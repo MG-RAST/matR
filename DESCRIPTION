@@ -1,6 +1,6 @@
 Package: KbaseKit
 Type: Package
-Title: Basic Toolkit for the Kbase MG-RAST Server
+Title: metagenomics analysis tools for R
 Version: 0.9
 Depends:
 Imports: RJSONIO, matlab, ecodist, Cairo, gplots
