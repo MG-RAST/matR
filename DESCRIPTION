@@ -1,0 +1,15 @@
+Package: KbaseKit
+Type: Package
+Title: Basic Toolkit for the Kbase MG-RAST Server
+Version: 0.9
+Depends:
+Imports: RJSONIO, matlab, ecodist, Cairo, gplots
+Suggests: 
+Date: 2012-01-05
+Author: Daniel Braithwaite
+Maintainer: Daniel Braithwaite <daniel_t_braithwaite@yahoo.com>
+Description: Object framework for comparative analysis of metagenomes; facility to download public and user-owned data and metadata from the metagenomic RAST service (http://metagenomics.anl.gov); function library mirroring existing, browser-based analysis routines; additional analysis techniques implemented in tandem with ongoing research and development.
+License: Unlimited
+LazyLoad: yes
+LazyData: yes
+
