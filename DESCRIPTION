@@ -2,8 +2,8 @@ Package: KbaseKit
 Type: Package
 Title: metagenomics analysis tools for R
 Version: 0.9
-Depends:
-Imports: RJSONIO, matlab, ecodist, Cairo, gplots
+Depends: Matrix, stats, nlme
+Imports: RJSONIO, matlab, ecodist, Cairo, gplots, pcaMethods
 Suggests: 
 Date: 2012-01-05
 Author: Daniel Braithwaite
