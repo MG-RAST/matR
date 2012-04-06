@@ -7,7 +7,7 @@
 # this is good for inspecting objects
 shew <- function (a) { 
 	cat ("typeof =", typeof (a), "  mode =", mode (a), "  class =", class (a), "\nsummary:\n")
-	print ("dimensions = ", dim (a))shh
+	print ("dimensions = ", dim (a))
 	summary (a) 
 	}
 
