@@ -1,7 +1,7 @@
 matR: The Metagenomic Anlysis Toolpack for R
 ===
 
-Contributors: Daniel Braithwaite (1), Kevin P. Keegan, Andreas Wilke, Jared Wilkening, 
+Contributors: Daniel Braithwaite (1), Kevin P. Keegan, Andreas Wilke, Tobias Paczian, Jared Wilkening, 
 Narayan Desai, Folker Meyer...
 
 (1) Primiary software author/engineer
