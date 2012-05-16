@@ -1,41 +1,54 @@
-
-export( 
-.kbGetServer,
-.kbSetServer,
-.kbGetAuth,
-.kbSetAuth,
-.kbCallRaw,
-.kbTestParams,
-.kbServers,
-.kbNamespaces,
-.Last.lib,
-kbListAll,
-kbAnnotationLookup,
-kbSearchMetagenomes,
-kbGet,
-
-print.kbProject,
-summary.kbProject,
-print.kbSample,
-summary.kbSample,
-print.kbLibrary,
-summary.kbLibrary,
-print.kbMetagenome,
-summary.kbMetagenome,
-print.kbSubset,
-summary.kbSubset,
-print.kbAbundance,
-summary.kbAbundance,
-
-kbDist,
-kbPCO,
-kbDendrograms,
-kbDoStats,
-kbPlotPCA,
-kbPreprocessing,
-kbSuggestTest,
-kbSampleMatrix
+# EXPORTS TO REMOVE FOR DISTRIBUTION
+export(
+shew
+#, shh, hold, seeDoc, buildHTMLDocs,
+#chomp, glom, oneof, oneofmust, oneofmusnt, 
+#semiwarn, simpleJSONReduction
 )
 
+# EXPORTS
+export(
+.mGetServer, .mGetAuth,
+.mCallRaw, .Last.lib,
+# .mServers, 
+# .mSetServer, .mSetAuth,
+# .mTestParams, .mNamespaces, 
+mGet, mListAll, mAnnotationLookup, mSearchMetagenomes,
+MGRAST_do_stats, MGRAST_plot_pca, MGRAST_plot_pco, MGRAST_preprocessing, MGRAST_suggest_test, heatmap_dendrogram, MGRAST_dendrograms, 
+mPermutations, mNormalize, mStats, mBoxplot, mDist, mPCO, mPCA, mPlotPCA, mDendrogram, mHeatmap, mSuggestTest,
+mProjects, mSamples, mMetagenomes,
+mProjectMeta, mSampleMeta, mMetagenomeMeta,
+orgMatrix, orgMatrixEvalue, orgMatrixLength, orgMatrixPercentID,
+funcMatrix, funcMatrixEvalue, funcMatrixLength, funcMatrixPercentID
+)
 
-import( RJSONIO, matlab, ecodist, Cairo, gplots )
+# CLASS EXPORTS
+exportClasses (mProjectMeta, mSampleMeta, mMetagenomeMeta, mMatrix)
+# exportMethods (print, summary, initialize)
+exportMethods (initialize)
+S3method (print, mProjectMeta)
+S3method (summary, mProjectMeta)
+S3method (print, mSampleMeta)
+S3method (summary, mSampleMeta)
+S3method (print, mMetagenomeMeta)
+S3method (summary, mMetagenomeMeta)
+S3method (print, mMatrix)
+S3method (summary, mMatrix)
+
+
+# IMPORTS FROM STANDARD PACKAGES
+# these statements could probably be much leaner
+import (Matrix)
+import (nlme)
+importFrom (stats)
+# but they make the following unnecessary:
+# importClassesFrom (Matrix, sparseMatrix)
+# importMethodsFrom (Matrix, ...)
+
+# IMPORTS FROM CONTRIBUTED PACKAGES
+# not doing it this way, rather, require'ing at runtime
+# import (RJSONIO, Cairo)
+# importFrom (matlab, ...)
+# importFrom (ecodist, ...)
+# importFrom (gplots, ...)
+
