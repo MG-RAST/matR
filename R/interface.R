@@ -1,4 +1,3 @@
-
 ############################################
 ### FRIENDLY FUNCTIONS FOR CASUAL USERS
 ###
@@ -41,19 +40,15 @@ orgMatrixPercentID <- function (mgIDs, level = "species", source = "m5nr", noMet
 	}
 
 
-funcMatrix <- function (mgIDs, level = "level3", source = "Subsystem", noMeta = FALSE)
-warning ("matR: unimplemented function")
-#mGet ("abundance", mgIDs, param = paste ("format/plain/type/functional/source/", source, "/group_level/", level, sep = ""))
+funcMatrix <- function (mgIDs, level = "level3", source = "Subsystems", noMeta = FALSE)
+mGet ("abundance", mgIDs, param = paste ("format/plain/type/function/source/", source, "/group_level/", level, sep = ""))
 
-funcMatrixEvalue <- function (mgIDs, level = "level3", source = "Subsystem" , noMeta = TRUE)
-warning ("matR: unimplemented function")
-#mGet ("abundance", mgIDs, param = paste ("format/plain/type/functional/result_column/evalue/source/", source, "/group_level/", level, sep = ""))
+funcMatrixEvalue <- function (mgIDs, level = "level3", source = "Subsystems" , noMeta = TRUE)
+mGet ("abundance", mgIDs, param = paste ("format/plain/type/function/result_column/evalue/source/", source, "/group_level/", level, sep = ""))
 
-funcMatrixLength <- function (mgIDs, level = "level3", source = "Subsystem" , noMeta = TRUE)
-warning ("matR: unimplemented function")
-#mGet ("abundance", mgIDs, param = paste ("format/plain/type/functional/result_column/length/source/", source, "/group_level/", level, sep = ""))
+funcMatrixLength <- function (mgIDs, level = "level3", source = "Subsystems" , noMeta = TRUE)
+mGet ("abundance", mgIDs, param = paste ("format/plain/type/function/result_column/length/source/", source, "/group_level/", level, sep = ""))
 
-funcMatrixPercentID <- function (mgIDs, level = "level3", source = "Subsystem" , noMeta = TRUE)
-warning ("matR: unimplemented function")
-#mGet ("abundance", mgIDs, param = paste ("format/plain/type/functional/result_column/identity/source/", source, "/group_level/", level, sep = ""))
+funcMatrixPercentID <- function (mgIDs, level = "level3", source = "Subsystems" , noMeta = TRUE)
+mGet ("abundance", mgIDs, param = paste ("format/plain/type/function/result_column/identity/source/", source, "/group_level/", level, sep = ""))
 

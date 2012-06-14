@@ -1,4 +1,3 @@
-
 ############################################
 ### CORE ROUINTES FOR COMMUNICATING
 ### WITH MG-RAST
@@ -39,7 +38,7 @@
 	else packageStartupMessage ("matR: using auth key: ", APIAuth )
 
 	APIServer <<- options ("matRServer")$matRServer
-	if (is.null (APIServer)) APIServer <<- APIServers$dev3
+	if (is.null (APIServer)) APIServer <<- APIServers$prod
 # if (is.null (APIServer)) APIServer <<- APIServers$prod
 	packageStartupMessage ("matR: server: ", APIServer)
 
@@ -399,7 +398,7 @@ if (resource == "abundance") {
 	if (notJSON) {
 		f <- tempfile ()
 		writeLines (x, f)
-		x <- data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", row.names = 1, check.names = FALSE))
+		x <- data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", comment.char = "", row.names = 1, check.names = FALSE))
 		unlink (f)
 		}
 	else if (y$matrix_type == "sparse") {
