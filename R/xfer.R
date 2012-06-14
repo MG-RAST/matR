@@ -1,4 +1,3 @@
-
 ############################################
 ### CORE ROUINTES FOR COMMUNICATING
 ### WITH MG-RAST
@@ -399,7 +398,7 @@ if (resource == "abundance") {
 	if (notJSON) {
 		f <- tempfile ()
 		writeLines (x, f)
-		x <- data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", row.names = 1, check.names = FALSE))
+		x <- data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", comment.char = "", row.names = 1, check.names = FALSE))
 		unlink (f)
 		}
 	else if (y$matrix_type == "sparse") {
