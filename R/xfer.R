@@ -38,7 +38,7 @@
 	else packageStartupMessage ("matR: using auth key: ", APIAuth )
 
 	APIServer <<- options ("matRServer")$matRServer
-	if (is.null (APIServer)) APIServer <<- APIServers$dev3
+	if (is.null (APIServer)) APIServer <<- APIServers$prod
 # if (is.null (APIServer)) APIServer <<- APIServers$prod
 	packageStartupMessage ("matR: server: ", APIServer)
 
