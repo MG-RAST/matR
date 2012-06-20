@@ -18,7 +18,7 @@ Unzip the download, and rename the resulting directory to "matR".  Package funct
 > biocLite ("pcaMethods")
 > install.packages ("Cairo", repos = "http://cran.wustl.edu")
 > install.packages ("gplots", repos = "http://cran.wustl.edu")
-> install.packages ("matR", type = "source", repos = "http://cran.wustl.edu")
+> install.packages ("matR", type = "source", repos = NULL)
 Any CRAN mirror can be used.  The download from git may now be deleted.
 
 LOADING
