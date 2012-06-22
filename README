@@ -1,3 +1,4 @@
+
 matR: Metagenomics Analysis Tools for R
 User Mini Guide
 
@@ -9,7 +10,7 @@ Facilities are implemented to query and download from the Kbase MG-RAST metageno
 INSTALLATION
 matR can be installed from github.  Download the zipped matR repository with the button labeled "ZIP" (on the repo page), or with:
 $ curl -Lko matR.zip https://github.com/MG-RAST/matR/zipball/master
-Unzip the download, and rename the resulting directory to "matR".  Package functionality is modular, in the sense that any dependency may be omitted without crippling the package as a whole.  However, to install all dependencies (recommended), run R from the parent directory of "matR" (for example, if the matR directory is found at /Computer/Desktop/matR/, run R from /Computer/Desktop/) and execute:
+Unzip the download, and rename the resulting directory to "matR".  Package functionality is modular, in the sense that any dependency may be omitted without crippling the package as a whole.  However, to install all dependencies (recommended), run R from the parent directory of "matR" and execute:
 > install.packages ("RJSONIO", repos = "http://cran.wustl.edu")
 > install.packages ("matlab", repos = "http://cran.wustl.edu")
 > install.packages ("ecodist", repos = "http://cran.wustl.edu")

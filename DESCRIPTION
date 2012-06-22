@@ -1,29 +1,29 @@
 Package: matR
 Type: Package
-Title: Metagenomics Analysis Tools via Kbase MG-RAST Server
-Version: 0.9.5
-Depends: R (>= 2.14.2), methods
-Imports: Matrix, stats, nlme
-Suggests: RJSONIO, matlab, ecodist, pcaMethods, Cairo, gplots
+Title: metagenomics analysis tools for R
+Version: 0.9.7
+Depends: R (>= 2.15), methods
+Imports: Matrix, stats
+Suggests: RJSONIO, pcaMethods, matlab, ecodist, Cairo, gplots
 URL: http://math.uic.edu/~braithwaite/R/matR-package.html
-Date: 2012-04-06
+Date: 2012-06-21
 Author: Daniel T. Braithwaite and Kevin P. Keegan
 Maintainer: Daniel T. Braithwaite <braithwaite@uchicago.edu>
 Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), email = "braithwaite@uchicago.edu"),
               person ("Kevin", "Keegan", role = "aut", email = "kevin.p.keegan@gmail.com"))
 Description:
 	Facilities are implemented to query and download from the
-	Kbase MG-RAST metagenome analysis server.  Access to private data is authenticated.  
+	MG-RAST metagenome analysis server.  Access to private data is authenticated.  
 	Metadata is lightly encapsulated with data.  Import and export is enabled via an RBIOM class, 
 	implemented as a close translation of the BIOM standard JSON format.  
 	A suite of relevant statistical analysis routines is provided, currently focused on taxon and 
 	function abundance.  This toolset is growing, supported by an active research effort.  Creation 
 	of high-quality images in various formats is implemented with a Cairo graphics device; 
-	rough-and-ready interactive graphics remain possible with R's default capabilities.  The package 
-	imports liberally from other contributed packages, but has no strict dependencies to 
-	preserve modularity of its three components (download access to MG-RAST, metagenome analysis, 
-	and visualization).
+	interactive graphics remain possible with R's default capabilities.  The package 
+	imports liberally from other contributed packages, but strictly depends only on base R, to 
+	preserve modularity of the various components.
 License: file LICENSE
 LazyLoad: yes
 LazyData: yes
-Collate: classes.R misc.R xfer.R stats.R interface.R
+Collate: misc.R access.R oldclasses.R oldwrappers.R readwrite.R analysisTemp.R init.R xfer.R
+
