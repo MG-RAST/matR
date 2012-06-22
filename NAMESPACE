@@ -1,0 +1,30 @@
+# for now, we are just exporting everything
+exportPattern(".*")
+
+# CLASS AND METHOD EXPORTS
+exportClassPattern(".*")
+# specifically: rlist, mmatrix, selection, view, collection
+# ...and pca, heatmap, analysis soon
+# ...and normalization, maybe
+
+exportMethods (print, summary, show, "[[", "$", asFile, metadata, collection)
+# ...and pca, heatmap, render soon
+
+S3method (print, rlist)
+S3method (summary, rlist)
+S3method (print, mmatrix)
+S3method (summary, mmatrix)
+S3method (print, selection)
+S3method (summary, selection)
+S3method (print, view)
+S3method (summary, view)
+S3method (print, collection)
+S3method (summary, collection)
+# S3method (print, pca)
+# S3method (summary, pca)
+# S3method (print, heatmap)
+# S3method (summary, heatmap)
+
+# IMPORTS FROM STANDARD PACKAGES
+importClassesFrom (Matrix, Matrix)
+# importClassesFrom (pcaMethods, pcaRes)

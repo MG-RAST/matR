@@ -1,0 +1,41 @@
+
+matR: Metagenomics Analysis Tools for R
+User Mini Guide
+
+THIS PACKAGE IS IN DEVELOPMENT.  SOME PARTS OF DOCUMENTATION MAY BE INACCURATE.  RELEASE OF V1.0 IS PLANNED FOR JUNE 2012.
+
+ABOUT
+Facilities are implemented to query and download from the Kbase MG-RAST metagenome analysis server.  Access to private data is authenticated.  Metadata is lightly encapsulated with data.  Import and export is enabled via an RBIOM class, implemented as a close translation of the BIOM standard JSON format.  A suite of relevant statistical analysis routines is provided, currently focused on taxon and function abundance.  This toolset is growing, supported by an active research effort.  Creation of high-quality images in various formats is implemented with a Cairo graphics device; rough-and-ready interactive graphics remain possible with R's default capabilities.  The package imports liberally from other contributed packages, but has no strict dependencies to preserve modularity of its three components (download access to MG-RAST, metagenome analysis, and visualization).
+
+INSTALLATION
+matR can be installed from github.  Download the zipped matR repository with the button labeled "ZIP" (on the repo page), or with:
+$ curl -Lko matR.zip https://github.com/MG-RAST/matR/zipball/master
+Unzip the download, and rename the resulting directory to "matR".  Package functionality is modular, in the sense that any dependency may be omitted without crippling the package as a whole.  However, to install all dependencies (recommended), run R from the parent directory of "matR" and execute:
+> install.packages ("RJSONIO", repos = "http://cran.wustl.edu")
+> install.packages ("matlab", repos = "http://cran.wustl.edu")
+> install.packages ("ecodist", repos = "http://cran.wustl.edu")
+> source ("http://bioconductor.org/biocLite.R")
+> biocLite ("pcaMethods")
+> install.packages ("Cairo", repos = "http://cran.wustl.edu")
+> install.packages ("gplots", repos = "http://cran.wustl.edu")
+> install.packages ("matR", type = "source", repos = NULL)
+Any CRAN mirror can be used.  The download from git may now be deleted.
+
+LOADING
+During an R session, matR functionality is only available after loading the package with:
+> library (matR)
+
+HELP AND DOCUMENTATION
+General guidelines for use and documentation per-function are available within R once the package is installed and loaded.  A few good places to start are:
+> package?matR
+> ?orgMatrix
+The package documentation in HTML is available at http://math.uic.edu/~braithwaite/R/matR-package.html.
+
+DEMO AND EXAMPLES
+A demonstration of matR functionality can be run from the R prompt with:
+> library (matR)
+> demo (matR)
+Example codes can be viewed at the end of many documentation pages obtained with the "?" help command, as in:
+> ?orgMatrix
+Such example codes can be executed with, for example:
+> utils::example ("orgMatrix")
