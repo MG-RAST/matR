@@ -1,100 +1,10 @@
-############################################
-### CORE ROUINTES FOR COMMUNICATING
-### WITH MG-RAST
-############################################
 
 ############################################
-### unexported globals that hold "state"
-############################################
-
-#.auth <- ""
-#.server <- ""
-# using global options kbase.auth and kbase.server for now
-
-############################################
-### check for servers and auth key upon
-### package loading
+### CORE ROUTINES FOR COMMUNICATING
+### WITH MG-RAST AND KBASE
 ###
-### the mechanism to preserve an auth
-### key is to assign it to a global symbol.
-### the user then may ensure it is saved
-### for the next session
-###
-### .auth is used and hidden, whereas 
-### kbase.auth.key is exported and not used
+### this is the API interface layer
 ############################################
-### lists relevant servers
-
-### hooks unused for now:
-### .onLoad <- function (libname, pkgname) { }
-### .onUnload <- function (libname) { }
-
-.onAttach <- function (libname, pkgname) {
-	APIAuth <<- options ("matRAuth")$matRAuth
-	if (is.null (APIAuth)) {
-		APIAuth <<- ""
-		packageStartupMessage ( "matR: no auth key" )
-		}
-	else packageStartupMessage ("matR: using auth key: ", APIAuth )
-
-	APIServer <<- options ("matRServer")$matRServer
-	if (is.null (APIServer)) APIServer <<- APIServers$prod
-# if (is.null (APIServer)) APIServer <<- APIServers$prod
-	packageStartupMessage ("matR: server: ", APIServer)
-
-# .... test network
-#	success <- TRUE
-#	if (success) packageStartupMessage ("matR: server reached") 
-#	else packageStartupMessage ("matR: server not reached")
-	packageStartupMessage ("matR: network not checked")
-
-#set print.default
-#set download.file.method
-	options (warn = 1)
-	packageStartupMessage( "matR: this package sets global option(s): warn = 1")
-
-	packageStartupMessage (paste (
-		"\nThis code is under active development.",
-		"Feedback, feature suggestions, and bug reports are welcome.",
-		#"Test codes are in the installation directory.",
-		#"Usage examples are included with the documentation,",
-		"A few things to try:   demo(matR)   package?matR   ?AbundanceRetrieval   utils::example(orgMatrix)", 
-		sep="\n"))
-	}
-
-.Last.lib <- function (libpath) { 
-#options (kbase.server = NULL)
-#options (kbase.auth = NULL)
-	rm (APIAuth, APIServer)
-	}
-
-### the server can be viewed and set manually
-.mGetServer <- function () { APIServer }
-# getOption (kbase.server) }
-
-
-# does not work
-# .mSetServer <- function ( s ) { APIServer <<- s }
-#options (kbase.server = s) }
-
-
-### simple interface to get and set the auth key.  it is set automatically upon loading, if it exists
-.mGetAuth <- function() { APIAuth }
-#getOption (kbase.auth) }
-
-# .mSetAuth <- function (key = NULL, save = FALSE) {
-# if (is.null (key) ) {
-#	message( "matR: Enter authorization key on a single line: " )
-#	key <- readLines (n=1, ok=TRUE, warn=FALSE)
-#}
-#if (save) {
-#	warning ("matR: authorization key set in global environment may be saved to .RData file")
-#	APIAuth.key <<- key
-#}
-# options (kbase.auth = key)
-#APIAuth <<- key
-#}
-
 
 ############################################
 ### we export a routine for "raw" calls to
@@ -128,8 +38,10 @@
 .mCallRaw <- function (call, toFile = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
-	urlStr <- paste (.mGetServer(), call, conj, "auth=", .mGetAuth(), sep = "")
-	message ("matR: .mCallRaw: ", urlStr)
+	urlStr <- paste (mConfig$server (), call, conj, "auth=", mConfig$getAuth (), sep = "")
+# assign "lastURL" recovery variable here
+	optMessage ("matR: reading ", urlStr)
+	mConfig$lastURL (urlStr)
 	if (!is.null (toFile)) {
 		download.file (urlStr, toFile, quiet = TRUE)
 		toFile
@@ -144,7 +56,7 @@
 ### get a list of all resources of one type.  
 ### a convenience function for no-parameter calls
 mListAll <- function (resource) {
-	suppressPackageStartupMessages (require (RJSONIO))
+	reqPack ("RJSONIO")
 	if ( !oneofmust (resource, "project", "sample", "library", "annotation", "metagenome")) return ()
 	x <- fromJSON (.mCallRaw (resource), simplify = TRUE, asText = TRUE)
 	x
@@ -160,7 +72,7 @@ mListAll <- function (resource) {
 # ... it seems this is not yet implemented in the API
 # ... so, this is untested ...
 mAnnotationLookup <- function (md5, namespace) {
-	suppressPackageStartupMessages (require (RJSONIO))
+	reqPack ("RJSONIO")
 	md5 <- chomp (md5)
 	namespace <- chomp (namespace)
 	if (length (namespace) > 1) {
@@ -177,10 +89,13 @@ mAnnotationLookup <- function (md5, namespace) {
 ### ... fix me ...
 mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
 	warning( "matR: unimplemented function" )
-	suppressPackageStartupMessages (require (RJSONIO))
+	reqPack ("RJSONIO")
 ### ... .mCallRaw etc ...
 	}
 
+# the purpose of mGet is to speak the language of the API
+# and acts as a buffer against changes therein.
+#
 # specify a resource and get it back in an R-friendly form
 # this routine handles API calls WHICH REQUIRE AN ID
 # it is an interface, not a wrapper, meaning the defaults and
@@ -209,9 +124,10 @@ mGet <- function(
 	func = NULL,			# multiple
 	md5 = NULL,				# multiple
 	param = NULL,			# any string, will be passed directly to the call
+	parse = TRUE,			# attempt parsing?  (of JSON or plain text)
+	enClass = FALSE,			# returned classed objects?
 	toFile = NULL ) {
 
-	suppressPackageStartupMessages (require (RJSONIO))
 # for "abundance" calls, there are naturally multiple 
 # IDs in a single API call.  this function also allows
 # multiple IDs for other resource calls, but handles them by 
@@ -232,13 +148,12 @@ toFile <- chomp (toFile)
 
 if (length (IDs) > 1) {
 	if ( oneof (resource, "project", "sample", "library", "metagenome")) {
-		x = list ()
+		x <- list ()
 # for text-ish resources we allow either one filename
 # per ID, or a single filename (meaning: append all to one)
-		if (!is.null (toFile) && length (toFile) != 1 && length (toFile) != length (IDs)) {
-			warning ("matR: call requires single filename or one filename per ID"); 
-			return ()
-			}
+		if (!is.null (toFile) && length (toFile) != 1 && length (toFile) != length (IDs))
+			stop ("matR: call requires single filename or one filename per ID"); 
+
 		deststr <- NULL
 		for (j in 1:length (IDs)) {
 			x [[j]] <- mGet (resource, IDs [j], namespace, annoType, seqType, org, func, md5, param)
@@ -246,11 +161,11 @@ if (length (IDs) > 1) {
 				sink (file = toFile [j]) ; print (x [[j]]) ; sink()
 				deststr <- paste (" to ", toFile [j])
 				}
-			message ("matR: fetched ", resource, " ", IDs [j], deststr)
+			optMessage ("matR: fetched ", resource, " ", IDs [j], deststr)
 			}
 		if (length (toFile) == 1) {
 			sink (file = toFile) ; print (x) ; sink()
-			message ("matR: wrote to ", toFile)
+			optMessage ("matR: wrote to ", toFile)
 			}
 		if (!is.null (toFile)) return (toFile)
 		return (x)
@@ -259,48 +174,43 @@ if (length (IDs) > 1) {
 # for resources received as files,
 # we require one filename per ID,
 # or else no filenames (meaning: use defaults)
-		if (!is.null (toFile) && length (toFile) != length (IDs)) {
-			warning ("matR: call requires one filename per ID");
-			return ()
-			}
+		if (!is.null (toFile) && length (toFile) != length (IDs))
+			stop ("matR: call requires one filename per ID");
 # NB. we allow that a single call might return more than one file
 # ... that is why the length of outFiles is unknown
 # ... and we have to use horrible style here
 		outFiles <- character(0)
 		for (j in 1:length (IDs)) {
 			ff <- mGet (resource, IDs [j], namespace, annoType, seqType, org, func, md5, param, toFile [j] )
-			message ("matR: fetched ", resource, " ", IDs [j], " to ", ff)
+			optMessage ("matR: fetched ", resource, " ", IDs [j], " to ", ff)
 			outFiles <- c (outFiles, ff)
 			}
 		return (outFiles)
 		}
-	if (resource != "abundance") {
-		warning ("matR: multiple ID\'s not implemented for specified resource"); 
-		return ()
-		}
+	if (resource != "abundance") stop ("matR: multiple ID\'s not implemented for specified resource")
 	}
 
-# from here on we are in the case of single of no
-# filename, and in the case of a single ID, except
-# if resource is "abundance"
+# from here on we are in the case of single or no
+# filename, and (unless resource is "abundance") in 
+# the case of single ID
 
 # code below is repeated unnecessarily when the function
-# recurs, but we live with that inefficiency
+# recurs, but we live with that 
 
 # we require retrieval to disk of certain resources
 if (oneof (resource, "sequenceSet", "reads") && is.null (toFile)) {
 	message ("matR: using default filename for file resource")
 	toFile <- paste (resource, ".", ID, sep = "")
-}
+	}
 
 # we now check up on parameters carefully, while
 # constructing the API call
 
 # make sure the resource type is valid
-if ( !oneofmust (resource, "project", "sample", "library", "metagenome", "subset", "sequenceSet", "sequences",  "reads", "abundance")) return ()
-
-# ... warn of functionality not yet implemented ...
-if ( !oneofmusnt (resource, "sequenceSet", "reads")) return ()
+oneofmust (resource, "project", "sample", "library", "metagenome", "subset", "sequenceSet", "sequences",  "reads", "abundance")
+# ... and the functionality is implemented ...
+oneofmust (resource, "project", "sample", "metagenome", "abundance")
+# oneofmusnt (resource, "sequenceSet", "reads")
 
 # warn of parameters specified but not appropriate to the call
 if ( !is.null( switch (resource,
@@ -371,87 +281,85 @@ else
 	x <- .mCallRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""))
 
 # otherwise, we process what we have received
-notJSON <- FALSE
-y <- try (fromJSON (x, simplify = TRUE, asText = TRUE), silent = TRUE)
-if (is (y, "try-error")) { 
-	message ("matR: received raw (not JSON)")
-	notJSON <- TRUE
-	}
-else message ("matR: ", length (unlist (y)), " elements (before reduction)")
-
-# x is used for the return value of this function
-# y is used for the JSON object received
-#
-# rearrange and rename fields of text resources nicely
-if (oneof (resource, "project", "sample", "library", "metagenome", "sequences") && !notJSON) {
-	x <- simpleJSONReduction (y)
-# ... this sometimes chokes when the retrieved object is incomplete ...
-	switch (resource, 
-		project = { names (x)[3] <- "kbase" },
-		sample = { names (x)[2] <- "kbase" },
-		library = { names (x)[2] <- "kbase" },
-		metagenome = { names (x)[2] <- "kbase" })
-	}
-# process abundance matrix nicely from out of BIOM format
-# ... the eventual plan is to implement an RBIOM class ...
-if (resource == "abundance") {
-	if (notJSON) {
-		f <- tempfile ()
-		writeLines (x, f)
-		x <- data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", comment.char = "", row.names = 1, check.names = FALSE))
-		unlink (f)
+if (parse) {
+	reqPack ("RJSONIO")
+	JSON <- FALSE
+	if (isValidJSON (x, asText = TRUE)) {
+# metadata elements are left as recursive lists (simplify = FALSE)
+		x <- fromJSON (x, asText = TRUE,
+				simplify = !oneof (resource, "project", "library", "sample", "metagenome"))
+		optMessage ("matR: ", length (unlist (x)), " elements after JSON parsing")
+		JSON <- TRUE
 		}
-	else if (y$matrix_type == "sparse") {
+	else optMessage ("matR: did not receive JSON")
+
+# ... the eventual plan is to implement an RBIOM class ...
+# process abundance matrix nicely ...
+	if (resource == "abundance") {
+#  ... from out of plain text format
+		if (! JSON) {
+			f <- tempfile ()
+			writeLines (x, f)
+# even where the matrix is passed is text format, we handle it as a Matrix
+			x <- Matrix (data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", comment.char = "", row.names = 1, check.names = FALSE)))
+			unlink (f)
+			}
+# or from sparse BIOM format
+		else if (x$matrix_type == "sparse") {
 # first we make a full matrix via the provided sparse matrix
 # remembering that BIOM indices start at zero
-		n <- length (y$data)
-		spM <- matrix (unlist (y$data), nrow = n, ncol = 3, byrow = TRUE)
-		M <- as.matrix (Matrix::sparseMatrix (i = 1 + spM [,1], j = 1 + spM [,2], x = spM [,3], dims = y$shape))
+			n <- length (x$data)
+			spM <- matrix (unlist (x$data), nrow = n, ncol = 3, byrow = TRUE)
+			M <- as.matrix (Matrix::sparseMatrix (i = 1 + spM [,1], j = 1 + spM [,2], x = spM [,3], dims = x$shape))
 # extract the column names that we expect
-		n <- y$shape [2]
-		s <- character (n)
-		for (j in 1:n)  s[j] <- (y$columns [[j]] ["id"])
-		colnames (M) <- s
+			n <- x$shape [2]
+			s <- character (n)
+			for (j in 1:n)  s[j] <- (x$columns [[j]] ["id"])
+			colnames (M) <- s
 # what the row names should be is debatable
 # ... perhaps I should check with others ...
 # here, we collapse the taxonomy to a single string
-		s <- character (n <- y$shape [1])
-		for (j in 1:n)  s[j] <- paste (y$rows [[j]] $metadata$taxonomy, collapse = ";", sep = "")
-		rownames (M) <- s
-		x <- M
+			s <- character (n <- x$shape [1])
+			for (j in 1:n)  s[j] <- paste (x$rows [[j]] $metadata$taxonomy, collapse = ";", sep = "")
+			rownames (M) <- s
+			x <- M
+			}
+		else warning ("matR: non-sparse matrix received in JSON; not implemented")
 		}
-	else warning ("matR: non-sparse JSON matrix received; not implemented")
-}
-# process subsets nicely into a data.frame
-else if (resource == "subset" && !notJSON) {
-	M <- cbind (data.frame (organism = names (y), row.names = NULL, stringsAsFactors = FALSE), count = unlist (lapply (y, length), use.names = FALSE))
-	x <- data.frame ( organism = as.vector (with (M, rep (organism, count))), 
-		md5 = unlist (lapply (y, names)), 
-		count = unlist (y),
-		row.names = NULL, stringsAsFactors = FALSE)
-}
+# ... process subsets nicely into a data.frame ...
+	else if (resource == "subset" && JSON) {
+		M <- cbind (data.frame (organism = names (x), row.names = NULL, stringsAsFactors = FALSE), count = unlist (lapply (x, length), use.names = FALSE))
+		x <- data.frame ( organism = as.vector (with (M, rep (organism, count))), 
+			md5 = unlist (lapply (x, names)), 
+			count = unlist (x),
+			row.names = NULL, stringsAsFactors = FALSE)
+		}
 # ... process sequences nicely ...
-else if (resource == "sequences" && !notJSON) {
-}
+	else if (resource == "sequences" && JSON) {
+		}
 
-# assign appropriate class to the return object
-# ... do other resources need to be here? ...
-x <- switch (resource,
-	project = new ("mProjectMeta", ID = IDs, x),
-	sample = new ("mSampleMeta", ID = IDs, x),
-#	library = "mLibraryMeta",
-	metagenome = new ("mMetagenomeMeta", ID = IDs, x),
-	abundance = new ("mMatrix", d = x, m = list(0)),
-	x)
+# this section should assign the appropriate class to the return object...
+	if (enClass) {
+# ...BUT instead we are not allowing this option for now
+# ...whether or not mGet should enClass things is still a grey-area design issue
+		stop ("matR: unimplemented function")
+		x <- switch (resource,
+			project = new ("mProjectMeta", ID = IDs, listify (x)),
+			sample = new ("mSampleMeta", ID = IDs, listify (x)),
+#			library = ...
+			metagenome = new ("mMetagenomeMeta", ID = IDs, listify (x)),
+			abundance = new ("mmatrix", data = x, meta = list ()),
+			x)
+		}
+	}
 
-# we return filenames visibly and objects invisibly
-# ... this is definitely not how output should be done!
+# ... this is definitely not how output to file should be done!
 # ... probably there should be a "write" method defined
-# ... for each class of returned object.  or, they should
+# ... for each class of returned object.  Or, they should
 # ... not even be objects, but just character vectors, simpler types
 if (!is.null (toFile)) {
 	sink (file = toFile) ; print (x) ; sink()
-	message( "matR: wrote to ", toFile )
+	optMessage( "matR: wrote to ", toFile )
 	toFile
 	}
 else x
@@ -472,16 +380,6 @@ else x
 #	toFile = ....
 #}
 
-# ...may again need this kind of scanning of the parameter string ...
-#
-#	abundance = (if (1 == length (grep ("format/plain", paramStr, fixed = TRUE))) {
-#		temp.file <- tempfile()
-#		writeLines (x, temp.file)
-#		y <- read.table (temp.file, header = TRUE, row.names = 1, sep = "\t", quote = "", comment.char = "")
-#		unlink (temp.file)
-#		y } else x),
-#	x)
-
 simpleJSONReduction <- function (x) {
 	empty <- vapply(x, function (x) (length(x) == 0), TRUE)
 	single <- vapply(x, function (x) (length(x) == 1), TRUE)
@@ -489,36 +387,3 @@ simpleJSONReduction <- function (x) {
 	y$more <- as.list (unlist (x [single], use.names = TRUE))
 	y
 	}
-
-############################################
-### hardcoded "parameters" of the package
-############################################
-
-### provides some valid API parameters for testing conveniently
-.mTestParams <- function () {
-	list (
-		project = "92", 
-		sample = "mgs3482", 
-		library = "mgl3482.4",
-		metagenome = c("4443360.3","4443361.3","4443362.3","4443363.3","4443364.3","4443365.3","4443366.3","4443367.3","4443368.3"),
-		subset = "", 
-		sequenceSet = "", 
-		sequences = "", 
-		annotation = "", 
-		reads = "", 
-		abundanceProfile = "mgm4440282.3", 
-		abundance = "mgm4440282.3",
-		md5 = "5c6cdf00b3b2509879f412d55582af1a",
-		matrix = "",
-		query = "")
-}
-
-
-############################################
-### us!
-############################################
-
-dtb <- person()
-kpk <- person()
-
-
