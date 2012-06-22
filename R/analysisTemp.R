@@ -1,5 +1,6 @@
 
 normalize <- function (M) {
+	M <- as.matrix (M)
 	M [is.na (M)] <- 0
 # log scale
 	M <- log2 (M + 1)
