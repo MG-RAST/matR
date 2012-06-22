@@ -1,18 +1,5 @@
-# for now, we are just exporting everything, rather than distinguishing as just below
+# for now, we are just exporting everything
 exportPattern(".*")
-
-# EXPORTS TO REMOVE FOR DISTRIBUTION
-# export(...)
-#
-# EXPORTS FOR DISTRIBUTION
-# export(...
-# mGet, mListAll, mAnnotationLookup, mSearchMetagenomes,
-# MGRAST_do_stats, MGRAST_plot_pca, MGRAST_plot_pco, MGRAST_preprocessing, MGRAST_suggest_test, heatmap_dendrogram, MGRAST_dendrograms, 
-# mPermutations, mNormalize, mStats, mBoxplot, mDist, mPCO, mPCA, mPlotPCA, mDendrogram, mHeatmap, mSuggestTest,
-# mProjects, mSamples, mMetagenomes,
-# mProjectMeta, mSampleMeta, mMetagenomeMeta,
-# orgMatrix, orgMatrixEvalue, orgMatrixLength, orgMatrixPercentID,
-# funcMatrix, funcMatrixEvalue, funcMatrixLength, funcMatrixPercentID)
 
 # CLASS AND METHOD EXPORTS
 exportClassPattern(".*")
@@ -20,9 +7,8 @@ exportClassPattern(".*")
 # ...and pca, heatmap, analysis soon
 # ...and normalization, maybe
 
-exportMethods (print, summary, show, "[[", "$", toFile, metadata, collection)
+exportMethods (print, summary, show, "[[", "$", asFile, metadata, collection)
 # ...and pca, heatmap, render soon
-# correct not to export "initialize"?
 
 S3method (print, rlist)
 S3method (summary, rlist)
@@ -39,20 +25,6 @@ S3method (summary, collection)
 # S3method (print, heatmap)
 # S3method (summary, heatmap)
 
-# for old class defs
-
-S3method (print, mProjectMeta)
-S3method (summary, mProjectMeta)
-S3method (print, mSampleMeta)
-S3method (summary, mSampleMeta)
-S3method (print, mMetagenomeMeta)
-S3method (summary, mMetagenomeMeta)
-
-
 # IMPORTS FROM STANDARD PACKAGES
 importClassesFrom (Matrix, Matrix)
 # importClassesFrom (pcaMethods, pcaRes)
-
-
-# NOT SURE ABOUT THESE
-# export (dtb, kpk)

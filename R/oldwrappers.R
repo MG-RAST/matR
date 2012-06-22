@@ -1,10 +1,10 @@
 
 ############################################
 ### FRIENDLY FUNCTIONS FOR CASUAL USERS
-### ---first version of such, maintained, but deprecated in favor of selection / view mechanism---
+### first attempt at user-friendly wrappers, deprecated in favor of selection / view mechanism
 ###
-### mGet is the engine.  these are wrappers.  keep superficial the processing performed here.
-### mGet should be not unaware, and not fully aware, but half-aware of class structures.
+### how aware should mGet() be of the user-facing class structure?  an open question.
+### it has an enClass parameter which for now is always FALSE.
 ### the critical thing is that it quarantines changes in the API.
 ### it is an interface, so it speaks common languages.
 ############################################
@@ -15,62 +15,52 @@ mMetagenomes <- function () mListAll ("metagenome")
 
 ############################################
 
-# --there should be some handling here to make a list into a properly classed
-# --items, when there are multiple IDs
-mProjectMeta <- function (projectIDs) new ("rlist", mGet ("project", projectIDs))
-mSampleMeta <- function (sampleIDs) new ("rlist", mGet ("sample", sampleIDs))
-mMetagenomeMeta <- function (metagenomeIDs) new ("rlist", mGet ("metagenome", metagenomeIDs))
+# CHECK: do these work?  do they work for multiple IDs?  is the result then properly classed?
+
+mProjectMeta <- function (ids) new ("rlist", listify (mGet ("project", scrubIds (ids))))
+mSampleMeta <- function (ids) new ("rlist", listify (mGet ("sample", scrubIds (ids))))
+mMetagenomeMeta <- function (ids) new ("rlist", listify (mGet ("metagenome", scrubIds (ids))))
 
 ############################################
 
-### CHECK SOURCE AND LEVEL DEFAULTS
-
-orgMatrix <- function (mgIDs, level = "species", source = "m5nr", noMeta = FALSE)
+orgMatrix <- function (ids, level = "species", source = "Subsystems", noMeta = FALSE)
 new ("mmatrix", data = 
-	mGet ("abundance", mgIDs, param = paste ("format/plain/source/", source, "/group_level/", 
-		level, sep = "", enClass = FALSE)),
-	metadata = new ("rlist"))
+	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/source/", source, "/group_level/", 
+		level, sep = "", enClass = FALSE)))
 
-orgMatrixEvalue <- function (mgIDs, level = "species", source = "m5nr", noMeta = TRUE)
+orgMatrixEvalue <- function (ids, level = "species", source = "Subsystems", noMeta = TRUE)
 new ("mmatrix", data = 
-	mGet ("abundance", mgIDs, param = paste ("format/plain/result_column/evalue/source/", source, "/group_level/", 
-		level, sep = ""), enClass = FALSE),
-	metadata = new ("rlist"))
+	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/result_column/evalue/source/", source, "/group_level/", 
+		level, sep = ""), enClass = FALSE))
 
-orgMatrixLength <- function (mgIDs, level = "species", source = "m5nr", noMeta = TRUE)
+orgMatrixLength <- function (ids, level = "species", source = "Subsystems", noMeta = TRUE)
 new ("mmatrix", data = 
-	mGet ("abundance", mgIDs, param = paste ("format/plain/result_column/length/source/", source, "/group_level/", 
-		level, sep = ""), enClass = FALSE),
-	metadata = new ("rlist"))
+	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/result_column/length/source/", source, "/group_level/", 
+		level, sep = ""), enClass = FALSE))
 
-orgMatrixPercentID <- function (mgIDs, level = "species", source = "m5nr", noMeta = TRUE)
+orgMatrixPercentID <- function (ids, level = "species", source = "Subsystems", noMeta = TRUE)
 new ("mmatrix", data = 
-	mGet ("abundance", mgIDs, param = paste ("format/plain/result_column/identity/source/", source, "/group_level/", 
-		level, sep = ""), enClass = FALSE),
-	metadata = new ("rlist"))
+	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/result_column/identity/source/", source, "/group_level/", 
+		level, sep = ""), enClass = FALSE))
 
 ############################################
 
-funcMatrix <- function (mgIDs, level = "level3", source = "Subsystems", noMeta = FALSE)
+funcMatrix <- function (ids, level = "level3", source = "m5rna", noMeta = FALSE)
 new ("mmatrix", data = 
-	mGet ("abundance", mgIDs, param = paste ("format/plain/type/function/source/", source, "/group_level/", 
-		level, sep = ""), enClass = FALSE),
-	metadata = new ("rlist"))
+	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/type/function/source/", source, "/group_level/", 
+		level, sep = ""), enClass = FALSE))
 
-funcMatrixEvalue <- function (mgIDs, level = "level3", source = "Subsystems" , noMeta = TRUE)
+funcMatrixEvalue <- function (ids, level = "level3", source = "m5rna" , noMeta = TRUE)
 new ("mmatrix", data = 
-	mGet ("abundance", mgIDs, param = paste ("format/plain/type/function/result_column/evalue/source/", source, "/group_level/", 
-		level, sep = ""), enClass = FALSE),
-	metadata = new ("rlist"))
+	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/type/function/result_column/evalue/source/", source, "/group_level/", 
+		level, sep = ""), enClass = FALSE))
 
-funcMatrixLength <- function (mgIDs, level = "level3", source = "Subsystem" , noMeta = TRUE)
+funcMatrixLength <- function (ids, level = "level3", source = "m5rna" , noMeta = TRUE)
 new ("mmatrix", data = 
-	mGet ("abundance", mgIDs, param = paste ("format/plain/type/function/result_column/length/source/", source, "/group_level/", 
-		level, sep = ""), enClass = FALSE),
-	metadata = new ("rlist"))
+	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/type/function/result_column/length/source/", source, "/group_level/", 
+		level, sep = ""), enClass = FALSE))
 
-funcMatrixPercentID <- function (mgIDs, level = "level3", source = "Subsystems" , noMeta = TRUE)
+funcMatrixPercentID <- function (ids, level = "level3", source = "m5rna" , noMeta = TRUE)
 new ("mmatrix", data = 
-	mGet ("abundance", mgIDs, param = paste ("format/plain/type/function/result_column/identity/source/", source, "/group_level/", 
-		level, sep = ""), enClass = FALSE),
-	metadata = new ("rlist"))
+	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/type/function/result_column/identity/source/", source, "/group_level/", 
+		level, sep = ""), enClass = FALSE))

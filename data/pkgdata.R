@@ -3,53 +3,29 @@
 ### DATA OBJECTS AVAILABLE UPON LOADING matR
 ############################################
 
-# These should be documented exported data objects ...
-# ... they may have some inaccuries & need to be checked ...
-# ... where do "Subsystems" and "function" belong? ...
-
-# "Subsystems"??
-mSources <- list (m5nr = "M5NR", swissprot = "SwissProt", genbank = "GenBank", img = "IMG", seed = "SEED",
-	TrEMBL = "trembl", refseq = "RefSeq", patric = "PATRIC", eggnog = "eggNOG", kegg = "KEGG", rdp = "RDP",
-	greengenes = "Greengenes", lsu = "LSU", ssu = "SSU")
-mFuncLevels <- list ("domain", "phylum", "class", "order", "family", "genus", "species", "strain")
-mOrgLevels <- list ("level1", "level2", "level3", "Subsystem")
-mTest <- list (
-	project = "102",
+sources <- list (
+	m5rna = "m5rna", rdp = "RDP", greengenes = "Greengenes", lsu = "LSU", ssu = "SSU",				# rna
+	nog = "NOG", cog = "COG", ko = "KO", go = "GO", subsystems = "Subsystems",						# ontology
+	m5nr = "m5nr", swissprot = "SwissProt", genbank = "GenBank", img = "IMG", seed = "SEED",		# protein
+	TrEMBL = "TrEMBL", refseq = "RefSeq", patric = "PATRIC", eggnog = "eggNOG", kegg = "KEGG")
+orgLevels <- list ("domain", "phylum", "class", "order", "family", "genus", "species", "strain")
+funcLevels <- list ("level1", "level2", "level3", "function")
+samp <- list (
+	project = "92",
+	project2 = "102",
 	sample = "mgs3482",
 	library = "mgl3482.4",
-	metagenome = "4443360.3",
-	shortMatrix = c ("4443360.3","4443361.3"),
-	longMatrix = c ("4443360.3","4443361.3","4443362.3","4443363.3","4443364.3","4443365.3","4443366.3","4443367.3","4443368.3"),
-	subset = "",
-	sequenceSet = "",
-	sequences = "",
-	annotation = "",
-	reads = "",
-	abundanceProfile = "mgm4440282.3",
-	abundance = "mgm4440282.3",
-	md5 = "5c6cdf00b3b2509879f412d55582af1a",
-	matrix = "",
-	query = "")
-	
+	ids = c ("4443360.3","4443361.3", "4443362.3"),
+	ids2 = c ("4441679.3", "4441680.3", "4441682.3", "4441695.3", "4441696.3", "4440463.3", "4440464.3"),
+	ids3 = c ("4492992.3", "4492991.3", "4492990.3", "4492989.3", "4492988.3", "4492987.3", "4492986.3", "4492985.3", "4492984.3", "4492983.3", "4492982.3", "4492981.3", "4492980.3")
+	)
 
 ############################################
-### These are session variables for
-### communication.  Currently, they are
-### available to the user, but eventually
-### they should not be.  Their values are
-### set per session when .onAttach is executed.
-############################################
-
-# .APIAuth <- ""
-# .APIServer <- ""
-
-############################################
-### Ignore that. 
-### All configuration information resides in
-### this closure object, to protect auth keys.
-### This forces the auth key to be entered
-### per-session, and prevents it from being
-### stored in .RData or .Rhistory
+### Package configuration information resides in
+### this closure.  In particular this forces 
+### the auth key to be entered per-session, 
+### and discourages it from being stored 
+### in .RData or .Rhistory
 #############################################
 
 mConfig <- (function () {
@@ -147,8 +123,5 @@ mConfig <- (function () {
 		par = par)
 	}) ()
 
-
 ### ... some way of saving options and importing on attach, 
 ### ... either an independent config file, or .Rprofile, or using options()
-
-

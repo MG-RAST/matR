@@ -1,12 +1,12 @@
 Package: matR
 Type: Package
-Title: Metagenomics Analysis Tools via MG-RAST Server
-Version: 0.9.6
+Title: metagenomics analysis tools for R
+Version: 0.9.7
 Depends: R (>= 2.15), methods
 Imports: Matrix, stats
 Suggests: RJSONIO, pcaMethods, matlab, ecodist, Cairo, gplots
 URL: http://math.uic.edu/~braithwaite/R/matR-package.html
-Date: 2012-04-06
+Date: 2012-06-21
 Author: Daniel T. Braithwaite and Kevin P. Keegan
 Maintainer: Daniel T. Braithwaite <braithwaite@uchicago.edu>
 Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), email = "braithwaite@uchicago.edu"),
@@ -25,5 +25,5 @@ Description:
 License: file LICENSE
 LazyLoad: yes
 LazyData: yes
-Collate: misc.R access.R oldclasses.R oldwrappers.R readwrite.R init.R xfer.R
+Collate: misc.R access.R oldclasses.R oldwrappers.R readwrite.R analysisTemp.R init.R xfer.R
 

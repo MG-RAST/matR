@@ -6,47 +6,42 @@
 ### simple helper functions into this file,
 ### out of the source file where they might
 ### mainly be used
+###
+### simple stuff only here
 ############################################
 
-### two functions for demos
-### each will step through a script, line by line
-###
-### this reads the file as text; each line is echoed exactly;
-### each line requires CR, except blank lines are simply echoed
+### two functions for demos: each will step through a script, line by line.
+### this one reads the file as text and echoes each line exactly.
+### each command must fit on a line, and blank lines are simply echoed.
 stepper <- function (fname) {
 	lines <- readLines (fname)
 	for (j in 1:length (lines))
 		if (lines [j] != "") {
 			cat (getOption ("prompt"), lines [j], sep = "")
 			readLines (n = 1, warn = FALSE)
-### this causes evaluation in the environment or frame (?) of the call to "stepper"
-### but perhaps I want it to take place in the parent?
+### NOTE: probably change eval() to occur in parent environment
 			eval (parse (text = lines [j]))
 			}
 		else cat ("\n")
 	}
 
-### this parses the whole file first; commands may span lines
-### comments are wiped; commands are reformatted to standard appearance
+### this one parses the whole file first.  commands may span lines.
+### comments are not displayed.  commands are reformatted to standard appearance.
 stepper2 <- function (fname) {
 	exprs <- parse (file = fname)
 	for (j in 1:length (exprs)) {
 		cat (getOption ("prompt"), as.character (exprs [j]), sep = "")
 		readLines (n = 1, warn = FALSE)
-### same question here
 		eval (exprs [j])
 		}
 	}
 
-
-### custom matrix and list printing functions, for general use
-### and also used for our class methods
-
+### custom matrix and list printing for general use and also for our class methods
 matrixPrinter <- function (x, ...) {
 	m <- min (nrow (x), 15)
 	n <- min (ncol (x), 5)
 # not fully sure why ths is necessary
-# seems 'rownames<-'is somwhat sloppily implemented for "Matrix"
+# seems "rownames<-" is somwhat sloppily implemented for "Matrix"
 	if (length (rownames (x)) > 0) rownames (x) <- abbrev (rownames (x), getOption ("width") / 3, "middle")
 	print (x [1:m, 1:n])
 	cat ("  <truncated from", nrow (x), "rows and", ncol (x), "columns>\n")
@@ -54,8 +49,7 @@ matrixPrinter <- function (x, ...) {
 
 ### Pretty printing of a restricted class of list structures, adaptive to screen width:
 ### the only atomic (non-list) elements in a traversal are length-one character vectors
-### this is for metadata but also handy in general
-### this routine assumes that listify() has been applied
+### this is for metadata but also handy in general; assumes that listify() has been applied
 listPrinter <- function (x) {
 	n <- 0
 	count <- function (x)
@@ -93,7 +87,6 @@ listPrinter <- function (x) {
 	twoColPrint (items, "middle", "right")
 	}
 
-
 ### convert metadata into a uniform, recursive structure:
 ###
 ### the only atomic (non-list) elements in a traversal are length-one character vectors
@@ -112,7 +105,6 @@ listify <- function (L) {
 				L [[j]] <- listify (L [[j]])
 	L
 	}
-
 
 ### abbreviates each element of a character vector
 ### to fit a given width, and adds "..." where 
@@ -136,7 +128,7 @@ twoColPrint <- function (v, Labbrev, Rabbrev) {
 	write.table (m, quote = FALSE, sep = " ", row.names = FALSE, col.names = FALSE)
 	}
 
-### a handy object inspector
+### a handy object inspector, sometimes more handy than str()
 shew <- function (a) { 
 	cat ("class:", class (a), "\n")
 	cat ("mode:", mode (a), "\n")
@@ -183,6 +175,26 @@ glom <- function (s) {
 	paste (as.character (s), collapse = ";", sep = "")
 	}
 
+# clean up a vector of ids, to standard format for the API,
+# adding prefix as necessary ("mgp", etc).  optional argument
+# is recycled to specify the resource of each id.
+scrubIds <- function (ids, res = "metagenome") {
+	ids <- strsplit (paste (ids, collapse = " "), "[^[:alnum:]]+") [[1]]
+	res <- rep (
+		c ("mgp", "mgl", "mgs", "mgm") [pmatch (res, c ("project", "library", "sample", "metagenome"))], 
+		length.out = length (ids))
+	ifelse (substr (ids, 1, 3) %in% c ("mgp", "mgl", "mgs", "mgm"), ids, paste (res, ids, sep = ""))
+	}
+
+# identify the kbase resources specified by a vector of ids
+# prefixes of "mgp", "mgl", "mgs", "mgm" are understood
+# any other prefix (including no prefix) results in "metagenome"
+scrapeRes <- function (ids) {
+	res <- match (substr (ids, 1, 3), c ("mgp", "mgl", "mgs", "mgm"))
+	res [is.na (res)] <- 4
+	c ("project", "library", "sample", "metagenome") [res]
+	}
+
 ### tests first argument for equality with any of others
 oneof <- function (x, ...) any (x == unlist ( list (...)))
 
@@ -207,6 +219,17 @@ semiwarn <- function (s) {
 	else FALSE
 	}
 
+### insist on loading a package
+reqPack <- function (P)
+	if ( !library (P, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE, logical.return = TRUE))
+		stop ("matR: package ", P, " required")
+
+### print an optional message according to verbosity configuration
+optMessage <- function (s, ...) if (mConfig$verbose ()) message (s, ...)
+
+### helps pluralize output text when appropriate
+plur <- function (x) if (length (x) > 1) "s" else ""
+
 ### last element of a vector
 lastof <- function (x) x [length (x)]
 
@@ -218,20 +241,8 @@ grType <- function (fileName) {
 	else "png"
 	}
 
-### we want to facilitate use of this package in parts;
-### therefore we minimize strict dependencies in
-### the DESCRIPTION file, and check for libraries
-### as necessary
-reqPack <- function (P)
-	if ( !library (P, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE, logical.return = TRUE))
-		stop ("matR: package ", P, " required")
-
-
-optMessage <- function (s, ...) if (mConfig$verbose ()) message (s, ...)
-
 ### merge two named lists, eliminating duplicates and giving priority to the first
 ### this is for resolving graphical parameters
 resolveMerge <- function (first, second)
 	append (first, second) [ !duplicated (c (names (first), names(second))) ]
 
-plur <- function (x) if (length (x) > 1) "s" else ""

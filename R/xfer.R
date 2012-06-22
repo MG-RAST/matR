@@ -125,7 +125,7 @@ mGet <- function(
 	md5 = NULL,				# multiple
 	param = NULL,			# any string, will be passed directly to the call
 	parse = TRUE,			# attempt parsing?  (of JSON or plain text)
-	enClass = TRUE,			# returned classed objects?
+	enClass = FALSE,			# returned classed objects?
 	toFile = NULL ) {
 
 # for "abundance" calls, there are naturally multiple 
@@ -300,7 +300,8 @@ if (parse) {
 		if (! JSON) {
 			f <- tempfile ()
 			writeLines (x, f)
-			x <- data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", comment.char = "", row.names = 1, check.names = FALSE))
+# even where the matrix is passed is text format, we handle it as a Matrix
+			x <- Matrix (data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", comment.char = "", row.names = 1, check.names = FALSE)))
 			unlink (f)
 			}
 # or from sparse BIOM format
@@ -337,8 +338,11 @@ if (parse) {
 	else if (resource == "sequences" && JSON) {
 		}
 
-# assign appropriate class to the return object
+# this section should assign the appropriate class to the return object...
 	if (enClass) {
+# ...BUT instead we are not allowing this option for now
+# ...whether or not mGet should enClass things is still a grey-area design issue
+		stop ("matR: unimplemented function")
 		x <- switch (resource,
 			project = new ("mProjectMeta", ID = IDs, listify (x)),
 			sample = new ("mSampleMeta", ID = IDs, listify (x)),
@@ -361,10 +365,6 @@ if (!is.null (toFile)) {
 else x
 }
 
-
-
-
-
 # at one point I thought: "reads" retrieves multiple 
 # files per ID (with different extensions), whereas
 # "sequenceSet" retrieves only one, but I think that
@@ -386,30 +386,4 @@ simpleJSONReduction <- function (x) {
 	y <- x[ !(single | empty)]
 	y$more <- as.list (unlist (x [single], use.names = TRUE))
 	y
-	}
-
-# clean up a vector of ids, to standard format for the API,
-# adding prefix as necessary ("mgp", etc).  optional argument
-# is recycled to specify the resource of each id.
-scrubIds <- function (ids, res = "metagenome") {
-	ids <- strsplit (paste (ids, collapse = " "), "^a-z0-9")
-	ids <- ids [nchar (ids) != 0]
-
-	allRes <- c ("project", "library", "sample", "metagenome")
-	res <- rep (allRes [pmatch (res, allRes)], length.out = length (ids))
-
-	ifelse (substr (ids, 1, 3) %in% ("mgp", "mgl", "mgs", "mgm"), ids, paste (res, ids))
-	}
-
-# identify the kbase resources specified by a vector of ids
-# prefixes of "mgp", "mgl", "mgs", "mgm" are understood
-# any other prefix (including no prefix) results in "metagenome"
-scrapeRes <- function (ids) {
-	res <- merge (
-		list (prefix = substr (ids, 1, 3), index = 1:length (ids)),
-		list (prefix = c ("mgp", "mgl", "mgs", "mgm"), fullname = c ("project", "library", "sample", "metagenome")),
-		all.x = TRUE, sort = FALSE)
-	res <- as.character (res [order (res$index),] $ fullname)
-	res [is.na (res)] <- "metagenome"
-	res
 	}

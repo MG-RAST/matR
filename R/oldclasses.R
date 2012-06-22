@@ -1,21 +1,15 @@
 
 ############################################
-### CLASS AND METHOD DEFINITIONS
-### FOR USER-FACING (and hidden) OBJECTS
-###
-### ---a successful enclassment, deprecated in---
-### ---favor of the selection/view mechanism---
+### this stuff is unused.
+### it belongs to an older idea about how to build the local objects.
+### the notions about how to display and summarize the various types of
+### metadata are still good and should be reimplemented.
 ############################################
 
-### metadata of different types (---deprecated for general listified structure---)
-setClass ("mProjectMeta", representation (ID = "character"), contains = "list")
-setClass ("mSampleMeta", representation (ID = "character"), contains = "list")
-setClass ("mMetagenomeMeta", representation (ID = "character"), contains = "list")
-
-### (---not sure if these were ever used; maybe just experimenting---)
-# setMethod ("initialize", "mProjectMeta", function(.Object, ID, meta) { .Object@ID <- ID ; .Object } )
-# setMethod ("initialize", "mSampleMeta", function(.Object, ID, meta) { .Object@ID <- ID ; .Object } )
-# setMethod ("initialize", "mMetagenomeMeta", function(.Object, ID) { .Object@ID <- ID ; .Object } )
+### metadata of different types
+# setClass ("mProjectMeta", representation (ID = "character"), contains = "list")
+# setClass ("mSampleMeta", representation (ID = "character"), contains = "list")
+# setClass ("mMetagenomeMeta", representation (ID = "character"), contains = "list")
 
 ############################################
 ### simple stuff to print important 
@@ -23,13 +17,10 @@ setClass ("mMetagenomeMeta", representation (ID = "character"), contains = "list
 ### evolve in the long-term with changes
 ### to the metadata hierarchy
 ###
-### ... the right way is not to print but to 
-### return a printable object, so that
-### needs to be fixed ...
-### 
-### and of course do not assume people are
-### using fixed width fonts
+### ... the right way is not to print but to return a printable object, so that needs to be fixed ...
+### ... and do not assume people are using fixed width fonts ...
 ############################################
+
 print.mProjectMeta <- function (x, ...) {
 # like many things we are dealing with, metadata formats are in flux.
 # so here, a bit of a hack .. just to print long lists of samples, 
@@ -93,6 +84,7 @@ summary.mMetagenomeMeta <- function (object, ...) {
 	cat (paste ("  <metadata summary of metagenome: ", object@ID, ">\n", sep = ""))
 	}
 
+### the mmatrix class exists in the new implementation, so needs to blanked out here
 # ... it would be nice to have ellipsis indicating missing columns ...
 #print.mmatrix <- function (x, ...) {
 #		m <- min (nrow (x@data), 15)
@@ -108,22 +100,3 @@ summary.mMetagenomeMeta <- function (object, ...) {
 #		cat (paste ("  <metagenomes: ", paste (colnames (object@data), collapse = " "), ">\n", sep = ""))
 #		print (data.frame (mean = format (colMeans (object), digits = 1), nonzero = "...", row.names = colnames (object)))
 #	}
-
-
-### ---PRIOR PRINTING METHOD ELIMINATED IN FAVOR OF THIS---
-
-prFunc <- print.mProjectMeta <- print.mSampleMeta <- print.mMetagenomeMeta <- function (x, ...) listPrinter (listify (x))
-setMethod ("print", "mProjectMeta", prFunc)
-setMethod ("print", "mSampleMeta", prFunc)
-setMethod ("print", "mMetagenomeMeta", prFunc)
-
-shFunc <- function (object) { prFunc (object) }
-### ---in interactive session S4 objects are rendered with show(), already generic---
-setMethod ("show", "mMetagenomeMeta", shFunc)
-setMethod ("show", "mProjectMeta", shFunc)
-setMethod ("show", "mSampleMeta", shFunc)
-
-#setMethod ("print", "mmatrix", matrixPrinter)
-#shFunc <- function (object) matrixPrinter (object)
-#setMethod ("show", "mmatrix", shFunc)
-
