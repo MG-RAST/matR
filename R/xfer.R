@@ -301,7 +301,7 @@ if (parse) {
 			f <- tempfile ()
 			writeLines (x, f)
 # even where the matrix is passed is text format, we handle it as a Matrix
-			x <- Matrix (data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", comment.char = "", row.names = 1, check.names = FALSE)))
+			x <- Matrix::Matrix (data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", comment.char = "", row.names = 1, check.names = FALSE)))
 			unlink (f)
 			}
 # or from sparse BIOM format
