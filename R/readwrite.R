@@ -4,70 +4,96 @@
 ### matR objects, the natural opposite of constructing
 ### an object of the same type from a filename or connection.
 ###
-### asFile(x, ...) : creates file with matR-standard representations of objects (maybe "as.file" or does that mislead?)
-### accepts parameters matR defines: "fileType", "inPath", "outPath"
-### accepts usual parameters R defines for text I/O: "sep", "quote", "fill", etc.
-### looks at default text I/O parameters set in mConfig
+### asFile(x, fname, ...) : creates fname containing objects
+### represented according to the current configuration of export parameters.
 ###
-### To decide how to write an object, a particular
-### call uses
-###   (1) global matR options,
-###   (2) properties of the object,
-###   (3) its actual arguments
-### with the latter always taking precedence.
+### when x is a list, fname should be a vector of the same length,
+### and each item will be written to a separate file
+###
+### To decide how to write an object, asFile consults (in this order) 
+### export parameters that are:
+###		(1) provided as arguments in the call
+###		(2) set in the "exp" slot of the object, if any
+###		(3) set in the global matR option, "exp"
 ### 
 ### The point is to provide standardization with 
 ### customizability for writing possibly complex
-### types as text.
+### types as text and binary files.
 ###
-### returns name of written file
+### returns name(s) of written file
 ###
-### reciprocal functionality fromFile() should be implemented directly
-### and also in functions that accept a parameter of class "connection"
-### ... does fromFile _autodetect_ what it reads, or is it told what
-### ... kind to read?
+### complementary import functionality should be provided by
+### functions accepting a parameter of class "connection"
 ###
+### asFile (<file>) to rewrite in different formats?  well, that is cute...
 #################################################
 
 setGeneric ("asFile", 
-	def = function (x, ...) { standardGeneric ("asFile") },
-	useAsDefault = FALSE)
+	def = function (x, fname, ...)
+		save (x, file = fname))
 
-setMethod ("asFile",			# for lists of IDs (this may be stupid)
-	"character",				# asFile (<file>) to rewrite in different formats?  well, that is cute...
-	function (x, ...) { } )
+setMethod ("asFile",
+	"list",
+	function (x, fname, ...)
+		for (j in 1:length(x)) asFile (x [[j]], fname [j]))
+
+setMethod ("asFile",					# for lists of IDs (this may be stupid)
+	"character",
+	function (x, fname, ...)
+		stop ("matR: unimplemented method for class character"))
+
 setMethod ("asFile",
 	"rlist",
-	function (x, ...) { } )
+	function (x, fname, ...)
+		stop ("matR: unimplemented method for class rlist"))
+
 setMethod ("asFile",
 	"matrix",
-	function (x, ...) { } )
+	function (x, fname, ...) {
+		args <- list (...)
+		expList <- resolveMerge (args, mConfig$exp())
+		if (expList$type != "binary")
+			write.table (x,
+				file = paste (mConfig$path(), fname, sep = ""),
+				append = expList$append,
+				sep = expList$sep,
+				na = expList$na,
+				row.names = expList$row.names,
+				col.names = expList$col.names)
+		else
+			save (x, file = fname)
+		})
+
 setMethod ("asFile",
 	"Matrix",
-	function (x, ...) { } )
+	function (x, fname, ...)
+		asFile (as.matrix (x), fname, ...))
+
 setMethod ("asFile", 
 	"mmatrix",
-	function (x, ...) { } )
+	function (x, fname, ...)
+		asFile (as.matrix (x), fname, ...))
+
 #setMethod ("asFile", 
 #	"RBIOM",
-#	function (x, ...) { } )
+#	function (x, fname, ...) { } )
 #setMethod ("asFile", 
 #	"pcaRes",
-#	function (x, ...) { } )
+#	function (x, fname, ...) { } )
 ### writing PCA to file:  need to concatenate two tables into single object.  snippet from original:
 ###	if (! is.null (asFile)) {
 ###		write.table (P@R2,	file = asFile, sep = "\t", col.names = FALSE, row.names = TRUE, append = FALSE)
 ###		write.table (P (my_pcaRes), file = asFile, sep = "\t", col.names = FALSE, row.names = TRUE, append = TRUE)
 #		}
 #setMethod ("asFile", 
-#	"mPCoA",
-#	function (x, ...) { } )
+#	"pca",
+#	function (x, fname, ...) { } )
 #setMethod ("asFile", 
 #	"dendrogram",
-#	function (x, ...) { } )	
+#	function (x, fname, ...) { } )	
 #setMethod ("asFile",
-#	"mHeatmap",
-#	function (x, ...) { } )
+#	"heatmap",
+#	function (x, fname, ...) { } )
 
 # just an idea:
 reconcileTextParametersWithDefaults <- function (...) { }

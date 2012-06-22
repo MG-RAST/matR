@@ -179,7 +179,7 @@ glom <- function (s) {
 # adding prefix as necessary ("mgp", etc).  optional argument
 # is recycled to specify the resource of each id.
 scrubIds <- function (ids, res = "metagenome") {
-	ids <- strsplit (paste (ids, collapse = " "), "[^[:alnum:]]+") [[1]]
+	ids <- strsplit (paste (ids, collapse = " "), "[^[:alnum:]\\.]+") [[1]]
 	res <- rep (
 		c ("mgp", "mgl", "mgs", "mgm") [pmatch (res, c ("project", "library", "sample", "metagenome"))], 
 		length.out = length (ids))
@@ -242,7 +242,7 @@ grType <- function (fileName) {
 	}
 
 ### merge two named lists, eliminating duplicates and giving priority to the first
-### this is for resolving graphical parameters
+### this is for resolving import / export / graphical parameters
 resolveMerge <- function (first, second)
 	append (first, second) [ !duplicated (c (names (first), names(second))) ]
 

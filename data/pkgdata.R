@@ -8,8 +8,8 @@ sources <- list (
 	nog = "NOG", cog = "COG", ko = "KO", go = "GO", subsystems = "Subsystems",						# ontology
 	m5nr = "m5nr", swissprot = "SwissProt", genbank = "GenBank", img = "IMG", seed = "SEED",		# protein
 	TrEMBL = "TrEMBL", refseq = "RefSeq", patric = "PATRIC", eggnog = "eggNOG", kegg = "KEGG")
-orgLevels <- list ("domain", "phylum", "class", "order", "family", "genus", "species", "strain")
-funcLevels <- list ("level1", "level2", "level3", "function")
+orgLevels <- c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain")
+funcLevels <- c ("level1", "level2", "level3", "function")
 samp <- list (
 	project = "92",
 	project2 = "102",

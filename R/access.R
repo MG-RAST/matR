@@ -217,7 +217,7 @@ setClass ("view",
 		source = "character",					# "m5rna", "Greengenes", etc.
 		other = "list"))						# just a precaution for extensibility
 setMethod ("initialize", "view", function (.Object) .Object)
-viewPr <- function (x, ... ) cat ("<matrix view:  ", x@of, " | ", x@annotation, " | ", x@level, " | ", x@source, ">\n", sep = "")
+viewPr <- function (x, ... ) cat ("<matrix view:  ", x@of, ", ", x@annotation, ", ", x@level, ", ", x@source, ">\n", sep = "")
 viewSh <- function (object) viewPr (object)
 setMethod ("print", "view", viewPr)
 setMethod ("summary", "view", viewSh)
@@ -231,8 +231,8 @@ summary.view <- viewSh
 # CHECK DEFAULTS & LOGIC
 view <- function (of = "count",
 				annotation = "function",
-				level = if (annotation == "function") "Subsystem" else "species",
-				source = if (annotation == "function") "m5rna" else "m5nr")  {
+				level = if (annotation == "function") "level3" else "species",
+				source = if (annotation == "function") "m5rna" else "Subsystems")  {
 	v <- new ("view")
 	v@of <- of; v@annotation <- annotation; v@level <- level; v@source <- source; v
 	}
@@ -276,14 +276,14 @@ setMethod ("initialize", "collection",
 		.Object } )
 setMethod ("[[", "collection",
 	function (x, i, j, ..., exact = TRUE)
-		x@data[[i]]
+		x@data[[i]])
 setMethod ("$", "collection",
 	function (x, name)
-		x@data[[name]]
+		x@data[[name]])
 colPr <- function (x, ... ) {
 	cat ("<collection of ", length (x@sel@sel), " metagenome(s), with ", length (x@views), " matrix view(s)>\n", sep = "")
 	print (x@sel) ; cat ("\n")
-	print (x@views)
+	for (e in x@views) print (e)
 	}
 colSh <- function (object) colPr (object)
 setMethod ("print", "collection", colPr)
@@ -307,14 +307,14 @@ setMethod ("collection", "selection",
 			views <- standardViews
 			}
 		data <- list ()
-		for (j in 1:length (views)) data [[j]] <- getMatrixView (sel@sel, views [[j]])
+		for (j in 1:length (views)) data [[j]] <- new ("mmatrix", getMatrixView (sel@sel, views [[j]]))
 		names (data) <- names (views)
 		new ("collection", sel, data, views)
 		} )
 setMethod ("collection", "character",
 	function (sel, ...)
 		collection (selection (sel), ...))
-setMethod ("collection", "connection", function
+setMethod ("collection", "connection",
 	function (sel, ...)
 		stop ("matR: unimplemented function"))			# this is EASY to implement and a BIG advantage
 
