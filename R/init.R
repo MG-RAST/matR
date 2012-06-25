@@ -10,17 +10,15 @@
 #	packageStartupMessage ("matR: not checking network access")
 # ... are there other options we should set?
 # ... for instance: print.default, download.file.method ?
-	packageStartupMessage (
-		"matR: metagenomics analysis tools for R",
-		"\nv0.9.7")
+	packageStartupMessage ("matR: metagenomics analysis tools for R")
 	options (warn = 1, width = 150, timeout = 300, digits = 2)
 #	packageStartupMessage (
 #		"matR: this package sets global option(s): warn = 1, width = 150, timeout = 300, digits = 2")
 # Configuration information including auth key resides in a closure
 # defined in matR/data.  This avoids an auth key ending up in .Rhistory or .RData
 	packageStartupMessage (
-		"\ncreate your auth key at http://metagenomics.anl.gov/?page=AccountManagement",
-		"\nenter it here with mConfig$setAuth()")
+		"create your auth key at:  http://metagenomics.anl.gov/?page=AccountManagement",
+		"\nenter it here with:  mConfig$setAuth()")
 	needed <- missingPackages ()
 	if (length (needed) > 0)
 		packageStartupMessage (paste (

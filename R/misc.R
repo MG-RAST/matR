@@ -37,6 +37,10 @@ stepper2 <- function (fname) {
 		}
 	}
 
+
+demo2 <- function () stepper (paste (path.package ("matR"), "/demo/second.R", sep = ""))
+
+
 ### custom matrix and list printing for general use and also for our class methods
 matrixPrinter <- function (x, ...) {
 	m <- min (nrow (x), 15)

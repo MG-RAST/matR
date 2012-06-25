@@ -1,8 +1,4 @@
 
-### first, we load the matR add-on package
-
-library(matR)
-
 ### we look at seven metagenomes that come from, respectively,
 ### cow rumen (3), fish gut (2), lean (1) and obese (1) mouse gut
 
