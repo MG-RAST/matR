@@ -223,9 +223,13 @@ semiwarn <- function (s) {
 	}
 
 ### insist on loading a package
-reqPack <- function (P)
-	if ( !library (P, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE, logical.return = TRUE))
+### we load additional packages _after_ matR on the search path
+reqPack <- function (P) {
+	if ( !library (P, pos = match("package:matR", search ()) + 1, character.only = TRUE, quietly = TRUE, 
+		warn.conflicts = FALSE, logical.return = TRUE))
 		stop ("matR: package ", P, " required")
+	else TRUE
+	}
 
 ### print an optional message according to verbosity configuration
 optMessage <- function (s, ...) if (mConfig$verbose ()) message (s, ...)

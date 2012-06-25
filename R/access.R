@@ -1,3 +1,15 @@
+
+# these data need to be available to matR and to the user.
+# cannot go in pkgdata.R for unclear reasons.
+sources <- list (
+	m5rna = "m5rna", rdp = "RDP", greengenes = "Greengenes", lsu = "LSU", ssu = "SSU",				# rna
+	nog = "NOG", cog = "COG", ko = "KO", go = "GO", subsystems = "Subsystems",						# ontology
+	m5nr = "m5nr", swissprot = "SwissProt", genbank = "GenBank", img = "IMG", seed = "SEED",		# protein
+	TrEMBL = "TrEMBL", refseq = "RefSeq", patric = "PATRIC", eggnog = "eggNOG", kegg = "KEGG")
+orgLevels <- c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain")
+funcLevels <- c ("level1", "level2", "level3", "function")
+
+
 #################################################
 ### Class components:
 ### definition, inheritance, construction, methods, print 
@@ -211,8 +223,8 @@ selection <- function (ids, resources = "metagenome", tagging = "asis")
 #################################################
 setClass ("view",
 	representation (
-		of = "character",						# "count", "normed", "evalue", "length", "percentid"
-		annotation = "character",				# "function" or "organism"
+		of = "character",
+		annotation = "character",
 		level =	"character",					# "species", "phylum", etc. OR "Subsystem", "level1", etc.
 		source = "character",					# "m5rna", "Greengenes", etc.
 		other = "list"))						# just a precaution for extensibility
@@ -228,13 +240,22 @@ summary.view <- viewSh
 # here, the class initialization function here does nothing,
 # while the user-facing construction function assigns defaults.
 # this is done differently than other classes, for no clear reason
-# CHECK DEFAULTS & LOGIC
+#
+# funcLevels and orgLevels are defined in pkgdata.R
+# c,f,l,S <- view()		c,o,s,m <- view(ann="org")		c,o,p,m <- view(ann="org",lev="phy")
 view <- function (of = "count",
 				annotation = "function",
-				level = if (annotation == "function") "level3" else "species",
-				source = if (annotation == "function") "m5rna" else "Subsystems")  {
+				level = if (!is.na (pmatch (annotation, "function"))) "level3" else "species",
+				source = if (!is.na (pmatch (annotation, "function"))) "Subsystems" else "m5rna")  {
 	v <- new ("view")
-	v@of <- of; v@annotation <- annotation; v@level <- level; v@source <- source; v
+	ofs <- c ("count", "normed", "evalue", "length", "percentid")
+	v@of <- ofs [pmatch (of, ofs)]
+	annotations <- c ("function", "organism")
+	v@annotation <- annotations [pmatch (annotation, annotations)]
+	v@level <- if (v@annotation == "function") funcLevels [pmatch (level, funcLevels)]
+		else orgLevels [pmatch (level, orgLevels)]
+	v@source <- sources [[pmatch (tolower (source), tolower (sources))]]
+	v
 	}
 
 # retrieves a matrix with given ids in a given view
@@ -247,8 +268,11 @@ getMatrixView <- function (ids, v) {
 		"/type/", v@annotation,
 		"/group_level/", v@level,
 		"/source/", v@source, sep = "")
-	(if (v@of == "normed") function (x) Matrix::Matrix (normalize (x)) else identity)
-		(mGet ("abundance", scrubIds (ids), param = s, enClass = FALSE))
+# irritated this does not work:
+# 	(if (v@of == "normed") function (x) Matrix::Matrix (normalize (x)) else identity) (mGet ("abundance", scrubIds (ids), param = s, enClass = FALSE))
+	x <- mGet ("abundance", scrubIds (ids), param = s, enClass = FALSE)
+	if (v@of == "normed") Matrix::Matrix (normalize (x))
+	else x
 	}
 
 #################################################
@@ -304,7 +328,7 @@ setMethod ("collection", "selection",
 	function (sel, ...) {
 		views <- unlist (list (...))
 		if (length (views) == 0) {
-			message ("matR: no view(s) specified; defaulting to standard")
+			message ("matR: no matrix view(s) specified; using defaults")
 			views <- standardViews
 			}
 		data <- list ()
@@ -315,9 +339,10 @@ setMethod ("collection", "selection",
 setMethod ("collection", "character",
 	function (sel, ...)
 		collection (selection (sel), ...))
-setMethod ("collection", "connection",
-	function (sel, ...)
-		stop ("matR: unimplemented function"))			# this is EASY to implement and a BIG advantage
+#setMethod ("collection", "connection",
+#	function (sel, ...)
+#		stop ("matR: unimplemented function"))			# this is EASY to implement and a BIG advantage.  or maybe .. need to setOldClass I think
+
 
 # this is a constant intended to be available to the user.
 # cannot go in pkgdata.R because its definition requires functionality from the package.
@@ -327,4 +352,3 @@ standardViews <- list (
 	evalue = view (of = "evalue"),
 	length = view (of = "length"),
 	percentid = view (of = "percentid"))
-

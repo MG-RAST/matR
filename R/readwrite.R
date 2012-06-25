@@ -51,15 +51,17 @@ setMethod ("asFile",
 	"matrix",
 	function (x, fname, ...) {
 		args <- list (...)
-		expList <- resolveMerge (args, mConfig$exp())
-		if (expList$type != "binary")
+		p <- resolveMerge (args, mConfig$exp())
+		fname <- paste (p$path, fname, sep = "")
+		if (p$type != "binary")
 			write.table (x,
-				file = paste (mConfig$path(), fname, sep = ""),
-				append = expList$append,
-				sep = expList$sep,
-				na = expList$na,
-				row.names = expList$row.names,
-				col.names = expList$col.names)
+				file = fname,
+				append = p$append,
+				quote = p$quote,
+				sep = p$sep,
+				na = p$na,
+				row.names = p$row.names,
+				col.names = p$col.names)
 		else
 			save (x, file = fname)
 		})

@@ -23,44 +23,44 @@ mMetagenomeMeta <- function (ids) new ("rlist", listify (mGet ("metagenome", scr
 
 ############################################
 
-orgMatrix <- function (ids, level = "species", source = "Subsystems", noMeta = FALSE)
+orgMatrix <- function (ids, level = "species", source = "m5rna", noMeta = FALSE)
 new ("mmatrix", data = 
 	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/source/", source, "/group_level/", 
 		level, sep = "", enClass = FALSE)))
 
-orgMatrixEvalue <- function (ids, level = "species", source = "Subsystems", noMeta = TRUE)
+orgMatrixEvalue <- function (ids, level = "species", source = "m5rna", noMeta = TRUE)
 new ("mmatrix", data = 
 	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/result_column/evalue/source/", source, "/group_level/", 
 		level, sep = ""), enClass = FALSE))
 
-orgMatrixLength <- function (ids, level = "species", source = "Subsystems", noMeta = TRUE)
+orgMatrixLength <- function (ids, level = "species", source = "m5rna", noMeta = TRUE)
 new ("mmatrix", data = 
 	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/result_column/length/source/", source, "/group_level/", 
 		level, sep = ""), enClass = FALSE))
 
-orgMatrixPercentID <- function (ids, level = "species", source = "Subsystems", noMeta = TRUE)
+orgMatrixPercentID <- function (ids, level = "species", source = "m5rna", noMeta = TRUE)
 new ("mmatrix", data = 
 	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/result_column/identity/source/", source, "/group_level/", 
 		level, sep = ""), enClass = FALSE))
 
 ############################################
 
-funcMatrix <- function (ids, level = "level3", source = "m5rna", noMeta = FALSE)
+funcMatrix <- function (ids, level = "level3", source = "Subsystems", noMeta = FALSE)
 new ("mmatrix", data = 
 	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/type/function/source/", source, "/group_level/", 
 		level, sep = ""), enClass = FALSE))
 
-funcMatrixEvalue <- function (ids, level = "level3", source = "m5rna" , noMeta = TRUE)
+funcMatrixEvalue <- function (ids, level = "level3", source = "Subsystems" , noMeta = TRUE)
 new ("mmatrix", data = 
 	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/type/function/result_column/evalue/source/", source, "/group_level/", 
 		level, sep = ""), enClass = FALSE))
 
-funcMatrixLength <- function (ids, level = "level3", source = "m5rna" , noMeta = TRUE)
+funcMatrixLength <- function (ids, level = "level3", source = "Subsystems" , noMeta = TRUE)
 new ("mmatrix", data = 
 	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/type/function/result_column/length/source/", source, "/group_level/", 
 		level, sep = ""), enClass = FALSE))
 
-funcMatrixPercentID <- function (ids, level = "level3", source = "m5rna" , noMeta = TRUE)
+funcMatrixPercentID <- function (ids, level = "level3", source = "Subsystems" , noMeta = TRUE)
 new ("mmatrix", data = 
 	mGet ("abundance", scrubIds (ids), param = paste ("format/plain/type/function/result_column/identity/source/", source, "/group_level/", 
 		level, sep = ""), enClass = FALSE))
