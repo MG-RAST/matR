@@ -12,7 +12,7 @@
 # ... for instance: print.default, download.file.method ?
 	packageStartupMessage (
 		"matR: metagenomics analysis tools for R",
-		"v0.9.7", sep = "\n")
+		"\nv0.9.7")
 	options (warn = 1, width = 150, timeout = 300, digits = 2)
 #	packageStartupMessage (
 #		"matR: this package sets global option(s): warn = 1, width = 150, timeout = 300, digits = 2")
@@ -20,7 +20,7 @@
 # defined in matR/data.  This avoids an auth key ending up in .Rhistory or .RData
 	packageStartupMessage (
 		"\ncreate your auth key at http://metagenomics.anl.gov/?page=AccountManagement",
-		"enter it here with mConfig$setAuth()", sep ="\n")
+		"\nenter it here with mConfig$setAuth()")
 	needed <- missingPackages ()
 	if (length (needed) > 0)
 		packageStartupMessage (paste (

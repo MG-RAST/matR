@@ -25,5 +25,5 @@ Description:
 License: file LICENSE
 LazyLoad: yes
 LazyData: yes
-Collate: misc.R access.R oldclasses.R oldwrappers.R readwrite.R analysisTemp.R init.R xfer.R
+Collate: misc.R access.R oldclasses.R oldwrappers.R readwrite.R analysis.R init.R xfer.R
 

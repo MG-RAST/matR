@@ -64,6 +64,7 @@ setMethod ("asFile",
 				col.names = p$col.names)
 		else
 			save (x, file = fname)
+		fname
 		})
 
 setMethod ("asFile",

@@ -20,7 +20,8 @@ stepper <- function (fname) {
 			cat (getOption ("prompt"), lines [j], sep = "")
 			readLines (n = 1, warn = FALSE)
 ### NOTE: probably change eval() to occur in parent environment
-			eval (parse (text = lines [j]))
+			R <- withVisible (eval.parent (parse (text = lines [j])))
+			if (R$visible && !is.null (R$value)) print (R$value)
 			}
 		else cat ("\n")
 	}

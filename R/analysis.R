@@ -5,7 +5,7 @@ setGeneric ("render", function (x, ...) standardGeneric ("render"), useAsDefault
 
 ### merge similarly, specialized for use in function doing final rendering (i.e. "render" methods)
 resolveParList <- function (call, object, defaults)
-	resolveMerge (call, resolveMerge (object, resolveMerge (mConfig$par(), defaults)))
+	resolveMerge (call, resolveMerge (object, resolveMerge (defaults, mConfig$par())))
 
 
 setClass ("pco",
@@ -42,55 +42,73 @@ setMethod ("show", "pco", function (object) print (object))
 ###   render (collection (c ("4441872.3", "4442034.3", "4448888.3", "4449999.3")))
 #################################################
 
-# setMethod ("render", "pco",
+# shortly this will become a method for class "pco" rather than "list"
+# this is just an expedient
 setMethod ("render", "list",
 	function (x, ...) {
-		plot (x$vectors[,1], x$vectors[,2])
+		parDefaults = list (
+# plot()
+			cex.axis = 1,
+			cex.lab = 1,
+			main = "Principal Coordinates Analysis",
+
+			xlab = "PC1",
+			ylab = "PC2",
+# plot() and points()
+			col = "blue",
+# text()
+			labels = "",
+			cex.pts = .8,
+			pos = 3)
+		p <- resolveParList (list (...), list (), parDefaults)
+
+		if (!is.null (p$fname) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
+			eval (as.call (c (quote (Cairo), 
+				file = p$fname, type = p$type, width = p$width, height = p$height, pointsize = p$pointsize, units = p$units)))
+		else dev.new ()
+		plot (x$vectors[,1], x$vectors[,2],
+			cex.axis = p$cex.axis, cex.lab = p$cex.lab, main = p$main, type = "p", col = p$col, xlab = p$xlab, ylab = p$ylab)
+		points (x$vectors[,1], x$vectors[,2], col = p$col, pch = 19, cex = 2)
+		text (x$vectors[,1], x$vectors[,2], labels = p$labels, cex = p$cex.pts, pos = p$pos)
+		if (!is.null (p$fname)) dev.off ()
 		} )
 
 setMethod ("render", "collection",
 	function (x, views = c ("count", "normed"), ...) {
+		n <- length (views)
 		parDefaults = list (
 # split.screen()
-			figs = c (2,1),
+			figs = c (n,1),
 # boxplot()
 			main = c ("raw data", "log2(x+1) & centered per sample, scaled 0 to 1 over all samples"),
 			las = 2,
+			names = colnames (x [[1]]),
 # Cairo()
 			width = 950,
 			height = 1000,
 			pointsize = 12,
 			res = NA,
 			units = "px")
-		n <- length (views)
-#		args = list (...)
-#		p <- resolveParList (args, list (), parDefaults)
-		p <- list (...)
-		print(unlist(p))
-		if (is.null (p$figs)) p$figs <- c (n, 1)
-		if (is.null (p$main)) p$main <- paste ("<", views, "> summary", sep = "")
-		else p$main <- rep (p$main, length.out = n)
-# Cairo(): width, height, file, type, pointside, bg, canvas, units
+		p <- resolveParList (list (...), list (), parDefaults)
+
+# Cairo(): width, height, file, type, pointsize, bg, canvas, units
 # dev.new(): unknown
-		if (!is.null (p$file) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
-			eval (as.call (c (quote (Cairo), p)))
-		else 
-			eval (as.call (c (quote (dev.new), p)))
+		if (!is.null (p$fname) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
+			eval (as.call (c (quote (Cairo), 
+				file = p$fname, type = p$type, width = p$width, height = p$height, pointsize = p$pointsize, units = p$units)))
+		else dev.new ()
 # split.screen(): figs
 		split.screen (p$figs)
-		main <- p$main
-		p$width <- NULL			# resolve conflicts in parameters names
-		p$height <- NULL
 		for (j in 1:n) {
 			screen (j)
 # want the call to boxplot to accept _all_ elements of p, but this might do for now
 # boxplot(): LOTS of options
-			p$main <- main [j]
-			eval (as.call (c (quote (boxplot), x = x [[views [j]]], p)))
+			eval (as.call (c (quote (boxplot), 
+				x = x [[views [j]]], main = p$main [j], names = p$names)))
 			}
-		if (!is.null (p$file)) dev.off ()
+		if (!is.null (p$fname)) dev.off ()
 		} )
-		
+
 # returns: list of "values" (numeric), "vectors" (matrix), "dist" (dist)
 # computes: distance, scaled eigenvalues, and eigenvectors
 # ... consider better way to combine?  c, cbind, data.matrix ...
