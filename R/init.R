@@ -5,23 +5,22 @@
 
 .onAttach <- function (libname, pkgname) {
 	mConfig$server (mConfig$servers()$prod)
-	packageStartupMessage ("matR: server: ", mConfig$server())
+#	packageStartupMessage ("matR: server: ", mConfig$server())
 # ... would be good to test the network here ...
-	packageStartupMessage ("matR: not checking network access")
+#	packageStartupMessage ("matR: not checking network access")
 # ... are there other options we should set?
 # ... for instance: print.default, download.file.method ?
-	options (warn = 1, width = 150, timeout = 300, digits = 2)
 	packageStartupMessage (
-		"matR: this package sets global option(s): warn = 1, width = 150, timeout = 300, digits = 2")
+		"matR: metagenomics analysis tools for R",
+		"v0.9.7", sep = "\n")
+	options (warn = 1, width = 150, timeout = 300, digits = 2)
+#	packageStartupMessage (
+#		"matR: this package sets global option(s): warn = 1, width = 150, timeout = 300, digits = 2")
 # Configuration information including auth key resides in a closure
 # defined in matR/data.  This avoids an auth key ending up in .Rhistory or .RData
-	packageStartupMessage ("matR: set your auth key with mConfig$setAuth()")
-
-	packageStartupMessage (paste (
-		"\nThis code is under active development.",
-		"Feedback, feature suggestions, and bug reports are welcome.",
-		"A few things to try:   demo(matR)   package?matR   ?AbundanceRetrieval   utils::example(orgMatrix)", 
-		sep = "\n"))
+	packageStartupMessage (
+		"\ncreate your auth key at http://metagenomics.anl.gov/?page=AccountManagement",
+		"enter it here with mConfig$setAuth()", sep ="\n")
 	needed <- missingPackages ()
 	if (length (needed) > 0)
 		packageStartupMessage (paste (
