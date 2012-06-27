@@ -4,11 +4,10 @@ exportPattern(".*")
 # CLASS AND METHOD EXPORTS
 exportClassPattern(".*")
 # specifically: rlist, mmatrix, selection, view, collection
-# ...and pca, heatmap, analysis soon
-# ...and normalization, maybe
+# ...and mpco, mheatmap, analysis soon
 
-exportMethods (print, summary, show, "[[", "$", asFile, metadata, collection)
-# ...and pca, heatmap, render soon
+exportMethods (print, summary, show, "[[", "$", asFile, metadata, collection, render)
+# ...and mpco, mheatmap, render soon
 
 S3method (print, rlist)
 S3method (summary, rlist)

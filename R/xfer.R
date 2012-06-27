@@ -38,10 +38,10 @@
 .mCallRaw <- function (call, toFile = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
-	urlStr <- paste (mConfig$server (), call, conj, "auth=", mConfig$getAuth (), sep = "")
+	urlStr <- paste (mconfig$server (), call, conj, "auth=", mconfig$getAuth (), sep = "")
 # assign "lastURL" recovery variable here
 	optMessage ("matR: reading ", urlStr)
-	mConfig$lastURL (urlStr)
+	mconfig$lastURL (urlStr)
 	if (!is.null (toFile)) {
 		download.file (urlStr, toFile, quiet = TRUE)
 		toFile

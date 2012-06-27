@@ -4,8 +4,8 @@
 ############################################
 
 .onAttach <- function (libname, pkgname) {
-	mConfig$server (mConfig$servers()$prod)
-#	packageStartupMessage ("matR: server: ", mConfig$server())
+	mconfig$server (mconfig$servers()$prod)
+#	packageStartupMessage ("matR: server: ", mconfig$server())
 # ... would be good to test the network here ...
 #	packageStartupMessage ("matR: not checking network access")
 # ... are there other options we should set?
@@ -17,8 +17,8 @@
 # Configuration information including auth key resides in a closure
 # defined in matR/data.  This avoids an auth key ending up in .Rhistory or .RData
 	packageStartupMessage (
-		"create your auth key at:  http://metagenomics.anl.gov/?page=AccountManagement",
-		"\nenter it here with:  mConfig$setAuth()")
+		"package?matR - for general info\n",
+		"mconfig$setAuth() - for private data access")
 	needed <- missingPackages ()
 	if (length (needed) > 0)
 		packageStartupMessage (paste (
@@ -47,6 +47,7 @@ dependencies <- function () {
 			cat ("\n")
 			chooseBioCmirror (graphics = FALSE)
 			cat ("\n")
+			message ("At the next prompt, please select all available repositories")
 			setRepositories (graphics = FALSE)
 			message ("Please wait...")
 			install.packages (needed)
