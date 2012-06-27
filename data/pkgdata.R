@@ -28,7 +28,7 @@ names (waters) <- c (paste ("fresh", 1:15, sep = ""), paste ("spring", 1:9, sep 
 ### in .RData or .Rhistory
 #############################################
 
-mConfig <- (function () {
+mconfig <- (function () {
 # communications
 	authX <- ""
 	serverX <- ""

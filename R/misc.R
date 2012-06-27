@@ -37,7 +37,7 @@ stepper2 <- function (fname) {
 		}
 	}
 
-
+demo1 <- function () stepper (paste (path.package ("matR"), "/demo/first.R", sep = ""))
 demo2 <- function () stepper (paste (path.package ("matR"), "/demo/second.R", sep = ""))
 
 
@@ -237,7 +237,7 @@ reqPack <- function (P) {
 	}
 
 ### print an optional message according to verbosity configuration
-optMessage <- function (s, ...) if (mConfig$verbose ()) message (s, ...)
+optMessage <- function (s, ...) if (mconfig$verbose ()) message (s, ...)
 
 ### helps pluralize output text when appropriate
 plur <- function (x) if (length (x) > 1) "s" else ""
