@@ -12,8 +12,8 @@
 	Set an authentication key for access to private data, or get the key currently in use.
 	}
 \usage{
-	mconfig$setAuth()
-	mconfig$getAuth()
+	`mconfig$setAuth`()
+	`mconfig$getAuth`()
 	}
 \details{
 	\code{mconfig} is a data object created in each session in the \code{matR} package environment to hold configuration information for that session.

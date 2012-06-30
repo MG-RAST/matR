@@ -4,7 +4,6 @@
 \alias{rlist-class}
 \alias{[[,rlist-method}
 \alias{$,rlist-method}
-\alias{asFile,rlist-method}
 \alias{initialize,rlist-method}
 \alias{print,rlist-method}
 \alias{show,rlist-method}

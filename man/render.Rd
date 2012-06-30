@@ -23,6 +23,6 @@ Details of graphical parameters.
 \references{
 }
 \author{Daniel T. Braithwaite}
-\seealso{\code{\link{render-methods}}, \code{\link{Collections}}, \code{\link{pco}}, \code{\link{heatmap}}}
+\seealso{\code{\link{render-methods}}, \code{\link{collection}}, \code{\link{pco}}, \code{\link{heatmap}}}
 \examples{
 }

@@ -2,7 +2,6 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{mmatrix-class}
-\alias{asFile,mmatrix-method}
 \alias{initialize,mmatrix-method}
 \alias{print,mmatrix-method}
 \alias{show,mmatrix-method}
@@ -21,8 +20,8 @@ Objects can be created by calls of the form \code{new("mmatrix", data, metadata,
     \item{\code{data}:}{Object of class \code{"Matrix"} ~~ }
     \item{\code{metadata}:}{Object of class \code{"rlist"} ~~ }
     \item{\code{hierarchy}:}{Object of class \code{"character"} ~~ }
-    \item{\code{Dim}:}{Object of class \code{"integer", from class "Matrix"} ~~ }
-    \item{\code{Dimnames}:}{Object of class \code{"list", from class "Matrix"} ~~ }
+%    \item{\code{Dim}:}{Object of class \code{"integer", from class "Matrix"} ~~ }
+%    \item{\code{Dimnames}:}{Object of class \code{"list", from class "Matrix"} ~~ }
   }
 }
 \section{Extends}{

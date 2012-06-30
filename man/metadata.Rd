@@ -15,7 +15,7 @@ Metadata in \code{matR} is }
 \value{
 	different according to object type
 	for full details link to page 
-In each case, a metadata object of S4 class "rlist"S4 class (with a few appropriate methods defined) that mostly amounts to a list of character vectors.
+  In each case, a metadata object of S4 class "rlist" that mostly amounts to a list of character vectors.
 	For more about metadata, see the MG-RAST webpage linked below.
   }
 \references{

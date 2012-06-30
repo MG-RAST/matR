@@ -2,9 +2,7 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{selection-class}
-\alias{collection,selection-method}
 \alias{initialize,selection-method}
-\alias{metadata,selection-method}
 \alias{print,selection-method}
 \alias{show,selection-method}
 \alias{summary,selection-method}

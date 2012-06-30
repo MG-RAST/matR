@@ -5,9 +5,7 @@
 \alias{[[,collection-method}
 \alias{$,collection-method}
 \alias{initialize,collection-method}
-\alias{metadata,collection-method}
 \alias{print,collection-method}
-\alias{render,collection-method}
 \alias{show,collection-method}
 \alias{summary,collection-method}
 

@@ -10,10 +10,10 @@
   \code{mconfig} is a data object created in each session in the \code{matR} package environment to hold configuration information for that session.
 }
 \usage{
-mconfig$par (...)
-mconfig$exp (...)
-mconfig$imp (...)
-mconfig$path (s = NULL)
+`mconfig$par` (...)
+`mconfig$exp` (...)
+`mconfig$imp` (...)
+`mconfig$path` (s = NULL)
 }
 \arguments{
   \item{...}{...}
