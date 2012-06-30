@@ -8,6 +8,7 @@ sources <- list (
 	TrEMBL = "TrEMBL", refseq = "RefSeq", patric = "PATRIC", eggnog = "eggNOG", kegg = "KEGG")
 orgLevels <- c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain")
 funcLevels <- c ("level1", "level2", "level3", "function")
+matrixOf <- c ("count", "normed", "evalue", "length", "percentid")
 
 
 #################################################
@@ -94,10 +95,10 @@ setMethod ("$", "rlist",
 setMethod ("[[", "rlist",
 	function (x, i, j, ..., exact = TRUE) { y <- unclass (x) [[i]] ; if (is (y, "list")) new ("rlist", y) else y })
 setMethod ("print", "rlist", rlistPr)
-setMethod ("summary", "rlist", rlistSh)
+setMethod ("summary", "rlist", function (object, ...) rlistSh (object))
 setMethod ("show", "rlist", rlistSh)
 print.rlist <- rlistPr
-summary.rlist <- rlistSh
+summary.rlist <- function (object, ...) rlistSh (object)
 
 ### the intended user-facing construction function:
 setMethod ("metadata", "character",
@@ -137,15 +138,15 @@ setMethod ("initialize", "mmatrix",
 	function (.Object, data = Matrix::Matrix(), metadata = new ("rlist"), hierarchy = character(0)) {
 		.Object@data <- data; .Object@metadata <- metadata; .Object@hierarchy <- hierarchy; .Object } )
 setMethod ("print", "mmatrix", matrixPr)
-setMethod ("summary", "mmatrix", matrixSh)
+setMethod ("summary", "mmatrix", function (object, ...) matrixSh (object))
 setMethod ("show", "mmatrix", matrixSh)
 print.mmatrix <- matrixPr
-summary.mmatrix <- matrixSh
+summary.mmatrix <- function (object, ...) matrixSh (object)
 
 ### the intended user-facing construction function:
 mmatrix <- function (ids, view = standardViews$count)
 	new ("mmatrix", 
-		data = getMatrixView (scrubIds (ids), view),
+		data = matrixView (scrubIds (ids), view),
 		metadata = metadata (ids), 
 		hierarchy = character (0))
 
@@ -192,10 +193,10 @@ setMethod ("metadata", "selection", function (x) { x@metadata } )
 selPr <- function (x, ... ) cat ("<metagenome selection:  ", paste (x @ sel, collapse = ", "), ">\n", sep = "")
 selSh <- function (object) selPr (object)
 setMethod ("print", "selection", selPr)
-setMethod ("summary", "selection", selSh)
+setMethod ("summary", "selection", function (object, ...) selSh (object))
 setMethod ("show", "selection", selSh)
 print.selection <- selPr
-summary.selection <- selSh
+summary.selection <- function (object, ...) selSh (object)
 
 ### the intended user-facing construction function:
 # this is not right; need to scrub / scrape
@@ -232,10 +233,10 @@ setMethod ("initialize", "view", function (.Object) .Object)
 viewPr <- function (x, ... ) cat ("<matrix view:  ", x@of, ", ", x@annotation, ", ", x@level, ", ", x@source, ">\n", sep = "")
 viewSh <- function (object) viewPr (object)
 setMethod ("print", "view", viewPr)
-setMethod ("summary", "view", viewSh)
+setMethod ("summary", "view", function (object, ...) viewSh (object))
 setMethod ("show", "view", viewSh)
 print.view <- viewPr
-summary.view <- viewSh
+summary.view <- function (object, ...) viewSh (object)
 
 # here, the class initialization function here does nothing,
 # while the user-facing construction function assigns defaults.
@@ -261,7 +262,7 @@ view <- function (of = "count",
 # retrieves a matrix with given ids in a given view
 # I think -- reconsider? -- it is sound for this function to take an id list, not a selection object
 # value is "Matrix" (not "mmatrix")
-getMatrixView <- function (ids, v) {
+matrixView <- function (ids, v) {
 	s <- paste (
 		"format/plain",
 		"/result_column/", switch (v@of, count = "abundance", normed = "abundance", evalue = "evalue", length = "length", percentid = "identity"),
@@ -312,10 +313,10 @@ colPr <- function (x, ... ) {
 	}
 colSh <- function (object) colPr (object)
 setMethod ("print", "collection", colPr)
-setMethod ("summary", "collection", colSh)
+setMethod ("summary", "collection", function (object, ...) colSh (object))
 setMethod ("show", "collection", colSh)
 print.collection <- colPr
-summary.collection <- colSh
+summary.collection <- function (object, ...) colSh (object)
 
 ### user-facing construction functions and manipulations:
 ###		M <- collection (<selection>, views)
@@ -332,7 +333,7 @@ setMethod ("collection", "selection",
 			views <- standardViews
 			}
 		data <- list ()
-		for (j in 1:length (views)) data [[j]] <- new ("mmatrix", getMatrixView (sel@sel, views [[j]]))
+		for (j in 1:length (views)) data [[j]] <- new ("mmatrix", matrixView (sel@sel, views [[j]]))
 		names (data) <- names (views)
 		new ("collection", sel, data, views)
 		} )

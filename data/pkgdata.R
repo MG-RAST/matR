@@ -92,7 +92,7 @@ mconfig <- (function () {
 		col.dendr = FALSE)
 
 	getAuth <- function () { authX }
-	setAuth <- function () { message ("Enter auth key on a single line:"); authX <<- readLines (n = 1, warn = FALSE) }
+	setAuth <- function () { message ("Enter auth key on a single line:"); authX <<- readLines (n = 1, warn = FALSE); NULL}
 	server <- function (s = NULL) if (is.null (s)) serverX else serverX <<- s
 	servers <- function () serversX
 	verbose <- function (t = NULL) if (is.null (t)) verboseX else verboseX <<- t
@@ -102,16 +102,19 @@ mconfig <- (function () {
 		L <- list (...)
 		if (length (L) == 0) impX
 		else impX <<- resolveMerge (L, impX)
+    NULL
 		}
 	exp <- function (...) {
 		L <- list (...)
 		if (length (L) == 0) expX
 		else expX <<- resolveMerge (L, expX)
+		NULL
 		}
 	par <- function (...) {
 		L <- list (...)
 		if (length (L) == 0) parX
 		else parX <<- resolveMerge (L, parX)
+		NULL
 		}
 
 	list (getAuth = getAuth,

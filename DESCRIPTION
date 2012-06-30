@@ -2,7 +2,7 @@ Package: matR
 Type: Package
 Title: metagenomics analysis tools for R
 Version: 0.9.7
-Depends: R (>= 2.15), methods
+Depends: R (>= 2.15), methods, utils
 Imports: Matrix, stats
 Suggests: RJSONIO, pcaMethods, matlab, ecodist, Cairo, gplots
 URL: http://math.uic.edu/~braithwaite/R/matR-package.html

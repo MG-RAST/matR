@@ -1,3 +1,0 @@
-
-.getAPIServer()
-.getAPIAuth()

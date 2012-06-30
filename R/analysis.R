@@ -8,28 +8,28 @@ resolveParList <- function (call, object, defaults)
 	resolveMerge (call, resolveMerge (object, resolveMerge (defaults, mconfig$par())))
 
 
-setClass ("mpco",
+setClass ("pco",
 	representation (
 		values = "numeric",
 		vectors = "matrix",
 #		distances = "dist",					need to setOldClass I think
 		par = "list"),
 	contains = NULL)
-#setMethod ("initialize", "mpco",
+#setMethod ("initialize", "pco",
 #	function (.Object, ...) {
 #		...
 #		.Object } )
-setMethod ("print", "mpco", function (x, ...) print (list (values = x@values, vectors = x@vectors, distances = x@distances)))
-setMethod ("summary", "mpco", function (object, ...) print (object))
-setMethod ("show", "mpco", function (object) print (object))
-#setIs ("mpco", "...",
+setMethod ("print", "pco", function (x, ...) print (list (values = x@values, vectors = x@vectors, distances = x@distances)))
+setMethod ("summary", "pco", function (object, ...) print (object))
+setMethod ("show", "pco", function (object) print (object))
+#setIs ("pco", "...",
 #	coerce = function (from) {},
 #	replace = function (object, value) {} )
-#setGeneric ("mpco")
-#setMethod ("mpco", "mmatrix",
+#setGeneric ("pco")
+#setMethod ("pco", "mmatrix",
 #		function (x, par = list (), ...) {
 #			parDefaults <- list ()
-#			mpco (x, resolveMerge (par, parDefaults), ...)
+#			pco (x, resolveMerge (par, parDefaults), ...)
 #			} )
 
 
@@ -42,7 +42,7 @@ setMethod ("show", "mpco", function (object) print (object))
 ###   render (collection (c ("4441872.3", "4442034.3", "4448888.3", "4449999.3")))
 #################################################
 
-# shortly this will become a method for class "mpco" rather than "list"
+# shortly this will become a method for class "pco" rather than "list"
 # this is just an expedient
 setMethod ("render", "list",
 	function (x, ...) {
@@ -112,7 +112,7 @@ setMethod ("render", "collection",
 # returns: list of "values" (numeric), "vectors" (matrix), "dist" (dist)
 # computes: distance, scaled eigenvalues, and eigenvectors
 # ... consider better way to combine?  c, cbind, data.matrix ...
-mpco <- function (x, method = "bray-curtis") {
+pco <- function (x, method = "bray-curtis") {
 	reqPack ("ecodist")
 	x <- as.matrix (x)
 	D <- matR::mdist (x, method)
@@ -120,7 +120,7 @@ mpco <- function (x, method = "bray-curtis") {
 	scaled <- P$values / sum (P$values)
 	names (scaled) <- paste ("PCO", 1:length(scaled), sep = "")
 	dimnames (P$vectors) [[1]] <- dimnames (x) [[2]]
-	list (values = scaled, vectors = P$vectors, distances = D)				# this is the template for our mpco object
+	list (values = scaled, vectors = P$vectors, distances = D)				# this is the template for our pco object
  	}
 
 # note: distance is calculated between columns, a difference from other common distance functions

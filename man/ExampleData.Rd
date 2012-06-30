@@ -4,12 +4,15 @@
 \alias{exampleMetadata}
 \alias{exampleMatrix}
 \alias{exampleIDs}
+\alias{samp}
+\alias{guts}
+\alias{waters}
 \docType{data}
 \title{
-Example Kbase Datasets
+Example Data 
 }
 \description{
-A metagenome metadata header, a taxon abundance matrix, and a vector of the associated metagenome IDs.
+Various data objects predefined in \code{matR} for toying around.
 }
 \usage{
 data(exampleMetadata)
@@ -20,6 +23,8 @@ data(exampleIDs)
 \url{http://metagenomics.anl.gov}
 }
 \examples{
+\dontrun{
 data(exampleMetadata)
+}
 }
 \keyword{datasets}
