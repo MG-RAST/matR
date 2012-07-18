@@ -36,6 +36,8 @@ collection (sel, ...)
   \item{...}{...}
 }
 \details{
+\code{matR} provides four layers of access to \code{MG-RAST}, represented by the functions \code{callRaw}, \code{mGet}, \code{matrixView}, and \code{collection}.
+
   Construction of \code{selection}, \code{view}, and \code{collection} objects is flexible and can be simple or customized.  In principal, a \code{collection} is defined by a \code{selection} and one or more named \code{view}s.  However, various shortcuts are available.  For a quick start, see the examples below.
 
   
@@ -44,7 +46,9 @@ collection (sel, ...)
   \code{selection} returns an object of \code{selection} class, \code{view} returns an object of \code{view} class, and \code{collection} returns an object of \code{collection} class.
 }
 \author{Daniel T. Braithwaite}
-\seealso{\code{\link{matR Parameters}}, \code{\link{Authentication}}, \code{Standard Views}, \code{\link{selection-class}}, \code{link{view-class}}, \code{\link{collection-class}}, \code{\link{collection-methods}}}
+\note{Remember to set an authentication key when attempting access to private data.}
+\seealso{\code{\link{matR Parameters}}, \code{\link{Authentication}}, \code{Standard Views}, \code{\link{selection-class}}, \code{link{view-class}}, \code{\link{collection-class}}, \code{\link{collection-methods}}
+callRaw, mGet, matrixView, Collections}
 \examples{
 
 }

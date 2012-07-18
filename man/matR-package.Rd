@@ -39,16 +39,23 @@ Daniel T. Braithwaite, Kevin P. Keegan}
 \url{http://metagenomics.anl.gov}\cr
 }
 \seealso{
+The short list...
 \code{\link{Authentication}}\cr
 \code{\link{Collections}}\cr
 \code{\link{Configuration}}\cr                % mconfig
 \code{\link{Demos}}\cr
 \code{\link{Dependencies}}\cr
 \code{\link{Example Data}}\cr
-\code{\link{Heatmap Dendrogram Analysis}}\cr
+\cr
+Plus...
+\code{\link{Analysis, Heatmap Dendrogram}}\cr
+\code{\link{Analysis, Principal Coordinates}}\cr
+\code{\link{Analysis, Q value}}\cr
+\code{\link{Analysis, Normalization}}\cr
+\code{\link{Analysis, Boxplots}}\cr
+\code{\link{Resources and Identifiers}}\cr
 \code{\link{Import and Export}}\cr            % asFile (plus imp, exp)
 \code{\link{Metadata}}\cr
-\code{\link{Principal Coordinates Analysis}}\cr
 \code{\link{Visualization}}\cr                % render (plus par)
 %\code{\link{Abundance Retrieval}}\cr
 %\code{\link{MG-RAST Identifiers}}\cr

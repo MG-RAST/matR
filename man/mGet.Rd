@@ -1,8 +1,6 @@
 \name{mGet}
 \alias{mGet}
-\title{
-Retrieve Resources from the MG-RAST API
-}
+\title{Structured Access to API Resources by ID}
 \description{...}
 \usage{
 	mGet(resource, ID, namespace = NULL, annoType = NULL, seqType = NULL, org = NULL, func = NULL, md5 = NULL, param = NULL, parse = TRUE, enClass = FALSE, toFile = NULL)
@@ -10,7 +8,7 @@ Retrieve Resources from the MG-RAST API
 \arguments{
 	\item{resource}{
 One of \code{"project"}, \code{"sample"}, \code{"library"}, \code{"metagenome"}, \code{"subset"}, \code{"sequenceSet"}, \code{"sequences"}, \code{"reads"}, \code{"abundance"}}
-	\item{ID}{One or multiple ID(s), appropriate to the resource requested}
+	\item{ID}{one or multiple IDs appropriate to the resource requested}
 	\item{namespace}{...}
 	\item{annoType}{...}
 	\item{seqType}{...}
@@ -18,47 +16,41 @@ One of \code{"project"}, \code{"sample"}, \code{"library"}, \code{"metagenome"},
 	\item{func}{...}
 	\item{md5}{...}
 	\item{param}{...}
-  \item{parse}{Should JSON be parsed?}
-  \item{enClass}{Should an attempt be made to put the returned object in a formal class?}
+  \item{parse}{attempt to parse return object(s) as JSON?}
+  \item{enClass}{attempt to give return object(s) a matR S4 class?}
 	\item{toFile}{...}
 }
 \details{
-This function retrieves output from the MG-RAST pipeline, of different kinds according to specified parameters.  
-The \code{resource} parameter determines what kind of data is retrieved.  Some resources are primarily 
-textual objects, others are numerical objects, and others are files.  An \code{ID} is always required, appropriate to the kind of 
-resource requested.
+\code{matR} provides four layers of access to \code{MG-RAST}, represented by the functions \code{callRaw}, \code{mGet}, \code{matrixView}, and \code{collection}.
 
-\code{ID} may contain multiple values in most calls.  Many reasonable formats for \code{ID} will work, such as:\cr
-\code{123}\cr
-\code{"123"}\cr
-\code{c(123,456)}\cr
-\code{c("123","456")}\cr
-\code{"123;456;789"}\cr
-\code{c(123,"456;789")}\cr
+The purpose of \code{mGet} is to provide structured access to API resources in an \code{R}-friendly manner.  Using this function effectively requires familiarity with the API documented at \link{http://api.metagenomics.anl.gov}.  \code{resource}s returned may be files, textual, numerical, or other.  Some are, and some are not, transmitted in \code{JSON}.  All API resources implemented by {mGet} require an \code{ID} appropriate to the kind of resource requested.
+
+\code{ID} is permitted to contain multiple values in many calls.  Many intuitive formats for \code{ID} will work.  See \link{Identifiers} for more details.
+
 Depending on the \code{resource} requested, multiple values may be (similarly) specified in 
 the \code{namespace}, \code{org}, \code{func}, \code{md5}, and \code{toFile} parameters.
 
-Output may be directed to disk with the \code{toFile} parameter.  Single or multiple filenames may be specified.  
+The results of the call may be directed to file(s) with the \code{toFile} parameter.  Single or multiple filenames may be specified.  
 In many cases, it is ok to call with multiple IDs and a single filename, and the result is that the downloaded resources
-will be concatenated into a single file.  If \code{resource} is
-\code{sequenceSet} or \code{reads}, however, the result is \emph{always} written to disk, and default filenames are used if \code{toFile} is
-not specified.  If \code{toFile} \emph{is} specified for these resources, one filename per ID is required.  In the case of \code{sequenceSet},
-the filename is used exactly.  In the case of \code{reads}, several files are associated to each ID, so each
-specified filename is used as a prefix, and an appropriate extension is appended.
-
-If \code{mGet} does not function properly, you might be requesting private data with an invalid authorization key.
-See \code{Authentication}.
+will be concatenated into a single file.  If \code{resource} is \code{sequenceSet} or \code{reads}, however, the result is
+\emph{always} written to disk, and default filenames are used if \code{toFile} is not specified.  If \code{toFile} \emph{is}
+specified for these resources, one filename per ID is required.  In the case of \code{sequenceSet}, the filename is used exactly.
+In the case of \code{reads}, several files are associated to each ID, so each specified filename is used as a prefix, and an
+appropriate extension is appended.
+}
+\note{
+Remember to set an authentication key when attempting access to private data.
 }
 \value{
 An object of the type requested, or a list of such objects if multiple IDs are specified.  
 However, if the \code{toFile} parameter was specified, its value is the return value.
 }
 \author{Daniel Braithwaite}
-\seealso{
+\seealso{callRaw, mGet, matrixView, Collections,
 \code{\link{Authentication}}
-	}
+Resources and Identifiers
+}
 \examples{
-## Not run:
 allProjectIDs <- mListAll("project")
 
 M <- mGet( "metagenome", "4447971.3" )
@@ -83,5 +75,4 @@ print (ab)
 % M1 <- mGet( "abundance", c(4443360.3,4443361.3,4443362.3), namespace="SEED" )
 % M2 <- mGet( "abundance", "4443360.3;4443361.3;4443362.3", namespace="SEED", toFile="myfile" )
 % M3 <- mGet( "abundance", "4443360.3;4443361.3;4443362.3", namespace="SEED", param="format/plain" )
-## End(Not run)
 }

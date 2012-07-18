@@ -1,5 +1,5 @@
 
-dontrun <- function () {}
+dontrun <- function () {
 #######################################################
 ### test stats routines on some random data
 #######################################################
