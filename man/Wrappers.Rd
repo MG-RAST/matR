@@ -10,8 +10,8 @@
 \alias{funcMatrixLength}
 \alias{funcMatrixPercentID}
 
-\title{Retrieve an Abundance Matrix with View Parameters}
-\description{...}
+\title{Retrieve a Specified Metagenome Matrix}
+\description{.....Construct an Analysis View of Matrix (Annotations by IDs) ...with a wrapper-style interface}
 \usage{
 matrixView(ids, v)
 
@@ -26,21 +26,25 @@ funcMatrixLength(ids, level = "level3", source = "Subsystems", noMeta = TRUE)
 funcMatrixPercentID(ids, level = "level3", source = "Subsystems", noMeta = TRUE)
 }
 \arguments{
+  \item{v}{an object of class view}
   \item{ids}{...}
   \item{level}{...}
   \item{source}{...}
   \item{noMeta}{...}
 }
 \details{
-\code{matR} provides four layers of access to \code{MG-RAST}, represented by the functions \code{callRaw}, \code{mGet}, \code{matrixView}, and \code{collection}.
+Currently \code{matR} provides four layers of access to \code{MG-RAST}, represented by the functions \code{callRaw}, \code{mGet}, \code{matrixView}, and \code{collection}.
+
+These functions are simple wrappers for appropriate calls to \code{mGet}, intended for convenience.  \code{matrixView} uses the \code{view} class to provide a higher level of generality than the others, which are named to indicate their respective function.
+
 }
-\value{The returned item is of class \code{Matrix} (defined in package \code{Matrix}).}
+\value{An object of class \code{Matrix} (from the \code{Matrix} package).}
 \author{Daniel T. Braithwaite}
-\note{These functions are simple wrappers for specific calls to \code{mGet}.
+\note{
+For some applications, it may be necessary to convert the returned \code{Matrix} explicitly with \code{as.matrix}.  See the examples.
 Remember to set an authentication key when attempting access to private data.
 }
-\seealso{\code{\link{mGet}}
-callRaw, mGet, matrixView, Collections}
+\seealso{callRaw, mGet, matrixView, Collections, Views}
 \examples{
 aa <- orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3")
 print (aa)
@@ -52,4 +56,5 @@ dd <- list (
 	m5rna = orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3", source = "m5rna" ),
 	RefSeq = orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3", source = "RefSeq" ),
 	Greengenes = orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3", source = "Greengenes" ))
+as.matrix (matrixView ("4441679.3 4441680.3", view (of = "drisee")))
 }

@@ -1,6 +1,7 @@
 \name{Identifiers}
 \alias{Identifiers}
 \alias{Resources}
+\alias{Resources and Identifiers}
 \alias{scrubIds}
 \alias{scrapeRes}
 \alias{Identifying Resources}
