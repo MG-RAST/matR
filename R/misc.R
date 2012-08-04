@@ -183,21 +183,23 @@ glom <- function (s) {
 	paste (as.character (s), collapse = ";", sep = "")
 	}
 
-# clean up a vector of ids, to standard format for the API,
+# clean up a vector of ids to standard format for the API,
 # adding prefix as necessary ("mgp", etc).  optional argument
 # is recycled to specify the resource of each id.
-scrubIds <- function (ids, res = "metagenome") {
+scrubIds <- function (ids, resources = c ("project", "library", "sample", "metagenome")) {
 	ids <- strsplit (paste (ids, collapse = " "), "[^[:alnum:]\\.]+") [[1]]
-	res <- rep (
-		c ("mgp", "mgl", "mgs", "mgm") [pmatch (res, c ("project", "library", "sample", "metagenome"))], 
+  if (missing (resources)) resources <- "metagenome"
+	resources <- rep (
+		c (project = "mgp", library = "mgl", sample = "mgs", metagenome = "mgm")
+      [match.arg (resources, several.ok = TRUE)],
 		length.out = length (ids))
-	ifelse (substr (ids, 1, 3) %in% c ("mgp", "mgl", "mgs", "mgm"), ids, paste (res, ids, sep = ""))
+	ifelse (substr (ids, 1, 3) %in% c ("mgp", "mgl", "mgs", "mgm"), ids, paste (resources, ids, sep = ""))
 	}
 
 # identify the kbase resources specified by a vector of ids
 # prefixes of "mgp", "mgl", "mgs", "mgm" are understood
 # any other prefix (including no prefix) results in "metagenome"
-scrapeRes <- function (ids) {
+scrapeResources <- function (ids) {
 	res <- match (substr (ids, 1, 3), c ("mgp", "mgl", "mgs", "mgm"))
 	res [is.na (res)] <- 4
 	c ("project", "library", "sample", "metagenome") [res]
