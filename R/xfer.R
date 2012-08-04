@@ -39,7 +39,6 @@
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
 	urlStr <- paste (mconfig$server (), call, conj, "auth=", mconfig$getAuth (), sep = "")
-# assign "lastURL" recovery variable here
 	optMessage ("matR: reading ", urlStr)
 	mconfig$lastURL (urlStr)
 	if (!is.null (toFile)) {
@@ -50,22 +49,14 @@
 	}
 
 ############################################
-### these are routines intended for general use
+### Now these are routines intended for general use
 ############################################
 
 ### get a list of all resources of one type.  
 ### a convenience function for no-parameter calls
-mListAll <- function (resource) {
+mListAllIds <- function (resource = c ("project", "sample", "library", "annotation", "metagenome")) {
 	reqPack ("RJSONIO")
-	if ( !oneofmust (resource, "project", "sample", "library", "annotation", "metagenome")) return ()
-	x <- fromJSON (.mCallRaw (resource), simplify = TRUE, asText = TRUE)
-	x
-#	invisible (switch (resource, 
-#		project = as.vector (x$projects),
-#		sample = as.vector (x$samples),
-#		library = as.vector (x$librarys),
-#		annotation = as.vector (x),
-#		metagenome = as.vector (x$metagenomes)))			### return R-friendly object	
+	fromJSON (.mCallRaw (match.arg (resource)), simplify = TRUE, asText = TRUE)
 	}
 
 # perform an md5 lookup in the specified annotation database
@@ -306,6 +297,10 @@ if (parse) {
 			}
 # or from sparse BIOM format
 		else if (x$matrix_type == "sparse") {
+### 2 Aug --- should this segment ALSO return a SPARSE matrix,
+### as does the "plain format" call?  Yes.  All the stuff below
+### is wasted computation; mGet("abundance") should always return a "Matrix" not "matrix"
+
 # first we make a full matrix via the provided sparse matrix
 # remembering that BIOM indices start at zero
 			n <- length (x$data)

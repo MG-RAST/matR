@@ -1,53 +1,23 @@
-\name{mListAll}
-\alias{mListAll}
-\title{
-List All IDs for a Specified Resource
-}
+\name{mListAllIds}
+\alias{mListAllIds}
+\title{List All Ids for a Specified Resource Type}
 \description{
-Convenience function to list all valid IDs for a given resource
+Convenience function to list all valid identifiers of accessible resources of a specified type.
 }
 \usage{
-mListAll(resource)
+mListAllIds(resource = c ("project", "sample", "library", "annotation", "metagenome"))
 }
 \arguments{
   \item{resource}{...}
 }
 \details{
+Note that an authentication key is required to access private resources.
 }
-\value{
-}
-\references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+\value{A character vector.}
+\author{Daniel T. Braithwaite}
+\seealso{\code{\link{Identifiers}},\code{\link{Authentication}},\code{link{mGet}}}
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (resource) 
-{
-    reqPack("RJSONIO")
-    if (!oneofmust(resource, "project", "sample", "library", 
-        "annotation", "metagenome")) 
-        return()
-    x <- fromJSON(.mCallRaw(resource), simplify = TRUE, asText = TRUE)
-    x
-  }
+mListAllIds("project")\cr
+mListAllIds("sample")\cr
+mListAllIds("metagenome")\cr
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
