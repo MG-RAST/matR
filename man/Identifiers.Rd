@@ -22,7 +22,7 @@ The format of resource identifiers is not specified exactly by the API or \code{
 
 \code{scrubIds} accepts ids in various formats and returns a character vector of the same ids properly formatted. \code{resources} should be length one, specifying one resource type for all ids, or equal in length to \code{ids}, specifying the type of each.  \code{scrapeResources} returns the resource types corresponding to ids given in proper format as a character vector.
 }
-\warning{
+\note{
 Ids given as numeric rather than character usually work, but use caution with metagenome ids.  Since they usually include a decimal point, problems can arise because as numerics they are float rather than integer.
 }
 \value{A character vector.}

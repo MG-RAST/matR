@@ -35,7 +35,7 @@
 # and,
 # always return file name(s) if result is a file
 #
-.mCallRaw <- function (call, toFile = NULL) {
+callRaw <- function (call, toFile = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
 	urlStr <- paste (mconfig$server (), call, conj, "auth=", mconfig$getAuth (), sep = "")
@@ -58,7 +58,7 @@
 mListAll <- function (resource) {
 	reqPack ("RJSONIO")
 	if ( !oneofmust (resource, "project", "sample", "library", "annotation", "metagenome")) return ()
-	x <- fromJSON (.mCallRaw (resource), simplify = TRUE, asText = TRUE)
+	x <- fromJSON (callRaw (resource), simplify = TRUE, asText = TRUE)
 	x
 #	invisible (switch (resource, 
 #		project = as.vector (x$projects),
@@ -81,7 +81,7 @@ mAnnotationLookup <- function (md5, namespace) {
 		}
 	x <- character( length (md5))
 	for (j in 1:length (md5))
-		x [ j ] <- fromJSON (.mCallRaw ( paste ("annotation?md5=", md5 [ j ], sep = "")))
+		x [ j ] <- fromJSON (callRaw ( paste ("annotation?md5=", md5 [ j ], sep = "")))
 	x
 	}
 
@@ -90,7 +90,7 @@ mAnnotationLookup <- function (md5, namespace) {
 mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
 	warning( "matR: unimplemented function" )
 	reqPack ("RJSONIO")
-### ... .mCallRaw etc ...
+### ... callRaw etc ...
 	}
 
 # the purpose of mGet is to speak the language of the API
@@ -274,11 +274,11 @@ paramStr <- paste (param, "?", sep = "")				# a string passed directly
 
 # the API call needs no post-processing in case of
 # a file resource (and we return the filename as
-# returned by .mCallRaw)
+# returned by callRaw)
 if (oneof (resource, "sequenceSet", "reads"))
-	return (.mCallRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""), toFile))
+	return (callRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""), toFile))
 else
-	x <- .mCallRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""))
+	x <- callRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""))
 
 # otherwise, we process what we have received
 if (parse) {
