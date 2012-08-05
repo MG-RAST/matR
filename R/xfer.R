@@ -56,7 +56,7 @@ callRaw <- function (call, toFile = NULL) {
 ### a convenience function for no-parameter calls
 mListAllIds <- function (resource = c ("project", "sample", "library", "annotation", "metagenome")) {
 	reqPack ("RJSONIO")
-	fromJSON (.mCallRaw (match.arg (resource)), simplify = TRUE, asText = TRUE)
+	fromJSON (callRaw (match.arg (resource)), simplify = TRUE, asText = TRUE)
 	}
 
 # perform an md5 lookup in the specified annotation database
@@ -106,8 +106,9 @@ mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
 # for anyone looking at this: a good bit of the craziness here
 # is meant as a hedge against fluctuations in the API 
 mGet <- function( 
-	resource,				# single value
-	ID,						# multiple value
+	resource = c ("project", "sample", "library", "metagenome", "subset", "sequenceSet",
+    "sequences",  "reads", "abundance"),      # single value
+	ID,			      			# multiple value
 	namespace = NULL,		# multiple
 	annoType = NULL,		# single
 	seqType = NULL,			# single
@@ -131,11 +132,13 @@ mGet <- function(
 # we allow flexible specification of the ID parameter.
 # a vector is natural to R scripting, while
 # semicolon-separated is natural to interactive use
-IDs <- chomp (ID)
+IDs <- scrubsIds (ID)
 
 # and we also accept semicolon-separated filenames
 semiwarn (toFile)
 toFile <- chomp (toFile)
+
+resource <- match.arg (resource)
 
 if (length (IDs) > 1) {
 	if ( oneof (resource, "project", "sample", "library", "metagenome")) {
@@ -196,12 +199,6 @@ if (oneof (resource, "sequenceSet", "reads") && is.null (toFile)) {
 
 # we now check up on parameters carefully, while
 # constructing the API call
-
-# make sure the resource type is valid
-oneofmust (resource, "project", "sample", "library", "metagenome", "subset", "sequenceSet", "sequences",  "reads", "abundance")
-# ... and the functionality is implemented ...
-oneofmust (resource, "project", "sample", "metagenome", "abundance")
-# oneofmusnt (resource, "sequenceSet", "reads")
 
 # warn of parameters specified but not appropriate to the call
 if ( !is.null( switch (resource,
@@ -287,32 +284,25 @@ if (parse) {
 # ... the eventual plan is to implement an RBIOM class ...
 # process abundance matrix nicely ...
 	if (resource == "abundance") {
-#  ... from out of plain text format
+#  ... from out of plain text format into "Matrix" class
 		if (! JSON) {
 			f <- tempfile ()
 			writeLines (x, f)
-# even where the matrix is passed is text format, we handle it as a Matrix
 			x <- Matrix::Matrix (data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", comment.char = "", row.names = 1, check.names = FALSE)))
 			unlink (f)
 			}
-# or from sparse BIOM format
-		else if (x$matrix_type == "sparse") {
-### 2 Aug --- should this segment ALSO return a SPARSE matrix,
-### as does the "plain format" call?  Yes.  All the stuff below
-### is wasted computation; mGet("abundance") should always return a "Matrix" not "matrix"
-
-# first we make a full matrix via the provided sparse matrix
+# ... or from sparse BIOM format
 # remembering that BIOM indices start at zero
+		else if (x$matrix_type == "sparse") {
+# first we make a full matrix via the provided sparse matrix
 			n <- length (x$data)
 			spM <- matrix (unlist (x$data), nrow = n, ncol = 3, byrow = TRUE)
-			M <- as.matrix (Matrix::sparseMatrix (i = 1 + spM [,1], j = 1 + spM [,2], x = spM [,3], dims = x$shape))
+			M <- Matrix::sparseMatrix (i = 1 + spM [,1], j = 1 + spM [,2], x = spM [,3], dims = x$shape)
 # extract the column names that we expect
-			n <- x$shape [2]
-			s <- character (n)
-			for (j in 1:n)  s[j] <- (x$columns [[j]] ["id"])
+			s <- character (n <- x$shape [2])
+			for (j in 1:n)  s[j] <- x$columns [[j]] ["id"]
 			colnames (M) <- s
-# what the row names should be is debatable
-# ... perhaps I should check with others ...
+# what the row names should be is debatable... perhaps I should check with others
 # here, we collapse the taxonomy to a single string
 			s <- character (n <- x$shape [1])
 			for (j in 1:n)  s[j] <- paste (x$rows [[j]] $metadata$taxonomy, collapse = ";", sep = "")

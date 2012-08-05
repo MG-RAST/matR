@@ -14,9 +14,8 @@ Currently \code{matR} provides four layers of access to \code{MG-RAST}, represen
 
 The purpose of \code{callRaw} is to facilitate free-form API calls.  Guidance regarding API syntax is available from the API page, linked below. The functionality of \code{callRaw} is limited to:  prefixing the API server name, appending the current authentication key (if set), iterating through multiple API calls (when \code{call} has length greater than one), and writing results to file (if so specified).
 
-THE FOLLOWING IS NOT SUFFICIENTLY CLEAR NOR WORKED OUT.....\cr
-...reconciliation between filestream and toFile?\cr
-\code{toFile} must be \code{NULL}, length one, or equal in length to \code{call}.  In the first case, the result(s) of the API call(s) are returned (as a list, if \code{call} has length greater than one).  In the second case, the results of all calls are appended successively to the indicated file.  In the last cases, calls are written one per file.
+[Note: neither passing multiple filenames, nor receiving filestreams is sufficiently worked out!\cr
+...\code{toFile} must be \code{NULL}, length one, or equal in length to \code{call}.  In the first case, the result(s) of the API call(s) are returned (as a list, if \code{call} has length greater than one).  In the second case, the results of all calls are appended successively to the indicated file.  In the last cases, calls are written one per file.]
 
 Remember to set an authentication key when attempting access to private data.
 }

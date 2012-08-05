@@ -3,11 +3,11 @@
 \title{Access API Resources by ID}
 \description{Presents a consistent interface for structured retrieval of API resources by ID and qualifying parameters, and for translation into objects natural to R.}
 \usage{
-	mGet(resource, ID, namespace = NULL, annoType = NULL, seqType = NULL, org = NULL, func = NULL, md5 = NULL, param = NULL, parse = TRUE, enClass = FALSE, toFile = NULL)
+	mGet(resource =  c ("project", "sample", "library", "metagenome", "subset", "sequenceSet",
+    "sequences", "reads", "abundance"), ID, namespace = NULL, annoType = NULL, seqType = NULL, org = NULL, func = NULL, md5 = NULL, param = NULL, parse = TRUE, enClass = FALSE, toFile = NULL)
 }
 \arguments{
-	\item{resource}{
-One of \code{"project"}, \code{"sample"}, \code{"library"}, \code{"metagenome"}, \code{"subset"}, \code{"sequenceSet"}, \code{"sequences"}, \code{"reads"}, \code{"abundance"}}
+	\item{resource}{...}
 	\item{ID}{one or multiple IDs appropriate to the resource requested}
 	\item{namespace}{...}
 	\item{annoType}{...}
@@ -55,15 +55,13 @@ callRaw, mGet, matrixView, Collections,
 Resources and Identifiers
 }
 \examples{
-aa <- mListAllIds("proj") [1:10]
-
 M <- mGet( "metagenome", "4447971.3" )
-P <- mGet( "project", aa)
+P <- mGet( "project", "mgp92")
 L <- mGet( "library", 3482.4 )
 S <- mGet( "sample", 441 )
 
-mGet ("metagenome", mListAllIds ("metagenome"), toFile = "metagenomeIDs")
-mGet ("project", aa, toFile = paste ("project.", aa, sep = ""))
+t <- tempfile()
+mGet ("metagenome", guts, toFile = t)
 
 ab <- mGet ("abundance", "4443360.3;4443361.3;4443362.3;4443363.3;4443364.3;4443365.3;4443366.3;4443367.3;4443368.3")
 
@@ -72,6 +70,7 @@ seq <- mGet ("sequences", "4441602.3", md5="5c6cdf00b3b2509879f412d55582af1a")
 mGet ("reads", "4441602.3")
 mGet ("reads", "4441602.3", toFile = "someReads")
 M1 <- mGet ("abundance", c(4443360.3,4443361.3,4443362.3), namespace="SEED")
-M2 <- mGet ("abundance", "4443360.3;4443361.3;4443362.3", namespace="SEED", toFile="myfile")
+M2 <- mGet ("abundance", "4443360.3;4443361.3;4443362.3", namespace="SEED", toFile="t")
 M3 <- mGet ("abundance", "4443360.3;4443361.3;4443362.3", namespace="SEED", param="format/plain")
+unlink (t)
 }
