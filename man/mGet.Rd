@@ -55,14 +55,14 @@ callRaw, mGet, matrixView, Collections,
 Resources and Identifiers
 }
 \examples{
-aa <- mListAll("project") [1:10]
+aa <- mListAllIds("proj") [1:10]
 
 M <- mGet( "metagenome", "4447971.3" )
 P <- mGet( "project", aa)
 L <- mGet( "library", 3482.4 )
 S <- mGet( "sample", 441 )
 
-mGet ("metagenome", mListAll ("metagenome"), toFile = "metagenomeIDs")
+mGet ("metagenome", mListAllIds ("metagenome"), toFile = "metagenomeIDs")
 mGet ("project", aa, toFile = paste ("project.", aa, sep = ""))
 
 ab <- mGet ("abundance", "4443360.3;4443361.3;4443362.3;4443363.3;4443364.3;4443365.3;4443366.3;4443367.3;4443368.3")
