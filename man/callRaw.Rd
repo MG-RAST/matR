@@ -24,7 +24,7 @@ A character vector: if files are written, their names, and otherwise, the result
 }
 \author{Daniel T. Braithwaite}
 \seealso{
-\code{\url{http://api.metagenomics.anl.gov}},
+\url{http://api.metagenomics.anl.gov},
 \code{\link{Authentication}}, \code{\link{Identifiers}},
 \code{\link{callRaw}}, \code{\link{mGet}}, \code{\link{matrixView}}, \code{\link{Collections}}
 }

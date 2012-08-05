@@ -132,7 +132,7 @@ mGet <- function(
 # we allow flexible specification of the ID parameter.
 # a vector is natural to R scripting, while
 # semicolon-separated is natural to interactive use
-IDs <- scrubsIds (ID)
+IDs <- scrubIds (ID)
 
 # and we also accept semicolon-separated filenames
 semiwarn (toFile)

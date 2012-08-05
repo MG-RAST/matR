@@ -27,9 +27,7 @@ Standing options may be set with \code{mconfig$exp(opt1=value1, opt2=value2, ...
 \value{
 The name of the file created, or an error.
 }
-\references{
-}
-\author{Daniel Braithwaite}
+\author{Daniel T. Braithwaite}
 \seealso{\code{\link{asFile-methods}}, \code{\link{mconfig}}, \code{\link{write.table}}, \code{\link{save}}}
 \examples{
 ## ...

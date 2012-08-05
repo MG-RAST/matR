@@ -17,7 +17,7 @@ Note that an authentication key is required to access private resources.
 \author{Daniel T. Braithwaite}
 \seealso{\code{\link{Identifiers}},\code{\link{Authentication}},\code{link{mGet}}}
 \examples{
-mListAllIds("project")\cr
-mListAllIds("sample")\cr
-mListAllIds("metagenome")\cr
+mListAllIds("project")
+mListAllIds("sample")
+mListAllIds("metagenome")
 }

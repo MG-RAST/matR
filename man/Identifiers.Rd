@@ -28,7 +28,7 @@ Ids given as numeric rather than character usually work, but use caution with me
 \value{A character vector.}
 \author{Daniel T. Braithwaite}
 \seealso{
-\code{\url{http://api.metagenomics.anl.gov}},
+\url{http://api.metagenomics.anl.gov},
 \code{\link{mGet}}, \code{\link{Selections}}, \code{\link{Collections}}}
 \examples{
 x <- c ("4445567.3", "4445568.3")

@@ -1,8 +1,7 @@
 \name{heatmap}
 \alias{heatmap}
-\alias{Heatmap Dendrogram Analysis}
 \title{
-Perform Heatmap Analysis with Dendrograms}
+Create Heatmap with Dendrograms}
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }

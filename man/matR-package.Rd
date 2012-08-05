@@ -33,31 +33,27 @@ License: \tab file LICENSE\cr
 LazyLoad: \tab yes\cr
 }
 }
-\author{
-Daniel T. Braithwaite, Kevin P. Keegan}
+\author{Daniel T. Braithwaite, Kevin P. Keegan}
 \references{
 \url{http://metagenomics.anl.gov}\cr
+\url{http://www.kbase.us}\cr
 }
 \seealso{
-The short list:
+The short list:\cr
 \code{\link{Authentication}}\cr
 \code{\link{Collections}}\cr
 \code{\link{Demos}}\cr
-\cr
-Plus...\cr
-\code{\link{Analysis, Heatmap Dendrogram}}\cr
-\code{\link{Analysis, Principal Coordinates}}\cr
-\code{\link{Analysis, Q value}}\cr
-\code{\link{Analysis, Normalization}}\cr
-\code{\link{Analysis, Boxplots}}\cr
-\code{\link{Configuration}}\cr                % mconfig
 \code{\link{Dependencies}}\cr
+
+And:\cr
+\code{\link{Analyses}}\cr                     % analysis superclass - heatmap, pcoa, normalization, qvalue
+\code{\link{Configuration}}\cr                % mconfig
 \code{\link{Example Data}}\cr
-\code{\link{Resources and Identifiers}}\cr
+\code{\link{Resources and Identifiers}}\cr    % Identifiers
 \code{\link{Import and Export}}\cr            % asFile (plus imp, exp)
 \code{\link{Metadata}}\cr
-\code{\link{Visualization}}\cr                % render (plus par)
-\code{\link{Other Packages}}\cr
+\code{\link{Recommended Packages}}\cr
+\code{\link{Visualizations}}\cr               % render (plus par)
 %\code{\link{Querying MG-RAST}}\cr
 }
 \keyword{ package }

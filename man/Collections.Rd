@@ -54,8 +54,8 @@ A collection is rarely built to hold a single view, but rather a list of multipl
 }
 \author{Daniel T. Braithwaite}
 \note{Remember to set an authentication key when attempting access to private data.}
-\seealso{\code{\link{matR Parameters}}, \code{\link{Authentication}}, \code{Standard Views}, \code{\link{selection-class}}, \code{link{view-class}}, \code{\link{collection-class}}, \code{\link{collection-methods}}
-callRaw, mGet, matrixView, Collections}
+\seealso{\code{\link{matR Parameters}}, \code{\link{Authentication}}, \code{Standard Views}, \code{\link{selection-class}}, \code{\link{view-class}}, \code{\link{collection-class}}, \code{\link{collection-methods}}
+\code{\link{callRaw}}, \code{\link{mGet}}, \code{\link{matrixView}}}
 \examples{
 cc <- collection("4443360.3;4443361.3;4443362.3;4443363.3;4443364.3;4443365.3;4443366.3;4443367.3;4443368.3")
 
