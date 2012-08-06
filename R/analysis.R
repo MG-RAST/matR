@@ -62,15 +62,15 @@ setMethod ("render", "list",
 			pos = 3)
 		p <- resolveParList (list (...), list (), parDefaults)
 
-		if (!is.null (p$fname) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
+		if (!is.null (p$toFile) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
 			eval (as.call (c (quote (Cairo), 
-				file = p$fname, type = p$type, width = p$width, height = p$height, pointsize = p$pointsize, units = p$units)))
+				file = p$toFile, type = p$type, width = p$width, height = p$height, pointsize = p$pointsize, units = p$units)))
 		else dev.new ()
 		plot (x$vectors[,1], x$vectors[,2],
 			cex.axis = p$cex.axis, cex.lab = p$cex.lab, main = p$main, type = "p", col = p$col, xlab = p$xlab, ylab = p$ylab)
 		points (x$vectors[,1], x$vectors[,2], col = p$col, pch = 19, cex = 2)
 		text (x$vectors[,1], x$vectors[,2], labels = p$labels, cex = p$cex.pts, pos = p$pos)
-		if (!is.null (p$fname)) dev.off ()
+		if (!is.null (p$toFile)) dev.off ()
 		} )
 
 setMethod ("render", "collection",
@@ -93,9 +93,9 @@ setMethod ("render", "collection",
 
 # Cairo(): width, height, file, type, pointsize, bg, canvas, units
 # dev.new(): unknown
-		if (!is.null (p$fname) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
+		if (!is.null (p$toFile) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
 			eval (as.call (c (quote (Cairo), 
-				file = p$fname, type = p$type, width = p$width, height = p$height, pointsize = p$pointsize, units = p$units)))
+				file = p$toFile, type = p$type, width = p$width, height = p$height, pointsize = p$pointsize, units = p$units)))
 		else dev.new ()
 # split.screen(): figs
 		split.screen (p$figs)
@@ -106,7 +106,7 @@ setMethod ("render", "collection",
 			eval (as.call (c (quote (boxplot), 
 				x = x [[views [j]]], main = p$main [j], names = p$names)))
 			}
-		if (!is.null (p$fname)) dev.off ()
+		if (!is.null (p$toFile)) dev.off ()
 		} )
 
 # returns: list of "values" (numeric), "vectors" (matrix), "dist" (dist)

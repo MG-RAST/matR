@@ -68,7 +68,7 @@ mconfig <- (function () {
 		device = "Cairo",						# "native", "Cairo"
 		reuseDevice = FALSE,					# open a new window for each graphical rendering?
 # for Cairo
-		fname = NULL,
+		toFile = NULL,
 		type = "png",							# default file type: "png","jpg","pdf","ps"
 # for par (general purpose)
 		bg = "black",
