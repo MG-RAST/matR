@@ -1,23 +1,25 @@
 Package: matR
 Type: Package
 Title: metagenomics analysis tools for R
-Version: 0.9.7
+Version: 0.9.8
 Depends: R (>= 2.15), methods, utils
 Imports: Matrix, stats
-Suggests: RJSONIO, pcaMethods, matlab, ecodist, Cairo, gplots
-URL: http://math.uic.edu/~braithwaite/R/matR-package.html
-Date: 2012-06-21
+Suggests: RJSONIO, pcaMethods, matlab, ecodist, Cairo, gplots, qvalue
+URL: http://dunkirk.mcs.anl.gov/~braithwaite/matR
+Date: 2012-08-12
 Author: Daniel T. Braithwaite and Kevin P. Keegan
 Maintainer: Daniel T. Braithwaite <braithwaite@uchicago.edu>
 Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), email = "braithwaite@uchicago.edu"),
               person ("Kevin", "Keegan", role = "aut", email = "kevin.p.keegan@gmail.com"))
 Description:
-	Facilities are implemented to query and download from the
-	MG-RAST metagenome analysis server.  Access to private data is authenticated.  
+	Query and download from the
+	MG-RAST metagenome analysis server with authenticated access to private data.
 	Metadata is lightly encapsulated with data.  Import and export is enabled via an RBIOM class, 
 	implemented as a close translation of the BIOM standard JSON format.  
 	A suite of relevant statistical analysis routines is provided, currently focused on taxon and 
-	function abundance.  This toolset is growing, supported by an active research effort.  Creation 
+	function abundance.  
+	workflows.  This toolset is growing, supported by an active research effort.  
+	Creation 
 	of high-quality images in various formats is implemented with a Cairo graphics device; 
 	interactive graphics remain possible with R's default capabilities.  The package 
 	imports liberally from other contributed packages, but strictly depends only on base R, to 
@@ -25,5 +27,5 @@ Description:
 License: file LICENSE
 LazyLoad: yes
 LazyData: yes
-Collate: misc.R access.R oldclasses.R oldwrappers.R readwrite.R analysis.R init.R xfer.R
+Collate: misc.R access.R oldclasses.R oldwrappers.R readwrite.R compute.R viz.R init.R xfer.R
 

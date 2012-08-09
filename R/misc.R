@@ -260,3 +260,6 @@ grType <- function (fileName) {
 resolveMerge <- function (first, second)
 	append (first, second) [ !duplicated (c (names (first), names(second))) ]
 
+### further specialized list-combining function for use in "render" methods
+resolveParList <- function (call, object, defaults)
+  resolveMerge (call, resolveMerge (object, resolveMerge (defaults, mconfig$par())))

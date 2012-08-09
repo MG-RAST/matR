@@ -26,6 +26,8 @@ Applied to a collection object, produces boxplots.  Applied to a heatmap, produc
 \seealso{
 \code{\link{collection}}, \code{\link{pco}}, \code{\link{heatmap}}, \code{\link{render-methods}}, \code{\link{mconfig}}}
 \examples{
+render (collection (c (alpha = "4441872.3", bravo = "4442034.3", charlie = "4448888.3")))
+
 aa <- collection (guts)
 render (aa)
 render (heatmap (aa))
