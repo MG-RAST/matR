@@ -1,9 +1,8 @@
-
 matR: Metagenomics Analysis Tools for R
 User Mini Guide
 
 THIS PACKAGE IS IN DEVELOPMENT.  SOME PARTS OF DOCUMENTATION MAY BE INACCURATE.  RELEASE OF V1.0 IS PLANNED FOR JUNE 2012.
-
+ 
 ABOUT
 Facilities are implemented to query and download from the Kbase MG-RAST metagenome analysis server.  Access to private data is authenticated.  Metadata is lightly encapsulated with data.  Import and export is enabled via an RBIOM class, implemented as a close translation of the BIOM standard JSON format.  A suite of relevant statistical analysis routines is provided, currently focused on taxon and function abundance.  This toolset is growing, supported by an active research effort.  Creation of high-quality images in various formats is implemented with a Cairo graphics device; rough-and-ready interactive graphics remain possible with R's default capabilities.  The package imports liberally from other contributed packages, but has no strict dependencies to preserve modularity of its three components (download access to MG-RAST, metagenome analysis, and visualization).
 
