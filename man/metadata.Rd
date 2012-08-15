@@ -42,6 +42,16 @@ mm <- collection ("4440283.3;4440286.3;4440285.3")
 metadata (mm) [[c ("4440286.3", "metadata", "project", "data", "PI_organization")]]
 metadata (mm) [[c ("4440286.3", "metadata", "sample", "data", "latitude")]]
 
+md <- metadata ("4440283.3;4440286.3;4440285.3")
+md$`4440286.3`$metadata$sample$data$latitude
+
+ln <- c ("4440286.3", "metadata", "project", "data", "PI_lastname"
+org <- c ("4440286.3", "metadata", "project", "data", "PI_organization"
+lat <- c ("4440286.3", "metadata", "sample", "data", "latitude")
+md [list (ln, org, lat)]
+
+md[,c("metadata","sample","data","latitude")]
+
 
 # live code actually requires slightly different calls for the moment
 # metadata ("mgp92", resource="project") [[c("metadata","study_abstract")]]
