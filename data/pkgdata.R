@@ -30,9 +30,9 @@ names (waters) <- c (paste ("fresh", 1:15, sep = ""), paste ("spring", 1:9, sep 
 
 mconfig <- (function () {
 # communications
-	authX <- ""
-	serverX <- ""
-	serversX <- list (
+	auth.X <- ""
+	server.X <- ""
+	servers.X <- list (
 		prod = "http://api.metagenomics.anl.gov/",
 		prod2 = "http://metagenomics.anl.gov/api.cgi/",
 		dev = "http://dev.metagenomics.anl.gov/api.cgi/",
@@ -41,20 +41,20 @@ mconfig <- (function () {
 		shock = "http://shock.mcs.anl.gov")
 
 	network <- TRUE								# ...possibly useful (though not at present)
-	lastURLX = ""								# .mCallRaw sets this at every call in case of error
-	verboseX <- FALSE
+	lastURL.X = ""								# .mCallRaw sets this at every call in case of error
+	verbose.X <- FALSE
 
 # file input and output
-	pathX <- ""									# all filenames are prefaced with this
+	path.X <- ""									# all filenames are prefaced with this
 # for read.table
-	impX <- list (
+	imp.X <- list (
 		type = "default",						# "text", "binary", "default"
 		header = TRUE,
 		sep = "\t",
 		quote = "",
 		row.names = 1)
 # for write.table
-	expX <- list (
+	exp.X <- list (
 		type = "default",						# "text", "binary", "default"
 		append = FALSE,
 		quote = FALSE,
@@ -64,7 +64,7 @@ mconfig <- (function () {
 		col.names = TRUE)
 
 # # global graphical defaults; a poor man style sheet
-	parX <- list (
+	par.X <- list (
 		device = "Cairo",						# "native", "Cairo"
 		reuseDevice = FALSE,					# open a new window for each graphical rendering?
 # for Cairo
@@ -91,30 +91,27 @@ mconfig <- (function () {
 		row.dendr = TRUE,
 		col.dendr = FALSE)
 
-	getAuth <- function () { authX }
-	setAuth <- function () { message ("Enter auth key on a single line:"); authX <<- readLines (n = 1, warn = FALSE); NULL}
-	server <- function (s = NULL) if (is.null (s)) serverX else serverX <<- s
-	servers <- function () serversX
-	verbose <- function (t = NULL) if (is.null (t)) verboseX else verboseX <<- t
-	lastURL <- function (s = NULL) if (is.null (s)) lastURLX else lastURLX <<- s
-	path <- function (s = NULL) if (is.null (s)) pathX else pathX <<- s
+	getAuth <- function () { auth.X }
+	setAuth <- function () { message ("Enter auth key on a single line:"); auth.X <<- readLines (n = 1, warn = FALSE); auth.X}
+	server <- function (s = NULL) if (is.null (s)) server.X else server.X <<- s
+	servers <- function () servers.X
+	verbose <- function (t = NULL) if (is.null (t)) verbose.X else verbose.X <<- t
+	lastURL <- function (s = NULL) if (is.null (s)) lastURL.X else lastURL.X <<- s
+	path <- function (s = NULL) if (is.null (s)) path.X else path.X <<- s
 	imp <- function (...) {
 		L <- list (...)
-		if (length (L) == 0) impX
-		else impX <<- resolveMerge (L, impX)
-    NULL
+		if (length (L) == 0) imp.X
+		else imp.X <<- resolveMerge (L, imp.X)
 		}
 	exp <- function (...) {
 		L <- list (...)
-		if (length (L) == 0) expX
-		else expX <<- resolveMerge (L, expX)
-		NULL
+		if (length (L) == 0) exp.X
+		else exp.X <<- resolveMerge (L, exp.X)
 		}
 	par <- function (...) {
 		L <- list (...)
-		if (length (L) == 0) parX
-		else parX <<- resolveMerge (L, parX)
-		NULL
+		if (length (L) == 0) par.X
+		else par.X <<- resolveMerge (L, par.X)
 		}
 
 	list (getAuth = getAuth,

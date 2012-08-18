@@ -1,91 +1,96 @@
 
-### defining generics for common functions has to be done right
+### Defining generics for common functions has to be done right,
 ### so we don't produce weird effects in users' customary workflows.
 
 setGeneric ("dist")
 setGeneric ("normalize", function (x, ...) standardGeneric ("normalize"))
 setGeneric ("permutations", function (x, ...) standardGeneric ("permutations"))
-
-setGeneric ("sigtest", function (x, ...) standardGeneric ("sigtest"), useAsDefault = FALSE)
-# setMethod ("sigtest", "collection", function (x, view = "normed") {...})
-# setMethod ("sigtest", "mmatrix")
-# setMethod ("sigtest", "matrix")
-setGeneric ("pco", function (x, ...) standardGeneric ("pco"), useAsDefault = FALSE)
-# setMethod ("pco", "collection", function (x, view = "normed") {...})
-# setMethod ("pco", "mmatrix", ...)
-# setMethod ("pco", "matrix", ...)
+setGeneric ("sigtest", function (x, ...) standardGeneric ("sigtest"))
+setGeneric ("pco", function (x, ...) standardGeneric ("pco"))
 setGeneric ("heatmap")
-# setMethod ("heatmap", "collection", function (x, view = "normed") {...})
-# setMethod ("heatmap", "mmatrix", ...)
-# setMethod ("heatmap", "matrix", ...)
 
-setClass ("pco",
-#           representation (
-#             values = "numeric",
-#             vectors = "matrix",
-#             dist = "dist",					# need to setOldClass?
-#             par = "list"),
-          contains = "list")
-setClass ("heatmap",
-#           representation (
-#             rowClust = "hclust",
-#             colClust = "hclust"),
-          contains = "list")
-setClass ("sigtest",
-#           representation (
-#             data = "matrix",
-#             pvals = "numeric",
-#             qvals = "numeric"),
-          contains = "list")
+### we use new-style classes, but in an old-style way.
+### analysis objects are lists, and within the code there
+### are implicit _conventions_ telling the necessary components,
+### but these are not declared to nor enforced by R itself.
+### ...we want to use S4 dispatching but not slots.
+
+# elements: par, values, vectors, dist, method
+setClass ("pco", repr = NULL, contains = "namedList")
+# assign in par: labels, colors
+
+# elements: call (this is temporary, pending rewrite of viz routine)
+setClass ("heatmap", repr = NULL, contains = "list")
+# assign in par: nothing
+
+# elements: result (data.frame), groups (factor)
+setClass ("sigtest", repr = NULL, contains = "list")
 
 ####################################################
-### principal components analysis
+### principal coordinates analysis
 ####################################################
 
-setMethod ("pco", "matrix", function (x, ...) {...} )
-
-# returns: list of "values" (numeric), "vectors" (matrix), "dist" (dist)
-# computes: distance, scaled eigenvalues, and eigenvectors
-# ... consider better way to combine?  c, cbind, data.matrix ...
+# setMethod ("pco", "matrix", 
+#            function (x, method = "bray-curtis", ...) {
+#              reqPack ("ecodist")
+#              D <- matR::dist (as.mmatrix (x), method)
+#              P <- ecodist::pco (D)
+#              scaled <- P$values / sum (P$values)
+#              names (scaled) <- paste ("PCO", 1:length(scaled), sep = "")
+#              rownames (P$vectors) <- colnames (x)
+#              new ("pco", list (par = list (...), values = scaled, vectors = P$vectors, dist = D))
+#            } )
+setMethod ("pco", "matrix",
+           function (x, method = "bray-curtis", ...) 
+             pco (mmatrix (x), method, ...))
 setMethod ("pco", "mmatrix", 
-           function (x, method = "bray-curtis") {
+           function (x, method = "bray-curtis", ...) {
              reqPack ("ecodist")
-             x <- as.matrix (x)
-             D <- matR::mdist (x, method)
+             D <- matR::dist (x, method)
              P <- ecodist::pco (D)
              scaled <- P$values / sum (P$values)
              names (scaled) <- paste ("PCO", 1:length(scaled), sep = "")
-             dimnames (P$vectors) [[1]] <- dimnames (x) [[2]]
-             list (values = scaled, vectors = P$vectors, distances = D)    		# this is the template for our pco object
+             rownames (P$vectors) <- colnames (x)
+             new ("pco", list (par = list (...), values = scaled, vectors = P$vectors, dist = D))
            } )
-
-setMethod ("print", "pco", function (x, ...) print (list (values = x@values, vectors = x@vectors, dist = x@dist)))
+setMethod ("pco", "collection", 
+           function (x, view = "normed", method = "bray-curtis", ...) {
+             P <- pco (x [[view]], method, ...)
+             if (is.null (P$par$col)) {
+               g <- groups (x)
+               levels (g) <- colors() [sample (length (colors()), nlevels (g))]
+               P$par$col <- as.character (g)
+             }
+             if (is.null (P$par$labels)) P$par$labels <- names (x)
+             if (is.null (P$main)) P$par$main <- paste ("PCoA,", ncol (x [[view]]), "metagenomes")
+             P
+           } )
+setMethod ("print", "pco", function (x, ...) print (x@.Data))
 setMethod ("summary", "pco", function (object, ...) print (object))
 setMethod ("show", "pco", function (object) print (object))
-#setMethod ("initialize", "pco",
-#  function (.Object, ...) {
-#		...
-#		.Object } )
-#setIs ("pco", "...",
-#	coerce = function (from) {},
-#	replace = function (object, value) {} )
-#setGeneric ("pco")
-#setMethod ("pco", "mmatrix",
-#		function (x, par = list (), ...) {
-#			parDefaults <- list ()
-#			pco (x, resolveMerge (par, parDefaults), ...)
-#			} )
 
 
 ####################################################
 ### heatmap-dendrogram analysis
 ####################################################
-setMethod ("heatmap", "collection", function (x, view = "normed", ...)
-  {
-# for now, just leave render doing all the work!  so for now a heatmap object 
-# will be just .. the parameter itself
-})
-
+# setMethod ("heatmap", "matrix", 
+#            function (x, ...)
+#              heatmap (mmatrix (x), ...))
+setMethod ("heatmap", "mmatrix",
+           function (x, ...)
+             new ("heatmap", list (par = as.list(match.call()), x = x)))
+setMethod ("heatmap", "collection",
+           function (x, view = "normed", ...) {
+             H <- heatmap (x [[view]], ...)
+             if (is.null (H$par$labCol)) H$par$labCol <- names (x)
+             if (is.null (H$par$labRow)) H$par$labRow <- NA
+             if (is.null (H$par$col_lab_mult)) H$par$col_lab_mult <- 1.2
+             if (is.null (H$par$margins)) H$par$margins <- c (9,1)
+             H
+             } )
+setMethod ("print", "heatmap", function (x, ...) print (x@.Data))
+setMethod ("summary", "heatmap", function (object, ...) print (object))
+setMethod ("show", "heatmap", function (object) print (object))
 
 ####################################################
 ### statistical significance testing
@@ -93,18 +98,28 @@ setMethod ("heatmap", "collection", function (x, view = "normed", ...)
 # check for valid significance test
 # why "as.real"?
 # is ok to run make_two_groups routine even for ANOVA and KW, which do not use it?
+
+setMethod ("sigtest", "collection",
+           function (x, sig_test = c ("t-test-paired", "Wilcoxon-paired", "t-test-un-paired", 
+                                      "Mann-Whitney_un-paired-Wilcoxon", "ANOVA-one-way", "Kruskal-Wallis"),
+                     groups = groups(x), fdr.level = NULL, view = "normed", ...)
+             sigtest (x [[view]], sig_test, groups, fdr.level, ...))
+setMethod ("sigtest", "mmatrix",
+           function (x, sig_test = c ("t-test-paired", "Wilcoxon-paired", "t-test-un-paired", 
+                                      "Mann-Whitney_un-paired-Wilcoxon", "ANOVA-one-way", "Kruskal-Wallis"), 
+                     groups, fdr.level = NULL, ...)
+             sigtest (as.matrix (x), sig_test, groups, fdr.level, ...))
 setMethod ("sigtest", "matrix",
-           function (x, groups, sig_test =
-             c ("t-test-paired", "Wilcoxon-paired", "t-test-un-paired", "Mann-Whitney_un-paired-Wilcoxon", 
-                "ANOVA-one-way", "Kruskal-Wallis"), ...) {
-             reqPack ("stats")
-             
+           function (x, sig_test = c ("t-test-paired", "Wilcoxon-paired", "t-test-un-paired", 
+                                      "Mann-Whitney_un-paired-Wilcoxon", "ANOVA-one-way", "Kruskal-Wallis"), 
+                     groups, fdr.level = NULL, ...) {
              x <- as.matrix (x)
-             m = nrow (x)
-             n = ncol (x)
+             m <- nrow (x) ; n <- ncol (x)
              ngroups <- nlevels (as.factor (groups))
              results <- matrix (0, m, ngroups + 2)
              rownames (results) <- rownames (x)
+# metagenomes in each group
+# numerical average per group per row
              colnames (results) <- c (paste ("group_(", levels (as.factor (groups)), ")_stddev", sep = ""),
                                       paste (sig_test, "_stat", sep = ""),
                                       paste (sig_test, "_p_value", sep = ""))
@@ -131,25 +146,33 @@ setMethod ("sigtest", "matrix",
                                   }))
                
              }
-             results
+             if (sig_test != "ANOVA-one-way") {
+               Q <- qvalue (results [,"p.value"], fdr.level = fdr.level)
+               results <- cbind (results, qvalue = Q$qvalues, significant = Q$significant)
+             }
+             new ("sigtest", list (par = NULL, result = data.frame(results)))
            } )
 
+setMethod ("print", "sigtest", function (x, ...) print (x@.Data))
+setMethod ("summary", "sigtest", function (object, ...) print (object))
+setMethod ("show", "sigtest", function (object) print (object))
 
 ####################################################
 ### other computation functions
 ####################################################
 ### note: distance is calculated between columns, a difference from other common distance functions
-### that needs to be documented!!
-setMethod ("dist", "matrix", function (x, method = "bray-curtis") {
+### that needs to be documented!
+setMethod ("dist", "mmatrix", function (x, method = "bray-curtis") {
 	x <- as.matrix (x)
 	if (any (method == c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference"))) {
 		reqPack ("ecodist")
 		ecodist::distance (t (x), method = method)
 		}
 	else stats::dist (t (x), method = method)
-### unifrac support to go here, too
+### we'll support unifrac too
 	} )
 
+setMethod ("normalize", "mmatrix", function (x, ...) { })
 setMethod ("normalize", "matrix", function (x, ...) {
 	x <- as.matrix (x)
 	x [is.na (x)] <- 0
@@ -167,7 +190,9 @@ setMethod ("normalize", "matrix", function (x, ...) {
 	if (scale != 0) x <- (x - shift) / scale
 	x
 	} )
+setMethod ("normalize", "Matrix", getMethod ("normalize", "matrix"))
 
+setMethod ("permutations", "mmatrix", function (x, ...) {} )
 setMethod ("permutations", "matrix",
   function (x, ntimes = 1, type = "sample", ...) {
 	x <- as.matrix (x)

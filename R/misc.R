@@ -187,13 +187,16 @@ glom <- function (s) {
 # adding prefix as necessary ("mgp", etc).  optional argument
 # is recycled to specify the resource of each id.
 scrubIds <- function (ids, resources = c ("project", "library", "sample", "metagenome")) {
-	ids <- strsplit (paste (ids, collapse = " "), "[^[:alnum:]\\.]+") [[1]]
+  names <- names (ids)
+  ids <- strsplit (paste (ids, collapse = " "), "[^[:alnum:]\\.]+") [[1]]
   if (missing (resources)) resources <- "metagenome"
 	resources <- rep (
 		c (project = "mgp", library = "mgl", sample = "mgs", metagenome = "mgm")
       [match.arg (resources, several.ok = TRUE)],
 		length.out = length (ids))
-	ifelse (substr (ids, 1, 3) %in% c ("mgp", "mgl", "mgs", "mgm"), ids, paste (resources, ids, sep = ""))
+	scrub <- ifelse (substr (ids, 1, 3) %in% c ("mgp", "mgl", "mgs", "mgm"), ids, paste (resources, ids, sep = ""))
+  names (scrub) <- names
+  scrub
 	}
 
 # identify the kbase resources specified by a vector of ids
