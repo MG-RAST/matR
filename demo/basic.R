@@ -42,21 +42,21 @@ render (M, views = c ("count", "normed"))
 ### that image clearly shows the utility of normalization.  We could also
 ### customize the image a bit with graphical parameters, and save it to a file.
 
-render (M, views = c ("count", "normed"), fname = "guts_summaries.png", main = c ("Raw Counts", "Normalized Counts"), bg = "tan")
+render (M, views = c ("count", "normed"), toFile = "guts_summaries.png", main = c ("Raw Counts", "Normalized Counts"))
 
 ### similarity between samples may be quantified by various numerical methods,
 ### producing a lower-triangular matrix of pairwise measurements
 
-mdist (M$normed, method = "euclidean")
+dist (M$normed, method = "euclidean")
 
-mdist (M$normed, method = "bray-curtis")
+dist (M$normed, method = "bray-curtis")
 
 ### every functional annotation gives one dimension of difference between samples.
 ### a principal coordinates analysis (PCoA) uses a dissimilarity matrix, such as those
 ### just computed, to reduce the dimension of the comparison space.  For this PCoA,
 ### we use euclidean distance
 
-P <- mpco (M$normed, method = "euclidean")
+P <- pco (M$normed, method = "euclidean")
 
 P
 
@@ -75,66 +75,8 @@ render (P, main = "PCoA of seven metagenomes", col = groupcolors, labels = names
 ### abundance matrix, more detail appears in relation to specific functional annotations, as follows
 ### (several system messages may appear next, from loading additional packages)
 
-mheatmap (M$normed, image_out = "guts_HD.jpg", labRow = NA, labCol = names (guts), col_lab_mult = 1.2, margins = c (9,1), image_title = "heatmap")
-
-### the visualization was saved to a file which we now open
-
-system ("open guts_HD.jpg")
+render (heatmap (M$normed), toFile = "guts_HD.jpg", labRow = NA, labCol = names (guts), col_lab_mult = 1.2, margins = c (9,1), main = "heatmap")
 
 ### note that the samples are reordered in the lower margin.  That is
 ### necessary for the dendrogram (tree diagram).
 
-### next we create a larger collection for a more elaborate analysis, now involving 24 metagenomes.
-### these take a bit longer to retrieve.  Fifteen come from a fresh water sample, the others
-### from a hot spring
-
-waters
-
-W <- collection (waters)
-
-### again we look at a principal coordinates analysis
-
-render (mpco (W$normed), main = "PCoA analysis, fresh vs. spring water samples", col = c (rep ("blue", 15), rep ("red", 9)))
-
-### clustering is still apparent, although less clearly than in the previous example
-### (and it is the second principal coordinate that differentiates the two groups).
-### we can again create a heatmap visualization:
-
-mheatmap (W$normed, image_out = "waters_HD.jpg", labRow = NA, labCol = names (waters), col_lab_mult = 1.2, margins = c (8,1), image_title = "heatmap")
-system ("open waters_HD.jpg")
-
-### a statistical test such as Kruskal-Wallis can help identify the most
-### significant rows (annotations) and sharpen the picture.  We separate the samples
-### into groups and perform the test:
-
-grouping <- c (rep ("a", 15), rep ("b", 9))
-results <- doStats (W$normed, grouping, "Kruskal-Wallis")
-
-### a few rows from the test results look like this:
-
-results [1:10,]
-
-### from the p-value column, we select rows passing a significance threshold,
-### and select the corresponding part of the original matrix
-
-pvals <- results [ , 4]
-subW <- W$normed [names (pvals) [pvals < 0.05], ]
-
-### comparing dimensions of the original and subselection matrices shows what
-### proportion of the original functional annotations are retained:
-
-dim (W$normed)
-dim (subW)
-
-### finally, a heatmap of the subselected matrix highlights rows of interest more clearly than before:
-
-mheatmap (subW, image_out = "waters_sub_HD.jpg", labRow = NA, labCol = names (waters), col_lab_mult = 1.2, margins = c (8,1), image_title = "subselection")
-system ("open waters_sub_HD.jpg")
-
-### this analysis could continue by setting more restrictive p-value thresholds, like this:
-
-subW01 <- W$normed [names (pvals) [pvals < 0.01], ]
-subW003 <- W$normed [names (pvals) [pvals < 0.003], ]
-
-### or by examining factors in metadata.  Subgroups discernible
-### in the heatmap can in fact be associated to metadata in this case.

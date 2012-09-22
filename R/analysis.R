@@ -62,7 +62,7 @@ setMethod ("pco", "collection",
                P$par$col <- as.character (g)
              }
              if (is.null (P$par$labels)) P$par$labels <- names (x)
-             if (is.null (P$main)) P$par$main <- paste ("PCoA,", ncol (x [[view]]), "metagenomes")
+             if (is.null (P$par$main)) P$par$main <- paste ("Metagenome Collection PCoA")
              P
            } )
 setMethod ("print", "pco", function (x, ...) print (x@.Data))

@@ -1,4 +1,12 @@
 
+xcall <- function (fun, ..., with = list(), without = character ()) {
+  call <- append (append (list (fun), list (...)), with)
+  call [without] <- NULL
+  print ("matR xcall:")
+  print (call [-1])
+  eval (as.call (call))
+}
+
 #################################################
 ### "render" is the generic function to visualize
 ### the computed analyis objects that we support.
@@ -29,64 +37,111 @@ setGeneric ("render", function (x, ...) standardGeneric ("render"))
 
 # setMethod ("render", "mmatrix", function (x, ...) {...})
 # setMethod ("render", "matrix", function (x, ...) {...})
-# uses: views, toFile, type, width, height, pointsize, units, figs, main, names (=labels)
+# supports: views, file, type, width, height, pointsize, units, figs, main, names (=labels)
 setMethod ("render", "collection",
-           function (x, ...) {
-             parDefaults = list (
-               views = c ("count", "normed"),
-# split.screen()
-               figs = c (2,1),
-# boxplot()
-               main = c ("raw data", "log2(x+1) & centered per sample, scaled 0 to 1 over all samples"),
-               las = 2, names = colnames (x [[1]]),
-# Cairo()
-               width = 950, height = 1000, pointsize = 12, res = NA, units = "px")
-             p <- resolveParList (list (...), x$par, parDefaults)
-             if (! is.null (p$labels)) p$names <- p$labels
+           function (x, views = c ("count", "normed"), file = NA, ...) {
 
-# Cairo(): width, height, file, type, pointsize, bg, canvas, units
-# dev.new(): unknown
-             if (!is.null (p$toFile) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
-               eval (as.call (c (quote (Cairo), 
-                                 file = p$toFile, type = p$type, width = p$width, height = p$height, 
-                                 pointsize = p$pointsize, units = p$units)))
-             else dev.new ()
-             split.screen (p$figs)
-             for (j in 1:length (p$views)) {
+# default graphical parameters
+
+             par = list (
+
+# for: boxplot()
+
+               las = 2, names = names (x))
+
+# computed defaults:
+
+             n <- length (views)
+             t <- ceiling (sqrt (n))
+             par$figs <- if (t * (t - 1) >= n) c (t, t-1) else c (t, t)
+             par$main <= if (identical (views, c ("count", "normed")))
+               c ("raw data", "log2(x+1) & centered per sample, scaled 0 to 1 over all samples")
+             else NA
+
+# make equivalent: names/labels
+
+             args <- list (...)
+             if (is.null (args$names)) args$names <- args$labels
+             if (is.null (args$labels)) args$labels <- args$names
+             par <- resolveParList (args, x$par, par)
+
+             xcall (dev.new, filename = file, with = par)
+             plot.new ()
+             split.screen (par$figs)
+
+             main <- rep (par$main, len = n)
+             for (j in 1:n) {
                screen (j)
+               par$main <- main [j]
+               
 # boxplot(): lots of options, revisit this
-               boxplot (x = x [[p$views [j]]], main = p$main [j], names = p$names)
-             }
-             if (!is.null (p$toFile)) dev.off ()
+
+               xcall (boxplot, x = x [[views [j]]], with = par, without = c ("width"))
+             } 
            } )
 
-# uses: main, col, labels, comp, toFile, type, width, height, pointsize, units, cex.axis, cex.lab, cex.pts, pos
+# relevant graphical parameters here are:
+# main, col, labels/names, type, width, height, 
+# pointsize, units, cex.axis, cex.lab, cex.pts, pos, ...
 setMethod ("render", "pco",
-           function (x, ...) {
-             parDefaults = list (
-               comp = c (1,2),
-# plot()
-               cex.axis = 1, cex.lab = 1, main = "Principal Coordinates Analysis",
-# plot() and points()
-               col = "blue",
-# text()
-               labels = "", cex.pts = .8, pos = 3)
-             p <- resolveParList (list (...), x$par, parDefaults)
-             p$xlab <- paste ("PC", p$comp [1], ", R^2 =", format (x$values [p$comp [1]], dig = 3))
-             p$ylab <- paste ("PC", p$comp [2], ", R^2 =", format (x$values [p$comp [2]], dig = 3))
-             if (! is.null (p$names)) p$labels <- p$names
+           function (x, components = c (1,2), file = NA, ...) {
+             
+# default graphical parameters:
+             
+             par <- list (
 
-             if (!is.null (p$toFile) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
-               eval (as.call (c (quote (Cairo), 
-                                 file = p$toFile, type = p$type, width = p$width, height = p$height, 
-                                 pointsize = p$pointsize, units = p$units)))
+# for: plot()
+               
+               cex.axis = 1, cex.lab = 1, main = "Principal Coordinates Analysis",
+               
+# for: points()
+               
+               col = "blue",
+               
+# for: text()
+               
+               labels = "", cex.pts = .8, pos = 3, pch = 19)
+             
+# computed defaults:
+             
+             par [c ("xlab", "ylab", if (length (components) == 3) "zlab" else NULL)] <-
+               paste ("PC", components, ", R^2 = ", format (x$values [components], dig = 3), sep = "")
+
+# resolve graphical parameters
+             
+             par <- resolveParList (list (...), x$par, par)
+             
+# we make "names" and "labels" synonymous here and elsewhere, as a convenience
+
+             if (is.null (par$names)) par$names <- par$labels
+             if (is.null (par$labels)) par$labels <- par$names
+
+# open device if needed
+
+             if (!is.na (file) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
+               Cairo (file = file, type = par$type, width = par$width, height = par$height, 
+                      pointsize = par$pointsize, units = par$units)
              else dev.new ()
-             plot (x$vectors [,p$comp [1]], x$vectors [,p$comp [2]],
-                   cex.axis = p$cex.axis, cex.lab = p$cex.lab, main = p$main, type = "p", col = p$col, 
-                   xlab = p$xlab, ylab = p$ylab)
-             points (x$vectors [,p$comp [1]], x$vectors [,p$comp [2]], col = p$col, pch = 19, cex = 2)
-             text (x$vectors [,p$comp [1]], x$vectors [,p$comp [2]], labels = p$labels, cex = p$cex.pts, pos = p$pos)
-             if (!is.null (p$toFile)) dev.off ()
+
+             i <- x$vectors [ ,components [1]]
+             j <- x$vectors [ ,components [2]]
+             k <- if (length (components) == 3) x$vectors [ ,components [3]] else NULL
+             if (is.null (k)) {
+               xcall (plot, x = i, y = j, with = par)
+               xcall (points, x = i, y = j, with = par, without = "type")
+             }
+             else {
+               reqPack ("scatterplot3d")
+               xys <- xcall (scatterplot3d, x = i, y = j, z = k, with = par) $ xyz.convert (i, j, k)
+               i <- xys$x ; j <- xys$y
+             }
+             xcall (text, x = i, y = j, with = par)
+
+             if (is.na (file)) NULL
+             else {
+               dev.off()
+               file
+             }
            } )
 
 setMethod ("render", "heatmap", 

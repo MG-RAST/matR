@@ -1,3 +1,7 @@
 first	a little tour of matR functionality
-second	a better tour of some better functionality
-tutorial	learn how to use matR
+basic	a simple analysis workflow
+bigger	an analysis workflow with 24 metagenomes
+metadata	how to use metadata 
+collections	how to build and use collections
+analyses	how to apply the analysis routines provided by matR
+

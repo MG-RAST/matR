@@ -37,8 +37,7 @@ stepper2 <- function (fname) {
 		}
 	}
 
-demo1 <- function () stepper (paste (path.package ("matR"), "/demo/first.R", sep = ""))
-demo2 <- function () stepper (paste (path.package ("matR"), "/demo/second.R", sep = ""))
+demo2 <- function (s) stepper (paste (path.package ("matR"), "/demo/", s, ".R", sep = ""))
 
 
 ### custom matrix and list printing for general use and also for our class methods

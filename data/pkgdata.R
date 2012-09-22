@@ -65,31 +65,19 @@ mconfig <- (function () {
 
 # # global graphical defaults; a poor man style sheet
 	par.X <- list (
-		device = "Cairo",						# "native", "Cairo"
-		reuseDevice = FALSE,					# open a new window for each graphical rendering?
-# for Cairo
-		toFile = NULL,
-		type = "png",							# default file type: "png","jpg","pdf","ps"
-# for par (general purpose)
-		bg = "black",
-		fg = "white",
-		las = 0,
+		file = NA,
+		type = "png",
+		title = "matR",
+		canvas = "white",
+		bg = "white",
+		fg = "black",
+    col = "blue",
 		col.main = "blue",
-		col = "red",
-		pointsize = 12,
-		units = "px",
-# for various plotting and rendering
-		main = "Some Science",
-		width = 400,
-		height = 400,
-		cx = 1, cy = 1,
-		pch = 19,
-# for pca
-		plab = "$ids",							# an encoded metadata reference?
-		pcol = "red",
-# for heatmap
-		row.dendr = TRUE,
-		col.dendr = FALSE)
+		pointsize = 10,
+		units = "in",
+		width = 5,
+		height = 5,
+		pch = 20)
 
 	getAuth <- function () { auth.X }
 	setAuth <- function () { message ("Enter auth key on a single line:"); auth.X <<- readLines (n = 1, warn = FALSE); auth.X}

@@ -4,7 +4,7 @@ Title: metagenomics analysis tools for R
 Version: 0.9.8
 Depends: R (>= 2.15), methods, utils
 Imports: Matrix, stats
-Suggests: RJSONIO, pcaMethods, matlab, ecodist, Cairo, gplots, qvalue
+Suggests: RJSONIO, pcaMethods, matlab, ecodist, Cairo, gplots, qvalue, scatterplot3d
 URL: http://dunkirk.mcs.anl.gov/~braithwaite/matR
 Date: 2012-08-12
 Author: Daniel T. Braithwaite and Kevin P. Keegan
