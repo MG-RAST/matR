@@ -1,4 +1,5 @@
-# HOW TO WORK WITH METAGENOME COLLECTIONS (press return repeatedly to step through)
+
+# HOW TO WORK WITH METAGENOME COLLECTIONS
 
 # You need to have ids for the metagenomes you're interested in.
 # Find them through the MG-RAST website.  If there are many, consider using
@@ -67,3 +68,4 @@ ff$FL2bis <- view (level = "level2", source = "COG")
 
 # In that example, the parameter "source" restricts the view to include
 # only annotations from the named database, "COG".
+

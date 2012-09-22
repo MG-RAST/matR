@@ -1,4 +1,5 @@
-# HOW TO WORK WITH METADATA (press return repeatedly to step through)
+
+# HOW TO WORK WITH METADATA
 
 # Metadata can be examined from a collection, or directly.  So the following code
 # shows two ways of getting the same thing.  First way:
