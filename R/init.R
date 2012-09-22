@@ -4,7 +4,7 @@
 ############################################
 
 .onAttach <- function (libname, pkgname) {
-	mconfig$server (mconfig$servers()$prod)
+	mconfig$server (mconfig$servers()$test)
 #	packageStartupMessage ("matR: server: ", mconfig$server())
 # ... would be good to test the network here ...
 #	packageStartupMessage ("matR: not checking network access")

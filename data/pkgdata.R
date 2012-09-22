@@ -35,6 +35,7 @@ mconfig <- (function () {
 	servers.X <- list (
 		prod = "http://api.metagenomics.anl.gov/",
 		prod2 = "http://metagenomics.anl.gov/api.cgi/",
+    test = "http://test.metagenomics.anl.gov/api.cgi/",
 		dev = "http://dev.metagenomics.anl.gov/api.cgi/",
 		dev2 = "http://dunkirk.mcs.anl.gov/~paczian/mgrastv3/api.cgi/",
 		dev3 = "http://dev.metagenomics.anl.gov/api_new.cgi/",
