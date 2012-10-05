@@ -17,10 +17,10 @@
 # Configuration information including auth key resides in a closure
 # defined in matR/data.  This avoids an auth key ending up in .Rhistory or .RData
 	packageStartupMessage (
-		"mconfig$setAuth()\tfor private data access\n",
-		"demo(package=\"matR\")\tfor how-to\'s and demos\n",
-    "data(package=\"matR\")\tfor example datasets\n",
-    "package?matR\t\tfor general info and more tips\n")
+		"access private data--\tmconfig$setAuth()\n",
+		"demos and tutorials--\tdemo(package=\"matR\")\n",
+    "example metagenomes--\tdata(package=\"matR\")\n",
+    "general help & info--\tpackage?matR\n")
 	needed <- missingPackages ()
 	if (length (needed) > 0)
 		packageStartupMessage (paste (

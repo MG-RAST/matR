@@ -7,7 +7,7 @@ exportClassPattern(".*")
 # ...and mpco, mheatmap, analysis soon
 
 exportMethods (print, summary, show, "[[", "$", "[", "[[<-", "$<-", names, "names<-", groups, "groups<-", mmatrix, metadata,
-  selection, collection, dist, normalize, permutations, sigtest, pco, heatmap, render, asFile)
+  selection, collection, dist, normalize, permutations, pco, heatmap, render, asFile)
 
 S3method (print, rlist)
 S3method (summary, rlist)

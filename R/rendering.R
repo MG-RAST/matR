@@ -35,50 +35,65 @@ xcall <- function (fun, ..., with = list(), without = character ()) {
 # setMethod ("render", "heatmap")
 setGeneric ("render", function (x, ...) standardGeneric ("render"))
 
+setMethod ("render", "collection", 
+           function (x, views = c ("count", "normed"), file = NA, ...) {
+             par <- list()
+             par$main <- c ("raw data", "log2(x+1) & centered per sample, scaled 0 to 1 over all samples")
+             par$names <- if (!all (groups (x) == 1)) paste (names (x), " (", groups (x), ")", sep = "")
+             else names (x)
+
+             plot.new ()
+             split.screen (c (2,1))
+             screen (1)
+             boxplot (x [[views [1]]], main = par$main [1], names = par$names, ...)
+             screen (2)
+             boxplot (x [[views [2]]], main = par$main[2], names = par$names, ... )
+  } )
+
 # setMethod ("render", "mmatrix", function (x, ...) {...})
 # setMethod ("render", "matrix", function (x, ...) {...})
 # supports: views, file, type, width, height, pointsize, units, figs, main, names (=labels)
-setMethod ("render", "collection",
-           function (x, views = c ("count", "normed"), file = NA, ...) {
-
-# default graphical parameters
-
-             par = list (
-
-# for: boxplot()
-
-               las = 2, names = names (x))
-
-# computed defaults:
-
-             n <- length (views)
-             t <- ceiling (sqrt (n))
-             par$figs <- if (t * (t - 1) >= n) c (t, t-1) else c (t, t)
-             par$main <= if (identical (views, c ("count", "normed")))
-               c ("raw data", "log2(x+1) & centered per sample, scaled 0 to 1 over all samples")
-             else NA
-
-# make equivalent: names/labels
-
-             args <- list (...)
-             if (is.null (args$names)) args$names <- args$labels
-             if (is.null (args$labels)) args$labels <- args$names
-             par <- resolveParList (args, x$par, par)
-
-             xcall (dev.new, filename = file, with = par)
-             plot.new ()
-             split.screen (par$figs)
-
-             main <- rep (par$main, len = n)
-             for (j in 1:n) {
-               screen (j)
-               par$main <- main [j]
-               
-# boxplot(): lots of options, revisit this
-
-               xcall (boxplot, x = x [[views [j]]], with = par, without = c ("width"))
-             } 
-           } )
+# setMethod ("render", "collection",
+#            function (x, views = c ("count", "normed"), file = NA, ...) {
+# 
+# # default graphical parameters
+# 
+#              par = list (
+# 
+# # for: boxplot()
+# 
+#                las = 2, names = names (x))
+# 
+# # computed defaults:
+# 
+#              n <- length (views)
+#              t <- ceiling (sqrt (n))
+#              par$figs <- if (t * (t - 1) >= n) c (t, t-1) else c (t, t)
+#              par$main <= if (identical (views, c ("count", "normed")))
+#                c ("raw data", "log2(x+1) & centered per sample, scaled 0 to 1 over all samples")
+#              else NA
+# 
+# # make equivalent: names/labels
+# 
+#              args <- list (...)
+#              if (is.null (args$names)) args$names <- args$labels
+#              if (is.null (args$labels)) args$labels <- args$names
+#              par <- resolveParList (args, x$par, par)
+# 
+#              xcall (dev.new, filename = file, with = par)
+#              plot.new ()
+#              split.screen (par$figs)
+# 
+#              main <- rep (par$main, len = n)
+#              for (j in 1:n) {
+#                screen (j)
+#                par$main <- main [j]
+#                
+# # boxplot(): lots of options, revisit this
+# 
+#                xcall (boxplot, x = x [[views [j]]], with = par, without = c ("width"))
+#              } 
+#            } )
 
 # relevant graphical parameters here are:
 # main, col, labels/names, type, width, height, 

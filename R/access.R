@@ -427,6 +427,10 @@ setMethod ("groups<-", "collection",
 # cannot go in pkgdata.R because its definition requires functionality from the package.
 standardViews <- list (
   count = view (of = "count"),
+  normed = view (of = "normed"))
+
+allViews <- list (
+  count = view (of = "count"),
   normed = view (of = "normed"),
   evalue = view (of = "evalue"),
   length = view (of = "length"),
