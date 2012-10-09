@@ -1,99 +1,82 @@
 
-options (width=200)
-library(matR)
+### we look at seven metagenomes that come from, respectively,
+### cow rumen (3), fish gut (2), lean (1) and obese (1) mouse gut
 
-###
-### MG-RAST IDs
-###
+guts
 
-mSamples() [1:100]
-mMetagenomes() [1:100]
+### these are MG-RAST IDs that come preloaded with matR to help get started.
+### for analysis, we download the related abundance data:
 
-###
-### Metadata Retrieval
-###
+M <- collection (guts)
 
-someProjects <- list()
-PIDs <- mProjects()
-for (id in PIDs [10:20]) someProjects [[id]] <- mProjectMeta (id)
-for (p in someProjects) summary (p)
-print (someProjects [[1]])
+M
 
-someMetagenomes <- list()
-MGIDs <- c ("4441679.3", "4441680.3", "4441682.3", "4441695.3", "4441696.3", "4440463.3", "4440464.3")
-for (id in MGIDs) someMetagenomes [[id]] <- mMetagenomeMeta (id)
-for (m in someMetagenomes) summary (m)
-print (someMetagenomes [[1]])
+### this collection has five "matrix views" which show, respectively:
+### (1) raw abundance counts of functional annotations, (2) normalized counts,
+### (3) average e-value, (4) average read length, and (5) average percent identity.
+### we can browse the data, as follows:
 
-###
-### Diversity Retrieval
-###
+M$count
 
-aa <- orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3")
-print (aa)
-bb <- orgMatrixEvalue ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3")
-print (bb)
-cc <- orgMatrixLength ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3", level = "phylum")
-print (cc)
-dd <- list (
-	m5nr = orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3", source = "m5nr" ),
-	RefSeq = orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3", source = "RefSeq" ),
-	Greengenes = orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3", source = "Greengenes" ))
+M$normed
 
-###
-### Retrieval by function is not yet implemented, but we will also show:
-### funcMatrix ()
-### funcMatrixEvalue ()
-### funcMatrixLength ()
-### funcMatrixPercentID ()
-###
+### metadata is also part of the collection object:
 
-###
-### Normalization of an abundance matrix
-###
+metadata (M)
 
-mNormalize (aa@data) [1:20,]
+### and specific items of interest can be directly accessed within the metadata hierarchy:
 
-###
-### Some statistical tests with metagenome groupings (wait for it....)
-###
+j <- c ("4440464.3", "metadata", "project", "data", "project_description")
+metadata (M) [[j]]
 
-mStats (aa@data, c (1,1,1,2,2,3,3), sig_test = "ANOVA-one-way") [1:20,]
-# mStats (aa@data, c (1,1,1,2,2,3,3), sig_test = "t-test-paired")
-# mStats (aa@data, c (1,2,1,2,3,3,3), sig_test = "t-test-un-paired")
-# mStats (aa@data, c (1,1,1,2,2,2,3,3,3), sig_test = "Kruskal-Wallis")
+### data from the collection is easy to export in comma-separated or tab-separated form (and then
+### import into Excel or another program) like this:
 
-###
-### Different similarity measures
-###
+asFile (M$count, fname = "guts_raw_counts.txt", sep = "\t")
 
-mDist (aa@data, "bray-curtis")
-mDist (aa@data, "euclidean")
-mDist (aa@data, "minkowski")
+### and applying to the collection a general-purpose visual rendering function
+### shows as boxplots simple summaries of requested matrix views
 
-###
-### Results from PCA in numerical form
-###
+render (M, views = c ("count", "normed"))
 
-mPCA (aa@data, 5)
+### that image clearly shows the utility of normalization.  We could also
+### customize the image a bit with graphical parameters, and save it to a file.
 
-###
-### Results from PCoA with similarity measure specified
-###
+render (M, views = c ("count", "normed"), toFile = "guts_summaries.png", main = c ("Raw Counts", "Normalized Counts"))
 
-mPCO (aa@data, method = "jaccard")
+### similarity between samples may be quantified by various numerical methods,
+### producing a lower-triangular matrix of pairwise measurements
 
-###
-### Permute the abundance matrix (for significance testing)
-###
+dist (M$normed, method = "euclidean")
 
-mPermutations (aa@data, type = "sample") [1:20,]
-mPermutations (aa@data, type = "dataset") [1:20,]
+dist (M$normed, method = "bray-curtis")
 
-###
-### Visualize the PCA
-###
+### every functional annotation gives one dimension of difference between samples.
+### a principal coordinates analysis (PCoA) uses a dissimilarity matrix, such as those
+### just computed, to reduce the dimension of the comparison space.  For this PCoA,
+### we use euclidean distance
 
-mPlotPCA (aa@data, 2, imgFile = "pca.png")
-system ("open pca.png")
+P <- pco (M$normed, method = "euclidean")
+
+P
+
+### the analysis is saved in the object P, and visual rendering of P will plot each sample
+### according to selected principal coordinates.  Here we use the first and second coordinates,
+### clustering those that are most similar, overall.  First, we create a vector of colors to reflect
+### the grouping we know exists
+
+groupcolors <- c (rep ("brown", 3), rep ("blue", 2), rep ("orange", 2))
+groupcolors
+guts
+
+render (P, main = "PCoA of seven metagenomes", col = groupcolors, labels = names (guts))
+
+### clustering according to our expectations is very clear.  In a heatmap visualization of the normalized
+### abundance matrix, more detail appears in relation to specific functional annotations, as follows
+### (several system messages may appear next, from loading additional packages)
+
+render (heatmap (M$normed), toFile = "guts_HD.jpg", labRow = NA, labCol = names (guts), col_lab_mult = 1.2, margins = c (9,1), main = "heatmap")
+
+### note that the samples are reordered in the lower margin.  That is
+### necessary for the dendrogram (tree diagram).
 

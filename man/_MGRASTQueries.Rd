@@ -1,12 +1,10 @@
 \name{MGRASTQueries}
 \alias{Querying MG-RAST}
-\alias{mListAll}
 \alias{mSearchMetagenomes}
 \alias{mAnnotationLookup}
-\title{Find IDs for Kbase MG-RAST Resources; Look Up Annotations}
+\title{Search Metagenomes and Look Up Annotations}
 \description{...}
 \usage{
-mListAll (resource)
 mSearchMetagenomes (resource, attribute = NULL, value = NULL)
 mAnnotationLookup (md5, namespace)
 }
@@ -25,5 +23,6 @@ mAnnotationLookup (md5, namespace)
 \author{Daniel Braithwaite}
 \seealso{\code{\link{mGet}}}
 \examples{
-## mListAll ("project")
+##
 }
+
