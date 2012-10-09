@@ -35,11 +35,10 @@
 # and,
 # always return file name(s) if result is a file
 #
-.mCallRaw <- function (call, toFile = NULL) {
+callRaw <- function (call, toFile = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
 	urlStr <- paste (mconfig$server (), call, conj, "auth=", mconfig$getAuth (), sep = "")
-# assign "lastURL" recovery variable here
 	optMessage ("matR: reading ", urlStr)
 	mconfig$lastURL (urlStr)
 	if (!is.null (toFile)) {
@@ -50,22 +49,14 @@
 	}
 
 ############################################
-### these are routines intended for general use
+### Now these are routines intended for general use
 ############################################
 
 ### get a list of all resources of one type.  
 ### a convenience function for no-parameter calls
-mListAll <- function (resource) {
+mListAllIds <- function (resource = c ("project", "sample", "library", "annotation", "metagenome")) {
 	reqPack ("RJSONIO")
-	if ( !oneofmust (resource, "project", "sample", "library", "annotation", "metagenome")) return ()
-	x <- fromJSON (.mCallRaw (resource), simplify = TRUE, asText = TRUE)
-	x
-#	invisible (switch (resource, 
-#		project = as.vector (x$projects),
-#		sample = as.vector (x$samples),
-#		library = as.vector (x$librarys),
-#		annotation = as.vector (x),
-#		metagenome = as.vector (x$metagenomes)))			### return R-friendly object	
+	fromJSON (callRaw (match.arg (resource)), simplify = TRUE, asText = TRUE)
 	}
 
 # perform an md5 lookup in the specified annotation database
@@ -81,7 +72,7 @@ mAnnotationLookup <- function (md5, namespace) {
 		}
 	x <- character( length (md5))
 	for (j in 1:length (md5))
-		x [ j ] <- fromJSON (.mCallRaw ( paste ("annotation?md5=", md5 [ j ], sep = "")))
+		x [ j ] <- fromJSON (callRaw ( paste ("annotation?md5=", md5 [ j ], sep = "")))
 	x
 	}
 
@@ -90,7 +81,7 @@ mAnnotationLookup <- function (md5, namespace) {
 mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
 	warning( "matR: unimplemented function" )
 	reqPack ("RJSONIO")
-### ... .mCallRaw etc ...
+### ... callRaw etc ...
 	}
 
 # the purpose of mGet is to speak the language of the API
@@ -115,8 +106,9 @@ mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
 # for anyone looking at this: a good bit of the craziness here
 # is meant as a hedge against fluctuations in the API 
 mGet <- function( 
-	resource,				# single value
-	ID,						# multiple value
+	resource = c ("project", "sample", "library", "metagenome", "subset", "sequenceSet",
+    "sequences",  "reads", "abundance"),      # single value
+	ID,			      			# multiple value
 	namespace = NULL,		# multiple
 	annoType = NULL,		# single
 	seqType = NULL,			# single
@@ -140,11 +132,13 @@ mGet <- function(
 # we allow flexible specification of the ID parameter.
 # a vector is natural to R scripting, while
 # semicolon-separated is natural to interactive use
-IDs <- chomp (ID)
+IDs <- scrubIds (ID)
 
 # and we also accept semicolon-separated filenames
 semiwarn (toFile)
 toFile <- chomp (toFile)
+
+resource <- match.arg (resource)
 
 if (length (IDs) > 1) {
 	if ( oneof (resource, "project", "sample", "library", "metagenome")) {
@@ -205,12 +199,6 @@ if (oneof (resource, "sequenceSet", "reads") && is.null (toFile)) {
 
 # we now check up on parameters carefully, while
 # constructing the API call
-
-# make sure the resource type is valid
-oneofmust (resource, "project", "sample", "library", "metagenome", "subset", "sequenceSet", "sequences",  "reads", "abundance")
-# ... and the functionality is implemented ...
-oneofmust (resource, "project", "sample", "metagenome", "abundance")
-# oneofmusnt (resource, "sequenceSet", "reads")
 
 # warn of parameters specified but not appropriate to the call
 if ( !is.null( switch (resource,
@@ -274,11 +262,11 @@ paramStr <- paste (param, "?", sep = "")				# a string passed directly
 
 # the API call needs no post-processing in case of
 # a file resource (and we return the filename as
-# returned by .mCallRaw)
+# returned by callRaw)
 if (oneof (resource, "sequenceSet", "reads"))
-	return (.mCallRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""), toFile))
+	return (callRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""), toFile))
 else
-	x <- .mCallRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""))
+	x <- callRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""))
 
 # otherwise, we process what we have received
 if (parse) {
@@ -296,28 +284,25 @@ if (parse) {
 # ... the eventual plan is to implement an RBIOM class ...
 # process abundance matrix nicely ...
 	if (resource == "abundance") {
-#  ... from out of plain text format
+#  ... from out of plain text format into "Matrix" class
 		if (! JSON) {
 			f <- tempfile ()
 			writeLines (x, f)
-# even where the matrix is passed is text format, we handle it as a Matrix
 			x <- Matrix::Matrix (data.matrix (read.table (f, header = TRUE, sep = "\t", quote = "", comment.char = "", row.names = 1, check.names = FALSE)))
 			unlink (f)
 			}
-# or from sparse BIOM format
+# ... or from sparse BIOM format
+# remembering that BIOM indices start at zero
 		else if (x$matrix_type == "sparse") {
 # first we make a full matrix via the provided sparse matrix
-# remembering that BIOM indices start at zero
 			n <- length (x$data)
 			spM <- matrix (unlist (x$data), nrow = n, ncol = 3, byrow = TRUE)
-			M <- as.matrix (Matrix::sparseMatrix (i = 1 + spM [,1], j = 1 + spM [,2], x = spM [,3], dims = x$shape))
+			M <- Matrix::sparseMatrix (i = 1 + spM [,1], j = 1 + spM [,2], x = spM [,3], dims = x$shape)
 # extract the column names that we expect
-			n <- x$shape [2]
-			s <- character (n)
-			for (j in 1:n)  s[j] <- (x$columns [[j]] ["id"])
+			s <- character (n <- x$shape [2])
+			for (j in 1:n)  s[j] <- x$columns [[j]] ["id"]
 			colnames (M) <- s
-# what the row names should be is debatable
-# ... perhaps I should check with others ...
+# what the row names should be is debatable... perhaps I should check with others
 # here, we collapse the taxonomy to a single string
 			s <- character (n <- x$shape [1])
 			for (j in 1:n)  s[j] <- paste (x$rows [[j]] $metadata$taxonomy, collapse = ";", sep = "")

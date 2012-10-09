@@ -1,114 +1,30 @@
 
-### we look at seven metagenomes that come from, respectively,
-### cow rumen (3), fish gut (2), lean (1) and obese (1) mouse gut
-
-guts
-
-### these are MG-RAST IDs that come preloaded with matR to help get started.
-### for analysis, we download the related abundance data:
-
-M <- collection (guts)
-
-M
-
-### this collection has five "matrix views" which show, respectively:
-### (1) raw abundance counts of functional annotations, (2) normalized counts,
-### (3) average e-value, (4) average read length, and (5) average percent identity.
-### we can browse the data, as follows:
-
-M$count
-
-M$normed
-
-### metadata is also part of the collection object:
-
-metadata (M)
-
-### and specific items of interest can be directly accessed within the metadata hierarchy:
-
-j <- c ("4440464.3", "metadata", "project", "data", "project_description")
-metadata (M) [[j]]
-
-### data from the collection is easy to export in comma-separated or tab-separated form (and then
-### import into Excel or another program) like this:
-
-asFile (M$count, fname = "guts_raw_counts.txt", sep = "\t")
-
-### and applying to the collection a general-purpose visual rendering function
-### shows as boxplots simple summaries of requested matrix views
-
-render (M, views = c ("count", "normed"))
-
-### that image clearly shows the utility of normalization.  We could also
-### customize the image a bit with graphical parameters, and save it to a file.
-
-render (M, views = c ("count", "normed"), fname = "guts_summaries.png", main = c ("Raw Counts", "Normalized Counts"), bg = "tan")
-
-### similarity between samples may be quantified by various numerical methods,
-### producing a lower-triangular matrix of pairwise measurements
-
-mdist (M$normed, method = "euclidean")
-
-mdist (M$normed, method = "bray-curtis")
-
-### every functional annotation gives one dimension of difference between samples.
-### a principal coordinates analysis (PCoA) uses a dissimilarity matrix, such as those
-### just computed, to reduce the dimension of the comparison space.  For this PCoA,
-### we use euclidean distance
-
-P <- mpco (M$normed, method = "euclidean")
-
-P
-
-### the analysis is saved in the object P, and visual rendering of P will plot each sample
-### according to selected principal coordinates.  Here we use the first and second coordinates,
-### clustering those that are most similar, overall.  First, we create a vector of colors to reflect
-### the grouping we know exists
-
-groupcolors <- c (rep ("brown", 3), rep ("blue", 2), rep ("orange", 2))
-groupcolors
-guts
-
-render (P, main = "PCoA of seven metagenomes", col = groupcolors, labels = names (guts))
-
-### clustering according to our expectations is very clear.  In a heatmap visualization of the normalized
-### abundance matrix, more detail appears in relation to specific functional annotations, as follows
-### (several system messages may appear next, from loading additional packages)
-
-mheatmap (M$normed, image_out = "guts_HD.jpg", labRow = NA, labCol = names (guts), col_lab_mult = 1.2, margins = c (9,1), image_title = "heatmap")
-
-### the visualization was saved to a file which we now open
-
-system ("open guts_HD.jpg")
-
-### note that the samples are reordered in the lower margin.  That is
-### necessary for the dendrogram (tree diagram).
-
-### next we create a larger collection for a more elaborate analysis, now involving 24 metagenomes.
-### these take a bit longer to retrieve.  Fifteen come from a fresh water sample, the others
+### we create a collection for a multistep analysis involving 24 metagenomes.
+### these take some time to retrieve.  Fifteen come from a fresh water sample, the others
 ### from a hot spring
 
 waters
 
 W <- collection (waters)
 
-### again we look at a principal coordinates analysis
+### we look at a principal coordinates analysis
 
-render (mpco (W$normed), main = "PCoA analysis, fresh vs. spring water samples", col = c (rep ("blue", 15), rep ("red", 9)))
+render (pco (W$normed), main = "PCoA analysis, fresh vs. spring water samples", col = c (rep ("blue", 15), rep ("red", 9)))
 
-### clustering is still apparent, although less clearly than in the previous example
-### (and it is the second principal coordinate that differentiates the two groups).
-### we can again create a heatmap visualization:
+### clustering is apparent, although not absolute, and it is the second
+### principal coordinate that differentiates the two groups.
+### we can create a heatmap visualization:
 
-mheatmap (W$normed, image_out = "waters_HD.jpg", labRow = NA, labCol = names (waters), col_lab_mult = 1.2, margins = c (8,1), image_title = "heatmap")
-system ("open waters_HD.jpg")
+H <- heatmap (W$normed)
+
+render (H, toFile = "waters_HD.png", labRow = NA, labCol = names (waters), col_lab_mult = 1.2, margins = c (8,1), main = "heatmap of 24 water samples")
 
 ### a statistical test such as Kruskal-Wallis can help identify the most
 ### significant rows (annotations) and sharpen the picture.  We separate the samples
 ### into groups and perform the test:
 
 grouping <- c (rep ("a", 15), rep ("b", 9))
-results <- doStats (W$normed, grouping, "Kruskal-Wallis")
+results <- sigtest (W$normed, grouping, "Kruskal-Wallis")
 
 ### a few rows from the test results look like this:
 
@@ -128,8 +44,7 @@ dim (subW)
 
 ### finally, a heatmap of the subselected matrix highlights rows of interest more clearly than before:
 
-mheatmap (subW, image_out = "waters_sub_HD.jpg", labRow = NA, labCol = names (waters), col_lab_mult = 1.2, margins = c (8,1), image_title = "subselection")
-system ("open waters_sub_HD.jpg")
+render (heatmap (subW), toFile = "waters_sub_HD.jpg", labRow = NA, labCol = names (waters), col_lab_mult = 1.2, margins = c (8,1), main = "subselection")
 
 ### this analysis could continue by setting more restrictive p-value thresholds, like this:
 
@@ -138,3 +53,4 @@ subW003 <- W$normed [names (pvals) [pvals < 0.003], ]
 
 ### or by examining factors in metadata.  Subgroups discernible
 ### in the heatmap can in fact be associated to metadata in this case.
+

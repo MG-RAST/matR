@@ -1,4 +1,5 @@
 
+dontrun <- function () {
 #######################################################
 ### test metadata retrieval, printing, summarizing
 #######################################################
@@ -36,5 +37,4 @@ for (j in some) mm [[MIDs [j]]] <- mMetagenomeMeta (MIDs [j])
 for (e in mm) print (e)
 for (e in mm) summary (e)
 
-
-
+}
