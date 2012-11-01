@@ -23,17 +23,19 @@
 	  "dependencies() ...to install them")
 	}
 
-dependencies <- function() {
+dependencies <- function (prompt = TRUE) {
 	need <- !hazPackages()
 	if (any (need)) {
 		message (
       "Suggested package(s) missing: ", paste (names (need) [need], collapse = " "), "\n")
-		setRepositories (graphics = FALSE)
-		cat ("\n")
-		chooseBioCmirror (graphics = FALSE)
-		cat ("\n")
-		chooseCRANmirror (graphics = FALSE)
-		cat ("\n")
+		if (prompt) {
+			chooseBioCmirror (graphics = FALSE)
+			cat ("\n")
+			chooseCRANmirror (graphics = FALSE)
+			cat ("\n")
+			setRepositories (graphics = FALSE)
+			cat ("\n")
+			}
 		install.packages (names (need) [need])
 		haz <- hazPackages()
 		if (all (haz)) message (
