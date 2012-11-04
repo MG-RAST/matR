@@ -99,7 +99,7 @@ setMethod ("pco", "collection",
              else {
                reqPack ("scatterplot3d")
                xys <- scatterplot3d (x = i, y = j, z = k, type = "h", lty.hplot = "dotted", main = par$main, 
-                                     pch = 19, color = par$col,
+                                     pch = 19, color = par$col, axis = TRUE, box = FALSE,
                                      xlab = par$xlab, ylab = par$ylab, zlab = par$zlab) $ xyz.convert (i, j, k)
                i <- xys$x ; j <- xys$y
              }
