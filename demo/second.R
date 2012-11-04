@@ -1,23 +1,23 @@
 
-### we create a collection for a multistep analysis involving 24 metagenomes.
-### these take some time to retrieve.  Fifteen come from a fresh water sample, the others
-### from a hot spring
+### For a multistep analysis, we use a collection of 24 metagenomes.
+### Fifteen come from a fresh water sample, the others from a hot spring
 
-waters
-
-W <- collection (waters)
+W <- Waters ; W
 
 ### we look at a principal coordinates analysis
 
-render (pco (W$normed), main = "PCoA analysis, fresh vs. spring water samples", col = c (rep ("blue", 15), rep ("red", 9)))
+groups (W) <- c (rep (1, 15), rep (2, 9))
+pco (W, view = "normed", main = "PCoA analysis, fresh vs. spring water samples")
 
-### clustering is apparent, although not absolute, and it is the second
-### principal coordinate that differentiates the two groups.
-### we can create a heatmap visualization:
+### clustering is apparent, although not absolutely, and it is the second
+### principal coordinate that differentiates the two groups.  We can also look
+### at the PCoA in three dimensions:
 
-H <- heatmap (W$normed)
+pco (W, view = "normed", comp = c (1,2,3), main = "PCoA analysis, fresh vs. spring water samples")
 
-render (H, toFile = "waters_HD.png", labRow = NA, labCol = names (waters), col_lab_mult = 1.2, margins = c (8,1), main = "heatmap of 24 water samples")
+### next we create a heatmap visualization:
+
+H <- heatmap (W, view = "normed")
 
 ### a statistical test such as Kruskal-Wallis can help identify the most
 ### significant rows (annotations) and sharpen the picture.  We separate the samples
@@ -28,29 +28,35 @@ results <- sigtest (W$normed, grouping, "Kruskal-Wallis")
 
 ### a few rows from the test results look like this:
 
-results [1:10,]
+head (results$sd)
 
-### from the p-value column, we select rows passing a significance threshold,
+head (results$mean)
+
+head (results$stat)
+
+### from the p-value column, we can identify rows passing a significance threshold,
 ### and select the corresponding part of the original matrix
 
-pvals <- results [ , 4]
-subW <- W$normed [names (pvals) [pvals < 0.05], ]
+Wsub <- W$normed [results$stat$p.value < 0.05, ]
 
-### comparing dimensions of the original and subselection matrices shows what
-### proportion of the original functional annotations are retained:
+### comparing number of rows between the original and subselection matrices
+### shows what proportion of the original functional annotations are retained:
 
-dim (W$normed)
-dim (subW)
+nrow (W$normed)
+nrow (Wsub)
 
-### finally, a heatmap of the subselected matrix highlights rows of interest more clearly than before:
+### and a heatmap of the subselected rows highlights areas of interest more clearly than before:
 
-render (heatmap (subW), toFile = "waters_sub_HD.jpg", labRow = NA, labCol = names (waters), col_lab_mult = 1.2, margins = c (8,1), main = "subselection")
+heatmap (W, view = "normed", rows = (results$stat$p.value < 0.05))
 
 ### this analysis could continue by setting more restrictive p-value thresholds, like this:
 
-subW01 <- W$normed [names (pvals) [pvals < 0.01], ]
-subW003 <- W$normed [names (pvals) [pvals < 0.003], ]
+heatmap (W, view = "normed", rows = (results$stat$p.value < 0.005))
+heatmap (W, view = "normed", rows = (results$stat$p.value < 0.0005))
 
-### or by examining factors in metadata.  Subgroups discernible
-### in the heatmap can in fact be associated to metadata in this case.
+### and here are the functions represented in the heatmap with highest granularity:
 
+rownames (results$stat) [results$stat$p.value < 0.0005]
+
+### We could also continue by examining factors in metadata.  In fact, in this case,
+### associations between metadata and subgroups discernible in the heatmap would be found.
