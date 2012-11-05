@@ -99,7 +99,7 @@ setMethod ("pco", "collection",
              else {
                reqPack ("scatterplot3d")
                xys <- scatterplot3d (x = i, y = j, z = k, type = "h", lty.hplot = "dotted", main = par$main, 
-                                     pch = 19, color = par$col,
+                                     pch = 19, color = par$col, axis = TRUE, box = FALSE,
                                      xlab = par$xlab, ylab = par$ylab, zlab = par$zlab) $ xyz.convert (i, j, k)
                i <- xys$x ; j <- xys$y
              }
@@ -136,7 +136,7 @@ setMethod ("show", "pco", function (object) print (object))
 
 
 setMethod ("heatmap", "collection",
-           function (x, view = "normed", file = NA, ...) {
+           function (x, view = "normed", rows = TRUE, file = NA, ...) {
              reqPack ("gplots")
 
              par <- list ()
@@ -147,7 +147,7 @@ setMethod ("heatmap", "collection",
              else names (x)
 
              plot.new ()
-             heatmap.2(as.matrix (x [[view]]), margins = c(8,1), cexCol = .95, labRow = NA,
+             heatmap.2(as.matrix (x [[view]] [rows, ]), margins = c(8,1), cexCol = .95, labRow = NA,
                        labCol = par$labCol,
                        key = FALSE, trace = "none", colsep = par$colsep, sepwidth = 0.01, 
                        main = par$main)
@@ -257,11 +257,11 @@ sigtest <- function (x, groups, sig_test =
         g1, g2)
     }))
   names (stat) <- c ("statistic", "p.value")
-  if (sig_test != "ANOVA-one-way") {
-    reqPack ("qvalue")
-    stat [c ("q.value", "significant")] <- 
-      qvalue (stat$p.value, fdr.level = fdr.level) [c ("qvalues", "significant")]
-  }
+#   if (sig_test != "ANOVA-one-way") {
+#     reqPack ("qvalue")
+#     stat [c ("q.value", "significant")] <- 
+#       qvalue (stat$p.value, fdr.level = fdr.level) [c ("qvalues", "significant")]
+#   }
   res$stat <- stat
   invisible (res)
 #   new ("sigtest", res)
