@@ -10,7 +10,7 @@
 .onAttach <- function (libname, pkgname) {
 	mconfig$server (mconfig$servers()$test)
 	packageStartupMessage (
-    "matR: metagenomics analysis tools for R (", packageVersion ("matR"), ")")
+    "matR: metagenomics analysis tools for R (", packageVersion ("matR"), ")\n")
 	options (warn = 1, width = 150, timeout = 300, digits = 2)
 	packageStartupMessage (
 		"access private data--\tmconfig$setAuth()\n",
@@ -19,21 +19,23 @@
     "general help & info--\tpackage?matR")
 	pkgs <- hazPackages()
 	if (!all (pkgs)) packageStartupMessage (
-	  "\nSuggested package(s) missing: ", paste (names (pkgs) [!pkgs] , collapse = " "), "\n",
-	  "dependencies() ...to install them")
+	  "Suggested package(s) missing: ", paste (names (pkgs) [!pkgs] , collapse = " "), "\n",
+	  "Use dependencies() to install them")
 	}
 
-dependencies <- function() {
+dependencies <- function (prompt = TRUE) {
 	need <- !hazPackages()
 	if (any (need)) {
 		message (
       "Suggested package(s) missing: ", paste (names (need) [need], collapse = " "), "\n")
-		setRepositories (graphics = FALSE)
-		cat ("\n")
-		chooseBioCmirror (graphics = FALSE)
-		cat ("\n")
-		chooseCRANmirror (graphics = FALSE)
-		cat ("\n")
+		if (prompt) {
+			chooseBioCmirror (graphics = FALSE)
+			cat ("\n")
+			chooseCRANmirror (graphics = FALSE)
+			cat ("\n")
+			setRepositories (graphics = FALSE)
+			cat ("\n")
+			}
 		install.packages (names (need) [need])
 		haz <- hazPackages()
 		if (all (haz)) message (
