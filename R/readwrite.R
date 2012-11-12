@@ -1,103 +1,97 @@
 
-#################################################
-### "asFile" is a generic function for exporting
-### matR objects, the natural opposite of constructing
-### an object of the same type from a filename or connection.
+### "asFile" methods to export matR objects.
+### 
+### we want to have methods to import and export common objects.
+### they should be complementary where appropriate.
 ###
-### asFile(x, fname, ...) : creates fname containing objects
-### represented according to the current configuration of export parameters.
+### there should be a general-purpose list method allowing for either,
+### concatenation of elements and a single file, or an equal-length list of filenames.
 ###
-### when x is a list, fname should be a vector of the same length,
-### and each item will be written to a separate file
-###
-### To decide how to write an object, asFile consults (in this order) 
-### export parameters that are:
+### the operations should be configurable, consulting export parameters (in this order):
 ###		(1) provided as arguments in the call
 ###		(2) set in the "exp" slot of the object, if any
-###		(3) set in the global matR option, "exp"
+###		(3) set in the global configuration "exp"
 ### 
-### The point is to provide standardization with 
-### customizability for writing possibly complex
-### types as text and binary files.
+### The point is to provide standardization and configurability for complex types.
 ###
-### returns name(s) of written file
-###
-### complementary import functionality should be provided by
-### functions accepting a parameter of class "connection"
-###
-### asFile (<file>) to rewrite in different formats?  well, that is cute...
-#################################################
+### should return name(s) of written file.
+
 
 setGeneric ("asFile", 
 	def = function (x, fname, ...)
 		save (x, file = fname))
 
-setMethod ("asFile",
-	"list",
-	function (x, fname, ...)
+setMethod ("asFile", "list", function (x, fname, ...)
 		for (j in 1:length(x)) asFile (x [[j]], fname [j]))
 
-setMethod ("asFile",					# for lists of IDs (this may be stupid)
-	"character",
-	function (x, fname, ...)
-		stop ("matR: unimplemented method for class character"))
+setMethod ("asFile", "character", function (x, fname, ...)					# for lists of IDs (this may be stupid)
+	stop ("matR: unimplemented method for class character"))
 
-setMethod ("asFile",
-	"rlist",
-	function (x, fname, ...)
+setMethod ("asFile", "rlist", function (x, fname, ...)
 		stop ("matR: unimplemented method for class rlist"))
 
-setMethod ("asFile",
-	"matrix",
-	function (x, fname, ...) {
-		args <- list (...)
-		p <- resolveMerge (args, mconfig$exp())
-		fname <- paste (p$path, fname, sep = "")
-		if (p$type != "binary")
-			write.table (x,
-				file = fname,
-				append = p$append,
-				quote = p$quote,
-				sep = p$sep,
-				na = p$na,
-				row.names = p$row.names,
-				col.names = p$col.names)
-		else
-			save (x, file = fname)
-		fname
-		})
+setMethod ("asFile", "matrix", function (x, fname, ...) {
+	args <- list (...)
+	p <- resolveMerge (args, mconfig$exp())
+	fname <- paste (p$path, fname, sep = "")
+	if (p$type != "binary")
+		write.table (x, file = fname, append = p$append, quote = p$quote, sep = p$sep, na = p$na,
+								 row.names = p$row.names, col.names = p$col.names)
+	else
+		save (x, file = fname)
+	fname
+})
 
-setMethod ("asFile",
-	"Matrix",
-	function (x, fname, ...)
-		asFile (as.matrix (x), fname, ...))
+setMethod ("asFile", "Matrix", function (x, fname, ...)
+	asFile (as.matrix (x), fname, ...))
 
-setMethod ("asFile", 
-	"mmatrix",
-	function (x, fname, ...)
-		asFile (as.matrix (x), fname, ...))
+setMethod ("asFile", "mmatrix", function (x, fname, ...)
+	asFile (as.matrix (x), fname, ...))
 
-#setMethod ("asFile", 
-#	"RBIOM",
-#	function (x, fname, ...) { } )
-#setMethod ("asFile", 
-#	"pcaRes",
-#	function (x, fname, ...) { } )
-### writing PCA to file:  need to concatenate two tables into single object.  snippet from original:
-###	if (! is.null (asFile)) {
-###		write.table (P@R2,	file = asFile, sep = "\t", col.names = FALSE, row.names = TRUE, append = FALSE)
-###		write.table (P (my_pcaRes), file = asFile, sep = "\t", col.names = FALSE, row.names = TRUE, append = TRUE)
-#		}
-#setMethod ("asFile", 
-#	"pca",
-#	function (x, fname, ...) { } )
-#setMethod ("asFile", 
-#	"dendrogram",
-#	function (x, fname, ...) { } )	
-#setMethod ("asFile",
-#	"heatmap",
-#	function (x, fname, ...) { } )
+setMethod ("asFile", "collection", function (x, view = "count", fname, ...)
+	asFile (x [[view]], fname, ...))
 
-# just an idea:
+setMethod ("asFile", "pco", function (x, fname, ...) {
+	args <- list (...)
+	p <- resolveMerge (args, mconfig$exp())
+	fname <- paste (p$path, fname, sep = "")
+	write.table (x [[2]], file = fname, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
+							 row.names = p$row.names, col.names = p$col.names)
+	write.table (x [[3]], file = fname, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
+							 row.names = p$row.names, col.names = p$col.names)
+	write.table (as.matrix (x [[4]]), file = fname, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
+							 row.names = p$row.names, col.names = p$col.names)
+} )
+
+
+### importing is a sort of separate problem
+###
+### for now we just have this function to read IDs in various formats:
+###
+### name ID
+### name ID
+### name ID
+### 
+### ID ID ID ID
+### 
+### ID
+### ID
+### ID
+
+readIDs <- function (filename, ...) {
+	y <- read.table (filename, colClasses = "character", ...)
+	if (nrow (y) > 1)
+		if (ncol (y) > 1) {
+			res <- as.character (y [,2])
+			names (res) <- as.character (y [,1])
+			res
+		}
+	else as.character (y [,1])
+	else unlist (y [1,], use.names = FALSE)
+}
+
+
+### just an idea:
+
 reconcileTextParametersWithDefaults <- function (...) { }
 reconcileGraphicsParametersWithDefaults <- function (...) { }
