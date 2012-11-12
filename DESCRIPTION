@@ -15,5 +15,5 @@ Description: matR is an analysis client for MG-RAST built as an extension packag
 License: file LICENSE
 LazyLoad: yes
 LazyData: yes
-Collate: misc.R access.R oldclasses.R oldwrappers.R readwrite.R analysis.R rendering.R init.R transfer.R
+Collate: util.R classmethodheaders.R selections.R collections.R oldclasses.R oldwrappers.R readwrite.R analysis.R rendering.R init.R transfer.R
 
