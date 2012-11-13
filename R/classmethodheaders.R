@@ -1,17 +1,20 @@
 
+###
 ### This package defines methods for the following functions,
 ### and additionally for "show" which is already generic.
 ### 
-### We also define certain S3 methods (maybe?)
+### We also define certain S3 methods
+###
 
 setGeneric ("print")
 setGeneric ("summary")
 setGeneric ("plot")
+setGeneric ("samples", function (x, ...) standardGeneric ("samples"))
 setGeneric ("names")
 setGeneric ("names<-")
-setGeneric ("samples", function (x, ...) standardGeneric ("samples"))
 setGeneric ("groups", function (x, ...) standardGeneric ("groups"))
 setGeneric ("groups<-", function (x, value) standardGeneric ("groups<-"))
+
 setGeneric ("metadata", function (x, ...) standardGeneric ("metadata"))
 
 setGeneric ("views", function (x, ...) standardGeneric ("views"))

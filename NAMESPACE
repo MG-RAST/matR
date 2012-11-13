@@ -6,11 +6,13 @@ exportClassPattern(".*")
 # specifically: rlist, mmatrix, selection, view, collection
 # ...and mpco, mheatmap, analysis soon
 
-exportMethods (print, summary, show, "[[", "$", "[", "[[<-", "$<-", names, "names<-", groups, "groups<-", mmatrix, metadata,
+exportMethods (print, summary, show, "[[", "$", "[[<-", "$<-", samples, names, "names<-", groups, "groups<-", mmatrix, metadata,
+  views, viewnames, "viewnames<-", 
   selection, collection, dist, normalize, permutations, pco, heatmap, render, asFile)
 
-S3method (print, rlist)
-S3method (summary, rlist)
+S3method (print, metadata)
+S3method (summary, metadata)
+S3method (`[`, metadata)
 S3method (print, mmatrix)
 S3method (summary, mmatrix)
 S3method (print, selection)
