@@ -16,8 +16,11 @@ setMethod ("metadata", "character", function (x, resource = c ("project", "sampl
 	attr (res, "factoring") <- factor (sapply (names (res), substr, start = 1, stop = 12))
 	class (res) <- "metadata"
 	res
+# must handle it sensible if this is not factorable
+# pull that substr snippet into a subroutine
 })
 
+# should return array if factored = TRUE
 `[.metadata` <- function (x, i, ..., unique = FALSE, factored = TRUE) {
 	L <- append (list (i), list (...))
 	res <- lapply (L, function (j)
@@ -28,6 +31,7 @@ setMethod ("metadata", "character", function (x, resource = c ("project", "sampl
 		res
 	}
 	else lapply(l, `class<-`, "metadata")
+# must adjust factor in return element
 }
 
 print.metadata <- function (x, ...) twoColPrint (x)
@@ -76,6 +80,10 @@ setMethod ("names<-", "selection", function (x, value) { names (x@ids) <- value 
 
 setMethod ("groups", "selection", function (x) x@groups)
 setMethod ("groups<-", "selection", function (x, value) { x@groups <- as.factor (value) ; x })
+
+setMethod ("[", "selection", function (x, i) {
+	# ... this needs completion
+})
 
 setMethod ("metadata", "selection", function (x) x@metadata)
 
