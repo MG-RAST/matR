@@ -2,9 +2,8 @@
 xcall <- function (fun, ..., with = list(), without = character ()) {
   call <- append (append (list (fun), list (...)), with)
   call [without] <- NULL
-  print ("matR xcall:")
-  print (call [-1])
-  eval (as.call (call))
+  call
+#  eval (as.call (call))
 }
 
 #################################################
@@ -36,19 +35,24 @@ xcall <- function (fun, ..., with = list(), without = character ()) {
 setGeneric ("render", function (x, ...) standardGeneric ("render"))
 
 setMethod ("render", "collection", 
-           function (x, views = c ("count", "normed"), file = NA, ...) {
-             par <- list()
-             par$main <- c ("raw data", "log2(x+1) & centered per sample, scaled 0 to 1 over all samples")
-             par$names <- if (!all (groups (x) == 1)) paste (names (x), " (", groups (x), ")", sep = "")
-             else names (x)
-
-             plot.new ()
-             split.screen (c (2,1))
-             screen (1)
-             boxplot (x [[views [1]]], main = par$main [1], names = par$names, ...)
-             screen (2)
-             boxplot (x [[views [2]]], main = par$main[2], names = par$names, ... )
-  } )
+					 function (x, views = c ("count", "normed"), file = NA, ...) {
+					 	par <- list(
+					 		main = c ("raw data", "log2(x+1) & centered per sample, scaled 0 to 1 over all samples"),
+					 		names = if (!all (groups (x) == 1)) paste (names (x), " (", groups (x), ")", sep = "")
+					 		else names (x))
+					 	par <- resolveMerge (list (...), par)
+					 	main <- par$main
+					 	par$main <- NULL
+					 	
+					 	plot.new ()
+					 	split.screen (c (2,1))
+					 	screen (1)
+#             boxplot (x [[views [1]]], main = par$main [1], names = par$names, ...)
+					 	xcall (boxplot, x [[views [1]]], main = main [1], with = par)
+					 	screen (2)
+#             boxplot (x [[views [2]]], main = par$main[2], names = par$names, ... )
+					 	xcall (boxplot, x [[views [2]]], main = main [2], with = par)
+					 } )
 
 # setMethod ("render", "mmatrix", function (x, ...) {...})
 # setMethod ("render", "matrix", function (x, ...) {...})

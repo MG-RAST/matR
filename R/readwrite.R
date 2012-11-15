@@ -27,9 +27,6 @@ setMethod ("asFile", "list", function (x, fname, ...)
 setMethod ("asFile", "character", function (x, fname, ...)					# for lists of IDs (this may be stupid)
 	stop ("matR: unimplemented method for class character"))
 
-setMethod ("asFile", "rlist", function (x, fname, ...)
-		stop ("matR: unimplemented method for class rlist"))
-
 setMethod ("asFile", "matrix", function (x, fname, ...) {
 	args <- list (...)
 	p <- resolveMerge (args, mconfig$exp())
@@ -43,9 +40,6 @@ setMethod ("asFile", "matrix", function (x, fname, ...) {
 })
 
 setMethod ("asFile", "Matrix", function (x, fname, ...)
-	asFile (as.matrix (x), fname, ...))
-
-setMethod ("asFile", "mmatrix", function (x, fname, ...)
 	asFile (as.matrix (x), fname, ...))
 
 setMethod ("asFile", "collection", function (x, view = "count", fname, ...)

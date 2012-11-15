@@ -2,7 +2,7 @@
 ###
 ### Metadata is implemented as an S3 class "metadata".
 ### It is a character vector with attributes that help interpret it.
-### attribute "groups" factors the vector by metagenome.
+### attribute "factoring" factors the vector by metagenome.
 ###
 
 setMethod ("metadata", "character", function (x, resource = c ("project", "sample", "metagenome")) {
@@ -13,12 +13,12 @@ setMethod ("metadata", "character", function (x, resource = c ("project", "sampl
 	resource <- "metagenome"
 
 	res <- unlist (lapply (x, mGet, resource = resource, enClass = FALSE))
-	attr (res, "groups") <- factor (sapply (names (res), substr, start = 1, stop = 12))
+	attr (res, "factoring") <- factor (sapply (names (res), substr, start = 1, stop = 12))
 	class (res) <- "metadata"
 	res
 })
 
-`[.metadata` <- function (x, i, ..., unique = FALSE, bygroups = TRUE) {
+`[.metadata` <- function (x, i, ..., unique = FALSE, factored = TRUE) {
 	L <- append (list (i), list (...))
 	res <- lapply (L, function (j)
 		unclass (x) [apply (sapply (j, grepl, x = names (x), fixed = TRUE), 1, all)])
@@ -33,8 +33,8 @@ setMethod ("metadata", "character", function (x, resource = c ("project", "sampl
 print.metadata <- function (x, ...) twoColPrint (x)
 
 summary.metadata <- function (x, ...) {
-	cat (length (x), "metadata fields in", nlevels (attr (x, "groups")), "group(s):\n")
-	table (attr (x, "groups"))
+	cat (length (x), "metadata fields in", nlevels (attr (x, "factoring")), "group(s):\n")
+	table (attr (x, "factoring"))
 }
 
 setOldClass ("metadata")

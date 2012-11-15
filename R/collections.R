@@ -1,136 +1,28 @@
 
 # these data need to be available to matR and to the user.
 # cannot go in pkgdata.R for unclear reasons.
-sources <- list (
-	m5rna = "m5rna", rdp = "RDP", greengenes = "Greengenes", lsu = "LSU", ssu = "SSU",				# rna
-	nog = "NOG", cog = "COG", ko = "KO", go = "GO", subsystems = "Subsystems",						# ontology
-	m5nr = "m5nr", swissprot = "SwissProt", genbank = "GenBank", img = "IMG", seed = "SEED",		# protein
-	TrEMBL = "TrEMBL", refseq = "RefSeq", patric = "PATRIC", eggnog = "eggNOG", kegg = "KEGG")
-ofs <- c ("count", "normed", "evalue", "length", "percentid")
-annotations <- c ("function", "organism")
-orgLevels <- c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain")
-funcLevels <- c ("level1", "level2", "level3", "function")
 
-#################################################
-### Class components:
-### definition, inheritance, construction, methods, print 
-#################################################
+view.params <- list (
+	entry = c ("count", "normed", "evalue", "length", "percentid"),
+	annot = c ("function", "organism"),
+	level = list (taxa = c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain"),
+								func = c ("level1", "level2", "level3", "function")),
+	source = list (rna = c ("m5rna", "RDP", "Greengenes", "LSU", "SSU"),
+								 ontology = c ("NOG", "COG", "KO", "GO", "Subsystems"),
+								 protein = c ("m5nr", "SwissProt", "GenBank", "IMG", "SEED", "TrEMBL", "RefSeq", "PATRIC", 
+								 						 "eggNOG", "KEGG")))
 
+standardViews <- list (
+	count = c (entry = "count"),
+	normed = c (entry = "normed"))
 
-#################################################
-### MATRIX
-### (1) based for now on the "Matrix" class; maybe to be reimplemented with an underlying BIOM object
-### (2) the advantages of defining this class (instead of just using a "Matrix") are not yet clear.
-###		But I am close to certain it will prove a good idea.  the (unused) hierarchy slot, for
-###		instance will find a purpose.
-###
-### DESIDERATA:
-###		retrieve the entire hierarchy into the hierarchy field, with short names in rownames
-#################################################
-matrixPr <- function (x, ...) matrixPrinter (x)
-matrixSh <- function (object) matrixPr (object)
-print.mmatrix <- matrixPr
-summary.mmatrix <- function (object, ...) matrixSh (object)
+allViews <- list (
+	count = c (entry = "count"),
+	normed = c (entry = "normed"),
+	evalue = c (entry = "evalue"),
+	length = c (entry = "length"),
+	percentid = c (entry = "percentid"))
 
-setClass ("mmatrix",
-					representation (
-						data = "Matrix", 
-						metadata = "rlist", 
-						hierarchy = "character"),
-					contains = NULL)
-setIs ("mmatrix", "Matrix",
-			 coerce = function (from) from@data,
-			 replace = function (object, value) { from @ data <- value ; from } )
-setIs ("mmatrix", "matrix",
-			 coerce = function (from) as.matrix (from@data),
-			 replace = function (object, value) { from @ data <- Matrix::Matrix (value) ; from } )
-setMethod ("initialize", "mmatrix",
-					 function (.Object, data = Matrix::Matrix(), metadata = new ("rlist"), hierarchy = character(0)) {
-					 	.Object@data <- data; .Object@metadata <- metadata; .Object@hierarchy <- hierarchy; .Object } )
-setMethod ("print", "mmatrix", matrixPr)
-setMethod ("summary", "mmatrix", function (object, ...) matrixSh (object))
-setMethod ("show", "mmatrix", matrixSh)
-
-### the intended user-facing construction function:
-setMethod ("mmatrix", "character",
-					 function (x, view = standardViews$count, ...)
-					 	new ("mmatrix", 
-					 			 data = matrixView (scrubIds (x), view),
-					 			 metadata = metadata (x), 
-					 			 hierarchy = character (0)))
-setMethod ("mmatrix", "matrix",
-					 function (x, ...)
-					 	new ("mmatrix",
-					 			 data = Matrix::Matrix (x),
-					 			 metadata = new ("rlist"),
-					 			 hierarchy = character (0)))
-
-#################################################
-### SPECIFIC OF VIEW(S)
-###
-### this class is built with extensions in mind.
-### for now it looks like just a list, but perhaps
-### that some elements of a view specification eventually
-### will not fit this paradigm.  that is why it is 
-### a proper class.
-###
-### USAGE:
-###   v <- view (annotation = "organism")
-###   v <- list ()
-###   for (s in mSources) v [[s]] <- view (source = s)
-###
-###	Tip: arguments do not need to be specified in full; e.g. view (ann = "func")
-### Valid values:
-###		... etc
-#################################################
-viewPr <- function (x, ... )
-	cat(x@of, " : ", x@annotation, " : ", x@level, " : ", x@source, "\n", sep = "")
-viewSh <- function (object) viewPr (object)
-print.view <- viewPr
-summary.view <- function (object, ...) viewSh (object)
-
-setClass ("view",
-					representation (
-						of = "character",
-						annotation = "character",
-						level =	"character",					# "species", "phylum", etc. OR "Subsystem", "level1", etc.
-						source = "character",					# "m5rna", "Greengenes", etc.
-						other = "list"))						# just a precaution for extensibility
-setMethod ("print", "view", viewPr)
-setMethod ("summary", "view", function (object, ...) viewSh (object))
-setMethod ("show", "view", viewSh)
-
-# funcLevels and orgLevels are defined in pkgdata.R
-# c,f,l,S <- view()		c,o,s,m <- view(ann="org")		c,o,p,m <- view(ann="org",lev="phy")
-view <- function (of = "count",
-									annotation = "function",
-									level = if (!is.na (pmatch (annotation, "function"))) "level3" else "species",
-									source = if (!is.na (pmatch (annotation, "function"))) "Subsystems" else "m5rna") {
-	of = ofs[pmatch(of,ofs)]
-	annotation = annotations[pmatch(annotation, annotations)]    
-	new("view", of = of,
-			annotation = annotation, 
-			level = if (annotation == "function") funcLevels[pmatch(level, funcLevels)] 
-			else orgLevels[pmatch(level, orgLevels)], 
-			source = sources[[pmatch(tolower(source), tolower(sources))]])
-}
-
-# retrieves a matrix with given ids in a given view
-# I think -- reconsider? -- it is sound for this function to take an id list, not a selection object
-# value is "Matrix" (not "mmatrix")
-matrixView <- function (ids, v) {
-	s <- paste (
-		"format/plain",
-		"/result_column/", switch (v@of, count = "abundance", normed = "abundance", evalue = "evalue", length = "length", percentid = "identity"),
-		"/type/", v@annotation,
-		"/group_level/", v@level,
-		"/source/", v@source, sep = "")
-	# irritated this does not work:
-	# 	(if (v@of == "normed") function (x) Matrix::Matrix (normalize (x)) else identity) (mGet ("abundance", scrubIds (ids), param = s, enClass = FALSE))
-	x <- mGet ("abundance", scrubIds (ids), param = s, enClass = FALSE)
-	if (v@of == "normed") Matrix::Matrix (normalize (x))
-	else x
-}
 
 #################################################
 ### MATRIX INTERACTION 
@@ -152,86 +44,121 @@ matrixView <- function (ids, v) {
 ### collection (file ("ids.txt"))
 # M$newview <- view ("anno")
 #################################################
-colPr <- function (x, ...) {
+setClass ("collection", representation ("namedList", sel = "selection"), contains = "namedList")
+
+setMethod ("samples", "collection", function (x) samples (x@sel))
+setMethod ("names", "collection", function (x) names (x@sel))
+setMethod ("names<-", "collection", function (x, value) { names (x@sel) <- value ; x })
+setMethod ("groups", "collection", function (x) groups (x@sel))
+setMethod ("groups<-", "collection", function (x, value) { groups (x@sel) <- value ; x })
+
+setMethod ("views", "collection", function (x) viewnames (x))				# needs attention here
+setMethod ("viewnames", "collection", function (x) names (x@.Data))
+setMethod ("viewnames<-", "collection", function (x, value) { names (x@.Data) <- value ; x })
+
+setMethod ("metadata", "collection", function (x) metadata (x@sel))
+setMethod ("selection", "collection", function (x) selection (x@sel))
+
+setMethod ("$", "collection", function (x, name) as.matrix (x [[name]]))
+setMethod ("$<-", "collection", function (x, name, value) { x [[name]] <- value ; x })
+
+setMethod ("[[", "collection", function (x, i, sparse = TRUE, plain = FALSE) {
+	res <- if (sparse) x@.Data [[i]] else as.matrix (x@.Data [[i]])
+	if (plain) for (e in setdiff (names (attributes (res)), c("dim", "dimnames"))) attr (res, e) <- NULL   # does this potentially interfere with the Matrix plumbing?
+	res
+})
+
+setMethod ("[", "collection", function (x, i) {
+### superstition gives rise to variable I just below
+	I <- i
+	x@sel <- x@sel [i]
+	x@.Data <- lapply (x@.Data, `[`, i =, j = I)
+	x
+	})
+
+setMethod ("collection", "character", function (x, ...) collection (selection (x), ...))
+setMethod ("collection", "selection", function (x, ...) {
+	views <- unlist (list (...))
+	if (length (views) == 0) views <- standardViews
+
+	res <- new ("collection", list(), sel = x)
+	length (res @ .Data) <- length (views)
+#	viewnames (res) <- names (views)
+	names (res @ .Data) <- names (views)
+
+#	for (e in names (views)) res [[e]] <- views [[e]]
+	res
+} )
+
+
+print.collection <- function (x, ...) {
 	print (x@sel)
 	cat ("\n")
-	for (j in 1:length(x@views)) { cat ("$", names (x@views) [j], " :: ", sep = "") ; print (x@views [[j]]) }
+# for (j in 1:length (x) { cat ("$", names (x@views) [j], " :: ", sep = "") ; print (x@views [[j]]) }
 }
-colSh <- function (object) colPr (object)
-print.collection <- colPr
-summary.collection <- function (object, ...) colSh (object)
-
-setClass ("collection",
-					representation (
-						sel = "selection",						# metagenome selection used to construct this collection object
-						data = "list",							# list of named "Matrix" objects (or possibly "mmatrix" for short/long names?)
-						views = "list"),							# list of corresponding named "view" objects
-					contains = NULL)
-setMethod ("[[", "collection", function (x, i, exact = TRUE) x@data [[i]])
-setMethod ("$", "collection", function (x, name) x [[name]])
-setMethod ("print", "collection", colPr)
-setMethod ("summary", "collection", function (object, ...) colSh (object))
-setMethod ("show", "collection", colSh)
-setMethod ("selection", "collection", function (x) x@sel)
-setMethod ("samples", "collection", function (x) selection (x))
-setMethod ("metadata", "collection", function (x) x@sel@metadata)
-setMethod ("views", "collection", function (x) x@views)
-setMethod ("viewnames", "collection", function (x) names (x@views))
-setMethod ("viewnames<-", "collection", 
-					 function (x, value) {
-					 	names(x@views) <- value
-					 	names(x@data) <- value
-					 	x
-					 } )
-setMethod ("collection", "character",
-					 function (x, ...)
-					 	collection (selection (x), ...))
-setMethod ("collection", "selection",
-					 function (x, ...) {
-					 	views <- unlist (list (...))
-					 	if (length (views) == 0) {
-					 		message ("matR: no matrix views specified; using defaults")
-					 		views <- standardViews
-					 	}
-					 	data <- list ()
-					 	for (j in 1:length (views))
-					 		data [[j]] <- new ("mmatrix", data = matrixView (x@ids, views [[j]]))
-					 	names (data) <- names (views)
-					 	new ("collection", sel = x, data = data, views = views)
-					 } )
-setMethod ("$<-", signature (x = "collection", value = "view"),
-					 function (x, name, value) {
-					 	x @ data [[name]] <- new ("mmatrix", data = matrixView (x@sel@ids, value))
-					 	x @ views [[name]] <- value
-					 	x
-					 } )
-setMethod ("[[<-", signature (x = "collection", i = "character", j = "missing", value = "view"), 
-					 function (x, i, value) {
-					 	x @ data [[i]] <- new ("mmatrix", data = matrixView (x@sel@ids, value))
-					 	x @ views [[i]] <- value
-					 	x
-					 } )
-setMethod ("names", "collection", function (x) names (x@sel))
-setMethod ("names<-", "collection", 
-					 function (x, value) {
-					 	names (x@sel) <- value
-					 	x } )
-setMethod ("groups", "collection", function (x) groups (x@sel))
-setMethod ("groups<-", "collection", 
-					 function (x, value) {
-					 	groups (x@sel) <- value
-					 	x } )
+summary.collection <- function (object, ...) print (object)
+setMethod ("print", "collection", print.collection)
+setMethod ("summary", "collection", summary.collection)
+setMethod ("show", "collection", function (object) print.collection (object))
 
 
-# this is a constant intended to be available to the user.
-# cannot go in pkgdata.R because its definition requires functionality from the package.
-standardViews <- list (
-	count = view (of = "count"),
-	normed = view (of = "normed"))
+setMethod ("[[<-", signature (x = "collection", value = "character"), function (x, i, value) {
+	vp <- sapply (view.params, unlist, use.names = FALSE)
+	chooser <- array (0, dim = sapply (vp, length), dimnames = vp)
 
-allViews <- list (
-	count = view (of = "count"),
-	normed = view (of = "normed"),
-	evalue = view (of = "evalue"),
-	length = view (of = "length"),
-	percentid = view (of = "percentid"))
+# weight default values
+	chooser ["count",,,] <- chooser ["count",,,] + 1
+	chooser [,"function",,] <- chooser[,"function",,] + 1
+	chooser [,,"species",] <- chooser [,,"species",] + 1
+	chooser [,,"level3",] <- chooser [,,"level3",] + 1
+	chooser [,,,"m5rna"] <- chooser [,,,"m5rna"] + 1
+	chooser [,,,"Subsystems"] <- chooser [,,,"Subsystems"] + 1
+
+# nullify impossible combinations
+	chooser [,"function",view.params$level$taxa,] <- -1
+	chooser [,"function",,view.params$source$rna] <- -1
+	chooser [,"organism",view.params$level$func,] <- -1
+	chooser [,"organism",,view.params$source$ontology] <- -1
+
+# see what has been requested and nullify others
+	names (value) <- names (vp) [sapply (names (value), pmatch, names (vp))]
+	J <- sapply (names (vp), function (x) vp [[x]] [pmatch (value [x], vp [[x]])])
+	j <- match (J ["entry"], vp$entry)
+	if (!is.na (j)) chooser [-j,,,] <- -1
+	j <- match (J ["annot"], vp$annot)
+	if (!is.na (j)) chooser [,-j,,] <- -1
+	j <- match (J ["level"], vp$level)
+	if (!is.na (j)) chooser [,,-j,] <- -1
+	j <- match (J ["source"], vp$source)
+	if (!is.na (j)) chooser [,,,-j] <- -1
+	
+# choose remaining combination of maximum weight
+	J <- chooser == max (chooser)
+	if (sum (J) != 1) stop ("cannot interpret view")
+	J <- arrayInd (which (J), dim (chooser))
+	if (chooser [J] <= 0) stop ("cannot interpret view")
+	names (J) <- names (vp)
+	
+	v <- sapply (names (vp), function (x) vp [[x]] [J [x]], simplify = FALSE)
+	message ("getting view:   ", paste (unlist (v), collapse = " : "))
+	s <- paste (
+		"format/plain",
+		"/result_column/", switch (v$entry, count = "abundance", normed = "abundance", evalue = "evalue", length = "length", percentid = "identity"),
+		"/type/", v$annot,
+		"/group_level/", v$level,
+		"/source/", v$source, sep = "")
+	
+#	should not call for "normed" if we have the data already...
+	x @ .Data [[i]] <- as.matrix (mGet ("abundance", selection (x), param = s, enClass = FALSE))
+	#if (v$entry == "normed") x @ .Data [[i]] <- normalize (x [[i]])
+	#for (e in names (y)) attr (x @ .Data [[i]], e) <- y [[e]]
+	x
+})
+
+
+
+#################################################
+### Class components:
+### definition, inheritance, construction, methods, print 
+#################################################
+
