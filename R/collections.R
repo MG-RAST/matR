@@ -92,6 +92,7 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	chooser [,"organism",,view.params$source$ontology] <- -1
 
 # see what has been requested and nullify others
+# should warn if no match to user input
 	names (value) <- names (vp) [sapply (names (value), pmatch, names (vp))]
 	J <- sapply (names (vp), function (x) vp [[x]] [pmatch (value [x], vp [[x]])])
 	j <- match (J ["entry"], vp$entry)

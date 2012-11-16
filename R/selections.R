@@ -1,44 +1,63 @@
 
-###
 ### Metadata is implemented as an S3 class "metadata".
-### It is a character vector with attributes that help interpret it.
-### attribute "factoring" factors the vector by metagenome.
-###
+### It is a named character vector with attributes that help interpret it.
+### Attribute "grouped" factors the vector, currently only by metagenome,
+### but potentially by project as well.
+
+regroup <- function (x) {
+# this only works for metagenomes and is inflexible
+# it should have an specifically recognize metagenome ID and project ID at least
+	factor (substr (names (x), start = 1, stop = 12))
+# return NULL if length one or unfactorable
+}
 
 setMethod ("metadata", "character", function (x, resource = c ("project", "sample", "metagenome")) {
-### this function has been prototyped to allow for future development, but for now,
-### we restrict to metadata objects OF collections, SPECIFIED by metagenome ID,
+# restriction to metadata objects OF collections, SPECIFIED by metagenome ID
+# needs to be lifted:
 	x <- scrubIds (x)
 	names (x) <- x
 	resource <- "metagenome"
 
 	res <- unlist (lapply (x, mGet, resource = resource, enClass = FALSE))
-	attr (res, "factoring") <- factor (sapply (names (res), substr, start = 1, stop = 12))
 	class (res) <- "metadata"
+# if regroup returns NULL that is ok:
+	attr (res, "grouped") <- regroup (res)
 	res
-# must handle it sensible if this is not factorable
-# pull that substr snippet into a subroutine
 })
 
-# should return array if factored = TRUE
-`[.metadata` <- function (x, i, ..., unique = FALSE, factored = TRUE) {
+# three return types are possible - metadata, list of metadata, data.frame (if bygroup = TRUE)
+`[.metadata` <- function (x, i, ..., unique = FALSE, bygroup = TRUE) {
 	L <- append (list (i), list (...))
-	res <- lapply (L, function (j)
-		unclass (x) [apply (sapply (j, grepl, x = names (x), fixed = TRUE), 1, all)])
+	if (bygroup) {
+		if (is.null (attr (x, "grouped"))) warning ("bygroup=TRUE with ungrouped metadata")
+		else {
+			
+		}
+	}
+	keep <- lapply (L, function (i) apply (sapply (i, grepl, x = names (x), fixed = TRUE), 1, all))
+	res <- lapply (L, function (i) unclass (x) [i])
 	if (length (res) == 1 || all (lapply (res, length) %in% c (0,1))) {
 		res <- unlist (res)
 		class (res) <- "metadata"
+		attr (res, "grouped") <- regroup (res)
 		res
 	}
-	else lapply(res, `class<-`, "metadata")
-# must adjust factor in return element
+	else {
+		res <- lapply(res, `class<-`, "metadata")
+# ... not sure here...		lapply (res, 'attr<-', which = "grouped", value = factor (regroup ()))
+	}
+# must adjust factor in return object
 }
 
 print.metadata <- function (x, ...) twoColPrint (x)
 
 summary.metadata <- function (x, ...) {
-	cat (length (x), "metadata fields in", nlevels (attr (x, "factoring")), "group(s):\n")
-	table (attr (x, "factoring"))
+	cat (length (x), "metadata fields")
+	if (is.null (attr (x, "grouped"))) cat (", ungrouped\n")
+	else {
+		cat (" in", nlevels (attr (x, "grouped")), "group(s):\n")
+		print (table (attr (x, "grouped")))
+	}
 }
 
 setOldClass ("metadata")
