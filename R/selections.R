@@ -30,7 +30,7 @@ setMethod ("metadata", "character", function (x, resource = c ("project", "sampl
 		class (res) <- "metadata"
 		res
 	}
-	else lapply(l, `class<-`, "metadata")
+	else lapply(res, `class<-`, "metadata")
 # must adjust factor in return element
 }
 
