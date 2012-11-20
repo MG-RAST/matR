@@ -19,7 +19,7 @@ setGeneric ("metadata", function (x, ...) standardGeneric ("metadata"))
 
 setGeneric ("views", function (x, ...) standardGeneric ("views"))
 setGeneric ("viewnames", function (x, ...) standardGeneric ("viewnames"))
-setGeneric ("viewnames<-", function (x, ...) standardGeneric ("viewnames<-"))
+setGeneric ("viewnames<-", function (x, value) standardGeneric ("viewnames<-"))
 
 setGeneric ("mmatrix", function (x, ...) standardGeneric ("mmatrix"))
 setGeneric ("selection", function (x, ...) standardGeneric ("selection"))

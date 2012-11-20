@@ -51,12 +51,12 @@ setMethod ("metadata", "character", function (x, resource = c ("project", "sampl
 
 print.metadata <- function (x, ...) twoColPrint (x)
 
-summary.metadata <- function (x, ...) {
-	cat (length (x), "metadata fields")
-	if (is.null (attr (x, "grouped"))) cat (", ungrouped\n")
+summary.metadata <- function (object, ...) {
+	cat (length (object), "metadata fields")
+	if (is.null (attr (object, "grouped"))) cat (", ungrouped\n")
 	else {
-		cat (" in", nlevels (attr (x, "grouped")), "group(s):\n")
-		print (table (attr (x, "grouped")))
+		cat (" in", nlevels (attr (object, "grouped")), "group(s):\n")
+		print (table (attr (object, "grouped")))
 	}
 }
 

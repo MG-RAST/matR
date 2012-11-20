@@ -136,7 +136,7 @@ print.collection <- function (x, ...) {
 		paste (sapply (names (view.params), function (p) attr (v, p)), collapse = " : "))
 	ps <- paste ("$", viewnames (x), "  (", vs, ")", sep = "")
 	cat (paste (ps, collapse = "\n"), "\n\n")
-	twoColPrint (selection (cc))
+	twoColPrint (selection (x))
 }
 summary.collection <- function (object, ...) print (object)
 setMethod ("print", "collection", print.collection)
