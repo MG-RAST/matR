@@ -44,17 +44,17 @@ setMethod ("asFile", "Matrix", function (x, file, ...)
 setMethod ("asFile", "collection", function (x, view = "count", file, ...)
 	asFile (x [[view]], file, ...))
 
-setMethod ("asFile", "pco", function (x, file, ...) {
-	args <- list (...)
-	p <- resolveMerge (args, mconfig$exp())
-	file <- paste (p$path, file, sep = "")
-	write.table (x [[2]], file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
-							 row.names = p$row.names, col.names = p$col.names)
-	write.table (x [[3]], file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
-							 row.names = p$row.names, col.names = p$col.names)
-	write.table (as.matrix (x [[4]]), file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
-							 row.names = p$row.names, col.names = p$col.names)
-} )
+#setMethod ("asFile", "pco", function (x, file, ...) {
+# 	args <- list (...)
+# 	p <- resolveMerge (args, mconfig$exp())
+# 	file <- paste (p$path, file, sep = "")
+# 	write.table (x [[2]], file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
+# 							 row.names = p$row.names, col.names = p$col.names)
+# 	write.table (x [[3]], file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
+# 							 row.names = p$row.names, col.names = p$col.names)
+# 	write.table (as.matrix (x [[4]]), file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
+# 							 row.names = p$row.names, col.names = p$col.names)
+# } )
 
 ### importing is a sort of separate problem
 ###
@@ -70,7 +70,7 @@ setMethod ("asFile", "pco", function (x, file, ...) {
 ### ID
 ### ID
 
-readIDs <- function (file, ...) {
+readIds <- function (file, ...) {
 	y <- read.table (file, colClasses = "character", ...)
 	if (nrow (y) > 1)
 		if (ncol (y) > 1) {

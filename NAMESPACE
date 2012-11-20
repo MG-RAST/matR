@@ -1,14 +1,23 @@
-# for now, we are just exporting everything
-exportPattern(".*")
+
+export(view.params, standard.views, all.views)
+export(dependencies, hazPackages)
+export(callRaw, mGet)
+export(readIds)
+export(demo2, scrubIds, scrapeResources)
+export(sigtest)
+
+# export everything (in development mode)
+# exportPattern(".*")
 
 # CLASS AND METHOD EXPORTS
 exportClassPattern(".*")
-# specifically: rlist, mmatrix, selection, view, collection
-# ...and mpco, mheatmap, analysis soon
+# S3 class: metadata
+# S4 classes: selection, collection
 
-exportMethods (print, summary, show, "[[", "$", "[[<-", "$<-", samples, names, "names<-", groups, "groups<-", mmatrix, metadata,
-  views, viewnames, "viewnames<-", 
-  selection, collection, dist, normalize, permutations, pco, heatmap, render, asFile)
+exportMethods (print, summary, show)
+exportMethods ("[[", "$", "[[<-", "$<-")
+exportMethods (samples, names, "names<-", groups, "groups<-", metadata, views, viewnames, "viewnames<-", selection, collection)
+exportMethods (dist, normalize, permutations, pco, heatmap, render, asFile)
 
 S3method (print, metadata)
 S3method (summary, metadata)
@@ -24,4 +33,4 @@ S3method (summary, collection)
 
 # IMPORTS FROM STANDARD PACKAGES
 importClassesFrom (Matrix, Matrix)
-# importClassesFrom (pcaMethods, pcaRes)
+

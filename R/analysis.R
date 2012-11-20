@@ -292,7 +292,6 @@ setMethod ("dist", "mmatrix", function (x, method = "bray-curtis") {
 ### we'll support unifrac too
 	} )
 
-setMethod ("normalize", "mmatrix", function (x, ...) { })
 setMethod ("normalize", "matrix", function (x, ...) {
 	x <- as.matrix (x)
 	x [is.na (x)] <- 0
@@ -312,7 +311,6 @@ setMethod ("normalize", "matrix", function (x, ...) {
 	} )
 setMethod ("normalize", "Matrix", getMethod ("normalize", "matrix"))
 
-setMethod ("permutations", "mmatrix", function (x, ...) {} )
 setMethod ("permutations", "matrix",
   function (x, ntimes = 1, type = "sample", ...) {
 	x <- as.matrix (x)
