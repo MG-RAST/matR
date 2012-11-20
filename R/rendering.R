@@ -136,11 +136,7 @@ setMethod ("render", "pco",
              if (is.null (par$labels)) par$labels <- par$names
 
 # open device if needed
-
-             if (!is.na (file) && suppressWarnings (suppressPackageStartupMessages (require (Cairo))))
-               Cairo (file = file, type = par$type, width = par$width, height = par$height, 
-                      pointsize = par$pointsize, units = par$units)
-             else dev.new ()
+             dev.new ()
 
              i <- x$vectors [ ,components [1]]
              j <- x$vectors [ ,components [2]]

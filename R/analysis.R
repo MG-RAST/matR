@@ -218,7 +218,7 @@ setMethod ("heatmap", "collection",
 sigtest <- function (x, groups, sig_test = 
   c ("t-test-paired", "Wilcoxon-paired", "t-test-un-paired",
      "Mann-Whitney_un-paired-Wilcoxon", "ANOVA-one-way", "Kruskal-Wallis"),
-                     fdr.level = NULL, ...) {
+                     fdr.level = NULL, qvalue = FALSE, ...) {
   x <- as.matrix (x)
   groups <- as.factor (groups)
   sig_test <- match.arg (sig_test)
@@ -257,11 +257,11 @@ sigtest <- function (x, groups, sig_test =
         g1, g2)
     }))
   names (stat) <- c ("statistic", "p.value")
-#   if (sig_test != "ANOVA-one-way") {
-#     reqPack ("qvalue")
-#     stat [c ("q.value", "significant")] <- 
-#       qvalue (stat$p.value, fdr.level = fdr.level) [c ("qvalues", "significant")]
-#   }
+   if (sig_test != "ANOVA-one-way" && qvalue) {
+     reqPack ("qvalue")
+     stat [c ("q.value", "significant")] <- 
+       qvalue (stat$p.value, fdr.level = fdr.level) [c ("qvalues", "significant")]
+   }
   res$stat <- stat
   invisible (res)
 #   new ("sigtest", res)
