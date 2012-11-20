@@ -61,7 +61,9 @@ setMethod ("[", "collection", function (x, i) {
 	})
 
 # needs configurable timeout
-setMethod ("collection", "character", function (x, ...) collection (selection (x), ...))
+# this won't work to open a file because the method won't be dispatched
+setMethod ("collection", "character", function (x, file = NULL...)
+	collection (selection (if (is.null (file)) x else readIDs (file)), ...))
 setMethod ("collection", "selection", function (x, ...) {
 	views <- list (...)
 	if (length (views) == 0) views <- standard.views

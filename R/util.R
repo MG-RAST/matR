@@ -13,8 +13,8 @@
 ### two functions for demos: each will step through a script, line by line.
 ### this one reads the file as text and echoes each line exactly.
 ### each command must fit on a line, and blank lines are simply echoed.
-stepper <- function (fname) {
-	lines <- readLines (fname)
+stepper <- function (file) {
+	lines <- readLines (file)
 	for (j in 1:length (lines))
 		if (lines [j] != "") {
 			cat (getOption ("prompt"), lines [j], sep = "")
@@ -28,8 +28,8 @@ stepper <- function (fname) {
 
 ### this one parses the whole file first.  commands may span lines.
 ### comments are not displayed.  commands are reformatted to standard appearance.
-stepper2 <- function (fname) {
-	exprs <- parse (file = fname)
+stepper2 <- function (file) {
+	exprs <- parse (file = file)
 	for (j in 1:length (exprs)) {
 		cat (getOption ("prompt"), as.character (exprs [j]), sep = "")
 		readLines (n = 1, warn = FALSE)

@@ -16,47 +16,45 @@
 ###
 ### should return name(s) of written file.
 
-
 setGeneric ("asFile", 
-	def = function (x, fname, ...)
-		save (x, file = fname))
+	def = function (x, file, ...)
+		save (x, file = file))
 
-setMethod ("asFile", "list", function (x, fname, ...)
-		for (j in 1:length(x)) asFile (x [[j]], fname [j]))
+setMethod ("asFile", "list", function (x, file, ...)
+		for (j in 1:length(x)) asFile (x [[j]], file [j]))
 
-setMethod ("asFile", "character", function (x, fname, ...)					# for lists of IDs (this may be stupid)
+setMethod ("asFile", "character", function (x, file, ...)					# for lists of IDs (this may be stupid)
 	stop ("matR: unimplemented method for class character"))
 
-setMethod ("asFile", "matrix", function (x, fname, ...) {
+setMethod ("asFile", "matrix", function (x, file, ...) {
 	args <- list (...)
 	p <- resolveMerge (args, mconfig$exp())
-	fname <- paste (p$path, fname, sep = "")
+	file <- paste (p$path, file, sep = "")
 	if (p$type != "binary")
-		write.table (x, file = fname, append = p$append, quote = p$quote, sep = p$sep, na = p$na,
+		write.table (x, file = file, append = p$append, quote = p$quote, sep = p$sep, na = p$na,
 								 row.names = p$row.names, col.names = p$col.names)
 	else
-		save (x, file = fname)
-	fname
+		save (x, file = file)
+	file
 })
 
-setMethod ("asFile", "Matrix", function (x, fname, ...)
-	asFile (as.matrix (x), fname, ...))
+setMethod ("asFile", "Matrix", function (x, file, ...)
+	asFile (as.matrix (x), file, ...))
 
-setMethod ("asFile", "collection", function (x, view = "count", fname, ...)
-	asFile (x [[view]], fname, ...))
+setMethod ("asFile", "collection", function (x, view = "count", file, ...)
+	asFile (x [[view]], file, ...))
 
-setMethod ("asFile", "pco", function (x, fname, ...) {
+setMethod ("asFile", "pco", function (x, file, ...) {
 	args <- list (...)
 	p <- resolveMerge (args, mconfig$exp())
-	fname <- paste (p$path, fname, sep = "")
-	write.table (x [[2]], file = fname, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
+	file <- paste (p$path, file, sep = "")
+	write.table (x [[2]], file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
 							 row.names = p$row.names, col.names = p$col.names)
-	write.table (x [[3]], file = fname, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
+	write.table (x [[3]], file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
 							 row.names = p$row.names, col.names = p$col.names)
-	write.table (as.matrix (x [[4]]), file = fname, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
+	write.table (as.matrix (x [[4]]), file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
 							 row.names = p$row.names, col.names = p$col.names)
 } )
-
 
 ### importing is a sort of separate problem
 ###
@@ -72,8 +70,8 @@ setMethod ("asFile", "pco", function (x, fname, ...) {
 ### ID
 ### ID
 
-readIDs <- function (filename, ...) {
-	y <- read.table (filename, colClasses = "character", ...)
+readIDs <- function (file, ...) {
+	y <- read.table (file, colClasses = "character", ...)
 	if (nrow (y) > 1)
 		if (ncol (y) > 1) {
 			res <- as.character (y [,2])
@@ -83,7 +81,6 @@ readIDs <- function (filename, ...) {
 	else as.character (y [,1])
 	else unlist (y [1,], use.names = FALSE)
 }
-
 
 ### just an idea:
 
