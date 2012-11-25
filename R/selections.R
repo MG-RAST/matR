@@ -9,6 +9,7 @@ regroup <- function (x) {
 # at least, it should recognize both metagenome IDs and project IDs
 	factor (substr (names (x), start = 1, stop = 12))
 # and it should return NULL if length one or unfactorable
+# Also, need to look into ordered and unordered factors, to make sure of no errors in subselection...
 }
 
 # dispatches on "ANY" to allow specifying "file" and omitting "x" entirely...
@@ -89,6 +90,76 @@ summary.metadata <- function (object, ...) {
 
 setOldClass ("metadata")
 
+
+### the "selection" class is basically for internal use.
+### a "collection" contains a "selection" plus a list of matrices.
+
+setClass ("selection", representation (ids = "character", groups = "factor", metadata = "metadata",
+																			 ids.spec = "character", resource.spec = "character", 
+																			 metadata.extent = "character"))
+
+setMethod ("selection", "selection", function (x) x@ids)
+setMethod ("samples", "selection", function (x) x@ids)
+
+setMethod ("names", "selection", function (x) names (x@ids))
+setMethod ("names<-", "selection", function (x, value) { names (x@ids) <- value ; x })
+
+# need to look into ordered and unordered factors, to make sure of no errors...
+# should the factor have names / labels?
+setMethod ("groups", "selection", function (x) x@groups)
+setMethod ("groups<-", "selection", function (x, value) { x@groups <- as.factor (value) ; x })
+
+setMethod ("[", "selection", function (x, i) {
+	x@ids <- x@ids [i]
+# we ungroup everything but should inherit grouping if it exists...
+	x@groups <- factor()
+# also for metadata, we take the easy way out, for now...
+# subselecting drops all metadata
+	z <- character (0)
+	class (z) <- "metadata"
+	x@metadata <- z
+	attr (x@metadata, "grouped") <- NULL
+	x@metadata.extent <- "none"
+# when "ids.spec" and "resource.spec" become actually used, they will need to be handled more delicately here...
+	x@ids.spec = character (0)
+	x@resource.spec = character (0)
+	x
+	})
+
+setMethod ("metadata", "selection", function (x) x@metadata)
+
+setMethod ("selection", "character", function (x, resource = c ("project", "sample", "metagenome"), 
+																							 metadata.extent = c ("none", "asis", "min", "all")) {
+### this function (like metadata above) has been prototyped to allow for future development,
+### and in this version, ignores certain parameters...
+	x <- scrubIds (x)
+	resource <- "metagenome"
+	if (!identical (metadata.extent, "none")) metadata.extent <- "all"
+
+	new ("selection", ids = x, groups = factor(),
+			 metadata = switch (metadata.extent, none = character (0), metadata (x)),
+			 ids.spec = x, resource.spec = resource, metadata.extent = metadata.extent)
+})
+setMethod ("selection", "numeric", getMethod ("selection", "character"))
+
+print.selection <- function (x, ...) {
+	if (is.null (names (x)) && 0 == length (groups (x))) print (selection (x))
+	else {
+		s <- selection (x)
+		n <- names (x)
+		g <- if (0 == length (groups (x))) NULL else paste ("(", groups (x), ")", sep = "")
+		names (s) <- if (is.null (n)) g else if (is.null (g)) n else paste (n, g)
+		twoColPrint (s)
+	}
+}
+summary.selection <- function (object, ...) print.selection (object)
+setMethod ("print", "selection", print.selection)
+setMethod ("summary", "selection", summary.selection)
+setMethod ("show", "selection", function (object) print.selection (object))
+
+
+
+
 ###
 ### the "selection" class exists to enable flexible
 ### specification of a group of metagenomes to study.
@@ -113,51 +184,3 @@ setOldClass ("metadata")
 ###
 ### specification of selections by project & sample id is not yet implemented
 ###
-
-setClass ("selection", representation (ids = "character", groups = "factor", metadata = "metadata",
-																			 ids.spec = "character", resource.spec = "character", 
-																			 metadata.extent = "character"))
-
-setMethod ("selection", "selection", function (x) x@ids)
-setMethod ("samples", "selection", function (x) x@ids)
-
-setMethod ("names", "selection", function (x) names (x@ids))
-setMethod ("names<-", "selection", function (x, value) { names (x@ids) <- value ; x })
-
-setMethod ("groups", "selection", function (x) x@groups)
-setMethod ("groups<-", "selection", function (x, value) { x@groups <- as.factor (value) ; x })
-
-setMethod ("[", "selection", function (x, i) {
-	# ... this needs completion
-})
-
-setMethod ("metadata", "selection", function (x) x@metadata)
-
-setMethod ("selection", "character", function (x, resource = c ("project", "sample", "metagenome"), 
-																							 metadata.extent = c ("none", "asis", "min", "all")) {
-### again this function has been prototyped to allow for future development
-	x <- scrubIds (x)
-	resource <- "metagenome"
-	if (!identical (metadata.extent, "none")) metadata.extent <- "all"
-
-	new ("selection", ids = x, groups = factor(),
-			 metadata = switch (metadata.extent, none = character (0), metadata (x)),
-			 ids.spec = x, resource.spec = resource, metadata.extent = metadata.extent)
-})
-setMethod ("selection", "numeric", getMethod ("selection", "character"))
-
-print.selection <- function (x, ...) {
-	if (is.null (names (x)) && 0 == length(groups (x))) print (selection (x))
-	else {
-		s <- selection (x)
-		n <- names (x)
-		g <- if (0 == length (groups (x))) NULL else paste ("(", groups (x), ")", sep = "")
-		names (s) <- if (is.null (n)) g else if (is.null (g)) n else paste (n, g)
-		twoColPrint (s)
-	}
-}
-summary.selection <- function (object, ...) print.selection (object)
-setMethod ("print", "selection", print.selection)
-setMethod ("summary", "selection", summary.selection)
-setMethod ("show", "selection", function (object) print.selection (object))
-

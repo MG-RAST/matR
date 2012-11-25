@@ -1,3 +1,6 @@
+
+# *** collection with views specified doesn't work due to file parameter; could put it last...?
+
 # need routines to handle view description vectors
 # * create printable string (and use uniformly)
 # * retrieve as vector from matrix attributes
@@ -34,28 +37,40 @@ setMethod ("names<-", "collection", function (x, value) { names (x@sel) <- value
 setMethod ("groups", "collection", function (x) groups (x@sel))
 setMethod ("groups<-", "collection", function (x, value) { groups (x@sel) <- value ; x })
 
-# should return list of character vectors of view attributes; return value should be usable to create a new collection
-setMethod ("views", "collection", function (x) viewnames (x))
+# the idea is:  the character vectors returned by this method should, themselves, 
+# be usable as view descriptions to construct new collections
+setMethod ("views", "collection", function (x) 
+	lapply (x@views, function (e) unlist (attributes (e) [names (view.params)])))					 
 setMethod ("viewnames", "collection", function (x) names (x@views))
 setMethod ("viewnames<-", "collection", function (x, value) { names (x@views) <- value ; x })
 
 setMethod ("metadata", "collection", function (x) metadata (x@sel))
 
-# should drop attributes but does not.
-setMethod ("$", "collection", function (x, name) as.matrix (x@views [[name]]))
+# this access operator dependably returns a plain vanilla matrix
+setMethod ("$", "collection", function (x, name) {
+	res <- as.matrix (x@views [[name]])
+# here we drop all attributes besides "dim" and "dimnames"
+	attributes (res) <- attributes (res) [c ("dim", "dimnames")]
+	res
+})
+# users are intended to use $<- but not [[<-
 setMethod ("$<-", "collection", function (x, name, value) { x [[name]] <- value ; x })
 
-setMethod ("[[", "collection", function (x, i, sparse = TRUE, plain = FALSE) {
-	res <- if (sparse) x@views [[i]] else as.matrix (x@views [[i]])
-# does this potentially interfere with the Matrix plumbing?  I think so...
-	if (plain) for (e in setdiff (names (attributes (res)), c("dim", "dimnames"))) attr (res, e) <- NULL
+# to avoid interfering with attributes set in Matrix package plumbing, we decide that plain requires full
+setMethod ("[[", "collection", function (x, i, full = FALSE, plain = FALSE) {
+	res <- if (plain || full) as.matrix (x@views [[i]]) else x@views [[i]]
+	if (plain) attributes (res) <- attributes (res) [c ("dim", "dimnames")]
 	res
 })
 
 setMethod ("[", "collection", function (x, i) {
 	x@sel <- x@sel [i]
-# "[" for "selection" still needs to be implemented
-# also, attributes of views also may need to be adjusted in the subselected object
+# need to keep an eye on this:
+# attributes in the subselected object may need to be adjusted, for instance "rowgroups" when implemented...
+# and this must work correctly for different kinds of index...
+# want to use: numeric, logical, sample names, sample IDs, groups...
+# for that matter, need to know exactly when/how column names in the matrices are assigned...
+# **** the following drops attributes; this is not ok...
 	x@views <- lapply (x@views, `[`, i=, j=i)
 	x
 	})
@@ -68,7 +83,9 @@ setMethod ("collection", "selection", function (x, ...) {
 	views <- list (...)
 	if (length (views) == 0) views <- standard.views
 	else if (is.list (views [[1]])) views <- views [[1]]
-# should check here for names & reject if absent
+	if (is.null (names (views))) stop ("views must have names")
+# what follows is a bit tricky, but seems ok
+# the list of views is created using the views themselves as entries, then the matrices are written over
 	res <- new ("collection", views = views, sel = x)
 	for (e in names (views)) res [[e]] <- views [[e]]
 	res
@@ -78,8 +95,9 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	vp <- sapply (view.params, unlist, use.names = FALSE)
 	chooser <- array (0, dim = sapply (vp, length), dimnames = vp)
 
-# view construction logic:
-# weight default values
+# we use a system of weights on all parameter combinations, to enable specifying views minimally
+# there is still some flaky behavior, but mostly it works nicely...
+# first, weight default values
 	chooser ["count",,,] <- chooser ["count",,,] + 1
 	chooser [,"function",,] <- chooser[,"function",,] + 1
 	chooser [,,"species",] <- chooser [,,"species",] + 1
@@ -94,7 +112,8 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	chooser [,"organism",,view.params$source$ontology] <- -1
 
 # see what has been requested and nullify others
-# should warn if no match to user input
+# should warn if no match to user input...
+# view parameters should not be hard-coded here...
 	names (value) <- names (vp) [sapply (names (value), pmatch, names (vp))]
 	J <- sapply (names (vp), function (x) vp [[x]] [pmatch (value [x], vp [[x]])])
 	j <- match (J ["entry"], vp$entry)
@@ -104,10 +123,10 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	j <- match (J ["level"], vp$level)
 	if (!is.na (j)) chooser [,,-j,] <- -1
 	j <- match (J ["source"], vp$source)
-	if (!is.na (j)) chooser [,,,-j] <- -1       # this needs to be prettier
+	if (!is.na (j)) chooser [,,,-j] <- -1
 	
 # choose remaining combination of maximum weight
-# write this in a better way.
+# write this in a better way...
 	J <- chooser == max (chooser)
 	if (sum (J) != 1) stop ("cannot interpret view")
 	J <- arrayInd (which (J), dim (chooser))
@@ -115,28 +134,43 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	names (J) <- names (vp)
 	
 	v <- sapply (names (vp), function (x) vp [[x]] [J [x]], simplify = FALSE)
-	message ("getting view:   ", paste (unlist (v), collapse = " : "))
-	s <- paste (
-		"format/plain",
-		"/result_column/", switch (v$entry, count = "abundance", normed = "abundance", evalue = "evalue", length = "length", percentid = "identity"),
-		"/type/", v$annot,
-		"/group_level/", v$level,
-		"/source/", v$source, sep = "")
 
-	x@views [[i]] <- as.matrix (mGet ("abundance", selection (x), param = s, enClass = FALSE))
-#	should not call for "normed" if we have the data already.
-	if (v$entry == "normed") x@views [[i]] <- normalize (x@views [[i]])
-	for (e in names (v)) attr (x@views [[i]], e) <- v [[e]]
+#	for "normed" view (and others, later) we check if we have the raw data already
+	
+	except.entry <- setdiff (names (view.params), "entry")
+	if (v$entry == "normed" && any (j <- sapply (x@views, 
+																							 function (e) 
+																							 	identical (attributes (e) [except.entry], v [except.entry])))) {
+		message ("calculating:   ", paste (unlist (v), collapse = " : "))
+		x@views [[i]] <- normalize (x@views [[which (j)]])
+	}
+	else {
+		message ("fetching:   ", paste (unlist (v), collapse = " : "))
+		s <- paste ("format/plain",
+								"/result_column/", switch (v$entry, 
+																					 count = "abundance", 
+																					 normed = "abundance", 
+																					 evalue = "evalue", 
+																					 length = "length", 
+																					 percentid = "identity"),
+								"/type/", v$annot,
+								"/group_level/", v$level,
+								"/source/", v$source, 
+								sep = "")
+# here eventually should go support for storing matrices sparsely...
+		x@views [[i]] <- as.matrix (mGet ("abundance", selection (x), param = s, enClass = FALSE))
+		if (v$entry == "normed") x@views [[i]] <- normalize (x@views [[i]])
+	}
+	attributes (x@views [[i]]) <- append (attributes (x@views [[i]]), v)
 	x
 })
 
-
 print.collection <- function (x, ...) {
 	vs <- sapply (x@views, function (v)
-		paste (sapply (names (view.params), function (p) attr (v, p)), collapse = " : "))
+		paste (unlist (attributes (v)) [names (view.params)], collapse = " : "))
 	ps <- paste ("$", viewnames (x), "  (", vs, ")", sep = "")
 	cat (paste (ps, collapse = "\n"), "\n\n")
-	twoColPrint (selection (x))
+	print (x@sel)
 }
 summary.collection <- function (object, ...) print (object)
 setMethod ("print", "collection", print.collection)

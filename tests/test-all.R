@@ -32,6 +32,7 @@ cc$org.count <- c (annot="organism", entry="count")
 cc$org.normed <- c (annot="organism", entry="normed")
 views (cc)
 viewnames (cc) [1:2] <- c ("func.count", "func.normed")
+viewnames (cc)
 
 cc$func.count
 cc$func.normed
@@ -63,7 +64,7 @@ mm[c("0464", "PI"), c("0464","seq_"), c("0464","biome")]
 mm["disease"]
 mm[".age"]
 mm["host_common_name"]
-mm["disease", ".age", "host_common_name", bygroup = TRUE]
+mm["host_common_name", "disease", ".age", bygroup = TRUE]
 
 ### ANALYSIS
 
