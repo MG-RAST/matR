@@ -46,6 +46,7 @@ Remember to set an authentication key when attempting access to private data.
 }
 \seealso{callRaw, mGet, matrixView, Collections, Views}
 \examples{
+\dontrun{
 aa <- orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3")
 print (aa)
 bb <- orgMatrixEvalue ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3")
@@ -57,4 +58,5 @@ dd <- list (
 	RefSeq = orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3", source = "RefSeq" ),
 	Greengenes = orgMatrix ("4441679.3;4441680.3;4441682.3;4441695.3;4441696.3;4440463.3;4440464.3", source = "Greengenes" ))
 as.matrix (matrixView ("4441679.3 4441680.3", view (of = "drisee")))
+}
 }

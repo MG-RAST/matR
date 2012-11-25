@@ -2,12 +2,12 @@
 ### Defining generics for common functions has to be done right,
 ### so we don't produce weird effects in users' customary workflows.
 
-setGeneric ("dist")
+setGeneric ("dist", function (x, ...) standardGeneric ("dist"))
 setGeneric ("normalize", function (x, ...) standardGeneric ("normalize"))
 setGeneric ("permutations", function (x, ...) standardGeneric ("permutations"))
 # setGeneric ("sigtest", function (x, ...) standardGeneric ("sigtest"))
 setGeneric ("pco", function (x, ...) standardGeneric ("pco"))
-setGeneric ("heatmap")
+setGeneric ("heatmap", function (x, ...) standardGeneric ("heatmap"))
 
 ### we use new-style classes, but in an old-style way.
 ### analysis objects are lists, and within the code there
@@ -16,7 +16,7 @@ setGeneric ("heatmap")
 ### ...we want to use S4 dispatching but not slots.
 
 # elements: par, values, vectors, dist, method
-setClass ("pco", repr = NULL, contains = "namedList")
+setClass ("pco", repr = NULL, contains = "list")
 # assign in par: labels, colors
 
 # elements: call (this is temporary, pending rewrite of viz routine)

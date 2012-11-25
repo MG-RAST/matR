@@ -5,48 +5,75 @@
 ### but potentially by project as well.
 
 regroup <- function (x) {
-# this only works for metagenomes and is inflexible
-# it should have an specifically recognize metagenome ID and project ID at least
+# this is bad... a hard-coded method to inflexibly recognize a single format...
+# at least, it should recognize both metagenome IDs and project IDs
 	factor (substr (names (x), start = 1, stop = 12))
-# return NULL if length one or unfactorable
+# and it should return NULL if length one or unfactorable
 }
 
-setMethod ("metadata", "character", function (x, resource = c ("project", "sample", "metagenome")) {
-# restriction to metadata objects OF collections, SPECIFIED by metagenome ID
-# needs to be lifted:
-	x <- scrubIds (x)
-	names (x) <- x
+# dispatches on "ANY" to allow specifying "file" and omitting "x" entirely...
+setMethod ("metadata", "ANY", function (x = "", file = NULL, resource = c ("project", "sample", "metagenome")) {
+# currently restricted to metadata objects OF collections that are SPECIFIED by metagenome ID
+# so the "resource" is ignored... should be revised...
+	x <- scrubIds (if (is.null (file)) x else readIds (file))
 	resource <- "metagenome"
+# names given to metagenome IDs are ignored, although maybe there could be a way to allow them...
+	names (x) <- x
 
 	res <- unlist (lapply (x, mGet, resource = resource, enClass = FALSE))
 	class (res) <- "metadata"
-# if regroup returns NULL that is ok:
+# it is understood that regroup may return NULL here, and that is ok...
 	attr (res, "grouped") <- regroup (res)
 	res
 })
 
-# three return types are possible - metadata, list of metadata, data.frame (if bygroup = TRUE)
-`[.metadata` <- function (x, i, ..., unique = FALSE, bygroup = TRUE) {
-	L <- append (list (i), list (...))
+# three return types are possible:
+# metadata (single index), list of metadata (multiple index), data.frame (bygroup=TRUE)
+# it would be good for "names" of elements of the returned object to be set...
+`[.metadata` <- function (x, i, ..., unique = FALSE, bygroup = FALSE) {
+# we accept an arbitrary number of user-specified index vectors
+# bear in mind that each index (vector) is possibly of length > 1
+	J <- append (list (i), list (...))
+# for the typical user, this special case is routine:
+# insist on one item per index per metagenome (even if NA) and return a data.frame
+# (in this scenario, multiple matches to an index signals an error)
 	if (bygroup) {
-		if (is.null (attr (x, "grouped"))) warning ("bygroup=TRUE with ungrouped metadata")
+		if (is.null (attr (x, "grouped"))) warning ("ignoring bygroup=TRUE with ungrouped metadata")
 		else {
-			
+# first we get the results as a list (see below) and then worry about creating the non-ragged data.frame
+			res <- eval (as.call (append (list (`[`, x), J)))
+			if (!is.list (res)) return (res)
+			return (as.data.frame (
+# we turn all elements of the returned list into character vectors of the same length
+# and assemble these into a data.frame
+				sapply (res, function (e) {
+					return.rows <- character (nlevels (attr (x, "grouped")))
+					names (return.rows) <- levels (attr (x, "grouped"))
+					return.rows [] <- NA
+					return.rows [as.character (attr (e, "grouped"))] <- e
+					return.rows } ),
+				stringsAsFactors = FALSE))
 		}
 	}
-	keep <- lapply (L, function (i) apply (sapply (i, grepl, x = names (x), fixed = TRUE), 1, all))
-	res <- lapply (L, function (i) unclass (x) [i])
+# next line creates a list of logical vectors, each serving to index the metadata object...
+# the j-th tells which elements of x should be returned for the j-th user-specified index vector
+	keep.list <- lapply (J, function (j) apply (sapply (j, grepl, x = names (x), fixed = TRUE), 1, all))
+# next line simply extracts those elements
+# but note "unclass" is necessary to avoid calling the present function ("[.metadata") recursively
+	res <- lapply (keep.list, function (j) unclass (x) [j])
+# the results is a list, which we collapse into a character vector under two circumstances:
+# (1) it has length one (because the user specified a single index vector)
+# (2) each element has length one (e.g., each user-specifed index selected a single element)
 	if (length (res) == 1 || all (lapply (res, length) %in% c (0,1))) {
 		res <- unlist (res)
 		class (res) <- "metadata"
 		attr (res, "grouped") <- regroup (res)
-		res
 	}
 	else {
 		res <- lapply(res, `class<-`, "metadata")
-# ... not sure here...		lapply (res, 'attr<-', which = "grouped", value = factor (regroup ()))
+		res <- lapply (res, function (e) { attr (e, "grouped") <- regroup (e) ; e } )
 	}
-# must adjust factor in return object
+	res
 }
 
 print.metadata <- function (x, ...) twoColPrint (x)

@@ -16,9 +16,9 @@
 ###
 ### should return name(s) of written file.
 
-setGeneric ("asFile", 
-	def = function (x, file, ...)
-		save (x, file = file))
+asFile <- function (x, file, ...) save (x, file = file)
+
+setGeneric ("asFile", function (x, file, ...) standardGeneric ("asFile"))		
 
 setMethod ("asFile", "list", function (x, file, ...)
 		for (j in 1:length(x)) asFile (x [[j]], file [j]))

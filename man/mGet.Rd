@@ -55,6 +55,7 @@ callRaw, mGet, matrixView, Collections,
 Resources and Identifiers
 }
 \examples{
+\dontrun{
 M <- mGet( "metagenome", "4447971.3" )
 P <- mGet( "project", "mgp92")
 L <- mGet( "library", 3482.4 )
@@ -73,4 +74,5 @@ M1 <- mGet ("abundance", c(4443360.3,4443361.3,4443362.3), namespace="SEED")
 M2 <- mGet ("abundance", "4443360.3;4443361.3;4443362.3", namespace="SEED", toFile="t")
 M3 <- mGet ("abundance", "4443360.3;4443361.3;4443362.3", namespace="SEED", param="format/plain")
 unlink (t)
+}
 }
