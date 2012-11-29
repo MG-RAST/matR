@@ -57,6 +57,7 @@ A collection is rarely built to hold a single view, but rather a list of multipl
 \seealso{\code{\link{matR Parameters}}, \code{\link{Authentication}}, \code{Standard Views}, \code{\link{selection-class}}, \code{\link{view-class}}, \code{\link{collection-class}}, \code{\link{collection-methods}}
 \code{\link{callRaw}}, \code{\link{mGet}}, \code{\link{matrixView}}}
 \examples{
+\dontrun{
 cc <- collection("4443360.3;4443361.3;4443362.3;4443363.3;4443364.3;4443365.3;4443366.3;4443367.3;4443368.3")
 
 metadata (selection (...))
@@ -75,4 +76,5 @@ ee$m
 ww <- list (func = view (), org = view(), onlygg= view())
 ff <- collection ("...", ww)
 ff$onlygg
+}
 }
