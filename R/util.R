@@ -266,3 +266,9 @@ resolveMerge <- function (first, second)
 resolveParList <- function (call, object, defaults)
   resolveMerge (call, resolveMerge (object, resolveMerge (defaults, mconfig$par())))
 
+xcall <- function (fun, ..., with = list(), without = character ()) {
+	call <- append (append (list (fun), list (...)), with)
+	call [without] <- NULL
+	if (mconfig$verbose()) message (paste (names (call [-1]), ":", as.character (call [-1]), sep = "", collapse = "  "), "\n")
+	eval (as.call (call))
+}

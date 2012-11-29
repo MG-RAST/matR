@@ -23,3 +23,14 @@ setGeneric ("viewnames<-", function (x, value) standardGeneric ("viewnames<-"))
 
 setGeneric ("selection", function (x, ...) standardGeneric ("selection"))
 setGeneric ("collection", function (x, ...) standardGeneric ("collection"))
+
+### Defining generics for common functions has to be done right,
+### so we don't produce weird effects in users' environments
+
+setGeneric ("dist", function (x, ...) standardGeneric ("dist"))
+setGeneric ("pco", function (x, ...) standardGeneric ("pco"))
+setGeneric ("heatmap", function (x, ...) standardGeneric ("heatmap"))
+setGeneric ("sigtest", function (x, ...) standardGeneric ("sigtest"))
+
+setGeneric ("render", function (x, ...) standardGeneric ("render"))
+

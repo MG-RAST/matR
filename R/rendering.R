@@ -1,11 +1,4 @@
 
-xcall <- function (fun, ..., with = list(), without = character ()) {
-  call <- append (append (list (fun), list (...)), with)
-  call [without] <- NULL
-  call
-#  eval (as.call (call))
-}
-
 #################################################
 ### "render" is the generic function to visualize
 ### the computed analyis objects that we support.
@@ -26,33 +19,14 @@ xcall <- function (fun, ..., with = list(), without = character ()) {
 ### 
 #################################################
 
-# Below are defined:
-# setMethod ("render", "matrix")
-# setMethod ("render", "mmatrix")
-# setMethod ("render", "collection", function (x, views = c ("raw", "normed")) {...})
-# setMethod ("render", "pco")
-# setMethod ("render", "heatmap")
-setGeneric ("render", function (x, ...) standardGeneric ("render"))
-
-setMethod ("render", "collection", 
-					 function (x, views = c ("count", "normed"), file = NA, ...) {
-					 	par <- list(
-					 		main = c ("raw data", "log2(x+1) & centered per sample, scaled 0 to 1 over all samples"),
-					 		names = if (!all (groups (x) == 1)) paste (names (x), " (", groups (x), ")", sep = "")
-					 		else names (x))
-					 	par <- resolveMerge (list (...), par)
-					 	main <- par$main
-					 	par$main <- NULL
-					 	
-					 	plot.new ()
-					 	split.screen (c (2,1))
-					 	screen (1)
-#             boxplot (x [[views [1]]], main = par$main [1], names = par$names, ...)
-					 	xcall (boxplot, x [[views [1]]], main = main [1], with = par)
-					 	screen (2)
-#             boxplot (x [[views [2]]], main = par$main[2], names = par$names, ... )
-					 	xcall (boxplot, x [[views [2]]], main = main [2], with = par)
-					 } )
+setMethod ("render", "collection", function (x, view = "normed", file = NA, ...) {
+	par <- list()
+	par$main <- paste (views (x) [[view]], collapse = " : ")
+	par$names <- if (length (names (x)) != 0) names (x) else samples (x)
+	if (length (groups (x)) != 0) par$names <- paste (par$names, " (", groups (x), ")", sep = "")
+	par <- resolveMerge (list (...), par)
+	xcall (boxplot, x [[view]], with = par)
+} )
 
 # setMethod ("render", "mmatrix", function (x, ...) {...})
 # setMethod ("render", "matrix", function (x, ...) {...})
@@ -644,3 +618,16 @@ setMethod ("render", "heatmap",
              if (!is.null (toFile)) dev.off ()
              invisible(retval)
            } )
+
+
+
+
+
+#	split.screen (c (2,1))
+#	screen (1)
+#             boxplot (x [[views [1]]], main = par$main [1], names = par$names, ...)
+#	xcall (boxplot, x [[views [1]]], main = main [1], with = par)
+#	screen (2)
+#             boxplot (x [[views [2]]], main = par$main[2], names = par$names, ... )
+#	xcall (boxplot, x [[views [2]]], main = main [2], with = par)
+

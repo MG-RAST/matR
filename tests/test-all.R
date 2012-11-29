@@ -7,14 +7,13 @@ guts
 ### COLLECTION CONSTRUCTION
 
 cc <- collection (guts)
-
 dd <- collection (guts, func1 = c (entry="normed", lev="level1"), func2 = c (entry="normed", lev="level2"), 
 									func3 = c (entry="normed", lev="level3"), func4 = c (entry="normed", lev="function"))
 
-## find a 16S set and name it
-xxx <- ....
-ee <- collection (xxx, dom = c (entry="normed", lev="domain"), phy = c (entry="normed", lev="phylum"), 
-									spec = c (entry="normed", lev="species"), func4 = c (entry="normed", lev="strain"))
+## find a 16S set to show
+# xxx <- ....
+# ee <- collection (xxx, dom = c (entry="normed", lev="domain"), phy = c (entry="normed", lev="phylum"), 
+#									spec = c (entry="normed", lev="species"), func4 = c (entry="normed", lev="strain"))
 
 ### COLLECTION MANIPULATION
 
@@ -68,5 +67,19 @@ mm["host_common_name", "disease", ".age", bygroup = TRUE]
 
 ### ANALYSIS
 
+viewnames (cc) [1:2] <- c ("count", "normed")
 
+heatmap (cc)
+heatmap (cc, main = "My Title")
+heatmap (cc, main = "My Title", col = c ("blue", "green"), cexCol = 0.8)
+heatmap(cc,rows=c(rep(TRUE,100),rep(FALSE,915)))
+heatmap(cc,rows=c(rep(TRUE,50),rep(FALSE,965)))
 
+pco (cc)
+groups (cc) <- c (1,1,1,2,2,3,3)
+pco (cc, view = "org.normed")
+pco (cc, comp = c (1,2))
+pco (cc, main = "My Title")
+
+render(cc)
+render(cc, "normed", las=3, cex.axis=.7, ylab = "my axis title")
