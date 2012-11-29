@@ -71,7 +71,14 @@ setMethod ("[", "collection", function (x, i) {
 # want to use: numeric, logical, sample names, sample IDs, groups...
 # for that matter, need to know exactly when/how column names in the matrices are assigned...
 # **** the following drops attributes; this is not ok...
-	x@views <- lapply (x@views, `[`, i=, j=i)
+	newviews <- lapply (x@views, `[`, i=, j=i)
+	names (newviews) <- names (x@views)
+	for (e in names (newviews)) {
+		a <- attributes (x@views [[e]])
+		a [c ("dim", "dimnames")] <- NULL
+		attributes (newviews [[e]]) [names (a)] <- a
+	}
+	x@views <- newviews
 	x
 	})
 
