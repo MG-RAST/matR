@@ -4,7 +4,7 @@
 mgp.ex <- scrubIds (c(9,54,18,12,57,16,757), "project")
 mgm.ex <- list()
 for (p in mgp.ex) {
-  md <- metadata (p, res = "project")
+  md <- mGet("project", p)
   mgm.ex [[md$id]] <- as.character (unlist (md$analyzed))
 }
 Whalebone <- collection (mgm.ex$mgp9)
