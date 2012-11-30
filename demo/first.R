@@ -24,28 +24,26 @@ metadata (M)
 
 ### and specific items of interest can be accessed, this way:
 
-j <- c ("mgm4440464.3", "metadata", "project", "data", "project_description")
-metadata (M) [[j]]
+metadata (M) [c ("4440464.3", "project_description")]
 
 ### data from the collection can be exported in CSV or tab-separated form:
 
-asFile (M$count, fname = "guts_raw_counts.csv", sep = ",")
+asFile (M$count, file = "guts_raw_counts.csv", sep = ",")
 
 ### and boxplots give a simple visual summary of diversity within the samples:
 
-render (M, views = c ("count", "normed"))
+render (M, view = "normed")
 
 ### similarity between samples can be quantified by various distance metrics,
 ### producing a triangular matrix of pairwise measurements:
 
-dist (M$normed, method = "euclidean")
+dist (M, view = "normed", method = "euclidean")
 
-dist (M$normed, method = "bray-curtis")
+dist (M, view = "normed", method = "bray-curtis")
 
 ### Next we use euclidean distance for a principal coordinates analysis (PCoA)
 ### to compare samples in a space of reduced dimension:
 
-dev.new()
 P <- pco (M, view = "normed", method = "euclidean")
 
 ### the analysis was plotted immediately, and the numerical results were
@@ -63,7 +61,7 @@ pco (M, view = "normed")
 ### the clustering is according to our expectations, of course.  In a heatmap of the
 ### normalized counts, more detail appears in relation to specific functional annotations:
 
-heatmap (M, view = "normed")
+heatmap (M, view = "normed", cexCol = 0.8)
 
 ### note that, as required for the dendrogram (tree diagram), samples are
 ### reordered in the lower margin.

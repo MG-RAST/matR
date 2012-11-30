@@ -32,6 +32,7 @@ The metadata of a \code{collection} is exactly the metadata of the \code{selecti
 %\author{Daniel T. Braithwaite}
 \seealso{\code{\link{Collections}}, \code{\link{Resources and Identifiers}}, \code{\link{rlist-class}}, \code{\link{metadata-methods}}}
 \examples{
+\dontrun{
 metadata ("mgp92") [[c ("metadata", "study_abstract")]]
 
 metadata ("mgs25665") [[c ("env_package", "metadata", "host_common_name")]]
@@ -57,4 +58,6 @@ md[,c("metadata","sample","data","latitude")]
 # metadata ("mgp92", resource="project") [[c("metadata","study_abstract")]]
 # metadata ("25665", resource="sample") [[c("env_package","metadata", "host_common_name")]]
 # metadata ("mgm4440284.3", resource="metagenome") [[c ("metadata", "library", "data", "seq_meth")]]
+
+}
 }
