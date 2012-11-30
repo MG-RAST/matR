@@ -48,6 +48,9 @@ setMethod ("pco", "collection", function (x, view = "normed", components = c (1,
 		grid ()
 		}
 	else {
+# parameter "color" has to be specially handled.
+# "points" above wants "col", scatterplot3d wants "color", and we
+# want the user not to worry about it...
 		par$color <- col
 		par$type <- "h"
 		par$lty.hplot <- "dotted"
@@ -110,7 +113,7 @@ setMethod ("sigtest", "matrix", function (x, groups, test = c ("t-test-paired", 
 																					fdr.level = NULL, qvalue = FALSE, ...) {
 	x <- as.matrix (x)
 	groups <- as.factor (groups)
-	sig_test <- match.arg (sig_test)
+	test <- match.arg (test)
 	res <- list()
 	res$samples <- colnames (x)
 	res$groups <- groups
@@ -118,7 +121,7 @@ setMethod ("sigtest", "matrix", function (x, groups, test = c ("t-test-paired", 
 		tapply (row, groups, mean)))
 	res$sd <- t (apply (x, 1, function (row)
 		tapply (row, groups, sd)))
-	fun <- switch (sig_test,
+	fun <- switch (test,
 								 "t-test-un-paired" =
 								 	function (x1, x2) t.test (x1, x2),
 								 "t-test-paired" = 
@@ -135,7 +138,7 @@ setMethod ("sigtest", "matrix", function (x, groups, test = c ("t-test-paired", 
 								 		c (a ["F value"] [1,1], a ["Pr(>F)"] [1,1])
 								 	})
 	stat <- as.data.frame (t (
-		if (sig_test %in% c ("Kruskal-Wallis", "ANOVA-one-way"))
+		if (test %in% c ("Kruskal-Wallis", "ANOVA-one-way"))
 			apply (x, 1, fun)
 		else {
 			g1 <- lapply (apply (x [ ,groups == levels (groups) [1]], 1, list), unlist)
@@ -146,7 +149,7 @@ setMethod ("sigtest", "matrix", function (x, groups, test = c ("t-test-paired", 
 				g1, g2)
 		}))
 	names (stat) <- c ("statistic", "p.value")
-	if (sig_test != "ANOVA-one-way" && qvalue) {
+	if (test != "ANOVA-one-way" && qvalue) {
 		reqPack ("qvalue")
 		stat [c ("q.value", "significant")] <- 
 			qvalue (stat$p.value, fdr.level = fdr.level) [c ("qvalues", "significant")]
