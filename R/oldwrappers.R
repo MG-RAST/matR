@@ -9,9 +9,9 @@
 ### it is an interface, so it speaks common languages.
 ############################################
 
-mProjects <- function () mListAll ("project")
-mSamples <- function () mListAll ("sample")
-mMetagenomes <- function () mListAll ("metagenome")
+mProjects <- function () mListAllIds ("project")
+mSamples <- function () mListAllIds ("sample")
+mMetagenomes <- function () mListAllIds ("metagenome")
 
 ############################################
 

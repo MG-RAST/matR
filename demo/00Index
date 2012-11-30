@@ -5,4 +5,3 @@ metadata	how-to: use metadata
 analyses	how-to: apply standard analyses
 offline	explains features requiring network access (but runs offline)
 datasets	builds the example datasets included with matR
-old	better not to run this one
