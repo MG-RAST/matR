@@ -18,6 +18,7 @@ view.params <- list (
 								 ontology = c ("NOG", "COG", "KO", "GO", "Subsystems"),
 								 protein = c ("m5nr", "SwissProt", "GenBank", "IMG", "SEED", "TrEMBL", "RefSeq", "PATRIC", 
 								 						 "eggNOG", "KEGG")))
+
 standard.views <- list (
 	count = c (entry = "count"),
 	normed = c (entry = "normed"))
@@ -27,6 +28,17 @@ all.views <- list (
 	evalue = c (entry = "evalue"),
 	length = c (entry = "length"),
 	percentid = c (entry = "percentid"))
+
+# assumes: a valid view
+# returns: list of API parameters, primed for call to mGet
+API.args.matrix <- function (view) {
+	list (
+		name = view ["annot"],
+		result_type = c (count = "abundance", evalue = "evalue", percentid = "identity", length = "length") [view ["entry"]],
+		group_level = view ["level"],
+		source = view ["source"]
+	)
+}
 
 setClass ("collection", representation (views = "list", sel = "selection"))
 
@@ -153,19 +165,22 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	}
 	else {
 		message ("fetching:   ", paste (unlist (v), collapse = " : "))
-		s <- paste ("format/plain",
-								"/result_column/", switch (v$entry, 
-																					 count = "abundance", 
-																					 normed = "abundance", 
-																					 evalue = "evalue", 
-																					 length = "length", 
-																					 percentid = "identity"),
-								"/type/", v$annot,
-								"/group_level/", v$level,
-								"/source/", v$source, 
-								sep = "")
-# here eventually should go support for storing matrices sparsely...
-		x@views [[i]] <- as.matrix (mGet ("abundance", selection (x), param = s, enClass = FALSE))
+# 		s <- paste ("format/plain",
+# 								"/result_column/", switch (v$entry, 
+# 																					 count = "abundance", 
+# 																					 normed = "abundance", 
+# 																					 evalue = "evalue", 
+# 																					 length = "length", 
+# 																					 percentid = "identity"),
+# 								"/type/", v$annot,
+# 								"/group_level/", v$level,
+# 								"/source/", v$source, 
+# 								sep = "")
+# # here eventually should go support for storing matrices sparsely...
+# 		x@views [[i]] <- as.matrix (mGet ("abundance", selection (x), param = s, enClass = FALSE))
+
+		x@views [[i]] <- mGet ("matrix", selection (x), with = API.args.matrix (unlist (v)))
+		
 		if (v$entry == "normed") x@views [[i]] <- normalize (x@views [[i]])
 	}
 	attributes (x@views [[i]]) <- append (attributes (x@views [[i]]), v)
