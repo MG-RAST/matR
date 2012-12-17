@@ -35,15 +35,16 @@
 # and,
 # always return file name(s) if result is a file
 #
-callRaw <- function (call, toFile = NULL) {
+
+callRaw <- function (call, file = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
 	urlStr <- paste (mconfig$server (), call, conj, "auth=", mconfig$getAuth (), sep = "")
 	optMessage ("matR: reading ", urlStr)
 	mconfig$lastURL (urlStr)
-	if (!is.null (toFile)) {
-		download.file (urlStr, toFile, quiet = TRUE)
-		toFile
+	if (!is.null (file)) {
+		download.file (urlStr, file, quiet = TRUE)
+		file
 		}
 	else readLines (urlStr, warn = FALSE)
 	}
@@ -84,6 +85,39 @@ mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
 ### ... callRaw etc ...
 	}
 
+# plan is to implement resources one-by-one
+# named API parameters are passed either in "with" or "..."
+# we add universal parameter "x" under the assumption that an ID of some kind is usually required
+mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClass = FALSE, file = NULL) { 
+	args <- append (with, list (...))
+
+	if (resource == "matrix") {
+		name <- args$name
+		args$name <- NULL
+		callStr <- paste (paste ("matrix/", name, "?", sep = ""),
+											paste ("id", x, sep = "=", collapse = "&"), "&",
+											paste (names (args), unname (args), sep = "=", collapse = "&"),
+											sep = "")
+		server <- mconfig$server()
+		mconfig$server (mconfig$servers()$api2)
+		y <- try (callRaw (callStr, file))
+		mconfig$server (server)
+		if (parse) {
+			reqPack ("RJSONIO")
+			if (! isValidJSON (y, asText = TRUE)) {
+				warning ("matR: cannot parse non-JSON object")
+				return (y)
+			}
+			y <- fromJSON (y, asText = TRUE, simplify = TRUE)
+			optMessage ("matR: ", length (unlist (y)), " elements after JSON parsing")
+		}
+		y
+	}
+	else oldmGet (resource, ID = x, namespace = args$namespace, annoType = args$annoType, seqType = args$seqType, org = args$org, 
+								func = args$func, md5 = args$md5, param = args$param, parse = parse, enClass = enClass, toFile = file)
+}
+
+
 # the purpose of mGet is to speak the language of the API
 # and acts as a buffer against changes therein.
 #
@@ -105,9 +139,8 @@ mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
 #
 # for anyone looking at this: a good bit of the craziness here
 # is meant as a hedge against fluctuations in the API 
-mGet <- function( 
-	resource = c ("project", "sample", "library", "metagenome", "subset", "sequenceSet",
-    "sequences",  "reads", "abundance"),      # single value
+oldmGet <- function( 
+	resource = c ("project", "sample", "library", "metagenome", "abundance"),      # single value
 	ID,			      			# multiple value
 	namespace = NULL,		# multiple
 	annoType = NULL,		# single
@@ -150,7 +183,7 @@ if (length (IDs) > 1) {
 
 		deststr <- NULL
 		for (j in 1:length (IDs)) {
-			x [[j]] <- mGet (resource, IDs [j], namespace, annoType, seqType, org, func, md5, param)
+			x [[j]] <- oldmGet (resource, IDs [j], namespace, annoType, seqType, org, func, md5, param)
 			if (length (toFile) > 1) {
 				sink (file = toFile [j]) ; print (x [[j]]) ; sink()
 				deststr <- paste (" to ", toFile [j])
@@ -175,7 +208,7 @@ if (length (IDs) > 1) {
 # ... and we have to use horrible style here
 		outFiles <- character(0)
 		for (j in 1:length (IDs)) {
-			ff <- mGet (resource, IDs [j], namespace, annoType, seqType, org, func, md5, param, toFile [j] )
+			ff <- oldmGet (resource, IDs [j], namespace, annoType, seqType, org, func, md5, param, toFile [j] )
 			optMessage ("matR: fetched ", resource, " ", IDs [j], " to ", ff)
 			outFiles <- c (outFiles, ff)
 			}
