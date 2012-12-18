@@ -40,13 +40,14 @@ callRaw <- function (call, file = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
 	urlStr <- paste (mconfig$server (), call, conj, "auth=", mconfig$getAuth (), sep = "")
-	optMessage ("matR: reading ", urlStr)
+	optMessage ("requesting ", urlStr)
 	mconfig$lastURL (urlStr)
 	if (!is.null (file)) {
-		download.file (urlStr, file, quiet = TRUE)
-		file
+		e <- try (download.file (urlStr, file, quiet = TRUE))
+		if (inherits (e, "try-error")) e
+		else file
 		}
-	else readLines (urlStr, warn = FALSE)
+	else try (readLines (urlStr, warn = FALSE))
 	}
 
 ############################################
@@ -68,7 +69,7 @@ mAnnotationLookup <- function (md5, namespace) {
 	md5 <- chomp (md5)
 	namespace <- chomp (namespace)
 	if (length (namespace) > 1) {
-		warning ("matR: only one namespace may be specified")
+		warning ("only one namespace may be specified")
 		return ()
 		}
 	x <- character( length (md5))
@@ -80,7 +81,7 @@ mAnnotationLookup <- function (md5, namespace) {
 ### search metagenomes in mgrast for specified criteria
 ### ... fix me ...
 mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
-	warning( "matR: unimplemented function" )
+	warning ("unimplemented function (fatal)")
 	reqPack ("RJSONIO")
 ### ... callRaw etc ...
 	}
@@ -91,30 +92,52 @@ mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
 mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClass = FALSE, file = NULL) { 
 	args <- append (with, list (...))
 
-	if (resource == "matrix") {
-		name <- args$name
-		args$name <- NULL
-		callStr <- paste (paste ("matrix/", name, "?", sep = ""),
+	if (resource %in% c ("project", "sample", "library", "metagenome")) {
+		s <- mconfig$server()
+		mconfig$server (mconfig$servers()$test)
+		y <- oldmGet (resource, ID = x, namespace = args$namespace, annoType = args$annoType, seqType = args$seqType, org = args$org, 
+						 func = args$func, md5 = args$md5, param = args$param, parse = parse, enClass = enClass, toFile = file)
+		mconfig$server (s)
+	}
+	else {
+		callStr <- resource
+		if (resource == "matrix") {
+			callStr <- paste (callStr, "/", args$name, sep = "")
+			args$name <- NULL
+		}
+		callStr <- paste (callStr, "?",
 											paste ("id", x, sep = "=", collapse = "&"), "&",
 											paste (names (args), unname (args), sep = "=", collapse = "&"),
 											sep = "")
-		server <- mconfig$server()
-		mconfig$server (mconfig$servers()$api2)
-		y <- try (callRaw (callStr, file))
-		mconfig$server (server)
+		y <- callRaw (callStr, file)
+		if (inherits (y, "try-error")) {
+			warning ("resource request unsuccessful")
+			return (y)  ######### might want to revisit this
+		}
 		if (parse) {
 			reqPack ("RJSONIO")
-			if (! isValidJSON (y, asText = TRUE)) {
-				warning ("matR: cannot parse non-JSON object")
-				return (y)
+			if (isValidJSON (y, asText = TRUE)) {
+				y <- fromJSON (y, asText = TRUE, simplify = TRUE)
+				optMessage (length (unlist (y)), " elements after JSON parsing")
+				if (resource == "matrix") {
+					if (TRUE) {   ########### revisit this
+						m <- matrix (unlist (y$data), ncol = 3, byrow = TRUE)
+						m <- Matrix::sparseMatrix (i = 1 + m [,1], j = 1 + m [,2], x = m [,3])
+						if (!enClass) m <- as.matrix (m)
+						rownames (m) <- sapply (y$rows, FUN = `[[`, i = "id")
+						colnames (m) <- sapply (y$columns, FUN = `[[`, i = "id")
+						rh <- lapply (y$rows, FUN = function (x) unlist (x [[c ("metadata", "ontology")]]))
+						hlen <- max (sapply (rh, length))
+						attr (m, "rowhier") <- t (sapply (rh, `length<-`, hlen))
+						y <- m
+					}
+					else warning ("incorrect matrix resource format")
+				}
 			}
-			y <- fromJSON (y, asText = TRUE, simplify = TRUE)
-			optMessage ("matR: ", length (unlist (y)), " elements after JSON parsing")
+			else warning ("cannot parse non-JSON object")
 		}
-		y
 	}
-	else oldmGet (resource, ID = x, namespace = args$namespace, annoType = args$annoType, seqType = args$seqType, org = args$org, 
-								func = args$func, md5 = args$md5, param = args$param, parse = parse, enClass = enClass, toFile = file)
+	y
 }
 
 
@@ -179,7 +202,7 @@ if (length (IDs) > 1) {
 # for text-ish resources we allow either one filename
 # per ID, or a single filename (meaning: append all to one)
 		if (!is.null (toFile) && length (toFile) != 1 && length (toFile) != length (IDs))
-			stop ("matR: call requires single filename or one filename per ID"); 
+			stop ("call requires single filename or one filename per ID"); 
 
 		deststr <- NULL
 		for (j in 1:length (IDs)) {
@@ -188,11 +211,11 @@ if (length (IDs) > 1) {
 				sink (file = toFile [j]) ; print (x [[j]]) ; sink()
 				deststr <- paste (" to ", toFile [j])
 				}
-			optMessage ("matR: fetched ", resource, " ", IDs [j], deststr)
+			optMessage ("fetched ", resource, " ", IDs [j], deststr)
 			}
 		if (length (toFile) == 1) {
 			sink (file = toFile) ; print (x) ; sink()
-			optMessage ("matR: wrote to ", toFile)
+			optMessage ("wrote to ", toFile)
 			}
 		if (!is.null (toFile)) return (toFile)
 		return (x)
@@ -202,19 +225,19 @@ if (length (IDs) > 1) {
 # we require one filename per ID,
 # or else no filenames (meaning: use defaults)
 		if (!is.null (toFile) && length (toFile) != length (IDs))
-			stop ("matR: call requires one filename per ID");
+			stop ("call requires one filename per ID");
 # NB. we allow that a single call might return more than one file
 # ... that is why the length of outFiles is unknown
 # ... and we have to use horrible style here
 		outFiles <- character(0)
 		for (j in 1:length (IDs)) {
 			ff <- oldmGet (resource, IDs [j], namespace, annoType, seqType, org, func, md5, param, toFile [j] )
-			optMessage ("matR: fetched ", resource, " ", IDs [j], " to ", ff)
+			optMessage ("fetched ", resource, " ", IDs [j], " to ", ff)
 			outFiles <- c (outFiles, ff)
 			}
 		return (outFiles)
 		}
-	if (resource != "abundance") stop ("matR: multiple ID\'s not implemented for specified resource")
+	if (resource != "abundance") stop ("multiple ID\'s not implemented for specified resource")
 	}
 
 # from here on we are in the case of single or no
@@ -226,7 +249,7 @@ if (length (IDs) > 1) {
 
 # we require retrieval to disk of certain resources
 if (oneof (resource, "sequenceSet", "reads") && is.null (toFile)) {
-	message ("matR: using default filename for file resource")
+	message ("using default filename for file resource")
 	toFile <- paste (resource, ".", ID, sep = "")
 	}
 
@@ -244,7 +267,7 @@ if ( !is.null( switch (resource,
 		sequences = NULL,
 		reads = c (namespace, annoType, seqType, org, func, md5),
 		abundance = c (seqType, org, func, md5), NULL))) {
-	warning ("matR: invalid parameter for specified resource")
+	warning ("invalid parameter for specified resource")
 	return ()
 	}
 
@@ -259,14 +282,14 @@ if ( !is.null( switch (resource,
 namespace <- chomp (namespace)
 # ... check here for valid values of namespace ...
 if (resource == "abundance" && length (namespace) > 1) {
-	warning ("matR: abundance must be taken against a single namespace")
+	warning ("abundance must be taken against a single namespace")
 	return ()
 	}
 nsStr <- if (is.null (namespace)) NULL
 	else paste ("source", chomp (namespace), collapse = "&", sep = "=")
 
 if ( length (annoType) > 1) {
-	warning ("matR: only one annotation type may be specified")
+	warning ("only one annotation type may be specified")
 	return ()
 	}
 annoTypeStr <- if (is.null (annoType)) NULL
@@ -274,7 +297,7 @@ annoTypeStr <- if (is.null (annoType)) NULL
 				else paste ("type", annoType, sep = "=")
 
 if ( length (seqType) > 1) {
-	warning ("matR: only one sequence type may be specified")
+	warning ("only one sequence type may be specified")
 	return ()
 	}
 seqTypeStr <- if (is.null (seqType)) NULL
@@ -309,10 +332,10 @@ if (parse) {
 # metadata elements are left as recursive lists (simplify = FALSE)
 		x <- fromJSON (x, asText = TRUE,
 				simplify = !oneof (resource, "project", "library", "sample", "metagenome"))
-		optMessage ("matR: ", length (unlist (x)), " elements after JSON parsing")
+		optMessage (length (unlist (x)), " elements after JSON parsing")
 		JSON <- TRUE
 		}
-	else optMessage ("matR: did not receive JSON")
+	else optMessage ("did not receive JSON")
 
 # ... the eventual plan is to implement an RBIOM class ...
 # process abundance matrix nicely ...
@@ -342,7 +365,7 @@ if (parse) {
 			rownames (M) <- s
 			x <- M
 			}
-		else warning ("matR: non-sparse matrix received in JSON; not implemented")
+		else warning ("non-sparse matrix received in JSON; not implemented")
 		}
 # ... process subsets nicely into a data.frame ...
 	else if (resource == "subset" && JSON) {
@@ -360,7 +383,7 @@ if (parse) {
 	if (enClass) {
 # ...BUT instead we are not allowing this option for now
 # ...whether or not mGet should enClass things is still a grey-area design issue
-		stop ("matR: unimplemented function")
+		stop ("unimplemented function")
 		x <- switch (resource,
 			project = new ("mProjectMeta", ID = IDs, listify (x)),
 			sample = new ("mSampleMeta", ID = IDs, listify (x)),
@@ -377,7 +400,7 @@ if (parse) {
 # ... not even be objects, but just character vectors, simpler types
 if (!is.null (toFile)) {
 	sink (file = toFile) ; print (x) ; sink()
-	optMessage( "matR: wrote to ", toFile )
+	optMessage( "wrote to ", toFile )
 	toFile
 	}
 else x
@@ -392,9 +415,9 @@ else x
 ### sensibly and according to the given parameter
 #if (resource == "reads") {
 #	if (toFile == NULL)
-#		message ("matR: using default filenames for multiple file resource")
+#		message ("using default filenames for multiple file resource")
 #	else
-#		message ("matR: using specified filename as prefix for multiple file resource")
+#		message ("using specified filename as prefix for multiple file resource")
 #	toFile = ....
 #}
 

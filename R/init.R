@@ -8,7 +8,7 @@
 ### as necessary, and provide a function to install suggested "dependencies"
 
 .onAttach <- function (libname, pkgname) {
-	mconfig$server (mconfig$servers()$test)
+	mconfig$server (mconfig$servers()$api2)
 	packageStartupMessage (
     "matR: metagenomics analysis tools for R (", packageVersion ("matR"), ")\n")
 	options (warn = 1, width = 150, timeout = 300, digits = 2)
