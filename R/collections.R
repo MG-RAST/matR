@@ -1,5 +1,4 @@
 
-# *** collection with views specified doesn't work due to file parameter; could put it last...?
 
 # need routines to handle view description vectors
 # * create printable string (and use uniformly)
@@ -31,7 +30,7 @@ all.views <- list (
 
 # assumes: a valid view
 # returns: list of API parameters, primed for call to mGet
-API.args.matrix <- function (view) {
+API.mapper.matrix <- function (view) {
 	list (
 		name = view ["annot"],
 		result_type = c (count = "abundance", evalue = "evalue", percentid = "identity", length = "length") [view ["entry"]],
@@ -75,6 +74,15 @@ setMethod ("[[", "collection", function (x, i, full = FALSE, plain = FALSE) {
 	res
 })
 
+setMethod ("rownames", "ANY", function (x, ...) base::rownames (x, ...))
+setMethod ("rownames", "collection", function (x, view = "normed", cat = NULL) {
+	if (is.null (cat))
+		rownames (x [[view]])
+	else if (as.logical (cat))
+		apply (attr (x [[view]], "rowhier"), 1, paste, collapse = if (is.logical (cat)) "; " else cat)
+	else attr (x [[view]], "rowhier")
+})
+
 setMethod ("[", "collection", function (x, i) {
 	x@sel <- x@sel [i]
 # need to keep an eye on this:
@@ -95,7 +103,7 @@ setMethod ("[", "collection", function (x, i) {
 	})
 
 # dispatches on "ANY" to allow specifying "file" and omitting "x"
-setMethod ("collection", "ANY", function (x = "", file = NULL, ...)
+setMethod ("collection", "ANY", function (x = "", ..., file = NULL)
 	collection (selection (if (is.null (file)) x else readIds (file)), ...))
 # needs option to configure timeout...
 setMethod ("collection", "selection", function (x, ...) {
@@ -164,6 +172,11 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 		x@views [[i]] <- normalize (x@views [[which (j)]])
 	}
 	else {
+		normed <- FALSE
+		if (v$entry == "normed") {
+			v$entry <- "count"
+			normed <- TRUE
+		}
 		message ("fetching:   ", paste (unlist (v), collapse = " : "))
 # 		s <- paste ("format/plain",
 # 								"/result_column/", switch (v$entry, 
@@ -179,9 +192,12 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 # # here eventually should go support for storing matrices sparsely...
 # 		x@views [[i]] <- as.matrix (mGet ("abundance", selection (x), param = s, enClass = FALSE))
 
-		x@views [[i]] <- mGet ("matrix", selection (x), with = API.args.matrix (unlist (v)))
-		
-		if (v$entry == "normed") x@views [[i]] <- normalize (x@views [[i]])
+		x@views [[i]] <- mGet ("matrix", selection (x), with = API.mapper.matrix (unlist (v)))
+
+		if (normed) {
+			x@views [[i]] <- normalize (x@views [[i]])
+			v$entry <- "normed"
+		}
 	}
 	attributes (x@views [[i]]) <- append (attributes (x@views [[i]]), v)
 	x
