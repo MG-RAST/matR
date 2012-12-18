@@ -236,7 +236,7 @@ semiwarn <- function (s) {
 reqPack <- function (P) {
 	if ( !library (P, pos = match("package:matR", search ()) + 1, character.only = TRUE, quietly = TRUE, 
 		warn.conflicts = FALSE, logical.return = TRUE))
-		stop ("matR: package ", P, " required")
+		stop ("matR: package ", P, " required")   ########## revisit this
 	else TRUE
 	}
 

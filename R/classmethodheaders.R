@@ -21,6 +21,10 @@ setGeneric ("views", function (x, ...) standardGeneric ("views"))
 setGeneric ("viewnames", function (x, ...) standardGeneric ("viewnames"))
 setGeneric ("viewnames<-", function (x, value) standardGeneric ("viewnames<-"))
 
+# did I do it right?  I think so, here, but check the handling
+# of calls to rownames, dist, and heatmap, that are not meant for us
+setGeneric ("rownames", function (x, ...) standardGeneric ("rownames"))
+
 setGeneric ("selection", function (x, ...) standardGeneric ("selection"))
 setGeneric ("collection", function (x, ...) standardGeneric ("collection"))
 
