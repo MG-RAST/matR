@@ -41,7 +41,8 @@ mconfig <- (function () {
 		dev2 = "http://dunkirk.mcs.anl.gov/~paczian/mgrastv3/api.cgi/",
 		dev3 = "http://dev.metagenomics.anl.gov/api_new.cgi/",
 		shock = "http://shock.mcs.anl.gov",
-		api2 = "http://api.metagenomics.anl.gov/api2.cgi/")
+		api2 = "http://api.metagenomics.anl.gov/api2.cgi/",
+		api2test = "http://test.metagenomics.anl.gov/api2.cgi/")
 	server <- function (s = NULL) if (is.null (s)) server.X else server.X <<- s
 	servers <- function () servers.X
 
