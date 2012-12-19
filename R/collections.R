@@ -13,9 +13,9 @@ view.params <- list (
 	annot = c ("function", "organism"),
 	level = list (taxa = c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain"),
 								func = c ("level1", "level2", "level3", "function")),
-	source = list (rna = c ("m5rna", "RDP", "Greengenes", "LSU", "SSU"),
-								 ontology = c ("NOG", "COG", "KO", "GO", "Subsystems"),
-								 protein = c ("m5nr", "SwissProt", "GenBank", "IMG", "SEED", "TrEMBL", "RefSeq", "PATRIC", 
+	source = list (rna = c ("M5RNA", "RDP", "Greengenes", "LSU", "SSU"),
+								 ontology = c ("NOG", "COG", "KO", "Subsystems"),
+								 protein = c ("M5NR", "SwissProt", "GenBank", "IMG", "SEED", "TrEMBL", "RefSeq", "PATRIC", 
 								 						 "eggNOG", "KEGG")))
 
 standard.views <- list (
@@ -129,7 +129,7 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	chooser [,"function",,] <- chooser[,"function",,] + 1
 	chooser [,,"species",] <- chooser [,,"species",] + 1
 	chooser [,,"level3",] <- chooser [,,"level3",] + 1
-	chooser [,,,"m5rna"] <- chooser [,,,"m5rna"] + 1
+	chooser [,,,"M5RNA"] <- chooser [,,,"M5RNA"] + 1
 	chooser [,,,"Subsystems"] <- chooser [,,,"Subsystems"] + 1
 
 # nullify impossible combinations
