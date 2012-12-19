@@ -81,61 +81,71 @@ mAnnotationLookup <- function (md5, namespace) {
 ### search metagenomes in mgrast for specified criteria
 ### ... fix me ...
 mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
-	warning ("unimplemented function (fatal)")
+	warning ("unimplemented function")
 	reqPack ("RJSONIO")
 ### ... callRaw etc ...
 	}
 
-# plan is to implement resources one-by-one
-# named API parameters are passed either in "with" or "..."
-# we add universal parameter "x" under the assumption that an ID of some kind is usually required
+# mGet will implement special handling of API resources, one-by-one.
+# but in the meantime, any resource can be called through a general interface,
+# named parameters specified in ... or as a list in "with"
+# additionally, parameter "x" represents the assumption that an ID of some kind is usually required
 mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClass = FALSE, file = NULL) { 
 	args <- append (with, list (...))
 
+# here we call the old API for metadata only
 	if (resource %in% c ("project", "sample", "library", "metagenome")) {
 		s <- mconfig$server()
 		mconfig$server (mconfig$servers()$test)
-		y <- oldmGet (resource, ID = x, namespace = args$namespace, annoType = args$annoType, seqType = args$seqType, org = args$org, 
-						 func = args$func, md5 = args$md5, param = args$param, parse = parse, enClass = enClass, toFile = file)
+		y <- try (oldmGet (resource, ID = x, namespace = args$namespace, annoType = args$annoType, seqType = args$seqType, org = args$org, 
+											 func = args$func, md5 = args$md5, param = args$param, parse = parse, enClass = enClass, toFile = file))
 		mconfig$server (s)
 	}
+
 	else {
 		callStr <- resource
-		if (resource == "matrix") {
-			callStr <- paste (callStr, "/", args$name, sep = "")
-			args$name <- NULL
-		}
+
+# per-resource preprocessors
+		switch (resource,
+						"matrix" =
+{
+	callStr <- paste (callStr, "/", args$name, sep = "")
+	args$name <- NULL
+})
+
+# generic request procedure
 		callStr <- paste (callStr, "?",
 											paste ("id", x, sep = "=", collapse = "&"), "&",
 											paste (names (args), unname (args), sep = "=", collapse = "&"),
 											sep = "")
 		y <- callRaw (callStr, file)
-		if (inherits (y, "try-error")) {
-			warning ("resource request unsuccessful")
-			return (y)  ######### might want to revisit this
-		}
-		if (parse) {
-			reqPack ("RJSONIO")
-			if (isValidJSON (y, asText = TRUE)) {
-				y <- fromJSON (y, asText = TRUE, simplify = TRUE)
-				optMessage (length (unlist (y)), " elements after JSON parsing")
-				if (resource == "matrix") {
-					if (TRUE) {   ########### revisit this
-						m <- matrix (unlist (y$data), ncol = 3, byrow = TRUE)
-						m <- Matrix::sparseMatrix (i = 1 + m [,1], j = 1 + m [,2], x = m [,3])
-						if (!enClass) m <- as.matrix (m)
-						rownames (m) <- sapply (y$rows, FUN = `[[`, i = "id")
-						colnames (m) <- sapply (y$columns, FUN = `[[`, i = "id")
-						rh <- lapply (y$rows, FUN = function (x) unlist (x [[c ("metadata", "ontology")]]))
-						hlen <- max (sapply (rh, length))
-						attr (m, "rowhier") <- t (sapply (rh, `length<-`, hlen))
-						y <- m
-					}
-					else warning ("incorrect matrix resource format")
-				}
-			}
-			else warning ("cannot parse non-JSON object")
-		}
+		if (inherits (y, "try-error")) warning ("resource request unsuccessful")
+		if (!parse) return (y)
+		reqPack ("RJSONIO")
+		valid <- try (isValidJSON (y, asText = TRUE))
+		if (!is.logical (valid) || !valid) warning ("cannot parse non-JSON object")
+		else y <- fromJSON (y, asText = TRUE, simplify = TRUE)
+		optMessage (length (unlist (y)), " elements after JSON parsing")
+
+# per-resource postprocessors
+		switch (resource,
+						matrix = 
+{
+	if (length (setdiff (c ("data", "rows", "columns"), names (y))) != 0) warning ("bad format in received resource")
+	m <- matrix (unlist (y$data), ncol = 3, byrow = TRUE)
+	m <- as.matrix (Matrix::sparseMatrix (i = 1 + m [,1], j = 1 + m [,2], x = m [,3]))
+	rownames (m) <- sapply (y$rows, `[[`, i = "id")
+	colnames (m) <- sapply (y$columns, `[[`, i = "id")
+
+# need to know if this is even supposed to be generally valid
+# it doesn't always work
+
+#	rh <- lapply (y$rows, function (x) unlist (x [[c ("metadata", "ontology")]]))
+#	hlen <- max (sapply (rh, length))
+#	attr (m, "rowhier") <- t (sapply (rh, `length<-`, hlen))
+	y <- m
+})
+
 	}
 	y
 }
