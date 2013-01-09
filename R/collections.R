@@ -1,5 +1,4 @@
 
-
 # need routines to handle view description vectors
 # * create printable string (and use uniformly)
 # * retrieve as vector from matrix attributes
@@ -157,7 +156,10 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	J <- chooser == max (chooser)
 	if (sum (J) != 1) stop ("cannot interpret view")
 	J <- arrayInd (which (J), dim (chooser))
-	if (chooser [J] <= 0) stop ("cannot interpret view")
+
+# Hotfix 9 Jan 2013 per discussion via RT
+# changed test from <= to <
+	if (chooser [J] < 0) stop ("cannot interpret view")
 	names (J) <- names (vp)
 	
 	v <- sapply (names (vp), function (x) vp [[x]] [J [x]], simplify = FALSE)
