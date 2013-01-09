@@ -1,10 +1,9 @@
 
-export(view.params, standard.views, all.views)
 export(dependencies, hazPackages)
-export(callRaw, mGet)
+export(callRaw, mListAllIds, mGet)
 export(readIds)
 export(demo2, scrubIds, scrapeResources)
-export(sigtest)
+export(normalize, sigtest)
 
 # export everything (in development mode)
 # exportPattern(".*")

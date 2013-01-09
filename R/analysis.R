@@ -12,7 +12,7 @@ setClass ("sigtest", repr = NULL, contains = "list")
 ### principal coordinates analysis
 ####################################################
 
-setMethod ("pco", "ANY", function (x, ...) ecodist::dist (x, ...))
+setMethod ("pco", "ANY", function (x, ...) ecodist::pco (x, ...))
 # see "dist" below for the rationale for an "ANY" method
 # here as below, this is a temporary hack...
 setMethod ("pco", "collection", function (x, view = "normed", components = c (1,2,3), 
@@ -209,6 +209,8 @@ normalize <- function (x) {
 	if (scale != 0) x <- (x - shift) / scale
 	x
 	}
+
+remove.singletons <- function (m) m
 
 permutations <- function (x, ntimes = 1, type = "sample", ...) {
 	x <- as.matrix (x)

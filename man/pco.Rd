@@ -1,59 +1,32 @@
 \name{pco}
 \alias{pco}
-\alias{Principal Coordinates Analysis}
-\title{
-Perform Principal Coordinates Analysis}
-\description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
-\usage{
-pco(x, method = "bray-curtis")        % add ... parameters and discuss graphical options
-}
-%- maybe also 'usage' for other objects documented here.
+\title{Perform Principal Coordinates Analysis of Collection}
+\description{Performs PCoA analysis, returning the results and plotting in two or three dimensions}
+\usage{pco(x, ...)}
 \arguments{
-  \item{x}{
-%%     ~~Describe \code{x} here~~
-}
-  \item{method}{
-%%     ~~Describe \code{method} here~~
-}
+  \item{x}{...}
+  \item{\dots}{...}
 }
 \details{
-  This function wraps function \code{pco} from package \code{ecodist} in a form convenient for \code{matR}.
+  This function wraps function \code{pco} from package \code{ecodist}.
 }
-\value{
-  Assuming the analyis is successful, an object of class \code{pco}.
-}
-\references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
+\value{...}
+\author{Kevin P. Keegan, Daniel T. Braithwaite}
 \seealso{
-\code{\code{\link{pco-methods}}, \link{pco-class}}, \code{\link{render}}
+\code{\link{pco-methods}}, \code{\link{pco-class}}, \code{\link{render}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+# basic plot
+pco (Coral)
 
-## The function is currently defined as
-function (x, method = "bray-curtis") 
-{
-    reqPack("ecodist")
-    x <- as.matrix(x)
-    D <- matR::mdist(x, method)
-    P <- ecodist::pco(D)
-    scaled <- P$values/sum(P$values)
-    names(scaled) <- paste("PCO", 1:length(scaled), sep = "")
-    dimnames(P$vectors)[[1]] <- dimnames(x)[[2]]
-    list(values = scaled, vectors = P$vectors, distances = D)
-  }
+# color and label points according to a grouping
+groups (Waters) <- c (rep (1, 15), rep (2, 9))
+pco (Waters, comp = c (1,2), main = "fresh vs. spring water samples", col = c (rep ("blue", 15), rep ("red", 9)))
+
+# plot three components
+# note parameter "color" here; "col" above
+col <- factor (metadata (Hospital) ["ventilation_type"])
+levels (col) <- c ("red", "blue", "orange")
+col <- as.character (col)
+pco (Hospital, comp = c (1,2,3), color = col, labels = "")
 }

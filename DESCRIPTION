@@ -6,14 +6,15 @@ Depends: R (>= 2.10), methods, utils
 Imports: Matrix, stats
 Suggests: RJSONIO, ecodist, gplots, scatterplot3d
 URL: https://github.com/MG-RAST/matR/
-Date: 2012-08-12
+Date: 2013-01-05
 Author: Daniel T. Braithwaite and Kevin P. Keegan
-Maintainer: Daniel T. Braithwaite <braithwaite@uchicago.edu>
+Maintainer: Daniel T. Braithwaite <braithwaite@cels.anl.gov>
 Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), email = "braithwaite@uchicago.edu"),
-              person ("Kevin", "Keegan", role = "aut", email = "kevin.p.keegan@gmail.com"))
+              person ("Kevin", "Keegan", role = "aut", email = "keegan@mcs.anl.gov"))
 Description: matR is an analysis client for MG-RAST built as an extension package to the popular R programming language for statistics.  This package is in development.  Facilities are implemented to download annotation data from the MG-RAST metagenome analysis server.  Easy acccess to lightly structured metadata, authentication for access to private data, and customized versions of relevant statistical and visualization tools are provided.
 License: file LICENSE
 LazyLoad: yes
 LazyData: yes
+LazyDataCompression: xz
 Collate: util.R classmethodheaders.R selections.R collections.R oldclasses.R oldwrappers.R readwrite.R analysis.R rendering.R init.R transfer.R
 

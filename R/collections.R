@@ -1,43 +1,12 @@
 
+########################################################################################
+### "collection" objects and related functions / methods are defined here.
+### "collection" and "selection" are S4 classes, whereas "metadata" is S3.
+### "views" are implemented as a character vector, not as a class at all, 
+### with a set of related routines located at the end of this file.
+########################################################################################
 
-# need routines to handle view description vectors
-# * create printable string (and use uniformly)
-# * retrieve as vector from matrix attributes
-
-# These data need to be available to matR and to the user.
-# They should go in data/ but objects from source files there 
-# are not accessible to package code (an empirical discovery).
-
-view.params <- list (
-	entry = c ("count", "normed", "evalue", "length", "percentid"),
-	annot = c ("function", "organism"),
-	level = list (taxa = c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain"),
-								func = c ("level1", "level2", "level3", "function")),
-	source = list (rna = c ("M5RNA", "RDP", "Greengenes", "LSU", "SSU"),
-								 ontology = c ("NOG", "COG", "KO", "Subsystems"),
-								 protein = c ("M5NR", "SwissProt", "GenBank", "IMG", "SEED", "TrEMBL", "RefSeq", "PATRIC", 
-								 						 "eggNOG", "KEGG")))
-
-standard.views <- list (
-	count = c (entry = "count"),
-	normed = c (entry = "normed"))
-all.views <- list (
-	count = c (entry = "count"),
-	normed = c (entry = "normed"),
-	evalue = c (entry = "evalue"),
-	length = c (entry = "length"),
-	percentid = c (entry = "percentid"))
-
-# assumes: a valid view
-# returns: list of API parameters, primed for call to mGet
-API.mapper.matrix <- function (view) {
-	list (
-		name = view ["annot"],
-		result_type = c (count = "abundance", evalue = "evalue", percentid = "identity", length = "length") [view ["entry"]],
-		group_level = view ["level"],
-		source = view ["source"]
-	)
-}
+# we anticipate implementing sparse matrices in the "collection" plumbing, but for now all matrices are dense
 
 setClass ("collection", representation (views = "list", sel = "selection"))
 
@@ -48,26 +17,23 @@ setMethod ("names<-", "collection", function (x, value) { names (x@sel) <- value
 setMethod ("groups", "collection", function (x) groups (x@sel))
 setMethod ("groups<-", "collection", function (x, value) { groups (x@sel) <- value ; x })
 
-# the idea is:  the character vectors returned by this method should, themselves, 
-# be usable as view descriptions to construct new collections
-setMethod ("views", "collection", function (x) 
-	lapply (x@views, function (e) unlist (attributes (e) [names (view.params)])))					 
+# views as here returned are reusable to construct new collections
+setMethod ("views", "collection", function (x) lapply (x@views, view.of.matrix))
 setMethod ("viewnames", "collection", function (x) names (x@views))
 setMethod ("viewnames<-", "collection", function (x, value) { names (x@views) <- value ; x })
 
 setMethod ("metadata", "collection", function (x) metadata (x@sel))
 
-# this access operator dependably returns a plain vanilla matrix
+# the "$" access operator returns a plain vanilla matrix; we drop all inessential attributes
 setMethod ("$", "collection", function (x, name) {
-	res <- as.matrix (x@views [[name]])
-# here we drop all attributes besides "dim" and "dimnames"
-	attributes (res) <- attributes (res) [c ("dim", "dimnames")]
-	res
+	m <- as.matrix (x@views [[name]])
+	attributes (m) <- attributes (m) [c ("dim", "dimnames")]
+	m
 })
-# users are intended to use $<- but not [[<-
+# users are intended to use $<- but not [[<- which is used here and defined below
 setMethod ("$<-", "collection", function (x, name, value) { x [[name]] <- value ; x })
 
-# to avoid interfering with attributes set in Matrix package plumbing, we decide that plain requires full
+# to avoid interfering with attributes used by the Matrix package, we decide that "plain" requires "full"
 setMethod ("[[", "collection", function (x, i, full = FALSE, plain = FALSE) {
 	res <- if (plain || full) as.matrix (x@views [[i]]) else x@views [[i]]
 	if (plain) attributes (res) <- attributes (res) [c ("dim", "dimnames")]
@@ -102,47 +68,131 @@ setMethod ("[", "collection", function (x, i) {
 	x
 	})
 
-# dispatches on "ANY" to allow specifying "file" and omitting "x"
+# an option to configure timeout per call would be nice.
+# "..." should be: one or multiple named views, a single list (of named views), or empty
+# method to dispatch on "ANY" allows specifying "file" and omitting "x"
 setMethod ("collection", "ANY", function (x = "", ..., file = NULL)
 	collection (selection (if (is.null (file)) x else readIds (file)), ...))
-# needs option to configure timeout...
 setMethod ("collection", "selection", function (x, ...) {
 	views <- list (...)
-	if (length (views) == 0) views <- standard.views
+	if (length (views) == 0) views <- default.views
 	else if (is.list (views [[1]])) views <- views [[1]]
-	if (is.null (names (views))) stop ("views must have names")
-# what follows is a bit tricky, but seems ok
-# the list of views is created using the views themselves as entries, then the matrices are written over
-	res <- new ("collection", views = views, sel = x)
-	for (e in names (views)) res [[e]] <- views [[e]]
-	res
+
+# we iterate across named views, calling the "[[<-" method to actually retrieve / construct each
+	L <- list() ; length (L) <- length (names (views))
+	cc <- new ("collection", views = L, sel = x)
+	for (e in names (views)) cc [[e]] <- views [[e]]
+	cc
 } )
 
+# if the view already exists (whether or not by the given name) we do nothing.
+# (so a possible, resulting scenario is that the view exists, but not by the requested name.)
+# sometimes we already have the necessary data, and the view can be computed instead of downloaded.
+# the logic of that is worked out in recursion that guarantees the existence of needed "auxiliary" view(s).
 setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value = "character"), function (x, i, value) {
+	v <- view.finish (value)
+	if (view.grep (v, x)) return (x)
+
+	x@views [[i]] <- if (v ["entry"] %in% c ("normed.counts", "no.singletons", "normed.no.singletons")) {
+		aux <- v
+		aux ["entry"] <- switch (v ["entry"], 
+														 normed.counts = "counts", 
+														 no.singletons = "counts",
+														 normed.no.singletons = "no.singletons")		
+		j <- view.grep (aux, x)
+		m <- if (j) x [[j]] else {
+			aux.name <- paste (aux, collapse = ".")
+			x [[aux.name]] <- aux
+			n <- x [[aux.name]]
+			x@views [[aux.name]] <- NULL
+			n
+		}
+		message ("computing:   ", view.str (v))
+		switch (v ["entry"],
+						normed.counts = normalize (m),
+						no.singletons = remove.singletons (m),
+						normed.no.singletons = remove.singletons (m))
+	}
+	else {
+		message ("fetching:   ", view.str (v))
+		mGet ("matrix", selection (x), with = view.API.mapper (v))
+	}
+	attributes (x@views [[i]]) <- append (attributes (x@views [[i]]), v)
+	x
+})
+
+print.collection <- function (x, ...) {
+	print (x@sel)
+	str <- paste ("$", viewnames (x), "  (", sapply (x@views, view.str), ")", sep = "")
+	str <- paste (str, collapse = "\n")
+	cat ("\n", str, "\n", sep = "")
+}
+summary.collection <- function (object, ...) print (object)
+setMethod ("print", "collection", print.collection)
+setMethod ("summary", "collection", summary.collection)
+setMethod ("show", "collection", function (object) print.collection (object))
+
+
+########################################################################################
+### below are routines for handling "view"s in a standard way
+########################################################################################
+
+# assumes: a complete view
+# returns: list of appropriate API parameters, primed for call to mGet
+view.API.mapper <- function (v) {
+	list (
+		name = v ["annot"],
+		result_type = c (counts = "abundance",
+										 normed.counts = "abundance",
+										 no.singletons = "abundance",
+										 normed.no.singletons = "abundance",
+										 evalue = "evalue",
+										 percentid = "identity",
+										 length = "length") [v ["entry"]],
+		group_level = v ["level"],
+		`source` = v ["source"]
+	)
+}
+
+# assumes: a complete view, and a collection
+# returns: numerical index of "v" within views of "cc", disregarding names of views
+view.grep <- function (v, cc) which (sapply (views (cc), identical, v))
+
+# assumes: a complete view
+# returns: its printable string representation
+view.str <- function (v) paste (v, collapse = " : ")
+
+# assumes: a matrix, with attributes fully describing what view it is
+# returns: the view
+view.of.matrix <- function (m) unlist (attributes (m) [names (view.params)])
+
+# assumes: a partial or complete view description (as a named character vector)
+# a best-guess complete view in a standard form
+view.finish <- function (spec) {
 	vp <- sapply (view.params, unlist, use.names = FALSE)
 	chooser <- array (0, dim = sapply (vp, length), dimnames = vp)
-
+	
 # we use a system of weights on all parameter combinations, to enable specifying views minimally
 # there is still some flaky behavior, but mostly it works nicely...
 # first, weight default values
-	chooser ["count",,,] <- chooser ["count",,,] + 1
+	chooser ["counts",,,] <- chooser ["counts",,,] + 1
 	chooser [,"function",,] <- chooser[,"function",,] + 1
 	chooser [,,"species",] <- chooser [,,"species",] + 1
 	chooser [,,"level3",] <- chooser [,,"level3",] + 1
 	chooser [,,,"M5RNA"] <- chooser [,,,"M5RNA"] + 1
 	chooser [,,,"Subsystems"] <- chooser [,,,"Subsystems"] + 1
-
+	
 # nullify impossible combinations
 	chooser [,"function",view.params$level$taxa,] <- -1
 	chooser [,"function",,view.params$source$rna] <- -1
-	chooser [,"organism",view.params$level$func,] <- -1
+	chooser [,"organism",view.params$level$`function`,] <- -1
 	chooser [,"organism",,view.params$source$ontology] <- -1
 
 # see what has been requested and nullify others
 # should warn if no match to user input...
 # view parameters should not be hard-coded here...
-	names (value) <- names (vp) [sapply (names (value), pmatch, names (vp))]
-	J <- sapply (names (vp), function (x) vp [[x]] [pmatch (value [x], vp [[x]])])
+	names (spec) <- names (vp) [sapply (names (spec), pmatch, names (vp))]
+	J <- sapply (names (vp), function (x) vp [[x]] [pmatch (spec [x], vp [[x]])])
 	j <- match (J ["entry"], vp$entry)
 	if (!is.na (j)) chooser [-j,,,] <- -1
 	j <- match (J ["annot"], vp$annot)
@@ -151,7 +201,7 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	if (!is.na (j)) chooser [,,-j,] <- -1
 	j <- match (J ["source"], vp$source)
 	if (!is.na (j)) chooser [,,,-j] <- -1
-	
+
 # choose remaining combination of maximum weight
 # write this in a better way...
 	J <- chooser == max (chooser)
@@ -159,25 +209,14 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	J <- arrayInd (which (J), dim (chooser))
 	if (chooser [J] <= 0) stop ("cannot interpret view")
 	names (J) <- names (vp)
-	
-	v <- sapply (names (vp), function (x) vp [[x]] [J [x]], simplify = FALSE)
+	sapply (names (vp), function (x) vp [[x]] [J [x]])
+}
 
-#	for "normed" view (and others, later) we check if we have the raw data already
-	
-	except.entry <- setdiff (names (view.params), "entry")
-	if (v$entry == "normed" && any (j <- sapply (x@views, 
-																							 function (e) 
-																							 	identical (attributes (e) [except.entry], v [except.entry])))) {
-		message ("calculating:   ", paste (unlist (v), collapse = " : "))
-		x@views [[i]] <- normalize (x@views [[which (j)]])
-	}
-	else {
-		normed <- FALSE
-		if (v$entry == "normed") {
-			v$entry <- "count"
-			normed <- TRUE
-		}
-		message ("fetching:   ", paste (unlist (v), collapse = " : "))
+
+
+
+
+
 # 		s <- paste ("format/plain",
 # 								"/result_column/", switch (v$entry, 
 # 																					 count = "abundance", 
@@ -192,55 +231,4 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 # # here eventually should go support for storing matrices sparsely...
 # 		x@views [[i]] <- as.matrix (mGet ("abundance", selection (x), param = s, enClass = FALSE))
 
-		x@views [[i]] <- mGet ("matrix", selection (x), with = API.mapper.matrix (unlist (v)))
 
-		if (normed) {
-			x@views [[i]] <- normalize (x@views [[i]])
-			v$entry <- "normed"
-		}
-	}
-	attributes (x@views [[i]]) <- append (attributes (x@views [[i]]), v)
-	x
-})
-
-print.collection <- function (x, ...) {
-	vs <- sapply (x@views, function (v)
-		paste (unlist (attributes (v)) [names (view.params)], collapse = " : "))
-	ps <- paste ("$", viewnames (x), "  (", vs, ")", sep = "")
-	cat (paste (ps, collapse = "\n"), "\n\n")
-	print (x@sel)
-}
-summary.collection <- function (object, ...) print (object)
-setMethod ("print", "collection", print.collection)
-setMethod ("summary", "collection", summary.collection)
-setMethod ("show", "collection", function (object) print.collection (object))
-
-
-
-
-#################################################
-### Class components:
-### definition, inheritance, construction, methods, print 
-#################################################
-
-
-#################################################
-### MATRIX INTERACTION 
-###
-### this class is called "collection" to recall the concept familiar from the existing UI
-###
-### USAGES:
-###		sel <- selection ("mgm111111.3")
-###		M <- collection (sel, g = view ("Greengenes"), r = view (source = "RDP"), full = view (source = "m5rna"))
-###		M$g ; M$r ; M[[3]]						(these are "Matrix")
-###		M$view(name = "new_view", annotation = "organism", level = "phylum")
-###		metadata(M)
-###		views(M)
-### user-facing construction functions and manipulations:
-###  	M <- collection (<selection>, views)
-###		M <- collection (<character vector of ids>, views)
-###		M <- collection (<file>, views)
-###		md <- metadata (M)
-### collection (file ("ids.txt"))
-### M$newview <- view ("anno")
-#################################################
