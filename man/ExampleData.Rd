@@ -1,30 +1,39 @@
 \name{ExampleData}
 \alias{ExampleData}
-\alias{Example Data}
-\alias{exampleMetadata}
-\alias{exampleMatrix}
-\alias{exampleIDs}
-\alias{samp}
+\alias{Coral}
+\alias{Guts}
+\alias{Hospital}
+\alias{Marine}
+\alias{Mat}
+\alias{Waters}
+\alias{Whalebone}
 \alias{guts}
 \alias{waters}
+\alias{id.ex}
+\alias{mgm.ex}
+\alias{mgp.ex}
 \docType{data}
-\title{
-Example Data 
-}
-\description{
-Various data objects predefined in \code{matR} for toying around.
-}
+\title{Example Data Objects in matR}
+\description{Various datasets predefined in \code{matR} for toying around}
 \usage{
-data(exampleMetadata)
-data(exampleMatrix)
-data(exampleIDs)
+Coral
+Guts
+Hospital
+Marine
+Mat
+Waters
+Whalebone
+guts
+waters
+id.ex
+mgm.ex
+mgp.ex
 }
-\source{
-\url{http://metagenomics.anl.gov}
+\source{\url{http://metagenomics.anl.gov}}
+\seealso{
+	\code{\link{Collections}}
 }
 \examples{
-\dontrun{
-data(exampleMetadata)
-}
+#
 }
 \keyword{datasets}

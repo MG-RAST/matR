@@ -241,7 +241,7 @@ reqPack <- function (P) {
 	}
 
 ### print an optional message according to verbosity configuration
-optMessage <- function (s, ...) if (mconfig$verbose ()) message (s, ...)
+optMessage <- function (s, ...) if (msession$verbose ()) message (s, ...)
 
 ### helps pluralize output text when appropriate
 plur <- function (x) if (length (x) > 1) "s" else ""
@@ -264,11 +264,11 @@ resolveMerge <- function (first, second)
 
 ### further specialized list-combining function for use in "render" methods
 resolveParList <- function (call, object, defaults)
-  resolveMerge (call, resolveMerge (object, resolveMerge (defaults, mconfig$par())))
+  resolveMerge (call, resolveMerge (object, resolveMerge (defaults, msession$par())))
 
 xcall <- function (fun, ..., with = list(), without = character ()) {
 	call <- append (append (list (fun), list (...)), with)
 	call [without] <- NULL
-	if (mconfig$verbose()) message (paste (names (call [-1]), ":", as.character (call [-1]), sep = "", collapse = "  "), "\n")
+	if (msession$verbose()) message (paste (names (call [-1]), ":", as.character (call [-1]), sep = "", collapse = "  "), "\n")
 	eval (as.call (call))
 }

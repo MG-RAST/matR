@@ -1,6 +1,6 @@
 
 ###
-### This package defines methods for the following functions,
+### This file defines methods for the following functions,
 ### and additionally for "show" which is already generic.
 ### 
 ### We also define certain S3 methods
@@ -37,4 +37,3 @@ setGeneric ("heatmap", function (x, ...) standardGeneric ("heatmap"))
 setGeneric ("sigtest", function (x, ...) standardGeneric ("sigtest"))
 
 setGeneric ("render", function (x, ...) standardGeneric ("render"))
-

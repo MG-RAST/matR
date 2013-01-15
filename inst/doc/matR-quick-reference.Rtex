@@ -1,0 +1,130 @@
+%\VignetteIndexEntry{Command Quick Reference for matR}
+%\VignetteKeyword{matR}
+
+\documentclass[twoside]{article}
+\usepackage[landscape,top=1cm, bottom=1cm, left=1cm, right=1cm]{geometry}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{fancyhdr}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{.3cm}
+
+\pagestyle{fancy}
+
+\begin{document}
+\fancyfoot{}
+
+\lfoot{\emph{http://metagenomics.anl.gov}}
+\cfoot{}
+\rfoot{\emph{mg-rast@mcs.anl.gov}}
+
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r}
+\raggedright{\bf{QUICK REFERENCE}} & \raggedleft{\bf{matR: metagenomics analysis tools for R} (v0.9.9)}
+\end{tabular*}
+
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l l}
+\bf{install \& load} \\
+\hline
+\texttt{install.packages("matR", type="source", repo=}		&	obtain the matR package for your system		&	\\
+\texttt{  "http://dunkirk.mcs.anl.gov/\~{}braithwaite/matR")}	&							&	\\
+\texttt{library(matR)}						&	load matR into your current session		&	\\
+\texttt{dependencies(prompt=TRUE)}				&	obtain packages used by matR			&	use \texttt{prompt=FALSE} for batch scripting	\\
+\texttt{hazPackages()}						&	show what dependencies are already installed	&	\\
+\texttt{msession\$setAuth()}					&	enter authentication key for private data	&	\\[0.3cm]
+
+\bf{getting help} \\
+\hline
+\texttt{demo(package="matR")}			&	see a list of available demos				\\
+\texttt{demo2("\emph{demo}")}			&	step through \texttt{\emph{demo}}			\\[0.3cm]
+%\texttt{package?matR}				&	main help page with list of topics			\\
+%\texttt{utils::example("\emph{function}")}	&	see examples of how to use \texttt{\emph{function}}	\\
+
+\bf{metagenome collections} \\
+\hline
+\texttt{cc <- collection(x, file=NULL)}		&	create collection				&	specify IDs with \texttt{x} or \texttt{file} but not both		\\
+\texttt{collection(x, n1=v1, n2=v2, ...)}	&	create collection with custom views		&	\texttt{v1}, \texttt{v2}, \ldots are character vectors (see below)	\\
+\texttt{collection(x, L)}			&	create collection with views from a list	&	\texttt{L} is a named list						\\
+\texttt{samples(cc)}				&	samples of a collection				&										\\
+\texttt{names(cc) <- xx}			&	name (or rename) samples			&	\texttt{xx} is a character vector					\\
+\texttt{groups(cc) <- xx}			&	group samples					&	\texttt{xx} is a factor		 					\\
+\texttt{asFile(cc, view="count", file, ...)}	&	write view to text file														\\[0.3cm]
+
+\bf{views of a collection} \\
+\hline
+\texttt{c(annot="function", ...)}			&	view described by character vector				&	valid elements: \texttt{annot}, \texttt{entry}, \texttt{source}, \texttt{level} 		\\
+\texttt{view.params}					&	valid values for all view elements																	\\
+\texttt{cc\$v <- xx}					&	add new view to existing collection				&	\texttt{xx} describes the new view								\\
+\texttt{views(cc)}					&	views of a collection																		\\
+\texttt{viewnames(cc) <- xx}				&	name (or rename) views						&	\texttt{xx} is a character vector								\\
+%\texttt{rowgroups(cc, "v") <- xx}			&	group rows of a view for analysis				&	\texttt{xx} is a vector or factor								\\
+\texttt{cc\$v}						&	view, as ordinary matrix					&	\texttt{v} is the name of an existing view							\\
+\texttt{cc[["\emph{v}", full=FALSE, plain=FALSE]]}	&	view, with options						&	\texttt{\emph{v}} is the name of an existing view						\\ [0.3cm]
+
+\bf{metadata} \\
+\hline
+\texttt{mm <- metadata(x, file=NULL, ...)}		&	metadata of metagenomes			&	specify IDs with \texttt{x} or \texttt{file} but not both	\\
+\texttt{metadata(cc)}					&	metadata of collection			&									\\
+\texttt{mm[x, y, ..., bygroup=FALSE]}			&	metadata elements			&	\texttt{x}, \texttt{y}, \ldots are character vectors		\\
+\texttt{asFile(mm, file, ...)}				&	write metadata to text file											\\[0.3cm]
+
+\bf{analysis and visualization} \\
+\hline
+\texttt{render(cc, view="normed", ...)}					&	summarize view diversity			&	graphical parameters as in \emph{boxplot}			\\
+\texttt{pco(cc, view="normed", comp=c(1,2,3),} 				&	compute and plot principal components		&	graphical parameters as in \emph{plot} and \emph{points}	\\
+\texttt{    method="bray-curtis", ...)}																			\\
+\texttt{heatmap(cc, view="normed", rows=TRUE, ...)} 			&	compute and view heatmap dendrogram		&	graphical parameters as in \emph{gplots::heatmap.2}		\\
+\texttt{sigtest(cc, view="normed", test, fdr.level, qvalue)}		&	apply significance test				&	may also be applied to an ordinary matrix			\\
+\texttt{asFile(x, file, ...)}						&	write analysis to text file												\\
+
+\end{tabular*}
+
+
+
+
+
+\newpage
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r}
+\raggedright{\bf{EXAMPLES}} & \raggedleft{\bf{matR: metagenomics analysis tools for R} (v0.9.9)}
+\end{tabular*}
+
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l}
+\bf{collections and views} \\
+\hline
+\texttt{view.params}							&	show valid values of view parameters				\\
+\texttt{default.views}					&	show default collection views					\\
+\texttt{collection(c("4441679.3","4441680.3","4441682.3"))}		&	create collection of specified samples (with default views)	\\
+\texttt{collection(x, L1 = c(lev="level1"), L2 = c(lev="level2"))}	&	create collection with custom views				\\
+\texttt{L <- list (spec = c(annot="organism"),}				&	create a list of views \ldots					\\
+\texttt{   phy = c(annot="organism", lev="phylum"),}												\\
+\texttt{   str = c(annot="organism", lev="strain"))}												\\
+\texttt{cc <- collection (c("4441679.3","4441680.3","4441682.3"), L)}	&	\ldots then create a collection with those views		\\
+\texttt{names(cc) <- c("samp1", "samp2", "samp3")}			&	name samples of the collection					\\
+\texttt{groups(cc) <- c(1,1,2) }					&	assign a grouping to the samples				\\
+\texttt{sub <- cc [c(1,2)]}						&	extract a subcollection of specified metagenomes		\\[0.3cm]
+
+\bf{metadata} \\
+\hline
+\texttt{mm <- metadata(guts)}						&	create metadata object (using predefined set of IDs)			\\
+\texttt{mm["0464"]}							&	single index of length one selects all fields from specified metagenome	\\
+\texttt{mm["body\_product"]}						&	single index of length one selects same field from all metagenomes	\\
+\texttt{mm["latitude", "longitude"]}					&	two indices, both length one, select same fields from all metagenomes	\\
+\texttt{mm["latitude", "longitude", bygroup=TRUE]}			&	same, as data.frame							\\
+\texttt{mm[c("0464", "env\_package.data")]}				&	one index of length two selects multiple fields from one metagenome	\\
+\texttt{mm[c("0464", "PI"), c("0464","seq\_"), c("0464","biome")]}	&	three indices, all length two, select various fields			\\
+\texttt{mm["host\_common\_name", "disease", ".age", bygroup=TRUE]}	&	selected fields not common to all metagenomes				\\[0.3cm]
+
+\bf{analysis and visualization} \\
+\hline
+\texttt{cc <- collection(guts)}							&	create collection (using predefined set of IDs)				\\
+\texttt{render(cc)}								&	boxplot for diversity overview						\\
+\texttt{render(cc, view="count", las=3, cex.axis=.7, ylab="my axis title")}	&	slightly customized boxplots						\\
+\texttt{P <- pco(cc, comp=c(1,2,3))}						&	plot initial three principal components					\\
+\texttt{pco (cc, main = "My Title", pch = 19:25, color=c(rep("blue",5),rep("red",2)))}	& and with customization 						\\
+\texttt{asFile(P, file="PCO.txt")}						&	write principal components in text format				\\
+\texttt{heatmap (cc, main="My Title", col=c("blue", "green"),cexCol=0.8)}	&	heatmap of all annotations with some customization			\\
+\texttt{heatmap (cc, rows=c(rep(TRUE, 100), rep(FALSE, 915)))}			&	heatmap of selected annotations						\\
+\texttt{res <- sigtest(cc)}							&	apply default significance test						\\
+
+\end{tabular*}
+
+\end{document}

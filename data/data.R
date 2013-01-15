@@ -7,6 +7,27 @@
 ### testing, demos, and interactive runtime.
 ############################################
 
+# These data need to be available to matR and to the user.
+# Note: objects declared here are not available to package code 
+# until runtime (an empirical discovery).
+
+view.params <- list (
+	entry = c ("counts", "normed.counts", "ns.counts", "ns.normed.counts", "evalue", "length", "percentid"),
+	annot = c ("function", "organism"),
+	level = list (taxa = c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain"),
+								`function` = c ("level1", "level2", "level3", "function")),
+	`source` = list (rna = c ("M5RNA", "RDP", "Greengenes", "LSU", "SSU"),
+									 ontology = c ("NOG", "COG", "KO", "Subsystems"),
+									 protein = c ("M5NR", "SwissProt", "GenBank", "IMG", "SEED", "TrEMBL", "RefSeq", "PATRIC", 
+									 						 "eggNOG", "KEGG")))
+
+# possibly parameters should be specified in full for each view, here (and possibly not)
+default.views <- list (
+	raw = c (entry = "counts"),
+	nrm = c (entry = "normed.counts"),
+	nsc = c (entry = "ns.counts"),
+	nsn = c (entry = "ns.normed.counts"))
+
 id.ex <- list (
 	project = "92",
 	project2 = "102",
@@ -17,14 +38,14 @@ id.ex <- list (
 
 ############################################
 ### Session configuration information resides in
-### this closure object.  In particular this forces 
+### this closure.  In particular this forces 
 ### the auth key to be entered per-session, and discourages
 ### it from being stored in .RData or .Rhistory.
 ### A significant improvement would be to allow _other_
 ### options to be stored from session to session.
 #############################################
 
-mconfig <- (function () {
+msession <- (function () {
 # communications
 	auth.X <- ""
 	getAuth <- function () { auth.X }
@@ -50,17 +71,17 @@ mconfig <- (function () {
 	network <- TRUE								# ...possibly useful (though not at present)
 
 # for API debugging, we maintain a stack of the last 10 API URLs attempted
-	lastURL.X <- rep ("", 10)
-	lastURLn.X <- 1
-	lastURL <- function (s = NULL) {
+	urls.X <- rep ("", 10)
+	urlsn.X <- 1
+	urls <- function (s = NULL) {
 		if (is.null (s)) 
-			c (lastURL.X [lastURLn.X:1], 
-				 if (lastURLn.X != 10) lastURL.X [10:(lastURLn.X + 1)]
+			c (urls.X [urlsn.X:1], 
+				 if (urlsn.X != 10) urls.X [10:(urlsn.X + 1)]
 				 else NULL)
 		else {
-			lastURLn.X <<- lastURLn.X + 1
-			if (lastURLn.X == 11) lastURLn.X <<- 1
-			lastURL.X [lastURLn.X] <<- s
+			urlsn.X <<- urlsn.X + 1
+			if (urlsn.X == 11) urlsn.X <<- 1
+			urls.X [urlsn.X] <<- s
 		}
 	}
 
@@ -121,17 +142,49 @@ mconfig <- (function () {
 		else par.X <<- resolveMerge (L, par.X)
 	}
 
+	debug <- function () {
+		file.name <- paste (getwd(), "/matR-debug-", 
+												gsub ("[^[:alnum:]+]", format (Sys.time (), "%m-%b-%Hh%Mm%Ss-%Z"), repl = "-"), ".txt", sep = "")
+		sink (file = file.name)
+		cat ("\n-----------------------------------------------------------------------R VERSION\n")
+		print (R.Version())
+		cat ("\n------------------------------------------------------------------------PACKAGES\n")
+		print (installed.packages () [,c ("Package", "Version", "Built")])
+		cat ("\n----------------------------------------------------------------------------URLs\n")
+		print (msession$urls())
+		cat ("\n---------------------------------------------------------------WORKSPACE (SHORT)\n")
+		print (ls())
+		cat ("\n----------------------------------------------------------------WORKSPACE (LONG)\n")
+		print (ls.str())
+		if (file.exists(".Rprofile")) {
+			cat ("\n-------------------------------------------------------------------------PROFILE\n")
+			cat (readLines (".Rprofile"), sep = "\n")
+		}
+		cat ("\n-------------------------------------------------------------------------HISTORY\n")
+		t <- tempfile()
+		savehistory (t)
+		cat (readLines (t), sep = "\n")
+		unlink (t)
+		sink ()
+		cat (
+			"Please email a description of the problem to mg-rast@metagenomics.anl.gov, along with this file:", 
+			file.name,
+			"Note: this file contains session information such as your command history.",
+			"If you have related privacy concerns, please review it before emailing.\n", sep = "\n")
+		}
+
 # the user interface to session configuration is via these functions
 	list (getAuth = getAuth,
-		setAuth = setAuth,
-		server = server, 
-		servers = servers, 
-		verbose = verbose,
-		lastURL = lastURL,
-		path = path,
-		imp = imp,
-		exp = exp,
-		par = par)
+				setAuth = setAuth,
+				server = server, 
+				servers = servers, 
+				verbose = verbose,
+				urls = urls,
+				path = path,
+				imp = imp,
+				exp = exp,
+				par = par,
+				debug = debug)
 	}) ()
 
 ### ... some way of saving options and importing on attach, 

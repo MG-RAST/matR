@@ -1,12 +1,8 @@
 \name{mListAllIds}
 \alias{mListAllIds}
-\title{List All Ids for a Specified Resource Type}
-\description{
-Convenience function to list all valid identifiers of accessible resources of a specified type.
-}
-\usage{
-mListAllIds(resource = c ("project", "sample", "library", "annotation", "metagenome"))
-}
+\title{List All IDs for a Specified Resource Type}
+\description{Lists all valid identifiers of accessible resources of a specified type}
+\usage{mListAllIds(resource = c ("project", "sample", "library", "annotation", "metagenome"))}
 \arguments{
   \item{resource}{...}
 }

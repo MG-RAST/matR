@@ -2,54 +2,51 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{selection-class}
-\alias{initialize,selection-method}
+\alias{[,selection,ANY,ANY,ANY-method}
+\alias{groups,selection-method}
+\alias{groups<-,selection-method}
+\alias{metadata,selection-method}
+\alias{names,selection-method}
+\alias{names<-,selection-method}
 \alias{print,selection-method}
+\alias{samples,selection-method}
+\alias{selection,selection-method}
 \alias{show,selection-method}
 \alias{summary,selection-method}
 
 \title{Class \code{"selection"}}
-\description{
-%%  ~~ A concise (1-5 lines) description of what the class is. ~~
-}
+\description{...}
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("selection", ids, resources, tagging)}.
+Objects can be created by calls of the form \code{new("selection", ...)}.
 %%  ~~ describe objects here ~~ 
 }
 \section{Slots}{
   \describe{
     \item{\code{ids}:}{Object of class \code{"character"} ~~ }
-    \item{\code{resources}:}{Object of class \code{"character"} ~~ }
-    \item{\code{sel}:}{Object of class \code{"character"} ~~ }
-    \item{\code{tagging}:}{Object of class \code{"character"} ~~ }
-    \item{\code{metadata}:}{Object of class \code{"rlist"} ~~ }
+    \item{\code{groups}:}{Object of class \code{"factor"} ~~ }
+    \item{\code{metadata}:}{Object of class \code{"metadata"} ~~ }
+    \item{\code{ids.spec}:}{Object of class \code{"character"} ~~ }
+    \item{\code{resource.spec}:}{Object of class \code{"character"} ~~ }
+    \item{\code{metadata.extent}:}{Object of class \code{"character"} ~~ }
   }
 }
 \section{Methods}{
   \describe{
-    \item{collection}{\code{signature(sel = "selection")}: ... }
-    \item{initialize}{\code{signature(.Object = "selection")}: ... }
+    \item{[}{\code{signature(x = "selection", i = "ANY", j = "ANY", drop = "ANY")}: ... }
+    \item{collection}{\code{signature(x = "selection")}: ... }
+    \item{groups}{\code{signature(x = "selection")}: ... }
+    \item{groups<-}{\code{signature(x = "selection")}: ... }
     \item{metadata}{\code{signature(x = "selection")}: ... }
+    \item{names}{\code{signature(x = "selection")}: ... }
+    \item{names<-}{\code{signature(x = "selection")}: ... }
     \item{print}{\code{signature(x = "selection")}: ... }
+    \item{samples}{\code{signature(x = "selection")}: ... }
+    \item{selection}{\code{signature(x = "selection")}: ... }
     \item{show}{\code{signature(object = "selection")}: ... }
     \item{summary}{\code{signature(object = "selection")}: ... }
 	 }
 }
-\references{
-%%  ~~put references to the literature/web site here~~
-}
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-%%  ~~objects to See Also as \code{\link{~~fun~~}}, ~~~
-%%  ~~or \code{\linkS4class{CLASSNAME}} for links to other classes ~~~
-}
+\seealso{\code{\link{selection-methods}}}
 \examples{
 showClass("selection")
 }
