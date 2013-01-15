@@ -12,11 +12,11 @@ setClass ("sigtest", repr = NULL, contains = "list")
 ### principal coordinates analysis
 ####################################################
 
-setMethod ("pco", "ANY", function (x, ...) ecodist::dist (x, ...))
+setMethod ("pco", "ANY", function (x, ...) ecodist::pco (x, ...))
 # see "dist" below for the rationale for an "ANY" method
 # here as below, this is a temporary hack...
 setMethod ("pco", "collection", function (x, view = "normed", components = c (1,2,3), 
-																					method = "bray-curtis", file = NA, ...) {
+																					method = "bray-curtis", ...) {
 	reqPack ("ecodist")
 	D <- matR::dist (x, view, method)
 	P <- ecodist::pco (D)
@@ -78,7 +78,7 @@ setMethod ("show", "pco", function (object) print (object))
 setMethod ("heatmap", "ANY", function (x, ...) stats::heatmap (x, ...))
 # see "dist" below for the rationale for an "ANY" method
 # here as below, this is a temporary hack...
-setMethod ("heatmap", "collection", function (x, view = "normed", rows = TRUE, file = NA, ...) {	
+setMethod ("heatmap", "collection", function (x, view = "normed", rows = TRUE, ...) {	
 	par <- list ()
 	par$main <- paste (views (x) [[view]], collapse = " : ")
 	par$colsep <- 1:length (samples (x))
@@ -154,8 +154,7 @@ setMethod ("sigtest", "matrix", function (x, groups, test = c ("t-test-paired", 
 		stat [c ("q.value", "significant")] <- 
 			qvalue (stat$p.value, fdr.level = fdr.level) [c ("qvalues", "significant")]
 	}
-	res$stat <- stat
-	invisible (res)
+	invisible (append (res, stat))
 	#   new ("sigtest", res)
 }	)
 
@@ -192,23 +191,31 @@ setMethod ("dist", "collection", function (x, view = "normed", method = "bray-cu
 ### we want to add unifrac...
 	} )
 
-normalize <- function (x) {
-	x <- as.matrix (x)
-	x [is.na (x)] <- 0
+normalize <- function (m) {
+	m <- as.matrix (m)
+	m [is.na (m)] <- 0
 # log scale
-	x <- log2 (x + 1)
+	m <- log2 (m + 1)
 # then scale by mean and standard deviation per sample
-	mu <- colMeans (x)
-	sigm <- unlist (sapply (as.data.frame (x), sd))
-	x <- t ((t (x) - mu) / sigm)
+	mu <- colMeans (m)
+	sigm <- unlist (sapply (as.data.frame (m), sd))
+	m <- t ((t (m) - mu) / sigm)
 # then scale to [0,1] across all samples.
 # it can occur that a column is uniformly zero, so
 # na.rm is necessary for such cases
-	shift <- min (x, na.rm = TRUE)
-	scale <- max (x, na.rm = TRUE) - shift
-	if (scale != 0) x <- (x - shift) / scale
-	x
+	shift <- min (m, na.rm = TRUE)
+	scale <- max (m, na.rm = TRUE) - shift
+	if (scale != 0) m <- (m - shift) / scale
+	m
 	}
+
+remove.singletons <- function (m, lim = 1) {
+	m <- as.matrix (m)
+	m [is.na (m)] <- 0
+	m [m <= lim] <- 0
+	m [apply (m, MARGIN = 1, sum) != 0, ]
+}
+
 
 permutations <- function (x, ntimes = 1, type = "sample", ...) {
 	x <- as.matrix (x)
