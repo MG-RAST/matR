@@ -12,7 +12,7 @@
 # until runtime (an empirical discovery).
 
 view.params <- list (
-	entry = c ("counts", "normed.counts", "no.singletons", "normed.no.singletons", "evalue", "length", "percentid"),
+	entry = c ("counts", "normed.counts", "ns.counts", "ns.normed.counts", "evalue", "length", "percentid"),
 	annot = c ("function", "organism"),
 	level = list (taxa = c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain"),
 								`function` = c ("level1", "level2", "level3", "function")),
@@ -24,9 +24,9 @@ view.params <- list (
 # possibly parameters should be specified in full for each view, here (and possibly not)
 default.views <- list (
 	raw = c (entry = "counts"),
-	nrw = c (entry = "normed.counts"),
-	nos = c (entry = "no.singletons"),
-	nns = c (entry = "normed.no.singletons"))
+	nrm = c (entry = "normed.counts"),
+	nsc = c (entry = "ns.counts"),
+	nsn = c (entry = "ns.normed.counts"))
 
 id.ex <- list (
 	project = "92",

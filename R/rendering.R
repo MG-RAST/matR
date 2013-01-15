@@ -19,7 +19,7 @@
 ### 
 #################################################
 
-setMethod ("render", "collection", function (x, view = "normed", file = NA, ...) {
+setMethod ("render", "collection", function (x, view = "normed", ...) {
 	par <- list()
 	par$main <- paste (views (x) [[view]], collapse = " : ")
 	par$names <- if (length (names (x)) != 0) names (x) else samples (x)

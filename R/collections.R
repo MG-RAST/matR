@@ -93,12 +93,12 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 	v <- view.finish (value)
 	if (view.grep (v, x)) return (x)
 
-	x@views [[i]] <- if (v ["entry"] %in% c ("normed.counts", "no.singletons", "normed.no.singletons")) {
+	x@views [[i]] <- if (v ["entry"] %in% c ("normed.counts", "ns.counts", "ns.normed.counts")) {
 		aux <- v
 		aux ["entry"] <- switch (v ["entry"], 
 														 normed.counts = "counts", 
-														 no.singletons = "counts",
-														 normed.no.singletons = "no.singletons")		
+														 ns.counts = "counts",
+														 ns.normed.counts = "ns.counts")		
 		j <- view.grep (aux, x)
 		m <- if (j) x [[j]] else {
 			aux.name <- paste (aux, collapse = ".")
@@ -110,8 +110,8 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 		message ("computing:   ", view.str (v))
 		switch (v ["entry"],
 						normed.counts = normalize (m),
-						no.singletons = remove.singletons (m),
-						normed.no.singletons = remove.singletons (m))
+						ns.counts = remove.singletons (m),
+						ns.normed.counts = normalize (m))
 	}
 	else {
 		message ("fetching:   ", view.str (v))
@@ -144,8 +144,8 @@ view.API.mapper <- function (v) {
 		name = v ["annot"],
 		result_type = c (counts = "abundance",
 										 normed.counts = "abundance",
-										 no.singletons = "abundance",
-										 normed.no.singletons = "abundance",
+										 ns.counts = "abundance",
+										 ns.normed.counts = "abundance",
 										 evalue = "evalue",
 										 percentid = "identity",
 										 length = "length") [v ["entry"]],
@@ -207,7 +207,10 @@ view.finish <- function (spec) {
 	J <- chooser == max (chooser)
 	if (sum (J) != 1) stop ("cannot interpret view")
 	J <- arrayInd (which (J), dim (chooser))
-	if (chooser [J] <= 0) stop ("cannot interpret view")
+
+# test below changed from <= to < per Bill Orsi bug report
+# pretty sure that is correct
+	if (chooser [J] < 0) stop ("cannot interpret view")
 	names (J) <- names (vp)
 	sapply (names (vp), function (x) vp [[x]] [J [x]])
 }

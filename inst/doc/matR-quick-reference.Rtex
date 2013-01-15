@@ -69,10 +69,10 @@
 
 \bf{analysis and visualization} \\
 \hline
-\texttt{render(cc, view="normed", file=NA, ...)}			&	summarize view diversity			&	graphical parameters as in \emph{boxplot}			\\
+\texttt{render(cc, view="normed", ...)}					&	summarize view diversity			&	graphical parameters as in \emph{boxplot}			\\
 \texttt{pco(cc, view="normed", comp=c(1,2,3),} 				&	compute and plot principal components		&	graphical parameters as in \emph{plot} and \emph{points}	\\
-\texttt{    method="bray-curtis", file=NA, ...)}																			\\
-\texttt{heatmap(cc, view="normed", rows=TRUE, file=NA, ...)} 		&	compute and view heatmap dendrogram		&	graphical parameters as in \emph{gplots::heatmap.2}		\\
+\texttt{    method="bray-curtis", ...)}																			\\
+\texttt{heatmap(cc, view="normed", rows=TRUE, ...)} 			&	compute and view heatmap dendrogram		&	graphical parameters as in \emph{gplots::heatmap.2}		\\
 \texttt{sigtest(cc, view="normed", test, fdr.level, qvalue)}		&	apply significance test				&	may also be applied to an ordinary matrix			\\
 \texttt{asFile(x, file, ...)}						&	write analysis to text file												\\
 

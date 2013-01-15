@@ -3,7 +3,7 @@ export(dependencies, hazPackages)
 export(callRaw, mListAllIds, mGet)
 export(readIds)
 export(demo2, scrubIds, scrapeResources)
-export(normalize, sigtest)
+export(normalize, remove.singletons, sigtest)
 
 # export everything (in development mode)
 # exportPattern(".*")
