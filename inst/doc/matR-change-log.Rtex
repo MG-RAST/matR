@@ -1,0 +1,34 @@
+%\VignetteIndexEntry{Change Log for matR}
+%\VignetteKeyword{matR}
+
+\documentclass{article}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{.3cm}
+
+\begin{document}
+\section{21 January 2013 --- Version 0.9.9}
+
+For auth keys and other session configuration, use: \texttt{msession} (formerly \texttt{mconfig})
+
+For bug reporting, use: \texttt{msession\$debug()} 
+
+Collections now have four default views:	\\
+raw counts (\texttt{raw})	\\
+normed counts (\texttt{nrm})	\\
+no singletons, raw counts (\texttt{nsc})	\\
+no singletons, normed counts (\texttt{nsn})
+
+Command reference now available with: \texttt{vignette("matR-quick-reference")}	\\
+The same document is available via: \texttt{https://www.github.com/MG-RAST/matR/inst/doc}
+
+Runtime R-style help now available, such as: \texttt{?collection}	\\
+For the moment, docs are by and large limited to series of examples.
+
+Significance testing of annotations available with: \texttt{?sigtest}.
+
+\section{14 January 2013 --- Version 0.9.9}
+
+This file available with: \texttt{vignette("matR-change-log")}
+
+\end{document}
+
