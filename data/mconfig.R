@@ -1,4 +1,3 @@
-
 ############################################
 ### DATA OBJECTS AVAILABLE UPON LOADING matR
 ###
@@ -28,7 +27,14 @@ mconfig <- (function () {
 # communications
 	auth.X <- ""
 	getAuth <- function () { auth.X }
-	setAuth <- function () { message ("Enter auth key on a single line:"); auth.X <<- readLines (n = 1, warn = FALSE); auth.X}
+	setAuth <- function (con = NULL) { 
+		if (is.null (con)) {
+			message ("Enter auth key on a single line:")
+			auth.X <<- readLines (n = 1, warn = FALSE)
+		}
+		else auth.X <<- readLines (con, n = 1, warn = FALSE)
+		auth.X
+	}
 
 # hopefully the need for this will go away.
 # in the early days, the API server was constantly moving
