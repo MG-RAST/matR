@@ -1,4 +1,3 @@
-
 ### we use new-style classes, but in an old-style way.
 ### analysis objects are lists, with components
 ### hard-coded in the routines, not explicitly declared.
@@ -154,8 +153,7 @@ setMethod ("sigtest", "matrix", function (x, groups, test = c ("t-test-paired", 
 		stat [c ("q.value", "significant")] <- 
 			qvalue (stat$p.value, fdr.level = fdr.level) [c ("qvalues", "significant")]
 	}
-	res$stat <- stat
-	invisible (res)
+	invisible (append (res, stat))
 	#   new ("sigtest", res)
 }	)
 
