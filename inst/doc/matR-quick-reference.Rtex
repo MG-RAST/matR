@@ -9,17 +9,18 @@
 \setlength{\parindent}{0cm}
 \setlength{\parskip}{.3cm}
 
+
 \pagestyle{fancy}
 
 \begin{document}
-\fancyfoot{}
+%\fancyfoot{}
 
-\lfoot{\emph{http://metagenomics.anl.gov}}
-\cfoot{}
-\rfoot{\emph{mg-rast@mcs.anl.gov}}
+%\lfoot{\emph{http://metagenomics.anl.gov}}
+%\cfoot{}
+%\rfoot{\emph{mg-rast@mcs.anl.gov}}
 
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r}
-\raggedright{\bf{QUICK REFERENCE}} & \raggedleft{\bf{matR: metagenomics analysis tools for R} (v0.9.9)}
+\raggedright{\bf{QUICK REFERENCE}}	&	\raggedleft{\bf{matR: metagenomics analysis tools for R} (v0.9.9)}
 \end{tabular*}
 
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l l}
