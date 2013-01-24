@@ -28,7 +28,7 @@ setMethod ("asFile", "character", function (x, file, ...)					# for lists of IDs
 
 setMethod ("asFile", "matrix", function (x, file, ...) {
 	args <- list (...)
-	p <- resolveMerge (args, mconfig$exp())
+	p <- resolveMerge (args, msession$exp())
 	file <- paste (p$path, file, sep = "")
 	if (p$type != "binary")
 		write.table (x, file = file, append = p$append, quote = p$quote, sep = p$sep, na = p$na,
@@ -46,7 +46,7 @@ setMethod ("asFile", "collection", function (x, view = "count", file, ...)
 
 #setMethod ("asFile", "pco", function (x, file, ...) {
 # 	args <- list (...)
-# 	p <- resolveMerge (args, mconfig$exp())
+# 	p <- resolveMerge (args, msession$exp())
 # 	file <- paste (p$path, file, sep = "")
 # 	write.table (x [[2]], file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
 # 							 row.names = p$row.names, col.names = p$col.names)

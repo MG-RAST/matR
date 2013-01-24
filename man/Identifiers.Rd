@@ -1,14 +1,9 @@
 \name{Identifiers}
 \alias{Identifiers}
-\alias{Resources}
-\alias{Resources and Identifiers}
 \alias{scrubIds}
 \alias{scrapeResources}
-\alias{Identifying Resources}
-\title{String Processing for Resource Identifiers}
-\description{
-Formats casually formatted ids properly.  Returns resource types of given ids.
-}
+\title{Process Strings as Resource Identifiers}
+\description{Formats ids properly, or returns resource types of given ids}
 \usage{
 scrubIds(ids, resources = c ("project", "library", "sample", "metagenome"))
 scrapeResources(ids)
@@ -29,7 +24,7 @@ Ids given as numeric rather than character usually work, but use caution with me
 \author{Daniel T. Braithwaite}
 \seealso{
 \url{http://api.metagenomics.anl.gov},
-\code{\link{mGet}}, \code{\link{Selections}}, \code{\link{Collections}}}
+\code{\link{mGet}}, \code{\link{Collections}}}
 \examples{
 x <- c ("4445567.3", "4445568.3")
 y <- "4445569.3;4445570.3"
