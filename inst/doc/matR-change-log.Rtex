@@ -6,7 +6,15 @@
 \setlength{\parskip}{.3cm}
 
 \begin{document}
-\section{21 January 2013 --- Version 0.9.9}
+
+\section*{24 January 2013 --- Version 0.9.9}
+To set your auth key from a file, use: \texttt{msession\$setAuth("my-key-file")} \\
+If you store your key on a shared machine, set file permissions appropriately.
+
+Annotation hierarchies are available with: \texttt{rownames(collection, view, sep)} \\
+\texttt{sep} should be a separator character, omitted, or \texttt{FALSE}.  In the last case, the result is a matrix, with one row per annotation, and one column per hierarchy level.
+
+\section*{21 January 2013 --- Version 0.9.9}
 
 For auth keys and other session configuration, use: \texttt{msession} (formerly \texttt{mconfig})
 
@@ -19,16 +27,19 @@ no singletons, raw counts (\texttt{nsc})	\\
 no singletons, normed counts (\texttt{nsn})
 
 Command reference now available with: \texttt{vignette("matR-quick-reference")}	\\
-The same document is available via: \texttt{https://www.github.com/MG-RAST/matR/inst/doc}
+The same document is available via: \\
+\texttt{https://github.com/MG-RAST/matR/raw/master/inst/doc/matR-quick-reference.pdf}
 
 Runtime R-style help now available, such as: \texttt{?collection}	\\
 For the moment, docs are by and large limited to series of examples.
 
 Significance testing of annotations available with: \texttt{?sigtest}.
 
-\section{14 January 2013 --- Version 0.9.9}
+\section*{14 January 2013 --- Version 0.9.9}
 
-This file available with: \texttt{vignette("matR-change-log")}
+This file available with: \texttt{vignette("matR-change-log")} \\
+And at: \\
+\texttt{https://github.com/MG-RAST/matR/raw/master/inst/doc/matR-change-log.pdf}
 
 \end{document}
 
