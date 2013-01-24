@@ -44,7 +44,7 @@ setMethod ("rownames", "ANY", function (x, ...) base::rownames (x, ...))
 setMethod ("rownames", "collection", function (x, view = "normed", cat = NULL) {
 	if (is.null (cat))
 		rownames (x [[view]])
-	else if (as.logical (cat))
+	else if (!is.logical (cat) || cat)
 		apply (attr (x [[view]], "rowhier"), 1, paste, collapse = if (is.logical (cat)) "; " else cat)
 	else attr (x [[view]], "rowhier")
 })
