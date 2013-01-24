@@ -14,7 +14,7 @@
 view.params <- list (
 	entry = c ("counts", "normed.counts", "ns.counts", "ns.normed.counts", "evalue", "length", "percentid"),
 	annot = c ("function", "organism"),
-	level = list (taxa = c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain"),
+	level = list (organism = c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain"),
 								`function` = c ("level1", "level2", "level3", "function")),
 	`source` = list (rna = c ("M5RNA", "RDP", "Greengenes", "LSU", "SSU"),
 									 ontology = c ("NOG", "COG", "KO", "Subsystems"),

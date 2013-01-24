@@ -13,9 +13,8 @@
     "matR: metagenomics analysis tools for R (", packageVersion ("matR"), ")")
 	options (warn = 1, timeout = 300, digits = 2)
 	packageStartupMessage (
-		"bugs? try vignette(\"matR-changelog\"), or email the output of msession$debug() to mg-rast@mcs.anl.gov.\n",
-		"for general help, run vignette(\"matR-quick-reference\") or package?matR")
-	# 	packageStartupMessage (
+		"help is available with package?matR, vignette(package=\"matR\"), or msession$debug()")
+# 	packageStartupMessage (
 # 		"access private data--\tmsession$setAuth()\n",
 # 		"demos and tutorials--\tdemo(package=\"matR\")\n",
 #     "example metagenomes--\tdata(package=\"matR\")\n",
