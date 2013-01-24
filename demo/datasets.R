@@ -24,3 +24,5 @@ Guts <- collection (guts)
 Waters <- collection (waters)
 
 rm("p","md")
+
+# remember to save with xz compression --- much smaller

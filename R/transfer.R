@@ -38,9 +38,9 @@
 callRaw <- function (call, file = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
-	urlStr <- paste (mconfig$server (), call, conj, "auth=", mconfig$getAuth (), sep = "")
+	urlStr <- paste (msession$server (), call, conj, "auth=", msession$getAuth (), sep = "")
 	optMessage ("requesting ", urlStr)
-	mconfig$lastURL (urlStr)
+	msession$urls (urlStr)
 	if (!is.null (file)) {
 		e <- try (download.file (urlStr, file, quiet = TRUE))
 		if (inherits (e, "try-error")) e
@@ -94,11 +94,11 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 
 # here we call the old API for metadata only
 	if (resource %in% c ("project", "sample", "library", "metagenome")) {
-		s <- mconfig$server()
-		mconfig$server (mconfig$servers()$test)
+		s <- msession$server()
+		msession$server (msession$servers()$test)
 		y <- try (oldmGet (resource, ID = x, namespace = args$namespace, annoType = args$annoType, seqType = args$seqType, org = args$org, 
 											 func = args$func, md5 = args$md5, param = args$param, parse = parse, enClass = enClass, toFile = file))
-		mconfig$server (s)
+		msession$server (s)
 	}
 
 	else {
@@ -151,6 +151,46 @@ if (hlen != 1) attr(m, "rowhier") <- t (attr(m, "rowhier"))
 
 	}
 	y
+}
+
+abundanceprofile.API.wrap <- function (...) {
+	mGet ("abundanceprofile", ...)
+}
+analysisset.API.wrap <- function (...) {
+	mGet ("", ...)
+}
+library.API.wrap <- function (...) {
+	mGet ("", ...)
+}
+m5nr.API.wrap <- function (...) {
+	mGet ("", ...)
+}
+matrix.API.wrap <- function (...) {
+	mGet ("", ...)
+}
+metadata.API.wrap <- function (...) {
+	mGet ("", ...)
+}
+metagenome.API.wrap <- function (...) {
+	mGet ("", ...)
+}
+metagenome_statistics.API.wrap <- function (...) {
+	mGet ("", ...)
+}
+notebook.API.wrap <- function (...) {
+	mGet ("", ...)
+}
+project.API.wrap <- function (...) {
+	mGet ("project", ...)
+}
+sample.API.wrap <- function (...) {
+	mGet ("sample", ...)
+}
+sequences.API.wrap <- function (...) {
+	mGet ("sequences", ...)
+}
+sequenceset.API.wrap <- function (...) {
+	mGet ("sequenceset", ...)
 }
 
 
@@ -441,3 +481,4 @@ simpleJSONReduction <- function (x) {
 	y$more <- as.list (unlist (x [single], use.names = TRUE))
 	y
 	}
+

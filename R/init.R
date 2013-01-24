@@ -8,15 +8,17 @@
 ### as necessary, and provide a function to install suggested "dependencies"
 
 .onAttach <- function (libname, pkgname) {
-	mconfig$server (mconfig$servers()$api2)
+	msession$server (msession$servers()$api2)
 	packageStartupMessage (
-    "matR: metagenomics analysis tools for R (", packageVersion ("matR"), ")\n")
-	options (warn = 1, width = 150, timeout = 300, digits = 2)
+    "matR: metagenomics analysis tools for R (", packageVersion ("matR"), ")")
+	options (warn = 1, timeout = 300, digits = 2)
 	packageStartupMessage (
-		"access private data--\tmconfig$setAuth()\n",
-		"demos and tutorials--\tdemo(package=\"matR\")\n",
-    "example metagenomes--\tdata(package=\"matR\")\n",
-    "general help & info--\tpackage?matR")
+		"help is available with package?matR, vignette(package=\"matR\"), or msession$debug()")
+# 	packageStartupMessage (
+# 		"access private data--\tmsession$setAuth()\n",
+# 		"demos and tutorials--\tdemo(package=\"matR\")\n",
+#     "example metagenomes--\tdata(package=\"matR\")\n",
+#     "general help & info--\tpackage?matR")
 	pkgs <- hazPackages()
 	if (!all (pkgs)) packageStartupMessage (
 	  "Suggested package(s) missing: ", paste (names (pkgs) [!pkgs] , collapse = " "), "\n",
