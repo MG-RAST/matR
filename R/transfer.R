@@ -1,4 +1,3 @@
-
 ############################################
 ### CORE ROUTINES FOR COMMUNICATING
 ### WITH MG-RAST AND KBASE
@@ -110,6 +109,7 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 						"matrix" =
 {
 	callStr <- paste (callStr, "/", args$name, sep = "")
+	name <- args$name
 	args$name <- NULL
 })
 
@@ -137,12 +137,15 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 	rownames (m) <- sapply (y$rows, `[[`, i = "id")
 	colnames (m) <- sapply (y$columns, `[[`, i = "id")
 
-# need to know if this is even supposed to be generally valid
-# it doesn't always work
+# need to confirm this understanding of the format
 
-#	rh <- lapply (y$rows, function (x) unlist (x [[c ("metadata", "ontology")]]))
-#	hlen <- max (sapply (rh, length))
-#	attr (m, "rowhier") <- t (sapply (rh, `length<-`, hlen))
+s <- switch (name, `function` = "ontology", organism = "taxonomy", NULL)
+rh <- try(lapply(y$rows, function(x) unlist(x[[c("metadata", s)]])))
+if (inherits(rh, "try-error")) warning ("annotation hierarchy unavailable")
+hlen <- max(sapply(rh, length))
+attr(m, "rowhier") <- sapply(rh, `length<-`, hlen)
+if (hlen != 1) attr(m, "rowhier") <- t (attr(m, "rowhier"))
+
 	y <- m
 })
 
