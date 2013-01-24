@@ -1,4 +1,3 @@
-
 ### we use new-style classes, but in an old-style way.
 ### analysis objects are lists, with components
 ### hard-coded in the routines, not explicitly declared.
