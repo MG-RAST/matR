@@ -28,7 +28,7 @@ setGeneric ("rownames", function (x, ...) standardGeneric ("rownames"))
 setGeneric ("selection", function (x, ...) standardGeneric ("selection"))
 setGeneric ("collection", function (x, ...) standardGeneric ("collection"))
 
-### Defining generics for common functions has to be done right,
+### Defining generics has to be done right, where name conflicts are likely,
 ### so we don't produce weird effects in users' environments
 
 setGeneric ("dist", function (x, ...) standardGeneric ("dist"))

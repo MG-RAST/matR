@@ -16,5 +16,5 @@ License: file LICENSE
 LazyLoad: yes
 LazyData: yes
 LazyDataCompression: xz
-Collate: util.R classmethodheaders.R selections.R collections.R oldclasses.R oldwrappers.R readwrite.R analysis.R rendering.R init.R transfer.R
+Collate: util.R classmethodheaders.R selections.R collections.R readwrite.R analysis-utils.R analysis-proc.R rendering.R init.R transfer.R
 

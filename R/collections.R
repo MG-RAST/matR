@@ -41,11 +41,11 @@ setMethod ("[[", "collection", function (x, i, full = FALSE, plain = FALSE) {
 })
 
 setMethod ("rownames", "ANY", function (x, ...) base::rownames (x, ...))
-setMethod ("rownames", "collection", function (x, view = "normed", cat = NULL) {
-	if (is.null (cat))
+setMethod ("rownames", "collection", function (x, view = "normed", sep = NULL) {
+	if (is.null (sep))
 		rownames (x [[view]])
-	else if (!is.logical (cat) || cat)
-		apply (attr (x [[view]], "rowhier"), 1, paste, collapse = if (is.logical (cat)) "; " else cat)
+	else if (!is.logical (sep) || sep)
+		apply (attr (x [[view]], "rowhier"), 1, paste, collapse = if (is.logical (sep)) "; " else sep)
 	else attr (x [[view]], "rowhier")
 })
 
@@ -91,21 +91,21 @@ setMethod ("collection", "selection", function (x, ...) {
 # the logic of that is worked out in recursion that guarantees the existence of needed "auxiliary" view(s).
 setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value = "character"), function (x, i, value) {
 	v <- view.finish (value)
-	if (view.grep (v, x)) return (x)
+	if (length (view.grep (v, x) != 0)) return (x)
 
-	x@views [[i]] <- if (v ["entry"] %in% c ("normed.counts", "ns.counts", "ns.normed.counts")) {
-		aux <- v
-		aux ["entry"] <- switch (v ["entry"], 
+	mmm <- if (v ["entry"] %in% c ("normed.counts", "ns.counts", "ns.normed.counts")) {
+		auxv <- v
+		auxv ["entry"] <- switch (v ["entry"], 
 														 normed.counts = "counts", 
 														 ns.counts = "counts",
-														 ns.normed.counts = "ns.counts")		
-		j <- view.grep (aux, x)
-		m <- if (j) x [[j]] else {
-			aux.name <- paste (aux, collapse = ".")
-			x [[aux.name]] <- aux
-			n <- x [[aux.name]]
-			x@views [[aux.name]] <- NULL
-			n
+														 ns.normed.counts = "ns.counts")
+		j <- view.grep (auxv, x)
+		m <- if (length (j) != 0) x [[j]] else {
+			auxv.name <- paste (auxv, collapse = ".")
+			x [[auxv.name]] <- auxv
+			nnn <- x [[auxv.name]]
+			x@views <- x@views [-which (names (x@views) == auxv.name)]
+			nnn
 		}
 		message ("computing:   ", view.str (v))
 		switch (v ["entry"],
@@ -117,13 +117,16 @@ setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value =
 		message ("fetching:   ", view.str (v))
 		mGet ("matrix", selection (x), with = view.API.mapper (v))
 	}
+	x@views [[i]] <- mmm
 	attributes (x@views [[i]]) <- append (attributes (x@views [[i]]), v)
 	x
 })
 
 print.collection <- function (x, ...) {
 	print (x@sel)
-	str <- paste ("$", viewnames (x), "  (", sapply (x@views, view.str), ")", sep = "")
+	str <- paste ("$", viewnames (x), "  (", 
+								sapply (x@views, function (y) view.str (view.of.matrix (y))),
+								")", sep = "")
 	str <- paste (str, collapse = "\n")
 	cat ("\n", str, "\n", sep = "")
 }
@@ -214,24 +217,3 @@ view.finish <- function (spec) {
 	names (J) <- names (vp)
 	sapply (names (vp), function (x) vp [[x]] [J [x]])
 }
-
-
-
-
-
-
-# 		s <- paste ("format/plain",
-# 								"/result_column/", switch (v$entry, 
-# 																					 count = "abundance", 
-# 																					 normed = "abundance", 
-# 																					 evalue = "evalue", 
-# 																					 length = "length", 
-# 																					 percentid = "identity"),
-# 								"/type/", v$annot,
-# 								"/group_level/", v$level,
-# 								"/source/", v$source, 
-# 								sep = "")
-# # here eventually should go support for storing matrices sparsely...
-# 		x@views [[i]] <- as.matrix (mGet ("abundance", selection (x), param = s, enClass = FALSE))
-
-
