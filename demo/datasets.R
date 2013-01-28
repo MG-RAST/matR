@@ -10,8 +10,8 @@ for (p in mgp.ex) {
 Whalebone <- collection (mgm.ex$mgp9)
 Marine <- collection (mgm.ex$mgp18)
 Mat <- collection (mgm.ex$mgp12)
-Coral <- collection (mgm.ex$mgp16)
-Hospital <- collection (mgm.ex$mgp757)
+# Coral <- collection (mgm.ex$mgp16)	     # no longer available
+# Hospital <- collection (mgm.ex$mgp757)     # no longer available
 
 guts <- c (cow.rumen.1 = "4441679.3", cow.rumen.2 = "4441680.3", cow.rumen.3 = "4441682.3",
            fish.gut.1 = "4441695.3", fish.gut.2 = "4441696.3",
@@ -23,6 +23,4 @@ names (waters) <- c (paste ("fresh", 1:15, sep = ""), paste ("spring", 1:9, sep 
 Guts <- collection (guts)
 Waters <- collection (waters)
 
-rm("p","md")
-
-# remember to save with xz compression --- much smaller
+# save (Whalebone,Marine,Mat,Coral,Hospital,Guts,Waters,guts,waters, file = "~/Desktop/devel/matR/data/collection-examples.rda", compress = "xz")

@@ -6,6 +6,25 @@ setClass ("pco", repr = NULL, contains = "list")
 setClass ("heatmap", repr = NULL, contains = "list")
 setClass ("sigtest", repr = NULL, contains = "list")
 
+
+
+####################################################
+### parallel coordinate plot
+####################################################
+
+# graphics parameters as in graphics::matplot
+parcoord <- function  (x, view = length (views (x)), groups = groups(x), 
+											 test = "Kruskal-Wallis", p.lim = 0.05, n.lim = NULL, ...) {
+	reqPack ("MASS")
+	par <- list ()
+# now set up graphics parameter defaults
+
+	res <- sigtest (x, view = view, groups = groups, test = test)
+	par <- resolveMerge (list (...), par)
+	xcall (parcoord, x = t (x [[view]] [res$p.value < p.lim]), col = col , var.label = TRUE, with = par)
+}
+
+
 ####################################################
 ### principal coordinates analysis
 ####################################################
@@ -13,7 +32,7 @@ setClass ("sigtest", repr = NULL, contains = "list")
 # see "dist" below for the rationale for an "ANY" method
 # here as below, this is a temporary hack...
 setMethod ("pco", "ANY", function (x, ...) ecodist::pco (x, ...))
-setMethod ("pco", "collection", function (x, view = "normed", components = c (1,2,3), 
+setMethod ("pco", "collection", function (x, view = length (views (x)), components = c (1,2,3), 
 																					method = "bray-curtis", ...) {
 	reqPack ("ecodist")
 	D <- matR::dist (x, view, method)
@@ -76,7 +95,7 @@ setMethod ("show", "pco", function (object) print (object))
 setMethod ("heatmap", "ANY", function (x, ...) stats::heatmap (x, ...))
 # see "dist" below for the rationale for an "ANY" method
 # here as below, this is a temporary hack...
-setMethod ("heatmap", "collection", function (x, view = "normed", rows = TRUE, ...) {	
+setMethod ("heatmap", "collection", function (x, view = length (views (x)), rows = TRUE, ...) {	
 	par <- list ()
 	par$main <- paste (views (x) [[view]], collapse = " : ")
 	par$colsep <- 1:length (samples (x))
@@ -98,7 +117,7 @@ setMethod ("heatmap", "collection", function (x, view = "normed", rows = TRUE, .
 ####################################################
 
 setMethod ("sigtest", "collection", 
-					 function (x, view = "normed",
+					 function (x, view = length (views (x)),
 					 					test = c ("t-test-paired", "Wilcoxon-paired", "t-test-un-paired", 
 					 										"Mann-Whitney_un-paired-Wilcoxon", "ANOVA-one-way", "Kruskal-Wallis"),
 					 					fdr.level = NULL, qvalue = FALSE, ...)
