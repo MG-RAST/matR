@@ -39,7 +39,7 @@ Remember to set an authentication key when attempting access to private data.
 	\code{\link{collection-methods}}}
 \examples{
 # make collection from single string of IDs directly:
-cc <- collection ("4443360.3 4443361.3 4443362.3 4443363.3 4443364.3 4443365.3 4443366.3 4443367.3 4443368.3")
+cc <- collection ("4441679.3 4441680.3 4441682.3 4441695.3 4441696.3 4440463.3 4440464.3")
 
 # or from a character vector:
 cc <- collection (guts)

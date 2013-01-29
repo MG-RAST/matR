@@ -7,12 +7,31 @@
 
 \begin{document}
 
-\section*{24 January 2013 --- Version 0.9.9}
-To set your auth key from a file, use: \texttt{msession\$setAuth("my-key-file")} \\
-If you store your key on a shared machine, set file permissions appropriately.
+Note: this document is a summary and skimps on some details.  See runtime help for exact function syntax.
 
-Annotation hierarchies are available with: \texttt{rownames(collection, view, sep)} \\
-\texttt{sep} should be a separator character, omitted, or \texttt{FALSE}.  In the last case, the result is a matrix, with one row per annotation, and one column per hierarchy level.
+\section*{28 January 2013 --- Version 0.9.9}
+One-liners are here!  Analysis products are returned in a list as usual, additionally containing the implied metagenome collection.  For instance: \\
+\texttt{> p <- pco("4441679.3 4441680.3 4441696.3 4440463.3 4440464.3", main="my title", color="blue")} \\
+\texttt{> pco(p\$collection, main="and now, in red", color="red")} \\
+Similarly implemented for: \texttt{heatmap}, \texttt{sigtest}.
+
+These routines apply to any matrix: \\
+\texttt{dist(x, method="bray-curtis")}			\\
+\texttt{normalize(x)}			\\
+\texttt{remove.singletons(x, lim.entry=1 , lim.row=1)}	\\
+\texttt{randomize(x, n=1, method = c("sample", "dataset", "complete"), FUN=identity)}
+
+For collections, the default view in most circumstances (e.g. analysis functions like \texttt{pco}) is the most recently constructed.
+
+For API debugging use: \texttt{messions\$urls()}
+
+Read metagenome IDs from file with: \texttt{collection(file="my-id-file.txt")}		\\
+One ID per line, or \texttt{name<tab>ID} per line.
+
+Read auth key from file with: \texttt{msession\$setAuth("my-key-file.txt")}
+
+Annotation hierarchies available with: \texttt{rownames(collection, view, sep)} \\
+With \texttt{sep=FALSE}, the result is a matrix: one column per hierarchy level, one row per annotation.
 
 \section*{21 January 2013 --- Version 0.9.9}
 
@@ -21,8 +40,8 @@ For auth keys and other session configuration, use: \texttt{msession} (formerly 
 For bug reporting, use: \texttt{msession\$debug()} 
 
 Collections now have four default views:	\\
-raw counts (\texttt{raw})	\\
-normed counts (\texttt{nrm})	\\
+raw counts (\texttt{raw})			\\
+normed counts (\texttt{nrm})			\\
 no singletons, raw counts (\texttt{nsc})	\\
 no singletons, normed counts (\texttt{nsn})
 
@@ -33,7 +52,7 @@ The same document is available via: \\
 Runtime R-style help now available, such as: \texttt{?collection}	\\
 For the moment, docs are by and large limited to series of examples.
 
-Significance testing of annotations available with: \texttt{?sigtest}.
+Significance testing of annotations available with: \texttt{sigtest()}.
 
 \section*{14 January 2013 --- Version 0.9.9}
 

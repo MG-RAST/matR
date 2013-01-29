@@ -52,8 +52,8 @@ heatmap (Hospital)
 
 # From a different metagenome collection, compare this heatmap of
 # raw counts (shown first) with the heatmap normalized counts (shown second):
-heatmap (Guts, view = "count")
-heatmap (Guts, view = "normed")
+heatmap (Guts, view = "raw")
+heatmap (Guts)
 
 # And here are couple others:
 heatmap (Whalebone, cexCol = 0.8)
