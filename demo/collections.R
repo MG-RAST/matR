@@ -41,10 +41,10 @@ metadata (cc)
 # Matrix views are accessed with "$".   For example,
 # this shows raw abundance counts of functional annotations
 # at level 3 of the Subsystems hierarchy:
-cc$count
+cc$raw
 
 # And this shows the same data, but normalized to lie between 0 and 1:
-cc$normed
+cc$nrm
 
 # Generally, the purpose of different matrix views is to show aspects 
 # of the same selection of metagenomes.
@@ -52,7 +52,7 @@ cc$normed
 # When you make a collection, you can specify the views that you want.
 # For instance, here we make a new collection with views for different
 # levels of the subsystems hierarchy:
-ff <- collection (guts, FL1 = c (level = "level1"), FL2 = c (level = "level2"), FL3 = c (level = "level3"))
+ff <- collection (guts, FL1 = c (annot="function", level = "level1"), FL2 = c (annot="function", level = "level2"), FL3 = c (annot="function", level = "level3"))
 
 # You can assign new names to the metagenomes of a collection:
 names (cc) <- c ("cow1", "cow2", "cow3", "fish1", "fish2", "mouse1", "mouse2")
@@ -61,7 +61,7 @@ names (cc) <- c ("cow1", "cow2", "cow3", "fish1", "fish2", "mouse1", "mouse2")
 groups (cc) <- c (1,1,1,2,2,3,3)
 
 # Finally, you can add a view to an existing collection in this way:
-ff$COG <- c (level = "level2", source = "COG")
+ff$COG <- c (annot="function", level = "level2", source = "COG")
 views (ff)
 
 # In that example, the parameter "source" restricts the view to include

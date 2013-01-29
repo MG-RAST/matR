@@ -26,19 +26,19 @@ head (results$stat)
 
 ## Using p-values, we check how many annotations are retained, at various significance levels:
 
-sum (results$stat$p.value < 0.05)
-sum (results$stat$p.value < 0.005)
-sum (results$stat$p.value < 0.0005)
+sum (results$p.value < 0.05)
+sum (results$p.value < 0.005)
+sum (results$p.value < 0.0005)
 
 ## It is easy to subselect, leaving abundance data for the eighteen functional annotations of highest significance in differentiating the two groups:
 
-subm <- Waters$normed [results$stat$p.value < 0.0005, ]
+subm <- Waters$nrm [results$p.value < 0.0005, ]
 dimnames (subm)
 subm
 
 ## A heatmap restricted to these functions shows clear distinctions between fresh and spring water, but also a curious aberration in the ninth spring water sample:
 
-heatmap (Waters, rows = (results$stat$p.value < 0.0005))
+heatmap (Waters, rows = (results$p.value < 0.0005))
 
 ## We can scrutinize available metadata for an explanation, and after noticing the various projects contained in the collection, it seems natural to compare sample environments:
 
@@ -64,15 +64,15 @@ Waters2 <- Waters [1:23]
 
 Waters3 <- Waters [19:24]
 
-## For instance, we can redo the eighteen-row heatmap from above, with the Amplicon metagenome omitted:
+## For instance, we can redo a heatmap from above with the Amplicon metagenome omitted:
 
 groups (Waters2) <- c (rep (1, 15), rep (2, 8))
 results2 <- sigtest (Waters2, test = "Kruskal-Wallis")
-heatmap (Waters2, rows = (results2$stat$p.value < 0.0005))
+heatmap (Waters2, rows = (results2$p.value < 0.005))
 
 ## Significance testing could also be redone with annotations from a higher (or lower) level of the Subsystems hierarchy:
 
-Waters$lev2 <- c (entry = "normed", level = "level2")
+Waters$lev2 <- c (entry = "ns.normed.counts", annot="function", level = "level2")
 results.lev2 <- sigtest (Waters, view = "lev2", test = "Kruskal-Wallis")
-heatmap (Waters, view = "lev2", rows = (results.lev2$stat$p.value < 0.005))
-rownames (Waters$lev2) [results.lev2$stat$p.value < 0.005]
+heatmap (Waters, view = "lev2", rows = (results.lev2$p.value < 0.02))
+rownames (Waters$lev2) [results.lev2$p.value < 0.02]

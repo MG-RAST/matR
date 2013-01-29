@@ -13,17 +13,17 @@
 \seealso{\code{\link{Collections}}}
 \examples{
 groups(Guts) <- c(1,1,1,2,2,2,2)
-res <- sigtest(Guts, view = "normed", test = "t-test-un-paired")
-res <- sigtest(Guts, "normed", "Mann-Whitney_un-paired-Wilcoxon")
-res <- sigtest(Guts, "normed", "ANOVA-one-way")
-res <- sigtest(Guts, "normed", "Kruskal-Wallis")
+res <- sigtest(Guts, view = "nrm", test = "t-test-un-paired")
+res <- sigtest(Guts, "nrm", "Mann-Whitney_un-paired-Wilcoxon")
+res <- sigtest(Guts, "nrm", "ANOVA-one-way")
+res <- sigtest(Guts, "nrm", "Kruskal-Wallis")
 
 groups(Waters) <- c(rep(1,12), rep(2,12))
-res <- sigtest(Waters, "normed", "t-test-paired")
-res <- sigtest(Waters, "normed", "t-test-un")
-res <- sigtest(Waters, "normed", "Mann-Whitney")
-res <- sigtest(Waters, "normed", "Wilcoxon-paired")
-res <- sigtest(Waters, "normed", "ANOVA")
+res <- sigtest(Waters, "nrm", "t-test-paired")
+res <- sigtest(Waters, "nrm", "t-test-un")
+res <- sigtest(Waters, "nrm", "Mann-Whitney")
+res <- sigtest(Waters, "nrm", "Wilcoxon-paired")
+res <- sigtest(Waters, "nrm", "ANOVA")
 res <- sigtest(Waters, test = "Kruskal")
 
 names(res)

@@ -41,7 +41,7 @@ setMethod ("asFile", "matrix", function (x, file, ...) {
 setMethod ("asFile", "Matrix", function (x, file, ...)
 	asFile (as.matrix (x), file, ...))
 
-setMethod ("asFile", "collection", function (x, view = "count", file, ...)
+setMethod ("asFile", "collection", function (x, view = length (views (x)), file, ...)
 	asFile (x [[view]], file, ...))
 
 #setMethod ("asFile", "pco", function (x, file, ...) {
