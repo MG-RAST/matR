@@ -22,6 +22,7 @@ Waters$lev2 <- c (entry = "normed", level = "level2")
 heatmap (Waters, view = "lev2")
 
 # map only selected rows, including a few graphical parameters (see ?gplots::heatmap.2)
+groups (Waters) <- c (rep (1, 15), rep (2, 9))
 results <- sigtest (Waters, view = "lev2", test = "Kruskal-Wallis")
-heatmap (Waters, view = "lev2", rows = (results$stat$p.value < 0.005), main = "Comparison of Water Samples", labCol = 1:24)
+heatmap (Waters, view = "lev2", rows = (results$p.value < 0.05), main = "Comparison of Water Samples", labCol = 1:24)
 }

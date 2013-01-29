@@ -1,28 +1,39 @@
+
+####################################################
+### here are found high-level analysis procedures
+###
 ### we use new-style classes in an old-style way.
 ### we want to use S4 dispatching but not slots.
 ### returned analysis objects are lists without formally defined components.
+####################################################
 
 setClass ("pco", repr = NULL, contains = "list")
 setClass ("heatmap", repr = NULL, contains = "list")
 setClass ("sigtest", repr = NULL, contains = "list")
-
-
 
 ####################################################
 ### parallel coordinate plot
 ####################################################
 
 # graphics parameters as in graphics::matplot
-parcoord <- function  (x, view = length (views (x)), groups = groups(x), 
-											 test = "Kruskal-Wallis", p.lim = 0.05, n.lim = NULL, ...) {
+# see "dist" below for the rationale for an "ANY" method
+# here as below, this is a temporary hack...
+setMethod ("parcoord", "ANY", function (x, ...) MASS::parcoord (x, ...))
+setMethod ("parcoord", "character", function (x, view = default.views$nsn, test = "Kruskal-Wallis", ...) {
+	cc <- collection (x, view = view)
+	res <- parcoord (cc, components = components, method = method, ...)
+	res$collection <- cc
+	invisible (res)
+})
+setMethod ("parcoord", "collection", function  (x, view = length (views (x)), test = "Kruskal-Wallis", 
+																								p.lim = 0.05, n.lim = NULL, ...) {
 	reqPack ("MASS")
 	par <- list ()
 # now set up graphics parameter defaults
-
 	res <- sigtest (x, view = view, groups = groups, test = test)
 	par <- resolveMerge (list (...), par)
-	xcall (parcoord, x = t (x [[view]] [res$p.value < p.lim]), col = col , var.label = TRUE, with = par)
-}
+	xcall (parcoord, x = t (x [[view]] [res$p.value < p.lim]), var.label = TRUE, with = par)
+} )
 
 
 ####################################################
@@ -32,6 +43,13 @@ parcoord <- function  (x, view = length (views (x)), groups = groups(x),
 # see "dist" below for the rationale for an "ANY" method
 # here as below, this is a temporary hack...
 setMethod ("pco", "ANY", function (x, ...) ecodist::pco (x, ...))
+setMethod ("pco", "character", function (x, view = default.views$nsn, 
+																				 components = c (1,2,3), method = "bray-curtis", ...) {
+	cc <- collection (x, view = view)
+	res <- pco (cc, components = components, method = method, ...)
+	res$collection <- cc
+	invisible (res)
+})
 setMethod ("pco", "collection", function (x, view = length (views (x)), components = c (1,2,3), 
 																					method = "bray-curtis", ...) {
 	reqPack ("ecodist")
@@ -80,7 +98,7 @@ setMethod ("pco", "collection", function (x, view = length (views (x)), componen
  		i <- xys$x ; j <- xys$y
 	}
 	text (x = i, y = j, labels = par$labels, pos = 4, cex = par$cex)
-	P
+	invisible (P)
 } )
 
 setMethod ("print", "pco", function (x, ...) print (x@.Data))
@@ -93,8 +111,14 @@ setMethod ("show", "pco", function (object) print (object))
 ####################################################
 
 setMethod ("heatmap", "ANY", function (x, ...) stats::heatmap (x, ...))
-# see "dist" below for the rationale for an "ANY" method
+# see "dist" elsewhere for the rationale for an "ANY" method
 # here as below, this is a temporary hack...
+setMethod ("heatmap", "character", function (x, view = default.views$nsn, rows = TRUE, ...) {
+	cc <- collection (x, view = view)
+	res <- heatmap (cc, rows = rows, ...)
+	res$collection <- cc
+	invisible (res)
+})
 setMethod ("heatmap", "collection", function (x, view = length (views (x)), rows = TRUE, ...) {	
 	par <- list ()
 	par$main <- paste (views (x) [[view]], collapse = " : ")
@@ -108,7 +132,7 @@ setMethod ("heatmap", "collection", function (x, view = length (views (x)), rows
 	par <- resolveMerge (list (...), par)
 
 	reqPack ("gplots")
-	xcall (heatmap.2, x [[view, plain = TRUE]] [rows, ], with = par)
+	invisible (xcall (heatmap.2, x [[view, plain = TRUE]] [rows, ], with = par))
 } )
 
 
@@ -122,6 +146,17 @@ setMethod ("sigtest", "collection",
 					 										"Mann-Whitney_un-paired-Wilcoxon", "ANOVA-one-way", "Kruskal-Wallis"),
 					 					fdr.level = NULL, qvalue = FALSE, ...)
 					 	sigtest (x [[view, plain = TRUE]], groups (x), test, fdr.level, qvalue, ...))
+setMethod ("sigtest", "character",
+					 function (x, view = default.views$nsn, groups,
+					 					test = c ("t-test-paired", "Wilcoxon-paired", "t-test-un-paired", 
+					 										"Mann-Whitney_un-paired-Wilcoxon", "ANOVA-one-way", "Kruskal-Wallis"),
+					 					fdr.level = NULL, qvalue = FALSE, ...) {
+	cc <- collection (x, view = view)
+	groups (cc) <- groups
+	res <- sigtest (cc, test = test, fdr.level = fdr.level, qvalue = qvalue, ...)
+	res$collection <- cc
+	invisible (res)
+})
 # with this function we aim to provide both a generally-applicable routine, and
 # a routine specialized for metagenome collections
 setMethod ("sigtest", "matrix", function (x, groups, test = c ("t-test-paired", "Wilcoxon-paired", "t-test-un-paired", 

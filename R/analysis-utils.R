@@ -2,6 +2,7 @@
 ####################################################
 ### find "elementary" analysis functions here.
 ### simple functions doing basic things.
+### by and large these apply to vanilla matrices.
 ####################################################
 
 # note: we calculate distance between columns, a difference from other common distance functions

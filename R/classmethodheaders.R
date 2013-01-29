@@ -35,5 +35,6 @@ setGeneric ("dist", function (x, ...) standardGeneric ("dist"))
 setGeneric ("pco", function (x, ...) standardGeneric ("pco"))
 setGeneric ("heatmap", function (x, ...) standardGeneric ("heatmap"))
 setGeneric ("sigtest", function (x, ...) standardGeneric ("sigtest"))
+setGeneric ("parcoord", function (x, ...) standardGeneric ("parcoord"))
 
 setGeneric ("render", function (x, ...) standardGeneric ("render"))

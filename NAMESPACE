@@ -16,9 +16,8 @@ exportClassPattern(".*")
 
 exportMethods (print, summary, show)
 exportMethods ("[[", "$", "[[<-", "$<-")
-exportMethods (samples, names, "names<-", groups, "groups<-", rownames, metadata, views, viewnames, "viewnames<-", selection, 
-	collection)
-exportMethods (pco, heatmap, sigtest, render, asFile)
+exportMethods (samples, names, "names<-", groups, "groups<-", rownames, metadata, views, viewnames, "viewnames<-", selection, collection)
+exportMethods (pco, heatmap, sigtest, parcoord, render, asFile)
 
 S3method (print, metadata)
 S3method (summary, metadata)
