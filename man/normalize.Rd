@@ -3,10 +3,12 @@
 \title{Centered and Scaled Logarithm of Abundance Data}
 \description{Centered and Scaled Logarithm of Abundance Data}
 \usage{
-normalize(m)
+normalize(x, method = c("standard"), ...)
 }
 \arguments{
-  \item{m}{...}
+  \item{x}{...}
+  \item{method}{...}
+  \item{...}{...}
 }
 \details{...}
 \value{...}

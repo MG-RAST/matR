@@ -11,11 +11,11 @@ Guts
 # "views" show different aspects of a metagenome collection, and
 # are accessed with "$".  For example, this shows raw abundance counts:
 
-Guts$count
+Guts$raw
 
 # This shows the same data, but normalized to lie between 0 and 1:
 
-Guts$normed
+Guts$nrm
 
 # Various functions apply to a collection.  For instance, to show the
 # samples it contains:
