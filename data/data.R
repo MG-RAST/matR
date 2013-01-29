@@ -15,17 +15,17 @@ view.params <- list (
 	annot = c ("function", "organism"),
 	level = list (organism = c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain"),
 								`function` = c ("level1", "level2", "level3", "function")),
-	`source` = list (rna = c ("M5RNA", "RDP", "Greengenes", "LSU", "SSU"),
+	source = list (rna = c ("M5RNA", "RDP", "Greengenes", "LSU", "SSU"),
 									 ontology = c ("NOG", "COG", "KO", "Subsystems"),
 									 protein = c ("M5NR", "SwissProt", "GenBank", "IMG", "SEED", "TrEMBL", "RefSeq", "PATRIC", 
 									 						 "eggNOG", "KEGG")))
 
 # possibly parameters should be specified in full for each view, here (and possibly not)
 default.views <- list (
-	raw = c (entry = "counts"),
-	nrm = c (entry = "normed.counts"),
-	nsc = c (entry = "ns.counts"),
-	nsn = c (entry = "ns.normed.counts"))
+	raw = c (entry = "counts", annot = "function", level = "level3", source = "Subsystems"),
+	nrm = c (entry = "normed.counts", annot = "function", level = "level3", source = "Subsystems"),
+	nsc = c (entry = "ns.counts", annot = "function", level = "level3", source = "Subsystems"),
+	nsn = c (entry = "ns.normed.counts", annot = "function", level = "level3", source = "Subsystems"))
 
 id.ex <- list (
 	project = "92",
@@ -48,12 +48,12 @@ msession <- (function () {
 # communications
 	auth.X <- ""
 	getAuth <- function () { auth.X }
-	setAuth <- function (con = NULL) { 
-		if (is.null (con)) {
+	setAuth <- function (file = NULL) { 
+		if (is.null (file)) {
 			message ("Enter auth key on a single line:")
 			auth.X <<- readLines (n = 1, warn = FALSE)
 		}
-		else auth.X <<- readLines (con, n = 1, warn = FALSE)
+		else auth.X <<- readLines (file, n = 1, warn = FALSE)
 		auth.X
 	}
 
@@ -172,11 +172,11 @@ msession <- (function () {
 		cat (readLines (t), sep = "\n")
 		unlink (t)
 		sink ()
-		cat (
-			"Please email a description of the problem to mg-rast@metagenomics.anl.gov, along with this file:", 
-			file.name,
-			"Note: this file contains session information such as your command history.",
-			"If you have related privacy concerns, please review it before emailing.\n", sep = "\n")
+		message (
+			"Please email a description of the problem to mg-rast@metagenomics.anl.gov, along with this file:\n", 
+			file.name, "\n",
+			"Note: this file contains session information such as your command history.\n",
+			"If you have related privacy concerns, please review it before emailing.")
 		}
 
 # the user interface to session configuration is via these functions

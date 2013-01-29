@@ -20,7 +20,7 @@ render(x, ...)
 render (Whalebone)
 
 # look at raw counts (instead of normed)
-render (Marine, view = "count")
+render (Marine, view = "raw")
 
 # apply standard graphical parameters
 render (Waters, las = 2, cex.axis = 0.6, main = "summary of annotation\nfrequencies")

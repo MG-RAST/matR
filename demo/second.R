@@ -40,26 +40,26 @@ head (results$stat)
 ### from the p-value column, we can identify rows passing a significance threshold,
 ### and select the corresponding part of the original matrix
 
-Wsub <- W$normed [results$stat$p.value < 0.05, ]
+Wsub <- W$nrm [results$p.value < 0.05, ]
 
 ### comparing number of rows between the original and subselection matrices
 ### shows what proportion of the original functional annotations are retained:
 
-nrow (W$normed)
+nrow (W$nrm)
 nrow (Wsub)
 
 ### and a heatmap of the subselected rows highlights areas of interest more clearly than before:
 
-heatmap (W, rows = (results$stat$p.value < 0.05))
+heatmap (W, rows = (results$p.value < 0.05))
 
 ### this analysis could continue by setting more restrictive p-value thresholds, like this:
 
-heatmap (W, rows = (results$stat$p.value < 0.005))
-heatmap (W, rows = (results$stat$p.value < 0.0005))
+heatmap (W, rows = (results$p.value < 0.005))
+heatmap (W, rows = (results$p.value < 0.0005))
 
 ### and here are the functions represented in the heatmap with highest granularity:
 
-rownames (results$stat) [results$stat$p.value < 0.0005]
+rownames (results$stat) [results$p.value < 0.0005]
 
 ### We could also continue by examining factors in metadata.  In fact, in this case,
 ### associations between metadata and subgroups discernible in the heatmap would be found.
