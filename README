@@ -10,7 +10,7 @@ With matR loaded, help of various kinds is available:
 > vignette("matR-change-log")         # opens pdf of recent feature revisions
 > demo2("demo-name")            # step through a demo
 > demo(package="matR")          # list available demos
-> ?collection                   # help with a particular function, in this case, "collection"
+> ?collection                   # help with a particular function
 > utils::example("collection")  # run examples for a particular function
 > package?matR                  # entry point for docs
 > library(help="matR")          # index of all help topics
