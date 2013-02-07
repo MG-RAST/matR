@@ -12,6 +12,27 @@ setClass ("heatmap", repr = NULL, contains = "list")
 setClass ("sigtest", repr = NULL, contains = "list")
 
 ####################################################
+### boxplot
+####################################################
+setMethod ("boxplot", "ANY", function (x, ...) graphics::boxplot (x, ...))
+setMethod ("boxplot", "character", function (x, view = default.views$nsn, ...) {
+	cc <- collection (x, view = view)
+	res <- boxplot (cc, ...)
+	res$collection <- cc
+	invisible (res)
+})
+setMethod ("boxplot", "collection", function  (x, view = length (views (x)), ...) {
+	par <- list ()
+	par$las <- 2
+	par$cex.axis <- 0.6
+	par$main <- "annotation diversity"
+	# now set up graphics parameter defaults
+	par <- resolveMerge (list (...), par)
+	xcall (boxplot, x = x [[view]], with = par)
+} )
+
+
+####################################################
 ### parallel coordinate plot
 ####################################################
 
@@ -19,20 +40,32 @@ setClass ("sigtest", repr = NULL, contains = "list")
 # see "dist" below for the rationale for an "ANY" method
 # here as below, this is a temporary hack...
 setMethod ("parcoord", "ANY", function (x, ...) MASS::parcoord (x, ...))
-setMethod ("parcoord", "character", function (x, view = default.views$nsn, test = "Kruskal-Wallis", ...) {
+setMethod ("parcoord", "character", function (x, view = default.views$nsn, groups, ...) {
 	cc <- collection (x, view = view)
-	res <- parcoord (cc, components = components, method = method, ...)
+	groups (cc) <- groups
+	res <- parcoord (cc, ...)
 	res$collection <- cc
 	invisible (res)
 })
 setMethod ("parcoord", "collection", function  (x, view = length (views (x)), test = "Kruskal-Wallis", 
-																								p.lim = 0.05, n.lim = NULL, ...) {
+																								p.lim = 0.05, n.lim = 25, ...) {
 	reqPack ("MASS")
 	par <- list ()
-# now set up graphics parameter defaults
-	res <- sigtest (x, view = view, groups = groups, test = test)
+	par$main <- "parallel coordinates"
+	par$var.label <- TRUE
+	res <- sigtest (x, view = view, test = test)
 	par <- resolveMerge (list (...), par)
-	xcall (parcoord, x = t (x [[view]] [res$p.value < p.lim]), var.label = TRUE, with = par)
+# this is not terribly clear
+# the point: plot annotations with p.value less than p.lim
+# but only plot n.lim of them, at most, keeping those with smallest p.value
+	which.p <- which (res$p.value < p.lim)
+	if (length (which.p) > n.lim)
+		which.p <- which.p [order (res$p.value [which.p]) [1:n.lim]]
+# axis label orientation - a special case
+	las.save <- par("las")
+	par (las = 2)
+	xcall (parcoord, x = t (x [[view]] [which.p,]), with = par)
+	par (las=las.save)
 } )
 
 
@@ -61,7 +94,7 @@ setMethod ("pco", "collection", function (x, view = length (views (x)), componen
 	P <- new ("pco", list (values = scaled, vectors = P$vectors, dist = D))
 
 	par <- list ()
-	par$main <- paste (views (x) [[view]], collapse = " : ")
+	par$main <- "principal coordinates"
 	par$labels <- if (length (names (x)) != 0) names (x) else samples (x)
 	if (length (groups (x)) != 0) par$labels <- paste (par$labels, " (", groups (x), ")", sep = "")
 	par [c ("xlab", "ylab", if (length (components) == 3) "zlab" else NULL)] <-
@@ -121,10 +154,11 @@ setMethod ("heatmap", "character", function (x, view = default.views$nsn, rows =
 })
 setMethod ("heatmap", "collection", function (x, view = length (views (x)), rows = TRUE, ...) {	
 	par <- list ()
-	par$main <- paste (views (x) [[view]], collapse = " : ")
+	par$main <- "heatmap-dendrogram"
 	par$colsep <- 1:length (samples (x))
 	par$labRow <- NA
 	par$labCol <- if (length (names (x)) != 0) names (x) else samples (x)
+	par$cexCol <- 0.6
 	if (length (groups (x)) != 0) par$labCol <- paste (par$labCol, " (", groups (x), ")", sep = "")
 	par$key <- FALSE
 	par$trace <- "none"
