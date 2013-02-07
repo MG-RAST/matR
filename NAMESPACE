@@ -6,9 +6,6 @@ export(callRaw, mListAllIds, mGet)
 export(readIds)
 export(demo2, scrubIds, scrapeResources)
 
-exportMethods (dist)
-export (normalize, remove.singletons, randomize)
-
 # CLASS AND METHOD EXPORTS
 # our S3 classes: metadata
 # our S4 classes: sigtest, selection, collection
@@ -17,7 +14,11 @@ exportClassPattern(".*")
 exportMethods (print, summary, show)
 exportMethods ("[[", "$", "[[<-", "$<-")
 exportMethods (samples, names, "names<-", groups, "groups<-", rownames, metadata, views, viewnames, "viewnames<-", selection, collection)
-exportMethods (pco, heatmap, sigtest, parcoord, render, asFile)
+
+exportMethods (dist)
+export (normalize, remove.singletons, randomize)
+
+exportMethods (boxplot, pco, heatmap, sigtest, parcoord, render, asFile)
 
 S3method (print, metadata)
 S3method (summary, metadata)
