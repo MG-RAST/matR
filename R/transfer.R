@@ -124,7 +124,7 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 		reqPack ("RJSONIO")
 		valid <- try (isValidJSON (y, asText = TRUE))
 		if (!is.logical (valid) || !valid) warning ("cannot parse non-JSON object")
-		else y <- fromJSON (y, asText = TRUE, simplify = TRUE)
+		y <- fromJSON (y, asText = TRUE, simplify = TRUE)
 		optMessage (length (unlist (y)), " elements after JSON parsing")
 
 # per-resource postprocessors
