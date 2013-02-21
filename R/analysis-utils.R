@@ -17,22 +17,32 @@
 
 # make a function in utils.R: where am I on the search path?
 # whereami <- function () match ("package:matR", search ()))
-# maybe use: get ("stats", pos = match("package:matR", search ()) + 1)
+# maybe use: get ("dist", pos = match("package:matR", search ()) + 1)
+# or...
+# get("rownames", env=as.environment(find("rownames")[2])) (x)
+
 setMethod ("dist", "ANY", function (x, ...) stats::dist (x, ...))
+setMethod ("dist", "matrix", 
+					 function (x, method = 
+					 	c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", 
+					 		 "difference", "euclidean", "maximum", "manhattan", 
+					 		 "canberra", "binary", "minkowski"), bycol = FALSE, ...) {
+					 	if (bycol) {
+					 		method <- match.arg (method)
+					 		if (method %in% c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference")) {
+					 			reqPack ("ecodist")
+					 			ecodist::distance (t (x), method = method, ...)
+					 		}
+					 		else stats::dist (t (x), method = method, ...)
+# we want to add unifrac, others
+					 	}
+					 	else stats::dist(x, method = method, ...) })
 setMethod ("dist", "collection", function (x, view = length (views (x)),
 																					 method = 
 																					 	c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", 
 																					 		 "difference", "euclidean", "maximum", "manhattan", 
-																					 		 "canberra", "binary", "minkowski"), ...) {
-	method <- match.arg (method)
-	x <- x [[view, plain = TRUE]]
-	if (method %in% c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference")) {
-		reqPack ("ecodist")
-		ecodist::distance (t (x), method = method, ...)
-	}
-	else stats::dist (t (x), method = method, ...)
-	# we want to add unifrac, others
-} )
+																					 		 "canberra", "binary", "minkowski"), ...)
+	dist (x [[view, plain = TRUE]], method = method, bycol = TRUE, ...))
 
 remove.singletons <- function (x, lim.entry = 1, lim.row = 1, ...) {
 	x <- as.matrix (x)
