@@ -83,6 +83,55 @@ setMethod ("pco", "character", function (x, view = default.views$nsn,
 	res$collection <- cc
 	invisible (res)
 })
+
+setMethod ("pco", "matrix", function (x, components = c (1,2,3), 
+																			method = "bray-curtis", ...) {
+	reqPack ("ecodist")
+	D <- matR::dist (x, method, bycol = TRUE)
+	P <- ecodist::pco (D)
+	scaled <- P$values / sum (P$values)
+	names (scaled) <- paste ("PCO", 1:length(scaled), sep = "")
+	rownames (P$vectors) <- colnames (x)
+	P <- new ("pco", list (values = scaled, vectors = P$vectors, dist = D))
+	
+	par <- list ()
+	par$main <- "principal coordinates"
+	par$labels <- colnames (x)
+	par [c ("xlab", "ylab", if (length (components) == 3) "zlab" else NULL)] <-
+		paste ("PC", components, ", R^2 = ", format (P$values [components], dig = 3), sep = "")
+	col <- "blue"
+	par$pch <- 19
+	par$cex <- 0.7
+	
+	i <- P$vectors [ ,components [1]]
+	j <- P$vectors [ ,components [2]]
+	k <- if (length (components) == 3) P$vectors [ ,components [3]] else NULL
+	if (is.null (k)) {
+		par$col <- col
+		par <- resolveMerge (list (...), par)
+		xcall (plot, x = i, y = j, with = par, without = "labels")
+		xcall (points, x = i, y = j, with = par, without = "labels")
+		grid ()
+	}
+	else {
+		# parameter "color" has to be specially handled.
+		# "points" above wants "col", scatterplot3d wants "color", and we
+		# want the user not to worry about it...
+		par$color <- col
+		par$type <- "h"
+		par$lty.hplot <- "dotted"
+		par$axis <- TRUE
+		par$box <- FALSE
+		par <- resolveMerge (list (...), par)
+		reqPack ("scatterplot3d")
+		xys <- xcall (scatterplot3d, x = i, y = j, z = k, with = par, 
+									without = c ("cex", "labels")) $ xyz.convert (i, j, k)
+		i <- xys$x ; j <- xys$y
+	}
+	text (x = i, y = j, labels = par$labels, pos = 4, cex = par$cex)
+	invisible (P)
+} )
+
 setMethod ("pco", "collection", function (x, view = length (views (x)), components = c (1,2,3), 
 																					method = "bray-curtis", ...) {
 	reqPack ("ecodist")
