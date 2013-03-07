@@ -8,8 +8,6 @@
 
 # we anticipate implementing sparse matrices in the "collection" plumbing, but for now all matrices are dense
 
-setClass ("collection", representation (views = "list", sel = "selection"))
-
 setMethod ("selection", "collection", function (x) selection (x@sel))
 setMethod ("samples", "collection", function (x) samples (x@sel))
 setMethod ("names", "collection", function (x) names (x@sel))

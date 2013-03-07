@@ -1,8 +1,10 @@
 
+##################################################################################################################
 ### Metadata is implemented as an S3 class "metadata".
 ### It is a named character vector with attributes that help interpret it.
 ### Attribute "grouped" factors the vector, currently only by metagenome,
 ### but potentially by project as well.
+##################################################################################################################
 
 regroup <- function (x) {
 # this is bad... a hard-coded method to inflexibly recognize a single format...
@@ -88,15 +90,10 @@ summary.metadata <- function (object, ...) {
 	}
 }
 
-setOldClass ("metadata")
-
-
+##################################################################################################################
 ### the "selection" class is basically for internal use.
 ### a "collection" contains a "selection" plus a list of matrices.
-
-setClass ("selection", representation (ids = "character", groups = "factor", metadata = "metadata",
-																			 ids.spec = "character", resource.spec = "character", 
-																			 metadata.extent = "character"))
+##################################################################################################################
 
 setMethod ("selection", "selection", function (x) x@ids)
 setMethod ("samples", "selection", function (x) x@ids)
@@ -157,30 +154,3 @@ setMethod ("print", "selection", print.selection)
 setMethod ("summary", "selection", summary.selection)
 setMethod ("show", "selection", function (object) print.selection (object))
 
-
-
-
-###
-### the "selection" class exists to enable flexible
-### specification of a group of metagenomes to study.
-###
-### for instance, it should accept two project ids
-### as specification of all subordinate metagenome ids,
-### and remember that the metagenomes belong to two distinct groups.
-###
-### USAGES:
-###		sel <- selection ("mgm111111.3", meta = "all")
-###		x <- selection (ids, meta = "all")
-###		metadata (x) $ env_package $ ...
-###
-### DESIDERATA:
-###		handle specification by mgm, mgs, mgp (mgl?) arbitrarily (as intended in the design)
-### the ids specified for construction: any of mgm, mgs, mgp, (mgl?)
-### resource type, corresponding to each id
-### representation of the selection content.  In the initial implementation, this
-### just means all metagenome ids.  Later, some kind of relational tree
-### complete metadata is always retrieved, but different approaches to metadata
-### redundancy are possible: "none", "asis", "min", "full".  to be implemented
-###
-### specification of selections by project & sample id is not yet implemented
-###
