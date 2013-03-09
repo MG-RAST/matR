@@ -157,7 +157,8 @@ view.API.mapper <- function (v) {
 										 percentid = "identity",
 										 length = "length") [v ["entry"]],
 		group_level = v ["level"],
-		`source` = v ["source"]
+		`source` = v ["source"],
+		hit_type = if (v ["hit"] == "NA") "" else v ["hit"]
 	)
 }
 
@@ -183,18 +184,23 @@ view.finish <- function (spec) {
 # we use a system of weights on all parameter combinations, to enable specifying views minimally
 # there is still some flaky behavior, but mostly it works nicely...
 # first, weight default values
-	chooser ["counts",,,] <- chooser ["counts",,,] + 1
-	chooser [,"function",,] <- chooser[,"function",,] + 1
-	chooser [,,"species",] <- chooser [,,"species",] + 1
-	chooser [,,"level3",] <- chooser [,,"level3",] + 1
-	chooser [,,,"M5RNA"] <- chooser [,,,"M5RNA"] + 1
-	chooser [,,,"Subsystems"] <- chooser [,,,"Subsystems"] + 1
-	
+	chooser ["counts",,,,] <- chooser ["counts",,,,] + 1
+	chooser [,"function",,,] <- chooser[,"function",,,] + 1
+	chooser [,,"species",,] <- chooser [,,"species",,] + 1
+	chooser [,,"level3",,] <- chooser [,,"level3",,] + 1
+	chooser [,,,"M5RNA",] <- chooser [,,,"M5RNA",] + 1
+	chooser [,,,"Subsystems",] <- chooser [,,,"Subsystems",] + 1
+	chooser [,,,,"all"] <- chooser [,,,,"all"] + 1
+	chooser [,,,,"na"] <- chooser [,,,,"na"] + 1
+
 # nullify impossible combinations
-	chooser [,"function",view.params$level$taxa,] <- -1
-	chooser [,"function",,view.params$source$rna] <- -1
-	chooser [,"organism",view.params$level$`function`,] <- -1
-	chooser [,"organism",,view.params$source$ontology] <- -1
+	chooser [,"function",view.params$level$organism,,] <- -1
+	chooser [,"function",,view.params$source$rna,] <- -1
+	chooser [,"function",,,view.params$hit$organism] <- -1
+
+	chooser [,"organism",view.params$level$`function`,,] <- -1
+	chooser [,"organism",,view.params$source$ontology,] <- -1
+	chooser [,"organism",,,view.params$hit$`function`] <- -1
 
 # see what has been requested and nullify others
 # should warn if no match to user input...
@@ -202,14 +208,16 @@ view.finish <- function (spec) {
 	names (spec) <- names (vp) [sapply (names (spec), pmatch, names (vp))]
 	J <- sapply (names (vp), function (x) vp [[x]] [pmatch (spec [x], vp [[x]])])
 	j <- match (J ["entry"], vp$entry)
-	if (!is.na (j)) chooser [-j,,,] <- -1
+	if (!is.na (j)) chooser [-j,,,,] <- -1
 	j <- match (J ["annot"], vp$annot)
-	if (!is.na (j)) chooser [,-j,,] <- -1
+	if (!is.na (j)) chooser [,-j,,,] <- -1
 	j <- match (J ["level"], vp$level)
-	if (!is.na (j)) chooser [,,-j,] <- -1
+	if (!is.na (j)) chooser [,,-j,,] <- -1
 	j <- match (J ["source"], vp$source)
-	if (!is.na (j)) chooser [,,,-j] <- -1
-
+	if (!is.na (j)) chooser [,,,-j,] <- -1
+	j <- match (J ["hit"], vp$hit)
+	if (!is.na (j)) chooser [,,,,-j] <- -1
+	
 # choose remaining combination of maximum weight
 # write this in a better way...
 	J <- chooser == max (chooser)
