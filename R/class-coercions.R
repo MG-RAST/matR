@@ -22,37 +22,69 @@
 ### should return name(s) of written file.
 ##################################################################################################################
 
+# this function should return a list of components in maximally simple data structures
+setAs ("biom", "list", 
+			 def = function (from)
+			 	reqPack ("RJSONIO")
+			 bb <- fromJSON (from, asText = TRUE, simplify = TRUE)
+			 
+			 # bulletproof this - do a better check
+			 if (length (setdiff (c ("data", "rows", "columns"), names (y))) != 0) warning ("bad format in received resource")
+			 
+			 m <- matrix (unlist (bb$data), ncol = 3, byrow = TRUE)
+			 m <- as.matrix (Matrix::sparseMatrix (i = 1 + m [,1], j = 1 + m [,2], x = m [,3]))
+			 
+			 # bulletproof this
+			 rownames (m) <- sapply (y$rows, `[[`, i = "id")
+			 colnames (m) <- sapply (y$columns, `[[`, i = "id")
+			 
+			 # need to confirm this understanding of the format - can't rely on what was asked for; have to look for what is there
+			 s <- switch (name, `function` = "ontology", organism = "taxonomy", NULL)
+			 
+			 rh <- try(lapply(y$rows, function(x) unlist(x[[c("metadata", s)]])))
+			 if (inherits(rh, "try-error")) warning ("annotation hierarchy unavailable")
+			 hlen <- max(sapply(rh, length))
+			 attr(m, "rowhier") <- sapply(rh, `length<-`, hlen)
+			 if (hlen != 1) attr(m, "rowhier") <- t (attr(m, "rowhier"))
+			 
+			 # return list corresponding to biom format specification
+			 list ( = , = , = ,)
+			 })
+
 
 setAs ("character", "collection",
 			 def = function (from) collection (from))
 setAs ("matrix", "collection",
 			 def = 
 			 	function (from) {
-			 		attr (from, "...") <- ...
-			 		cc <- new ("collection")
-			 		cc@views <- list (view = from)
-			 		cc@sel <- ...
+			 		if (is.null (colnames (from))) warning ("samples are unidentified due to missing colnames")
+			 		warning ("collection will have no metadata")
+			 		warning ("view of collection will be unidentified")
+			 		new ("collection",
+			 				 view = list (data = from),
+			 				 sel = new ("selection", ids = colnames (from), groups = factor(0), metadata = character(0), 
+			 				 					 id.spec = character(0), resource.spec = character(0), metadata.extent = "none"))
 			 	})
 setAs ("biom", "collection",
 			 def = function (from) {
-			 	reqPack ("RJSONIO")
-			 	s <- fromJSON (from, asText = TRUE, simplify = TRUE)
-			 	m <- ...     # copy from mGet; then call this from there
-			 	cc <- as.collection (m)
-			 	metadata (cc) <- ...
-			 	cc
-			 },
-			 replace = function (from, value) { })
+			 	bb <- from.biom (from)
+			 	new ("collection",
+			 			 view = list (data = bb$data),
+			 			 sel = new ("selection",
+			 			 					 ids = colnames (from), 
+			 			 					 groups = factor(0), 
+			 			 					 metadata = character(0), 
+			 			 					 id.spec = character(0), 
+			 			 					 resource.spec = character(0), 
+			 			 					 metadata.extent = "none"))
+			 })
 
 setAs ("collection", "matrix",
 			 def = function (from)
 			 	from [[length (views (from)), plain = TRUE]])
 setAs ("biom", "matrix",
 			 def = function (from) {
-			 	reqPack ("RJSONIO")
-			 	s <- fromJSON (from, asText = TRUE, simplify = TRUE)
-			 	m <- ...     # adapt from mGet
-			 	m
+			 	from.biom (from) $ data
 			 })
 
 setAs ("list", "biom",

@@ -79,6 +79,22 @@ setMethod ("metadata", "ANY", function (x = "", file = NULL, resource = c ("proj
 	res
 }
 
+setMethod (`metadata<-`, "collection", 
+					 function (x, value, seriously = FALSE) 
+					 	if (seriously) {
+					 		x@sel@metadata <- value
+					 		x
+					 	}
+					 else stop ("prohibited replacement of metadata"))
+
+`[<-.metadata` <- function (x, i, bygroup = TRUE, value) {
+	mm <- value
+	names (mm) <- unique (metadata (x) [i])
+	mmn <- append (metadata (x), mm)
+	class (mmn) <- "metadata"
+	mmn
+}
+
 print.metadata <- function (x, ...) twoColPrint (x)
 
 summary.metadata <- function (object, ...) {
