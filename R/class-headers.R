@@ -18,9 +18,21 @@
 ####
 
 setOldClass ("metadata")
-setClass ("selection", representation (ids = "character", groups = "factor", metadata = "metadata",
-																			 ids.spec = "character", resource.spec = "character", 
+setClass ("selection", representation (ids = "character", 
+																			 groups = "factor", 
+																			 metadata = "metadata",
+																			 ids.spec = "character",
+																			 resource.spec = "character", 
 																			 metadata.extent = "character"))
+
+
+# setClass ("selection", representation (metagenomes = "character",  ..... c("mgm4441980.3", "mgm4441980.3", "mgm4441980.3", ....)
+# 																			 projects = "factor", ...... factor("mgp10", "mgp10", "mgp12", "mgp12", "mgp12", ....)
+# 																			 groups = "factor", ..... factor(1,1,1,2,2,....)
+# 																			 metadata = "metadata",
+# 																			 metadata.extent = "numeric"))     # code 0 (none), 1 (minimal),2 (full)
+
+
 setClass ("collection", representation (views = "list", sel = "selection"))
 setClass ("biom", repr = NULL, contains = "character")
 setClass ("pco", repr = NULL, contains = "list")
