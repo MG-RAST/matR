@@ -23,10 +23,46 @@
 <b>Related Tutorials:</b> None.
 </p>
 
-<h1>Introduction</h1>
-matR is a client for analysis of metagenomic annotations built as an extension package to the popular R programming language for statistics.  It features facilities to build and examine metagenome collections, access to metadata, authentication for access to private data, customized analysis and visualization tools, and easy integration with the wide world of R extension packages.
+<p>
+<b>Related Tutorials:</b>
+</p>
+<p>
+<a id="menu">
+The following page presents a typical matR based analysis.  
+The individual steps are highlighted below, you can proceed through them
+sequentially, or view each separately:
+</a>  
+</p>
 
+
+<a HREF="#introduction">Introduction</a>
+<p></p>
+<a HREF="#installation">Installation</a>
+<p></p>
+<a HREF="#collections">Collections</a>
+<p></p>
+<a HREF="#built_in_demo">Using built in demonstrations</a>
+<p></p>
+<a HREF="#built_in_data">Using built in data</a>
+<p></p>
+<a HREF="#download">Downloading data</a>
+<p></p>
+<a HREF="#grouping">Downloading data</a>
+<p></p>
+<a HREF="#pcoa">Generate 2 and 3 dimensional PCoAs</a>
+<p></p>
+
+
+
+<a id="introduction">
+<h1>Introduction</h1>
+</a>
+matR is a client for analysis of metagenomic annotations built as an extension package to the popular R programming language for statistics.  It features facilities to build and examine metagenome collections, access to metadata, authentication for access to private data, customized analysis and visualization tools, and easy integration with the wide world of R extension packages.
+<p><a HREF="#menu">menu</a></p>
+
+<a id="installation">
 <h1>Installation</h1>
+</a>
 At the R prompt, enter: 
 <pre>
 > install.packages ("matR", type = "source",
@@ -41,6 +77,100 @@ to load the package, and finally enter:
 > dependencies ()
 </pre>
 to install supporting packages.  Note that in the technical sense there are no dependencies, but without supporting packages, many features will be unusable.
+<p><a HREF="#menu">menu</a></p>
+
+
+<a id="built_in_demo">
+<h1>Using built-in demonstrations</h1>
+</a>
+MatR has a number of demonstrations built in for the purpose of exploring many of matR's capabilities.  To see built in demonstrations:
+<pre>
+> demo(package="matR")
+</pre>
+To run a demo, run the demo2 function with an analysis name returned from <i>demo(package="matR")</i>:
+<pre>
+> demo2("analyses")
+</pre>
+The demo2 function stops for each line of comment or code it returns for easy viewing. Press enter to proceed through each line in a demonstration
+<p><a HREF="#menu">menu</a></p>
+
+<a id="built_in_data">
+<h1>Using built-in data sets</h1>
+</a>
+MatR has a number of datasets built in for the purpose of exploring matR's capabilities without having to download data.  To see built in datasets:
+<pre>
+> data(package="matR")
+</pre>
+To see the contents of a built in data set, simply type the name of the list (e.g.):
+<pre>
+> Marine
+</pre>
+The demo2 function stops for each line of comment or code it returns for easy viewing. Press enter to proceed through each line in a demonstration
+<p><a HREF="#menu">menu</a></p>
+
+
+<a id="download">
+<h1>Downloading data</h1>
+</a>
+<p>Downlaoding enables users with a wide variety methods to access their abundance count data, dowloading them through the KBase API to data objects that are easily manipulated within R, with matR or any other R pacakges.</p>
+<p>A typical download involves three steps:</p>
+<p>(1) Creating a list of KBase/MG-RAST ids for the samples to be downloaded. Lists can be labeled or not.</p>
+<p>Here is an example of creating a labeled list:</p>
+<pre>
+>my_list <- c("fresh1"="mgm4440424.3", "fresh2"="mgm4440423.3", "spring1"="mgm4441096.3", "spring2"="mgm4442583.3")
+</pre>
+Here, the sample list is created without labels:
+<pre>
+>my_list <- c("mgm4440424.3", "mgm4440423.3", "mgm4441096.3", "mgm4442583.3")
+</pre>
+<p>(2) Determining if you want to use the default matR download(the case considered directly below in 3a), or if you want to specifiy the parameters for your download(see 3b below). </p>
+<p>(3a) To perform a default download, for the list created above:
+<pre>
+my_collection <- collection(my_list)
+</pre>
+<p>The content of default downloads will depend on the type of seqeunce data that was annotated.  Whole genome shotgun data return subsystem level3 ("named subsystems") counts; amplicon
+data return species level abundance data by default.  Note that for all default downloads, 4 types of counts are returned, raw abunadnce values ("raw"), normlized abundance values "nrm", raw counts with singleton counts removed "nsc", and counts normalized after the removal of singleton counts "nsn". To view these four objects, use standard R referencing; e.g. to view the raw "count values: </p> 
+<pre>
+>my_collection$raw
+</pre>
+<p>(3b) To perform a custom download, you have to specify the parameter values for each download</p>
+<p>You can see the complete list of parameters like this:</p>
+<pre>
+>view.params
+</pre>
+<p>If you wanted to download the level2 subsystem counts, this would work</p>
+<pre>
+>my_custom_collection <- collection(my_list, my_counts=c(entry="count", annot="func", level="level2", source="Subsystems"))
+</pre>
+<p>To view the counts, standard R referencing would be used:</p>
+<pre>
+>my_custom_collection$my_counts
+</pre>
+<p><a HREF="#menu">menu</a></p>
+
+
+<a id="grouping">
+<h1>Sample grouping</h1>
+</a>
+Segregation of samples with respect to metadata, or arbitrarily, defined groups is an essential precursor to most visulizations (e.g. heatmap dendrogram or PCoA), and all statistical tests. MatR will soon support 
+automated metadata driven creation of sample groups.  For now, the process is manual.  Groups are added to collections in the following way:
+<pre>
+groups(my_collection) <- c(1,1,2,2)
+</pre>
+It is also possible to specify groups when a visualization or statistical analysis is performed.
+<p><a HREF="#menu">menu</a></p>
+
+
+
+<a id="pcoa">
+<h1>Generate 2 and 3 dimensional PCoAs</h1>
+</a>
+
+
+<p><a HREF="#menu">menu</a></p>
+
+
+
 
 <h1>Example</h1>
 We use a prepackaged collection of 24 metagenomes, fifteen from a fresh water sample, the others from a hot spring.
@@ -131,7 +261,9 @@ We added a new view to the collection, and proceeded as before.
 <h1>Functionality</h1>
 This tutorial provides an overview of functionality, by example.
 
+<a id="collections">
 <h2>Collections</h2>
+</a>
 Metagenome collections are constructed using metagenome IDs.  For example:
 <pre>
 > ids <- c ("4441679.3", "4441680.3", "4441682.3", "4441695.3", "4441696.3", "4440463.3", "4440464.3")
@@ -167,6 +299,7 @@ Subsets can be taken of collections, as of regular vector objects.  For instance
 </pre>
 that contains only the first four metagenomes.
 </pre>
+<p><a HREF="#menu">menu</a></p>
 
 <h2>Metadata</h2>
 Metadata is a list of named elements with a hierarchical organization.  To select elements, an arbitrary number of index vectors may be specified.  For instance, we can use one index (of length one) to get all metadata from one metagenome:
@@ -191,6 +324,7 @@ These are just examples to show the flexibility of indexing metadata.  One other
 > mm ["host_common_name", "disease", ".age", bygroup = TRUE]
 </pre>
 If a requested metadata field is missing from a metagenome, NA is placed instead.
+<p><a HREF="#menu">menu</a></p>
 
 <h2>Basic Analysis</h2>
 A very large library of statistical tools is available in the R language.   matR provides convenient wrappings of some useful procedures and visualizations.  The following examples use prepackaged datasets.
