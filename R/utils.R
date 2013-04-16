@@ -234,7 +234,7 @@ semiwarn <- function (s) {
 ### insist on loading a package
 ### we load additional packages _after_ matR on the search path
 reqPack <- function (P) {
-	if ( !library (P, pos = match("package:matR", search ()) + 1, character.only = TRUE, quietly = TRUE, 
+	if ( !library (P, pos = whereIam() + 1, character.only = TRUE, quietly = TRUE, 
 		warn.conflicts = FALSE, logical.return = TRUE))
 		stop ("matR: package ", P, " required")   ########## revisit this
 	else TRUE
@@ -272,3 +272,7 @@ xcall <- function (fun, ..., with = list(), without = character ()) {
 	if (msession$verbose()) message (paste (names (call [-1]), ":", as.character (call [-1]), sep = "", collapse = "  "), "\n")
 	eval (as.call (call))
 }
+
+whereIam <- function () which (search () == "package:matR")
+
+prior <- function (f) function (x, ...) get (f, pos = whereIam() + 1) (x, ...)

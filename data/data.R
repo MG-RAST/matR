@@ -18,14 +18,16 @@ view.params <- list (
 	source = list (rna = c ("M5RNA", "RDP", "Greengenes", "LSU", "SSU"),
 									 ontology = c ("NOG", "COG", "KO", "Subsystems"),
 									 protein = c ("M5NR", "SwissProt", "GenBank", "IMG", "SEED", "TrEMBL", "RefSeq", "PATRIC", 
-									 						 "eggNOG", "KEGG")))
+									 						 "eggNOG", "KEGG")),
+	hit = list (organism = c ("all", "single", "lca"),
+							`function` = "na"))
 
 # possibly parameters should be specified in full for each view, here (and possibly not)
 default.views <- list (
-	raw = c (entry = "counts", annot = "function", level = "level3", source = "Subsystems"),
-	nrm = c (entry = "normed.counts", annot = "function", level = "level3", source = "Subsystems"),
-	nsc = c (entry = "ns.counts", annot = "function", level = "level3", source = "Subsystems"),
-	nsn = c (entry = "ns.normed.counts", annot = "function", level = "level3", source = "Subsystems"))
+	raw = c (entry = "counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
+	nrm = c (entry = "normed.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
+	nsc = c (entry = "ns.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
+	nsn = c (entry = "ns.normed.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"))
 
 id.ex <- list (
 	project = "92",

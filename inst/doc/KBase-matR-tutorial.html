@@ -1,0 +1,248 @@
+
+
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<title>Using the matR Package</title>
+</head>
+
+<body>
+<p>
+<b>Purpose:</b> Learn what the matR package is, what it can do, how to install it, and where to find more information.
+</p>
+
+<p>
+<b>Required Prerequisite Activities:</b> A current installation of the R language (>= 2.15) is required.
+</p>
+
+<p>
+<b>Suggested Prerequisite Activities:</b> Gain some familiarity with R.  Online tutorials can be found at the <a href="http://www.r-project.org">R Language homepage</a>.  </p>
+
+<p>
+<b>Related Tutorials:</b> None.
+</p>
+
+<h1>Introduction</h1>
+matR is a client for analysis of metagenomic annotations built as an extension package to the popular R programming language for statistics.  It features facilities to build and examine metagenome collections, access to metadata, authentication for access to private data, customized analysis and visualization tools, and easy integration with the wide world of R extension packages.
+
+<h1>Installation</h1>
+At the R prompt, enter: 
+<pre>
+> install.packages ("matR", type = "source",
+    repo = "http://dunkirk.mcs.anl.gov/~braithwaite/matR")
+</pre>
+And then, enter:
+<pre>
+> library (matR)
+</pre>
+to load the package, and finally enter:
+<pre>
+> dependencies ()
+</pre>
+to install supporting packages.  Note that in the technical sense there are no dependencies, but without supporting packages, many features will be unusable.
+
+<h1>Example</h1>
+We use a prepackaged collection of 24 metagenomes, fifteen from a fresh water sample, the others from a hot spring.
+<pre>
+> Waters
+> samples (Waters)
+</pre>
+We look at a principal coordinates analysis with samples colored by group:
+<pre>
+> groups (Waters) <- c (rep (1, 15), rep (2, 9))
+> col <- groups (Waters)
+> levels (col) <- c ("blue", "red")
+> col <- as.character (col)
+> pco (Waters, comp = c (1,2), main = "fresh vs. spring water samples", col = col)
+</pre>
+We can also look at principal coordinates in three dimensions, or a heatmap:
+<pre>
+> pco (Waters, comp = c (1,2,3), main = "fresh vs. spring water samples", color = col)
+> heatmap (Waters)
+</pre>
+A statistical test such as Kruskal-Wallis can help identify the most significant rows (annotations) and sharpen the picture:
+<pre>
+> results <- sigtest (Waters, test = "Kruskal-Wallis")
+</pre>
+We can browse the test results:
+<pre>
+> head (results$sd)
+> head (results$mean)
+> head (results$stat)
+</pre>
+Using p-values, we check how many annotations are retained, at various significance levels:
+<pre>
+> sum (results$stat$p.value < 0.05)
+> sum (results$stat$p.value < 0.005)
+> sum (results$stat$p.value < 0.0005)
+</pre>
+It is easy to subselect, leaving abundance data for the eighteen functional annotations of highest significance in differentiating the two groups:
+<pre>
+> subm <- Waters$normed [results$stat$p.value < 0.0005, ]
+> dimnames (subm)
+> subm
+</pre>
+A heatmap restricted to these functions shows clear distinctions between fresh and spring water, but also a curious aberration in the ninth spring water sample:
+<pre>
+> heatmap (Waters, rows = (results$stat$p.value < 0.0005))
+</pre>
+We can scrutinize available metadata for an explanation, and after noticing the various projects contained in the collection, it seems natural to compare sample environments:
+<pre>
+> metadata (Waters) ["project.name"]
+> metadata (Waters) ["4443745.3"]
+> metadata (Waters) ["env_package"]
+> metadata (Waters) ["sample.data"]
+> metadata (Waters) ["temperature"]
+</pre>
+Nothing turns up, so we turn to library information:
+<pre>
+> metadata (Waters) ["library"]
+</pre>
+There, we discover that the ninth spring water sample, unlike every other in the collection and even in its own project, underwent Amplicon sequencing:
+<pre>
+> metadata (Waters) ["library.type"]
+</pre>
+At this point we may wish to continue analysis with subcollections, using WGS metagenomes, only:
+<pre>
+> Waters2 <- Waters [1:23]
+</pre>
+Or we may, to isolate a comparison of different sequencing technologies, select metagenomes only from the project that includes the Amplicon metagenome:
+<pre>
+> Waters3 <- Waters [19:24]
+</pre>
+For instance, we can redo the eighteen-row heatmap from above, with the Amplicon metagenome omitted:
+<pre>
+> groups (Waters2) <- c (rep (1, 15), rep (2, 8))
+> results2 <- sigtest (Waters2, test = "Kruskal-Wallis")
+> heatmap (Waters2, rows = (results2$stat$p.value < 0.0005))
+</pre>
+Significance testing could also be redone with annotations from a higher (or lower) level of the Subsystems hierarchy:
+<pre>
+> Waters$lev2 <- c (entry = "normed", level = "level2")
+> results.lev2 <- sigtest (Waters, view = "lev2", test = "Kruskal-Wallis")
+> heatmap (Waters, view = "lev2", rows = (results.lev2$stat$p.value < 0.005))
+> rownames (Waters$lev2) [results.lev2$stat$p.value < 0.005]
+</pre>
+We added a new view to the collection, and proceeded as before.
+
+
+
+<h1>Functionality</h1>
+This tutorial provides an overview of functionality, by example.
+
+<h2>Collections</h2>
+Metagenome collections are constructed using metagenome IDs.  For example:
+<pre>
+> ids <- c ("4441679.3", "4441680.3", "4441682.3", "4441695.3", "4441696.3", "4440463.3", "4440464.3")
+> cc <- collection (ids)
+</pre>
+This creates a collection object containing metadata and abundance data for the identified metagenomes.  Various functions apply to collections:
+<pre>
+> samples (cc)        # show ids of constituent metagenomes
+> names (cc)          # show names of metagenomes
+> views (cc)          # show the matrix views that the collection contains (see below)
+> viewnames (cc)      # show just the names of the views
+> metadata (cc)       # access metadata of the collection
+</pre>
+Views of collections are accessed with "$".   For example, this command shows raw abundance counts of functional annotations at level 3 of the Subsystems hierarchy:
+<pre>
+> cc$count
+</pre>
+while this shows the same data, but normalized to lie between 0 and 1:
+<pre>
+> cc$normed
+</pre>
+Generally, the purpose of views is to show different aspects of the same selection of metagenomes.  Views can be specified when a collection is constructed:
+<pre>
+> dd <- collection (ids, kegg = c (source = "KEGG"))
+</pre>
+and can also be added to an existing collection:
+<pre>
+> dd$cog <- c (source = "COG")
+</pre>
+Subsets can be taken of collections, as of regular vector objects.  For instance, a subcollection is created by
+<pre>
+> ee <- cc [1:4]
+</pre>
+that contains only the first four metagenomes.
+</pre>
+
+<h2>Metadata</h2>
+Metadata is a list of named elements with a hierarchical organization.  To select elements, an arbitrary number of index vectors may be specified.  For instance, we can use one index (of length one) to get all metadata from one metagenome:
+<pre>
+> mm <- metadata (cc)
+> mm ["4440464.3"]
+</pre>
+Or we can use two indices, each of length one, to get certain elements from all metagenomes:
+<pre>
+> mm ["latitude", "longitude"]
+</pre>
+The following example uses one index of length two, to get the entire environmental package from one metagenome:
+<pre>
+> mm [c ("4440464.3", "env_package.data")]
+</pre>
+And this example uses three indices, all of length two, to select a miscellany of elements:
+<pre>
+> mm [c ("0464", "PI"), c ("0464","seq"), c ("0464","biome")]
+</pre>
+These are just examples to show the flexibility of indexing metadata.  One other convenient feature creates a data.frame with one row per metagenome, with this syntax:
+<pre>
+> mm ["host_common_name", "disease", ".age", bygroup = TRUE]
+</pre>
+If a requested metadata field is missing from a metagenome, NA is placed instead.
+
+<h2>Basic Analysis</h2>
+A very large library of statistical tools is available in the R language.   matR provides convenient wrappings of some useful procedures and visualizations.  The following examples use prepackaged datasets.
+<p>
+<!--<img alt="" src="boxplot.svg"><br>-->
+Boxplots usefully summarize diversity, with this command:
+<pre>
+> render (Coral, view="count")
+> render (Coral, view="normed")
+</pre>
+<!--<img alt="" src="pco.svg"><br>-->
+A principal components analysis is plotted in two or three dimensions, and grouped by color, this way:
+<pre>
+> g <- factor (metadata (Hospital) ["ventilation_type"])
+> col <- g
+> levels (col) <- c ("red", "blue", "orange")
+> col <- as.character (col)
+> pco (Hospital, comp = c (1,2), col = col, labels = g)
+> P <- pco (Hospital, comp = c (1,2,3), color = col, labels = g)
+</pre>
+The numerical results of the analysis are stored in the object P.
+<p>
+<!--<img alt="" src="heatmap1.svg"><br>-->
+A heatmap gives a quick visual summary of annotations, as well suggesting further investigations:
+<pre>
+> heatmap (Guts, cexCol = 0.9)
+</pre>
+Significance testing of annotations is the starting point for detailed analysis.  The following routine calculates the significance of each annotation in establishing a specified grouping of samples, by the Kruskal-Wallis test.  Then, a heatmap is made of only the rows passing a specified significance threshold.
+<!--<img alt="" src="heatmap2.svg"><br><br>-->
+<pre>
+> groups(Waters) <- c (rep (1, 15), rep (2, 9))
+> results <- sigtest (Waters, test = "Kruskal-Wallis")
+> heatmap (Waters, rows = (results$stat$p.value < 0.005), main = "annotations at p < 0.005")
+</pre>
+Such analyses can be fruitfully iterated.
+
+<h2>Integration</h2>
+matR integrates easily with other R software.  Collection views are directly extracted as ordinary matrices with the $ operator, as above.  Metadata is an S3-classed character vector.  Visualization routines accept all standard graphical parameters.  Shortcuts are provided to write collection data and analyses to text files.
+
+<h1>Further Resources</h1>
+Once the package is loaded in an R session, use:
+<pre>
+> demo (package = "matR")
+</pre>
+for a list of short tutorial demos.  Run these with the regular R command demo() or the enhanced version demo2(), for instance:
+<pre>
+> demo2 ("metadata")
+</pre>
+To list prepackaged datasets, use:
+<pre>
+> data (package = "matR")
+</pre>
+
+</body>
+</html>
