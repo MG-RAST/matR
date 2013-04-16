@@ -1,48 +1,38 @@
 
 ####################################################
-### find "elementary" analysis functions here.
-### simple functions doing basic things.
-### by and large these apply to vanilla matrices.
+### these are elementary analysis routines, typically (mere) functions,
+### not methods.  they apply to "matrix", not "collection".
 ####################################################
 
-# note: we calculate distance between columns, a difference from other common distance functions
-# that ne	eds to be documented!
+###
+# our "dist" will mask any "dist" behind it in the search path.
+# we only want to dispatch on "matrix".
+# but we must not block, if some other dist does apply to another class.
+# for instance, "stats::dist" applies to "data.frame".
+# therefore we must define an "ANY" method to pass the call along.
+# otherwise a call would fail: R sees our "dist" has no appropriate method and gives up.
+#
+# also, it is not possible to make stats::dist the default method, 
+# because it lacks "..." as a formal parameter, 
+# and we need additional arguments.
+#
+# this problem and solution are repeated for other analysis functions
+###
 
-# typically our generic "dist" will mask stats::dist, so we must pass along calls intended for 
-# that function, by defining a method that dispatches on "ANY".  It is not possible to make
-# stats::dist the default method, because it lacks "..." as a formal parameter, and we need
-# additional arguments ("view").
-# presently, this is a bad hack. we should look for _any_ dist behind us in the search path,
-# not explicitly stats::dist.
-
-# make a function in utils.R: where am I on the search path?
-# whereami <- function () match ("package:matR", search ()))
-# maybe use: get ("dist", pos = match("package:matR", search ()) + 1)
-# or...
-# get("rownames", env=as.environment(find("rownames")[2])) (x)
-
-setMethod ("dist", "ANY", function (x, ...) stats::dist (x, ...))
 setMethod ("dist", "matrix", 
-					 function (x, method = 
-					 	c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", 
-					 		 "difference", "euclidean", "maximum", "manhattan", 
-					 		 "canberra", "binary", "minkowski"), bycol = FALSE, ...) {
-					 	if (bycol) {
-					 		method <- match.arg (method)
-					 		if (method %in% c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference")) {
-					 			reqPack ("ecodist")
-					 			ecodist::distance (t (x), method = method, ...)
-					 		}
-					 		else stats::dist (t (x), method = method, ...)
-# we want to add unifrac, others
+					 function (x, 
+					 					method = c ("euclidean", "bray-curtis", "jaccard", "mahalanobis", "sorensen", 
+					 											"difference", "maximum", "manhattan", "canberra", "binary", "minkowski"), 
+					 					..., bycol = FALSE) {
+					 	if (bycol) x <- t (x)
+					 	method <- match.arg (method)
+					 	if (method %in% c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference")) {
+					 		reqPack ("ecodist")
+					 		ecodist::distance (x, method = method, ...)
 					 	}
-					 	else stats::dist(x, method = method, ...) })
-setMethod ("dist", "collection", function (x, view = length (views (x)),
-																					 method = 
-																					 	c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", 
-																					 		 "difference", "euclidean", "maximum", "manhattan", 
-																					 		 "canberra", "binary", "minkowski"), ...)
-	dist (x [[view, plain = TRUE]], method = method, bycol = TRUE, ...))
+					 	else stats::dist (x, method = method, ...)
+					 } )
+setMethod ("dist", "ANY", prior ("dist"))
 
 remove.singletons <- function (x, lim.entry = 1, lim.row = 1, ...) {
 	x <- as.matrix (x)
