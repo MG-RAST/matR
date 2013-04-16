@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>KBase Notebook and R</title>
+</head>
+
+<body>
+<p><b>Purpose:</b> explains use of the R language within KBase Notebook</p>
+
+<p><b>Required Prerequisite Activities:</b> none</p>
+
+<p><b>Suggested Prerequisite Activities:</b> familiarity with the R language and KBase Notebook is recommended</p>
+
+<p><b>Related Tutorials:</b> (****EG****)</p>
+
+<h1>Introduction</h1>
+The R language is the open source standard for statistical computing.  The base language is complemented by a large body of extension packages specifically for genomic analysis, making R a valuable auxiliary system for KBase users.  (See, for example, the <a href="http://www.bioconductor.org/">Bioconductor</a> (link) repository.)  Transparent access to R from within KBase Notebook supports use of (almost) the complete R language and most extensions.  Thereby, a large collection of analysis facilities is available to Notebook users, and the advantages of the Notebook framework are offered to researchers already scripting in R.  While R experience is not essential for this tutorial, it is helpful.
+
+<h1>Getting Started</h1>
+Start in a new notebook and execute a single cell with exactly these lines:
+<pre><code>
+init_ipy()
+%load_ext rmagic
+</code></pre>
+After that, a cell will be interpreted as R whenever its first line is:
+<pre><code>
+%%R
+</code></pre>
+Remember, each R cell must begin with this line.
+
+<h1>matR</h1>
+matR (metagenomics analysis tools for R) is an extension package to the R language facilitating analyses that reference KBase resources directly.  matR is automatically loaded and available within KBase Notebook.  (It can also be added to any R installation.)  A separate tutorial (****link****) explains details of the matR package for R users.
+
+<h1>Availability of R Extensions</h1>
+Installation of extension packages is a routine and streamlined process for R users.  Packages for biological applications in particular are a major strength of the R software community.  Many popular packages are already installed to the R environment that is accessed by KBase Notebook.  These include:  <tt>ape, ecodist, matlab, picante, vegan, (etc)</tt>
+<p>
+Additional packages can be installed in the usual way (namely, the <tt>install.packages()</tt> function) with the caveat that interaction with R menus is not possible (see below).  Consequently, the <tt>repos=</tt> parameter should be used if the default (use <tt>options("repos")</tt> to query it) is not adequate.  See R help for the <tt>install.packages()</tt> function.
+
+<h1>Input, Output, Graphics, and Files</h1>
+Several ways in which the Notebook framework alters ordinary interaction with R should be noted.
+<p>
+It is not possible to use R functions that require interaction with the user (via stdin).  Some consequences are:  the built-in R runtime help is not available; utility functions that may use menu selection, such as <tt>install.packages()</tt> or <tt>chooseBioCmirror()</tt>, must be used non-interactively if at all; it may be easier to work with scripts written as numerous short notebook cells, rather than a few long cells.
+<p>
+Certain output that is automatically printed in an ordinary R session does not appear in the Notebook environment.  For such cases, instead of <tt>&lt;command&gt;</tt> alone, execute:
+<pre>
+print(&lt;command&gt;)
+</pre>
+<p>
+Graphics created by R commands acting on a default graphics device automatically appear in KBase Notebook as cell output.  Graphics output can also be directed (with control over size and format) to a file in the usual way, namely, by calling an appropriate function to create a file-based device of the desired type, such as <tt>pdf(file=...)</tt> or <tt>svg(filename=...)</tt>.  See R help for individual functions.
+<p>
+It is possible to make files available to R code running from KBase Notebook, and to retrieve created files, but details are system-dependent.  Consult the administrator of the system hosting your notebooks.
+
+These remarks should be taken as general guidelines.  Where more details are required, please consult the documentation for RPy2, the Python extension that powers R functionality in KBase Notebook.
+
+<h1>Referencing Objects Across Contexts</h1>
+Objects created in R code can be referenced from the Python context, but not vice-versa.  (TH: details)
+
+Again, where more details are required, documentation for RPy2 may be helpful.
+
+
+
+http://ipython.org/ipython-doc/dev/config/extensions/rmagic.html
+http://rpy.sourceforge.net/rpy2.html
+
+
+
+<h1>Example</h1>
+A complete notebook showing the use of R, matR, and various R extensions can be found here.  (link)
+
+</body>
+</html>
