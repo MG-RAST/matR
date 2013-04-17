@@ -5,7 +5,8 @@
 \alias{selection,collection-method}
 \alias{selection,numeric-method}
 \alias{selection}
-\title{Methods for Function \code{selection} in Package \pkg{matR}}
+
+\title{methods for function \code{selection} in package \pkg{matR}}
 \description{...}
 \section{Methods}{
 \describe{

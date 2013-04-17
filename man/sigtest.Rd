@@ -1,16 +1,16 @@
 \name{sigtest}
 \alias{sigtest}
-\title{Test Significance of Annotations}
+\title{Significance Test of Collection Annotations Against Groupings}
 \description{Applies specified significance test to annotations of a grouped collection}
 \usage{sigtest(x, ...)}
 \arguments{
-  \item{x}{...}
-  \item{\dots}{...}
+  \item{x}{collection}
+  \item{\dots}{further arguments as indicated below}
 }
-\details{...}
-\value{...}
+%\details{...}
+\value{A list with components expressing the result of significance testing.}
 \author{Kevin P. Keegan, Daniel T. Braithwaite}
-\seealso{\code{\link{Collections}}}
+\seealso{\code{\link{Collections}}, \code{\link{sigtest-methods}}}
 \examples{
 groups(Guts) <- c(1,1,1,2,2,2,2)
 res <- sigtest(Guts, view = "nrm", test = "t-test-un-paired")

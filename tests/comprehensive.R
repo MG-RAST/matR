@@ -9,11 +9,6 @@
 ### permutations
 ####################################################################################
 
-
-# must review modifications of Guts object for conflicts
-
-
-
 library(matR)
 msession$async(FALSE)
 
@@ -46,20 +41,64 @@ collection (file = "guts-IDs.txt", list.of.views)
 ####################################################################################
 ### test: collection() factored by project
 ####################################################################################
-single project
-multiple projects
-projects plus metagenomes
-analysis of these
-new function: projects(cc)
+# collections specified by ID of project and/or metagenome:
+cc1 <- collection ("mgp757")
+cc2 <- collection ("mgp6 mgp20 mgp26 mgp50")
+cc3 <- collection ("mgp757 mgm4441679.3 mgm4441680.3")
+cc4 <- collection ("mgp6 mgp20 mgm4441679.3 mgm4441680.3")
+
+projects (Guts)
+projects (Guts, factor = TRUE)
+
+projects (cc1)
+samples (cc1)
+
+projects (cc2)
+samples (cc2)
+
+projects (cc3)
+samples (cc3)
+
+projects (cc4)
+samples (cc4)
+
+# use of project information in analyses:
+# same thing two ways:
+boxplot (cc1, names = projects (cc1, factor = TRUE))
+boxplot (cc1, names = "*project.id")
+# or label by metagenome:
+boxplot (cc1, names = samples (cc1))
+
+pco (cc1, col = "*seq_meth", pch = "*project.id", labels = "")
+pco (cc2, col = "*env_package.type", pch = "*project.id", labels = "")
+
+heatmap (cc4, labels = "*project.id")
+pnames <- factor (metadata (cc4) ["project.id"])
+levels (pnames) <- c ("A", "B", "C")
+heatmap (cc4, labels = as.character (pnames))
 
 
 ####################################################################################
 ### test: collection() asynchronous
 ####################################################################################
 msession$async(TRUE)
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
 ...build & use collections, here...
 ...should actually run the whole test battery again, or something...
+cc <- collection (guts, L1 = c(level = "level1"), L2 = c(level = "level2"), L3 = c(level = "level3"), L4 = c(level = "function"))
+ready (cc)
+ready (cc, view = "L1")
+while (! ready (cc, view = "L4")) wait (1)
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
 msession$async(FALSE)
+cc <- collection (guts, async = TRUE)
+while () {
+	try (cc$L1)
+	try (cc$L2)
+	try (cc$L3)
+	try (cc$L4)
+}
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 ####################################################################################
@@ -67,6 +106,7 @@ msession$async(FALSE)
 ####################################################################################
 # static elements of a collection:
 samples (Guts)
+projects (Guts)
 views (Guts)
 rownames (Guts, view = "raw")
 rownames (Guts, view = "raw", sep = FALSE)
@@ -78,9 +118,9 @@ groups (Guts)
 viewnames (Guts)
 metadata (Guts)
 # assignments
-names (Guts) <- as.character (1:7)
-groups (Guts) <- c (1,1,1,2,2,3,3)
-viewnames (Guts) <- c ("a","b","c","d")
+nn <- names (Guts) ; names (Guts) <- as.character (1:7) ; names (Guts) <- nn
+gg <- groups (Guts) ; groups (Guts) <- c (1,1,1,2,2,3,3) ; groups (Guts) <- gg
+vv <- viewnames (Guts) ; viewnames (Guts) <- c ("a","b","c","d") ; viewnames (Guts) <- vv
 # access views, as plain matrix
 Guts$raw
 Guts$nrm
@@ -122,14 +162,16 @@ metadata (Guts) ["latitude", "longitude", bygroup=TRUE]
 metadata (Guts) [c("0464", "env package.data")]
 metadata (Guts) [c("0464", "PI"), c("0464","seq "), c("0464","biome")]
 # new metadata fields created by assignment:
-host <- factor (metadata (Guts) ["host_common_name"])
-levels(host) <- c ("c", "f", "m")
-metadata (Guts) ["host_abbrev"] <- as.character (host)
+host_abbrev <- factor (metadata (Guts) ["host_common_name"])
+levels (host_abbrev) <- c ("c", "f", "m")
+metadata (Guts) ["host_abbrev", bygroup = TRUE] <- as.character (host)
 
 
 ####################################################################################
 ### test sigtest()
 ####################################################################################
+# save groups
+hh <- groups (Guts) ; kk <- groups (Waters)
 # two equivalent invocations:
 gg <- c (1,1,1,2,2,1,1)
 sigtest (Guts, view = "nsn", groups = gg, test = "Kruskal-Wallis")
@@ -145,6 +187,8 @@ sigtest (Waters, test = "Wilcoxon-paired")
 # ANOVA
 groups (Guts) <- c (1,1,1,2,2,3,3)
 sigtest (Guts,  test = "ANOVA-one-way")
+# restore groups
+groups (Guts) <- hh ; groups (Waters) <- kk
 
 
 ####################################################################################
@@ -197,7 +241,7 @@ heatmap (Guts, labels = 1:7)
 heatmap (Guts, names = 1:7)
 # label: explicitly (as above), by metadata, by groups, by sample names, or by ID
 heatmap (Guts, labels = "*host_common_name")
-groups (Guts) <- c ("A", "A", "A", "B", "B", "C", "C") ; heatmap (Guts) ; groups (Guts) <- NULL
+gg <- groups (Guts) ; groups (Guts) <- c ("A", "A", "A", "B", "B", "C", "C") ; heatmap (Guts) ; groups (Guts) <- gg
 heatmap (Guts)
 nn <- names (Guts) ; names (Guts) <- NULL ; heatmap (Guts) ; names (Guts) <- nn
 # graphical parameters as found in ?gplots::heatmap2
@@ -207,13 +251,60 @@ heatmap (Guts, main = "", colsep = "", labRow = "", labCol = "", col = )
 ####################################################################################
 ### test parcoord()
 ####################################################################################
-
+# save groups:
+gg <- groups (Guts)
+# basic use: two equivalent invocations:
+parcoord (Guts, view = "nrm", groups = c (1,1,1,2,2,3,3), test = "Kruskal.Wallis", p.lim = 0.05)
+groups (Guts) <- c (1,1,1,2,2,3,3)
+parcoord (Guts)
+# plot top n significant functions, instead of functions meeting a significance threshhold
+parcoord (Guts, view = "nrm", groups = c (1,1,1,2,2,3,3), test = "Kruskal.Wallis", n.lim = 25)
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# color, linetype, linewidth: explicitly, by metadata, by groups
+col, lty, lwd
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# ... function labels, sample labels ... needs to be worked out
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# graphical parameters as found in ?MASS::parcoord and ?graphics::matplot
+parcoord (Guts, main = "my title")
+# restore groups
+groups (Guts) <- gg
 
 
 ####################################################################################
-### test: biom conversions
+### test: type conversions
 ####################################################################################
 
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
+bb <- mGet ("matrix", guts, parse = FALSE, enClass = FALSE)
+class (bb) <- "biom"
+
+# biom ----> list
+as.list (biom)
+
+# collection, biom ----> matrix
+as.matrix (Guts)
+as.matrix (bb)
+
+# biom, matrix ----> collection
+as.collection (bb)
+as.collection (Guts$raw)
+
+# collection, matrix ----> biom
+as.biom (Guts)
+as.biom (Guts$raw)
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+####################################################################################
+### test: permutation analyses
+####################################################################################
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
+summarize.dist <- function (x, groups) sapply (groups, function (g) mean (dist x [g,]))
+iterations <- randomize (cc$nsn, n = 1000, method = ..., summarize.dist, metadata (cc) ["source.and.seqtype"])
+iterations <- simplify2array (iterations)
+averages <- apply (iterations, 1, mean)
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 
 ####################################################################################

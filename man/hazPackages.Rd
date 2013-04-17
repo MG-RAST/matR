@@ -1,14 +1,14 @@
 \name{hazPackages}
 \alias{hazPackages}
-\title{Reports Present and Missing Dependencies}
-\description{...}
+\title{Report Present and Missing Package Dependencies}
+\description{See \code{dependencies()} below}
 \usage{
 hazPackages()
 }
-\details{...}
-\value{...}
+%\details{...}
+%\value{...}
 \author{Daniel T. Braithwaite}
 \seealso{\code{\link{dependencies}}}
 \examples{
-#
+hazPackages()
 }

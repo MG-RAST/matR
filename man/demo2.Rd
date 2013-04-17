@@ -1,24 +1,24 @@
 \name{demo2}
 \alias{Demos}
 \alias{demo2}
-\title{Step Through Demos Line by Line}
-\description{Improves on standard function demo() by stepping line by line}
+\title{Step Through Tutorial Demos}
+\description{Improves on builtin function \code{demo()} by stepping line by line}
 \usage{
 demo2(s)
 }
 \arguments{
-  \item{s}{...}
+  \item{s}{name of demo to run (character)}
 }
-\details{See \code{demo (package="matR")} for a list of provided demos.}
-\value{...}
+\details{See \code{demo(package="matR")} for a list of packaged demos.}
+%\value{...}
 \author{Daniel T. Braithwaite}
-\seealso{...}
+%\seealso{...}
 \examples{
 \dontrun{
 # step through metadata demo
-demo2 ("metadata")
+demo2("metadata")
 
 # step through second analysis demo
-demo2 ("another")
+demo2("another")
 }
 }
