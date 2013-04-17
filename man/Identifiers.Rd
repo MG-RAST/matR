@@ -2,23 +2,24 @@
 \alias{Identifiers}
 \alias{scrubIds}
 \alias{scrapeResources}
-\title{Process Strings as Resource Identifiers}
-\description{Formats ids properly, or returns resource types of given ids}
+
+\title{Process Resource Identifiers}
+\description{Formats IDs properly.  Returns resource types of given IDs.}
 \usage{
 scrubIds(ids, resources = c ("project", "library", "sample", "metagenome"))
 scrapeResources(ids)
 }
 \arguments{
-  \item{ids}{...}
-  \item{resources}{...}
+  \item{ids}{string(s) specifying resource ID(s) (character)}
+  \item{resources}{string(s) specifying resource type(s) (character)}
 }
 \details{
-The format of resource identifiers is not specified exactly by the API or \code{MG-RAST}, so these functions exist to provide consistency and convenience.  (Typically, high-level functions that expect identifiers apply these functions to their argument internally as necessary.)
+These functions provide consistency in handling IDs to identify metagenomes and related resources.
 
-\code{scrubIds} accepts ids in various formats and returns a character vector of the same ids properly formatted. \code{resources} should be length one, specifying one resource type for all ids, or equal in length to \code{ids}, specifying the type of each.  \code{scrapeResources} returns the resource types corresponding to ids given in proper format as a character vector.
+\code{scrubIds} accepts IDs in various formats and returns a character vector of the same IDs properly formatted. \code{resources} should be length one, specifying one resource type for all IDs, or equal in length to \code{ids}, specifying the type of each.  \code{scrapeResources} returns the resource types corresponding to IDs given in proper format as a character vector.
 }
 \note{
-Ids given as numeric rather than character usually work, but use caution with metagenome ids.  Since they usually include a decimal point, problems can arise because as numerics they are float rather than integer.
+IDs given as numeric rather than character usually work, but use caution with metagenome IDs.  Since they usually include a decimal point, problems can arise because as numerics they are float rather than integer.
 }
 \value{A character vector.}
 \author{Daniel T. Braithwaite}

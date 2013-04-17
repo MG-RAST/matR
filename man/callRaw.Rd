@@ -1,29 +1,27 @@
 \name{callRaw}
 \alias{callRaw}
-\title{Issue Unsupervised API Calls}
+\title{Issue Any API Call Without Checks}
 \description{
-Processes input minimally to allow arbitrary API calls, returning minimally processed results
+Processes input minimally to allow any API call, returning minimally processed results
 }
 \usage{callRaw(call, file = NULL)}
 \arguments{
-  \item{call}{...}
-  \item{file}{...}
+  \item{call}{properly-formatted API call (character)}
+  \item{file}{name of file for received data (character)}
 }
 \details{
-The purpose of \code{callRaw} is to facilitate free-form API calls.  Guidance regarding API syntax is available from the API page, linked below. The functionality of \code{callRaw} is limited to:  prefixing the API server name, appending the current authentication key (if set), and writing results to a file (if specified).
+Facilitates free-form API calls.  Guidance regarding API syntax is available from the API page, linked below. The functionality of \code{callRaw} is limited to:  prefixing the API server name, appending the current authentication key (if set), and writing results to a file (if specified).
 
 Note: neither passing multiple calls/filenames, nor receiving filestreams is yet worked out.
 
 For retrieval of private data, an authentication key must be set.
 }
-\value{
-...
-}
+%\value{...}
 \author{Daniel T. Braithwaite}
 \seealso{
-\url{http://api.metagenomics.anl.gov/api2.cgi},
+\url{http://api.metagenomics.anl.gov},
 \code{\link{Authentication}}, \code{\link{Identifiers}},
-\code{\link{callRaw}}, \code{\link{mGet}}, \code{\link{Collections}}
+\code{\link{mGet}}, \code{\link{Collections}}
 }
 \examples{
 callRaw ("project/92")

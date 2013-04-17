@@ -6,20 +6,16 @@
 \alias{show,sigtest-method}
 \alias{summary,sigtest-method}
 
-\title{Class \code{"sigtest"}}
-\description{...}
-\section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("sigtest", ...)}.
-%%  ~~ describe objects here ~~ 
-}
+\title{class \code{"sigtest"}}
+\description{Container for results of annotation significance testing}
 \section{Slots}{
   \describe{
-    \item{\code{.Data}:}{Object of class \code{"list"} ~~ }
+    \item{\code{.Data}:}{Object of class \code{"list"}}
   }
 }
 \section{Extends}{
-Class \code{"\linkS4class{list}"}, from data part.
-Class \code{"\linkS4class{analysis}"}, directly.
+Class \code{"\linkS4class{list}"}, from data part.\cr
+Class \code{"\linkS4class{analysis}"}, directly.\cr
 Class \code{"\linkS4class{vector}"}, by class "list", distance 2.
 }
 \section{Methods}{
@@ -30,7 +26,4 @@ Class \code{"\linkS4class{vector}"}, by class "list", distance 2.
 	 }
 }
 \seealso{\code{\link{sigtest}}}
-\examples{
-showClass("sigtest")
-}
 \keyword{classes}

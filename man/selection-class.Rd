@@ -14,20 +14,16 @@
 \alias{show,selection-method}
 \alias{summary,selection-method}
 
-\title{Class \code{"selection"}}
-\description{...}
-\section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("selection", ...)}.
-%%  ~~ describe objects here ~~ 
-}
+\title{class \code{"selection"}}
+\description{Structured container for a specification of metagenomes}
 \section{Slots}{
   \describe{
-    \item{\code{ids}:}{Object of class \code{"character"} ~~ }
-    \item{\code{groups}:}{Object of class \code{"factor"} ~~ }
-    \item{\code{metadata}:}{Object of class \code{"metadata"} ~~ }
-    \item{\code{ids.spec}:}{Object of class \code{"character"} ~~ }
-    \item{\code{resource.spec}:}{Object of class \code{"character"} ~~ }
-    \item{\code{metadata.extent}:}{Object of class \code{"character"} ~~ }
+    \item{\code{ids}:}{Object of class \code{"character"}}
+    \item{\code{groups}:}{Object of class \code{"factor"}}
+    \item{\code{metadata}:}{Object of class \code{"metadata"}}
+    \item{\code{ids.spec}:}{Object of class \code{"character"}}
+    \item{\code{resource.spec}:}{Object of class \code{"character"}}
+    \item{\code{metadata.extent}:}{Object of class \code{"character"}}
   }
 }
 \section{Methods}{
@@ -47,7 +43,4 @@ Objects can be created by calls of the form \code{new("selection", ...)}.
 	 }
 }
 \seealso{\code{\link{selection-methods}}}
-\examples{
-showClass("selection")
-}
 \keyword{classes}

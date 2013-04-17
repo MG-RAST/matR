@@ -25,15 +25,12 @@
 \alias{viewnames<-,collection-method}
 \alias{views,collection-method}
 
-\title{Class \code{"collection"}}
-\description{...}
-\section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("collection", ...)}.
-}
+\title{class \code{"collection"}}
+\description{Structured container for data of a specified selection of metagenomes}
 \section{Slots}{
   \describe{
-    \item{\code{views}:}{Object of class \code{"list"} ~~ }
-    \item{\code{sel}:}{Object of class \code{"selection"} ~~ }
+    \item{\code{views}:}{Object of class \code{"list"}}
+    \item{\code{sel}:}{Object of class \code{"selection"}}
   }
 }
 \section{Methods}{
@@ -44,6 +41,7 @@ Objects can be created by calls of the form \code{new("collection", ...)}.
     \item{[[}{\code{signature(x = "collection")}: ... }
     \item{[[<-}{\code{signature(x = "collection", i = "ANY", j = "missing", value = "character")}: ... }
     \item{asFile}{\code{signature(x = "collection")}: ... }
+    \item{boxplot}{\code{signature(x = "collection")}: ... }
     \item{dist}{\code{signature(x = "collection")}: ... }
     \item{groups}{\code{signature(x = "collection")}: ... }
     \item{groups<-}{\code{signature(x = "collection")}: ... }
@@ -51,6 +49,7 @@ Objects can be created by calls of the form \code{new("collection", ...)}.
     \item{metadata}{\code{signature(x = "collection")}: ... }
     \item{names}{\code{signature(x = "collection")}: ... }
     \item{names<-}{\code{signature(x = "collection")}: ... }
+    \item{parcoord}{\code{signature(x = "collection")}: ... }
     \item{pco}{\code{signature(x = "collection")}: ... }
     \item{print}{\code{signature(x = "collection")}: ... }
     \item{render}{\code{signature(x = "collection")}: ... }
@@ -66,7 +65,4 @@ Objects can be created by calls of the form \code{new("collection", ...)}.
 	 }
 }
 \seealso{\code{\link{Collections}}}
-\examples{
-showClass("collection")
-}
 \keyword{classes}

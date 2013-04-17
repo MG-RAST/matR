@@ -3,28 +3,18 @@
 \docType{package}
 \title{Metagenomics Analysis Tools for R}
 \description{
-This package provides access to the MG-RAST metagenome annotation
-pipeline and related analysis tools.
+matR provides analysis tools for metagenomics integrated with the MG-RAST annotation pipeline.
 }
 \details{
-matR is an analysis client for MG-RAST built as
-an extension package to the popular R
-programming language for statistics.  This
-package is in development.  Facilities are
-implemented to download annotation data from the
-MG-RAST metagenome analysis server.  Easy
-acccess to lightly structured metadata,
-authentication for access to private data, and
-customized versions of relevant statistical and
-visualization tools are provided.
+matR is an analysis module, extending the MG-RAST metagenome annotation pipeline.  Customized versions of statistical and visualization tools access metagenome annotations and metadata transparently, with authentication for private data.  As an add-on package to the popular R programming language for statistics, matR enables analysis to use the complete functionality of that environment and its extensions.
 }
 \author{Daniel T. Braithwaite, Kevin P. Keegan}
 \references{
-\url{http://metagenomics.anl.gov}\cr
 \url{http://www.kbase.us}\cr
 }
 \seealso{
 \code{\link{Authentication}}\cr
+\code{\link{Analysis}}\cr
 \code{\link{Collections}}\cr
 \code{\link{Demos}}\cr
 \code{\link{Dependencies}}\cr

@@ -76,5 +76,6 @@ randomize <- function (x, ntimes = 1, method = c ("sample", "dataset", "complete
 														dataset = matrix (sample (as.vector (x)), m, n),
 														complete = matrix (tabulate (sample (1:(m*n), tot, TRUE), nbins = m*n), m, n)),
 										...)
-	simplify2array (L)
+#	simplify2array (L)
+	L
 }

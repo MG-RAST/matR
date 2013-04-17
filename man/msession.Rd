@@ -1,31 +1,26 @@
 \name{msession}
 \alias{msession}
 \alias{Authentication}
-\title{Get or Set Session Configuration}
-\description{Reports or adjusts settings of the current session including authentication key}
-\usage{...}
-\details{...}
-\value{...}
+\title{Session Configuration Including Authentication}
+\description{Accesses control details for the current session, including authentication, API server, and debugging info.}
+%\usage{See examples below.}
+%\details{...}
+%\value{...}
 \author{Daniel T. Braithwaite}
 \seealso{\code{\link{Visualization}}, \code{\link{asFile}}}
 \examples{
-# show current authentication key (if set)
+\dontrun{
+# set and show current authentication key
+msession$setAuth()
+msession$setAuth(file="mykey.txt")
 msession$getAuth()
 
-# show available servers
+# show available and current servers, and set
 msession$servers()
-
-# show current server
 msession$server()
-
-# show recent URL (for debugging)
-msession$urls()
-
-\dontrun{
-# set authentication key
-msession$setAuth()
-
-# set server
 msession$server("http://api.metagenomics.anl.gov")
+
+# show recent API calls for debugging
+msession$urls()
 }
 }
