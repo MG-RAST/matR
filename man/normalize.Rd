@@ -1,17 +1,17 @@
 \name{normalize}
 \alias{normalize}
-\title{Centered and Scaled Logarithm of Abundance Data}
-\description{Centered and Scaled Logarithm of Abundance Data}
+\title{Log-scale and Center Matrix}
+\description{Centers and scales logarithm of entries of a numeric matrix}
 \usage{
 normalize(x, method = c("standard"), ...)
 }
 \arguments{
-  \item{x}{...}
-  \item{method}{...}
-  \item{...}{...}
+  \item{x}{matrix}
+  \item{method}{currently unused}
+  \item{...}{currently unused}
 }
-\details{...}
-\value{...}
+%\details{...}
+%\value{...}
 \author{Kevin P. Keegan, Daniel T. Braithwaite}
 \examples{
 #
