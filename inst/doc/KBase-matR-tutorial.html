@@ -20,36 +20,32 @@
 <b>Suggested Prerequisite Activities:</b> Gain some familiarity with R.  Online tutorials can be found at the <a href="http://www.r-project.org">R Language homepage</a>.  </p>
 
 <p>
-<b>Related Tutorials:</b> None.
-</p>
+<b>Notes:</b> 
+The following tutorial provides a brief overvie of matR functions. For a more detailed description of matR's capabilities, please see the <a href="">matR manual</a> </b>
 
 <p>
-<b>Related Tutorials:</b>
-</p>
-<p>
-<a id="menu">
-The following page presents a typical matR based analysis.  
-The individual steps are highlighted below, you can proceed through them
-sequentially, or view each separately:
-</a>  
-</p>
+<b>Related Tutorials:</b><a id="menu"> The following page presents a typical matR based analysis. The individual steps are highlighted below, you can proceed through them sequentially, or view each separately: </a>  
 
 
-<a HREF="#introduction">Introduction</a>
-<p></p>
-<a HREF="#installation">Installation</a>
-<p></p>
-<a HREF="#collections">Collections</a>
-<p></p>
-<a HREF="#built_in_demo">Using built in demonstrations</a>
-<p></p>
-<a HREF="#built_in_data">Using built in data</a>
-<p></p>
-<a HREF="#download">Downloading data</a>
-<p></p>
-<a HREF="#grouping">Downloading data</a>
-<p></p>
-<a HREF="#pcoa">Generate 2 and 3 dimensional PCoAs</a>
+
+<p><a HREF="#introduction">Introduction</a></p>
+
+<p><a HREF="#installation">Installation</a></p>
+<p><a HREF="#collections">Collections</a></p>
+<p><a HREF="#built_in_demo">Using built in demonstrations</a></p>
+<p><a HREF="#built_in_data">Using built in data</a></p>
+<p><a HREF="#download">Downloading data</a></p>
+<p><a HREF="#norm-box">Data normalization and distribution vizualization with boxplots</a></p>
+<p><a HREF="#grouping">Downloading data</a></p>
+<p><a HREF="#pcoa">Generate 2 and 3 dimensional PCoAs</a></p>
+<p><a HREF="#heat-dend">Generate heatmap-dendrogram</a></p>
+<p><a HREF="#stats">Performing statistical tests</a></p>
+<p><a HREF="#collections">Collections</a></p>
+<p><a HREF="#metadata">Metadata</a></p>
+<p><a HREF="#example">An additional analysis example</a></p>
+
+
+
 <p></p>
 
 
@@ -105,7 +101,10 @@ To see the contents of a built in data set, simply type the name of the list (e.
 <pre>
 > Marine
 </pre>
-The demo2 function stops for each line of comment or code it returns for easy viewing. Press enter to proceed through each line in a demonstration
+To see a summary of the samples contained in the data set <i>samples(data_set_name)</i>, e.g.:
+<pre>
+>samples(Marine)
+</pre>
 <p><a HREF="#menu">menu</a></p>
 
 
@@ -149,6 +148,28 @@ data return species level abundance data by default.  Note that for all default 
 <p><a HREF="#menu">menu</a></p>
 
 
+<a id="norm-box">
+<h1>Data normalization and vizualizing data distributions</h1>
+</a>
+A critical consideration in all analyses of abundance data is how to treat the data with respect to normalization and scaling.
+matR provides a simple function to all values in a single sample:
+
+<p><a href="http://www.codecogs.com/eqnedit.php?latex=x*_{s,i} = \frac{x_{s,i} - \bar{x}} {\sigma _{s}}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?x*_{s,i} = \frac{x_{s,i} - \bar{x}} {\sigma _{s}}" title="x*_{s,i} = \frac{x_{s,i} - \bar{x}} {\sigma _{s}}" /></a></p> 
+This procedure is outlined in <a HREF="http://catalog.loc.gov/cgi-bin/Pwebrecon.cgi?v3=1&ti=1,1&SEQ=20130417142822&Search_Arg=1-58488-327-8&Search_Code=STNO&CNT=100&PID=I61Qwpq77YeSlFk3loj6ROUmk80V&SID=1">Speed 2003 pp116-117</a>
+After this procedure has been applied to values from each sample, all values in the data set are scaled from [min..max] to [0..1].
+Briefly, each value (i) in a sample (s) is adjusted such that the mean of all values in the sample is 0 with a standard deviation of 1.
+You can perform matR normalization this way if your data is a matR collection:
+<pre> >normed_data <- normalize(my_collection$my_counts) </pre>
+or this way if your data are in the form of a matrix:
+<pre> >normed_data <- normalize(my_matrix) </pre>
+<p>Before you generate visualizations from, or apply statistical anlayses to your data, t is crucial to look at the data distributions. The easiest way to do this is to use the R(base) boxplot function.</p>
+<p>To produce a boxplot for the raw and normalized values used in the example above: </p>
+<pre> >boxplot(my_collection$my_counts) </pre>
+<pre> >boxplot(normed_data) </pre>
+Note that in the first example, boxplot is applied to a matrix contained in a collection ( the matrix "my_counts" contained in the collection "my_collection").  In the second example, boxplot is applied directly to a matrix object ( "normed_data" )
+<p>Observation of data distributions is an easy way to identify samples that may need to be culled (exhibit distributions that are too dissimilar from others), and can be used as a means to determine the class of statistical tests that  are most appropriate for the data (e.g. parametric tests for data that exhibit a normal distribution and non-parametric tests for data with non-normal distributions).  This is an extremely brief overview - users are encouraged to contact informatic statistical experts if there are any questions/doubts concerning data distributions and how they infomr data analyses. </p>
+<p><a HREF="#menu">menu</a></p>
+
 <a id="grouping">
 <h1>Sample grouping</h1>
 </a>
@@ -160,38 +181,56 @@ groups(my_collection) <- c(1,1,2,2)
 It is also possible to specify groups when a visualization or statistical analysis is performed.
 <p><a HREF="#menu">menu</a></p>
 
-
-
 <a id="pcoa">
 <h1>Generate 2 and 3 dimensional PCoAs</h1>
+<p>Using matR, it is easy to generate 2 and 3 dimmensional PCoAs.</p>
+<p>Below are examples to produce 2 and 3 dimmensional PCoAs from built in data</p> 
 </a>
-
-
-<p><a HREF="#menu">menu</a></p>
-
-
-
-
-<h1>Example</h1>
-We use a prepackaged collection of 24 metagenomes, fifteen from a fresh water sample, the others from a hot spring.
+<p>We use a prepackaged collection of 24 metagenomes (the "Waters" dataset), fifteen from a fresh water sample, the others from a hot spring.</p>
 <pre>
 > Waters
 > samples (Waters)
 </pre>
-We look at a principal coordinates analysis with samples colored by group:
+We can see that the first 15 samples are "<i>fresh</i>" water, the last 9 are "<i>spring</i>" 
+We generate groupings with this information: 
 <pre>
 > groups (Waters) <- c (rep (1, 15), rep (2, 9))
+</pre>
+Now the first 15 samples are in group "1", the last 9 are in group "2" -- note that group names can be numerical or text.
+Next we use the groupings to define colors for the PCoA plot:
+<pre>
 > col <- groups (Waters)
 > levels (col) <- c ("blue", "red")
 > col <- as.character (col)
+</pre>
+This created a "col" vector from the group numbers specified above, then changed each instance of "1" with "blue", "2" with "red"
+Note that R doesn't <i>know</i> which samples should be red and blue -- it uses the order of values in the "col" vector to determine coloring
+Now we can generate a simple 2 dimmensional PCoA - by default, we use the first two components (those that contain the largest amoung of variation in the data):
+<pre>
 > pco (Waters, comp = c (1,2), main = "fresh vs. spring water samples", col = col)
 </pre>
-We can also look at principal coordinates in three dimensions, or a heatmap:
+Creating a 3 dimensional PCoA from the same data is easy:
 <pre>
-> pco (Waters, comp = c (1,2,3), main = "fresh vs. spring water samples", color = col)
+pco (Waters, comp = c (1,2,3), main = "fresh vs. spring water samples", color = col)
+</pre>
+There are a number of additional options that will allow you to create PCoAs with additional options - specifying the distance metric etc. These are outlined in the <a href="">matR manual</a>  
+<p><a HREF="#menu">menu</a></p>
+
+<a id="heat-dend">
+<h1>Creating a heatmap-dendrogram</h1>
+<p>Using matR, you can also generate heatmap dendrograms of your data.</p>
+<p>Here we provide a simple a example using built-in data:</p>
+<pre>
 > heatmap (Waters)
 </pre>
-A statistical test such as Kruskal-Wallis can help identify the most significant rows (annotations) and sharpen the picture:
+As with pcoa - there are a number of option that can be used to customize this visualization.  These are outlined in much greater detail in the 
+<p><a HREF="#menu">menu</a></p>
+
+<a id="stat">
+<h1>Performing statistical tests</h1>
+<p>One of the most useful features of matR is it's ability to perform multiple tests that have been optimized for metagenomic data.  In addition, users are encouraged to use other packages to perform desired tests on their data.</p>
+<p>Here we provide simple examples of statistical tests built into matR using the built in "Waters" dataset.  The <a href="">matR manual</a> contains a much more complete and detailed description of all available statistical functions</p>
+<p>A statistical test such as Kruskal-Wallis can help identify the most significant rows (annotations) and sharpen the picture:</p>
 <pre>
 > results <- sigtest (Waters, test = "Kruskal-Wallis")
 </pre>
@@ -255,14 +294,12 @@ Significance testing could also be redone with annotations from a higher (or low
 > rownames (Waters$lev2) [results.lev2$stat$p.value < 0.005]
 </pre>
 We added a new view to the collection, and proceeded as before.
+<p><a HREF="#menu">menu</a></p>
 
 
-
-<h1>Functionality</h1>
-This tutorial provides an overview of functionality, by example.
 
 <a id="collections">
-<h2>Collections</h2>
+<h1>Collections</h1>
 </a>
 Metagenome collections are constructed using metagenome IDs.  For example:
 <pre>
@@ -301,7 +338,9 @@ that contains only the first four metagenomes.
 </pre>
 <p><a HREF="#menu">menu</a></p>
 
-<h2>Metadata</h2>
+<a id="metadata">
+<h1>Metadata</h1>
+</a>
 Metadata is a list of named elements with a hierarchical organization.  To select elements, an arbitrary number of index vectors may be specified.  For instance, we can use one index (of length one) to get all metadata from one metagenome:
 <pre>
 > mm <- metadata (cc)
@@ -326,7 +365,10 @@ These are just examples to show the flexibility of indexing metadata.  One other
 If a requested metadata field is missing from a metagenome, NA is placed instead.
 <p><a HREF="#menu">menu</a></p>
 
-<h2>Basic Analysis</h2>
+
+<a id="example">
+<h1>Basic Analysis Example</h1>
+</a>
 A very large library of statistical tools is available in the R language.   matR provides convenient wrappings of some useful procedures and visualizations.  The following examples use prepackaged datasets.
 <p>
 <!--<img alt="" src="boxplot.svg"><br>-->
@@ -361,7 +403,12 @@ Significance testing of annotations is the starting point for detailed analysis.
 </pre>
 Such analyses can be fruitfully iterated.
 
-<h2>Integration</h2>
+<p>This provides a simple example ofthe type of analyses that can be performed with matR. </p>
+<p>Users are strongly encourage to view the <a href="">matR manual</a> for a more detailed description of all functions and capabilities.</p>
+
+<p><a HREF="#menu">menu</a></p>
+
+<h1>Integration</h1>
 matR integrates easily with other R software.  Collection views are directly extracted as ordinary matrices with the $ operator, as above.  Metadata is an S3-classed character vector.  Visualization routines accept all standard graphical parameters.  Shortcuts are provided to write collection data and analyses to text files.
 
 <h1>Further Resources</h1>
