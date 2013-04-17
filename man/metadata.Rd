@@ -1,14 +1,15 @@
 \name{metadata}
 \alias{metadata}
+
 \title{Access Metadata of Collection}
 \description{Accesses metadata of an existing collection, or of specified metagenomes}
 \usage{metadata(x, ...)}
 \arguments{
-  \item{x}{...}
-  \item{\dots}{...}
+  \item{x}{collection or metagenome resource ID(s) (collection or character)}
+  \item{\dots}{currently unused}
 }
 \details{Metadata elements are accessed in various ways, by field name.  See below for examples.}
-\value{...}
+%\value{...}
 \references{
 \url{http://blog.metagenomics.anl.gov/metadata-in-mg-rast/},\cr
 \url{http://gensc.org/gc_wiki/index.php/MIxS}

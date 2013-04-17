@@ -7,20 +7,16 @@
 \alias{show,pco-method}
 \alias{summary,pco-method}
 
-\title{Class \code{"pco"}}
-\description{...}
-\section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("pco", ...)}.
-%%  ~~ describe objects here ~~ 
-}
+\title{class \code{"pco"}}
+\description{Container for results of a principal coordinates analysis}
 \section{Slots}{
   \describe{
-    \item{\code{.Data}:}{Object of class \code{"list"} ~~ }
+    \item{\code{.Data}:}{Object of class \code{"list"}}
   }
 }
 \section{Extends}{
-Class \code{"\linkS4class{list}"}, from data part.
-Class \code{"\linkS4class{analysis}"}, directly.
+Class \code{"\linkS4class{list}"}, from data part.\cr
+Class \code{"\linkS4class{analysis}"}, directly.\cr
 Class \code{"\linkS4class{vector}"}, by class "list", distance 2.
 }
 \section{Methods}{
@@ -32,7 +28,4 @@ Class \code{"\linkS4class{vector}"}, by class "list", distance 2.
 	 }
 }
 \seealso{\code{\link{pco}}}
-\examples{
-showClass("pco")
-}
 \keyword{classes}

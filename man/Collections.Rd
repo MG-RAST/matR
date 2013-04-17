@@ -8,11 +8,10 @@
 \alias{viewnames}
 \alias{viewnames<-}
 \alias{rownames}
-\title{Metagenome Collections for Analysis}
-\description{The basic component of analysis in \code{matR} is a matrix with columns labeled by metagenome ID
-and rows labeled by annotation,
-but there are various possibilities for the matrix content, and analyses often examine several such matrices 
-together.  Such a group of related matrices is called a \code{collection}.}
+\title{About Metagenome Collections}
+\description{The basic object of analysis in \code{matR} is a matrix, with columns labeled by metagenome ID and rows by annotation.
+There are various possibilities for the matrix content (constituting different \code{views}), and analyses may examine several such matrices 
+together.  A group of such matrices referring to the same metagenomes is called a \code{collection}.}
 \usage{
 collection (x, ...)
 samples (x, ...)
@@ -24,19 +23,18 @@ viewnames (x) <- value
 rownames (x, ...)
 }
 \arguments{
-  \item{x}{...}
-  \item{value}{...}
-  \item{...}{...}
+  \item{x}{collection or metagenome IDs}
+  \item{value}{replacement value}
+  \item{...}{currently unused}
 }
-\details{
-Remember to set an authentication key when attempting access to private data.
-}
-\value{...}
+\note{Private data requires an authentication key.}
+%\value{...}
 \author{Daniel T. Braithwaite}
 \seealso{
 	\code{\link{Authentication}}, 
 	\code{\link{default.views}}, 
-	\code{\link{collection-methods}}}
+	\code{\link{collection-methods}},
+	\code{\link{coerce-methods}}}
 \examples{
 # make collection from single string of IDs directly:
 cc <- collection ("4441679.3 4441680.3 4441682.3 4441695.3 4441696.3 4440463.3 4440464.3")
