@@ -1,11 +1,11 @@
 \name{dependencies}
 \alias{dependencies}
 \alias{Dependencies}
-\title{Install Package Dependencies of matR}
-\description{Attempts to install certain add-on packages (some of which are essential)}
+\title{Install Packages Needed for Full Functionality}
+\description{Attempts to install certain add-on packages, some optional, others essential}
 \usage{dependencies(prompt = TRUE)}
 \arguments{
-  \item{prompt}{...}
+  \item{prompt}{TRUE for interactive use; FALSE for use in scripts}
 }
 \details{
 This routine attempts to install, from repositories chosen by the user, the packages listed in the \code{Suggests:} field of the \code{matR} \code{DESCRIPTION} file.  

@@ -2,10 +2,9 @@
 \docType{methods}
 \alias{heatmap-methods}
 \alias{heatmap,ANY-method}
-\title{Methods for Function \code{heatmap} in Package \pkg{matR}}
-\description{
- ~~ Methods for function \code{heatmap} in package \pkg{matR} ~~
-}
+
+\title{methods for function \code{heatmap} in package \pkg{matR}}
+\description{...}
 \section{Methods}{
 \describe{
 \item{\code{signature(x = "ANY")}}{...}

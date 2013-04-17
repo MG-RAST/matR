@@ -13,8 +13,8 @@
 \alias{mgm.ex}
 \alias{mgp.ex}
 \docType{data}
-\title{Example Data Objects in matR}
-\description{Various datasets predefined in \code{matR} for toying around}
+\title{Metagenome Collection Example Datasets}
+\description{Various metagenome collections packaged as examples, useful for offline exploration and demonstration}
 \usage{
 Coral
 Guts
@@ -34,6 +34,11 @@ mgp.ex
 	\code{\link{Collections}}
 }
 \examples{
-#
+samples(Hospital)
+views(Coral)
+
+pco(Guts)
+
+heatmap(Waters)
 }
 \keyword{datasets}

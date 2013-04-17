@@ -3,7 +3,8 @@
 \alias{pco-methods}
 \alias{pco,ANY-method}
 \alias{pco,collection-method}
-\title{Methods for Function \code{pco} in Package \pkg{matR}}
+
+\title{methods for function \code{pco} in package \pkg{matR}}
 \description{...}
 \section{Methods}{
 \describe{

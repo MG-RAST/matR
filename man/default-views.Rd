@@ -2,7 +2,7 @@
 \alias{default.views}
 \alias{view.params}
 \docType{data}
-\title{Attributes of Views of Metagenomes Collections}
+\title{Data Attributes of Metagenome Collections}
 \description{Data objects provided to explain possible views of a metagenome collection}
 \usage{
 default.views
@@ -11,7 +11,10 @@ view.params
 \details{\code{view.params} shows parameters and allowed values for specifying views of a collection.  \code{default.views} shows the named views included by default, when a collection is created with no views explicitly specified.}
 \examples{
 default.views
+default.views$raw
+
 view.params
+view.params$level$organism
 }
 \keyword{datasets}
 
