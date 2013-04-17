@@ -1,17 +1,20 @@
 \name{render}
 \alias{render}
 \alias{Visualization}
-\title{Visualize Collections and Analyses}
-\description{Produces default visualizations of metegenome collections and certain analyses}
+
+\title{Produce Graphic of Computed Analysis}
+\description{
+Produces default visualizations of analysis products.  Under construction.  Methods are intended for:  collection, pco, parcoord, heatmap, sigtest.
+}
 \usage{
 render(x, ...)
 }
 \arguments{
-  \item{x}{...}
+  \item{x}{renderable object (see above)}
   \item{\dots}{...}
 }
-\details{...}
-\value{...}
+%\details{...}
+%\value{...}
 \author{Daniel T. Braithwaite}
 \seealso{
 \code{\link{Collections}}

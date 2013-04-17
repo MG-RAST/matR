@@ -1,19 +1,17 @@
 \name{heatmap}
 \alias{heatmap}
-\title{Create Heatmap of Collection}
-\description{Creates heatmap of the specified view of a collection.}
+\title{Heatmap of Collection}
+\description{Creates heatmap of the specified view of a collection.  This function wraps and customizes \code{heatmap.2()} from package \code{gplots}.}
 \usage{heatmap(x, ...)}
 \arguments{
-  \item{x}{...}
-  \item{\dots}{...}
+  \item{x}{collection}
+  \item{\dots}{further arguments as indicated below}
 }
-\details{
-  This function wraps function \code{heatmap.2} from package \code{gplots}.
-}
-\value{...}
-\author{Daniel T. Braithwaite}
+%\details{...}
+%\value{...}
+\author{Kevin P. Keegan, Daniel T. Braithwaite}
+\seealso{\code{\link{heatmap-methods}}}
 \examples{
-
 # simple use
 heatmap (Waters)
 

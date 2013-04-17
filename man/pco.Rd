@@ -1,16 +1,15 @@
 \name{pco}
 \alias{pco}
-\title{Perform Principal Coordinates Analysis of Collection}
-\description{Performs PCoA analysis, returning the results and plotting in two or three dimensions}
+
+\title{Principal Coordinates Analysis of Collection}
+\description{Performs PCoA analysis, returning the results and plotting in two or three dimensions. This function wraps function \code{pco()} from package \code{ecodist}.}
 \usage{pco(x, ...)}
 \arguments{
-  \item{x}{...}
-  \item{\dots}{...}
+  \item{x}{collection}
+  \item{\dots}{further arguments as indicated below}
 }
-\details{
-  This function wraps function \code{pco} from package \code{ecodist}.
-}
-\value{...}
+%\details{}
+%\value{...}
 \author{Kevin P. Keegan, Daniel T. Braithwaite}
 \seealso{
 \code{\link{pco-methods}}, \code{\link{pco-class}}, \code{\link{render}}

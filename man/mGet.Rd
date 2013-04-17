@@ -1,35 +1,33 @@
 \name{mGet}
 \alias{mGet}
+
 \title{Access API Resources by ID}
 \description{Retrieves API resources with some helpful structure and processing}
 \usage{
 	mGet(resource = "matrix", x, with = NULL, ..., parse = TRUE, enClass = FALSE, file = NULL)
 }
 \arguments{
-	\item{resource}{...}
-	\item{x}{...}
-	\item{with}{...}
-	\item{...}{...}
-	\item{parse}{...}
-	\item{enClass}{...}
-	\item{file}{...}
+	\item{resource}{name of resource for call (length-one character)}
+	\item{x}{resource IDs for call (character)}
+	\item{with}{parameters for call (named list)}
+	\item{...}{additional parameters}
+	\item{parse}{parse result as JSON (logical)}
+	\item{enClass}{convert to a structured object where possible (logical)}
+	\item{file}{file name for retrieved resource (character)}
 }
 \details{
-The purpose of \code{mGet} is to provide structured access to API resources in an \code{R}-friendly manner.  
-Most functionality of the API documented at \url{http://api.metagenomics.anl.gov/api2.cgi} is available.
-Familiarity with that API is necessary to use \code{mGet} effectively.
+\code{mGet} provides structured access to API resources in an \code{R}-friendly manner.  
+Most functionality of the API documented at \url{http://api.metagenomics.anl.gov} is available through this interface.
 
-\code{resource}s returned may be files or data, and may or may not be transmitted in \code{JSON}.
+Retrieved \code{resource}s may be files or data, and may or may not be transmitted in \code{JSON}.
 API resources implemented by \code{mGet} require an identifier (\code{x}) appropriate to the kind of resource requested.
 
-In some calls, \code{x} is permitted to contain multiple values.  Various formats for \code{x} are understood.  
+In some calls, \code{x} can contain multiple values.  Various formats for \code{x} are understood.  
 See \link{Identifiers} for more details.
 
 Authentication is required to access to private data.
 }
-\value{
-...
-}
+\value{Various, according to the call issued.}
 \author{Daniel Braithwaite}
 \seealso{
 \code{\link{callRaw}}, 

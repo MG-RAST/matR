@@ -5,12 +5,10 @@
 ### Attribute "grouped" factors the vector, currently only by metagenome,
 ### but potentially by project as well.
 
-
-a metadata object m is a S3-classed, named character vector carrying two attributes:
-
-attr(m,"metagenome") --- factor ("mgm4441980.3", "mgm4441980.3", "mgm4441980.3", "mgm4441980.3", ....)
-attr(m,"project") --- factor ("mgp10", "mgp10", "mgp10","mgp10", "mgp12", "mgp12", "mgp12", ....)
-
+### a metadata object m is a S3-classed, named character vector carrying two attributes:
+###
+### attr(m,"metagenome") --- factor ("mgm4441980.3", "mgm4441980.3", "mgm4441980.3", "mgm4441980.3", ....)
+### attr(m,"project") --- factor ("mgp10", "mgp10", "mgp10","mgp10", "mgp12", "mgp12", "mgp12", ....)
 
 ##################################################################################################################
 

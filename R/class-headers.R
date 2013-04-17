@@ -51,6 +51,7 @@ setGeneric ("summary")
 # selections.R
 setGeneric ("samples", function (x, ...) standardGeneric ("samples"))
 setGeneric ("metadata", function (x, ...) standardGeneric ("metadata"))
+setGeneric ("metadata<-", function (x, value, ...) standardGeneric ("metadata<-"))
 setGeneric ("names")
 setGeneric ("names<-")
 setGeneric ("groups", function (x, ...) standardGeneric ("groups"))
@@ -68,10 +69,11 @@ setGeneric ("collection", function (x, ...) standardGeneric ("collection"))
 setGeneric ("dist", function (x, ...) standardGeneric ("dist"))
 
 # analysis.R
+setGeneric ("boxplot", function (x, ...) standardGeneric ("boxplot"))
+setGeneric ("parcoord", function (x, ...) standardGeneric ("parcoord"))
 setGeneric ("pco", function (x, ...) standardGeneric ("pco"))
 setGeneric ("heatmap", function (x, ...) standardGeneric ("heatmap"))
 setGeneric ("sigtest", function (x, ...) standardGeneric ("sigtest"))
-setGeneric ("parcoord", function (x, ...) standardGeneric ("parcoord"))
 
 # render.R
 setGeneric ("render", function (x, ...) standardGeneric ("render"))
