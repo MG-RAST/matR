@@ -341,6 +341,38 @@ matR:::view.finish(c(entry="fun"))
 matR:::view.finish(c(annot="org", hi="sing"))
 matR:::view.finish(c(annot="org", hi="lca"))
 
+####################################################################################
+### analysis-utils.R:
+###
+### dist()
+### group.dist()
+### dist2groups()
+### randomize()
+### remove.singletons()
+### normalize()
+### sigtest()
+####################################################################################
+
+
+####################################################################################
+### test: group.dist()
+####################################################################################
+rm <- matrix (runif (30), nr = 5, nc = 6)
+groups <- factor (c ('a','a','a','b','b'))
+group.dist (rm, groups)
+
+
+####################################################################################
+### test: randomize()
+####################################################################################
+
+randomize (matrix (runif (30), 10, 3), n = 5)
+randomize (Guts$raw, n = 10, method = "sample")
+randomize (Guts$raw, n = 10, method = "rowwise", FUN = mean)
+randomize (Guts$raw, n = 10, method = "dataset", FUN = colSums)
+randomize (Guts$raw, n = 10, method = "complete", FUN = 
+	function (m) sigtest (as.collection (m), groups = c (1,1,1,2,2,2,2)))
+
 
 ####################################################################################
 ### finally, test examples (maybe the package validator does this anyway?)
@@ -361,3 +393,5 @@ utils::example("heatmap")
 utils::example("heatmap")
 utils::example("heatmap")
 utils::example("heatmap")
+
+

@@ -73,7 +73,7 @@ setGeneric ("boxplot", function (x, ...) standardGeneric ("boxplot"))
 setGeneric ("parcoord", function (x, ...) standardGeneric ("parcoord"))
 setGeneric ("pco", function (x, ...) standardGeneric ("pco"))
 setGeneric ("heatmap", function (x, ...) standardGeneric ("heatmap"))
-setGeneric ("sigtest", function (x, ...) standardGeneric ("sigtest"))
+# setGeneric ("sigtest", function (x, ...) standardGeneric ("sigtest"))
 
 # render.R
 setGeneric ("render", function (x, ...) standardGeneric ("render"))

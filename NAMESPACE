@@ -18,7 +18,7 @@ exportMethods (samples, names, "names<-", groups, "groups<-", rownames, metadata
 exportMethods (dist)
 export (normalize, remove.singletons, randomize)
 
-exportMethods (boxplot, pco, heatmap, sigtest, parcoord, render, asFile)
+exportMethods (boxplot, pco, heatmap, parcoord, render, asFile)
 
 S3method (print, metadata)
 S3method (summary, metadata)
