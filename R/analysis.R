@@ -34,11 +34,12 @@ setMethod ("boxplot", "ANY", prior ("boxplot"))
 ### built on MASS::parcoord() and graphics::matplot() and matR::sigtest()
 ####################################################
 setMethod ("parcoord", "collection", function  (x, 
-																								view = length (views (x)),
 																								groups = groups (x),
 																								test = "Kruskal-Wallis", 
 																								p.lim = 0.05, 
-																								n.lim = 25, ...) {
+																								n.lim = 25, ...,
+																								view = length (views (x))
+																								) {
 	reqPack ("MASS")
 	par <- list ()
 	par$main <- "parallel coordinates"
@@ -79,7 +80,7 @@ setMethod ("pco", "collection", function (x,
 # elements are: labels, colors, groups(x), names(x), samples(x)
 # see above: why do I use "rownames(x[[view]])"?
 # fix col v. color once and for all --- it is NOT impossible
-par <- list ()
+	par <- list ()
 	par$main <- "principal coordinates"
 	par$labels <- if (length (names (x)) != 0) names (x) else samples (x)
 	if (length (groups (x)) != 0) par$labels <- paste (par$labels, " (", groups (x), ")", sep = "")

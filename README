@@ -22,6 +22,6 @@ During an R session, matR functionality is only available after loading the pack
 
 INSTALLATION
 A current installation of R (http://www.r-project.org) is required.  The package can be downloaded from GitHub, or easily installed from within R:
-> install.packages("matR", repo="http://dunkirk.mcs.anl.gov/~braithwaite/matR", type="source")
+> install.packages("matR", repo="http://dunkirk.mcs.anl.gov/~braithwaite/R", type="source")
 > library(matR)
 > dependencies()

@@ -10,74 +10,84 @@
 \setlength{\parskip}{.3cm}
 
 
-\pagestyle{fancy}
+\pagestyle{empty}
 
 \begin{document}
-%\fancyfoot{}
 
+%
+% add email address
+% remove page number
+% most parameters have defaults
+%
+%
+%\fancyfoot{}
 %\lfoot{\emph{http://metagenomics.anl.gov}}
 %\cfoot{}
 %\rfoot{\emph{mg-rast@mcs.anl.gov}}
+%\texttt{hazPackages()}						&	show what dependencies are already installed	&	\\
+%\texttt{utils::example("\emph{function}")}	&	see examples of how to use \texttt{\emph{function}}	\\
+%\texttt{rowgroups(cc, "v") <- xx}			&	group rows of a view for analysis				&	\texttt{xx} is a vector or factor								\\
+
+
 
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r}
-\raggedright{\bf{QUICK REFERENCE}}	&	\raggedleft{\bf{matR: metagenomics analysis tools for R} (v0.9.9)}
-\end{tabular*}
-
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l l}
-\bf{install \& load} \\
+\bf{QUICK REFERENCE}	&	\bf{matR (0.9.9): metagenomics analysis tools for R}
+\end{tabular*}									\\
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l r}
+			&	\emph{mg-rast@mcs.anl.gov}
+\end{tabular*}									\\
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l}
+\bf{installation and help}		&					\\
 \hline
-\texttt{install.packages("matR", type="source", repo=}		&	obtain the matR package for your system		&	\\
-\texttt{  "http://dunkirk.mcs.anl.gov/\~{}braithwaite/matR")}	&							&	\\
-\texttt{library(matR)}						&	load matR into your current session		&	\\
-\texttt{dependencies(prompt=TRUE)}				&	obtain packages used by matR			&	use \texttt{prompt=FALSE} for batch scripting	\\
-\texttt{hazPackages()}						&	show what dependencies are already installed	&	\\
-\texttt{msession\$setAuth()}					&	enter authentication key for private data	&	\\[0.3cm]
-
-\bf{getting help} \\
-\hline
-\texttt{demo(package="matR")}			&	see a list of available demos				\\
-\texttt{demo2("\emph{demo}")}			&	step through \texttt{\emph{demo}}			\\[0.3cm]
-%\texttt{package?matR}				&	main help page with list of topics			\\
-%\texttt{utils::example("\emph{function}")}	&	see examples of how to use \texttt{\emph{function}}	\\
+\texttt{dependencies(prompt=)}					&	obtain supporting packages (with or without interactive prompting)				\\
+\texttt{msession\$setAuth(file=)}				&	enter key for private data (use \texttt{file} to read from disk)				\\
+\texttt{demo(package="matR"); demo2("demo")}			&	list demos; or step through demo named \texttt{"demo"}						\\
+\texttt{data(package="matR")}					&	list metagenome collections prepackaged								\\
+\texttt{?command; library(help="matR"); msession\$debug()}	&	get help and examples for \texttt{command}; see index of help topics; create debug report	\\[0.3cm]
 
 \bf{metagenome collections} \\
 \hline
-\texttt{cc <- collection(x, file=NULL)}		&	create collection				&	specify IDs with \texttt{x} or \texttt{file} but not both		\\
-\texttt{collection(x, n1=v1, n2=v2, ...)}	&	create collection with custom views		&	\texttt{v1}, \texttt{v2}, \ldots are character vectors (see below)	\\
-\texttt{collection(x, L)}			&	create collection with views from a list	&	\texttt{L} is a named list						\\
-\texttt{samples(cc)}				&	samples of a collection				&										\\
-\texttt{names(cc) <- xx}			&	name (or rename) samples			&	\texttt{xx} is a character vector					\\
-\texttt{groups(cc) <- xx}			&	group samples					&	\texttt{xx} is a factor		 					\\
-\texttt{asFile(cc, view="count", file, ...)}	&	write view to text file														\\[0.3cm]
+\texttt{cc <- collection(x, ..., file=)}	&	create collection with sample IDs as in \texttt{x} or \texttt{file}, and data views specified by \texttt{...} \\
+\texttt{samples(cc); projects(cc)}		&	see samples in a collection, or projects appearing (fully or partially) in a collection			\\
+\texttt{views(cc)}				&	see data views included in a collection									\\
+\texttt{names(cc); names(cc) <- x}		&	see sample names; or name or rename samples								\\
+\texttt{groups(cc); groups(cc) <- x}		&	see sample grouping; or group samples of a collection							\\
+\texttt{cc[sub]; as(x, "collection")}		&	subset collection, retaining samples \texttt{sub}; formally convert matrix \texttt{x} to collection	\\[0.3cm]
 
-\bf{views of a collection} \\
+\bf{data views in a collection} \\
 \hline
-\texttt{c(annot="function", ...)}			&	view described by character vector				&	valid elements: \texttt{annot}, \texttt{entry}, \texttt{source}, \texttt{level} 		\\
-\texttt{view.params}					&	valid values for all view elements																	\\
-\texttt{cc\$v <- xx}					&	add new view to existing collection				&	\texttt{xx} describes the new view								\\
-\texttt{views(cc)}					&	views of a collection																		\\
-\texttt{viewnames(cc) <- xx}				&	name (or rename) views						&	\texttt{xx} is a character vector								\\
-%\texttt{rowgroups(cc, "v") <- xx}			&	group rows of a view for analysis				&	\texttt{xx} is a vector or factor								\\
-\texttt{cc\$v}						&	view, as ordinary matrix					&	\texttt{v} is the name of an existing view							\\
-\texttt{cc[["\emph{v}", full=FALSE, plain=FALSE]]}	&	view, with options						&	\texttt{\emph{v}} is the name of an existing view						\\ [0.3cm]
+\texttt{view.params; default.views}			&	see parameters that define data views and valid values; or see default data views	\\
+\texttt{cc\$raw}					&	extract data view named \texttt{raw} as an ordinary matrix				\\
+\texttt{cc[["raw", full=, plain=]]}			&	extract data view named \texttt{raw} with options					\\
+\texttt{views(cc); viewnames(cc) <- x}			&	see or rename data views of a collection						\\
+\texttt{x <- c(annot=, entry=, level=, source=, hit=)}	& 	 describe a data view by selecting values for view parameters				\\
+\texttt{cc\$new <- x}					&	add data view named \texttt{new}, as described by \texttt{x}, to an existing collection		\\[0.3cm]
 
 \bf{metadata} \\
 \hline
-\texttt{mm <- metadata(x, file=NULL, ...)}		&	metadata of metagenomes			&	specify IDs with \texttt{x} or \texttt{file} but not both	\\
-\texttt{metadata(cc)}					&	metadata of collection			&									\\
-\texttt{mm[x, y, ..., bygroup=FALSE]}			&	metadata elements			&	\texttt{x}, \texttt{y}, \ldots are character vectors		\\
-\texttt{asFile(mm, file, ...)}				&	write metadata to text file											\\[0.3cm]
+\texttt{metadata(cc)}						&	all metadata of a collection											\\
+\texttt{metadata(cc)["str"]}					&	metadata fields matching specifier \texttt{"str"}								\\
+\texttt{metadata(cc)["str1", "str2", ..., bygroup=]}		&	fields matching any of given specifiers; \texttt{NA} inserted as needed when \texttt{bygroup=TRUE}		\\
+\texttt{mm <- metadata(x, file=)}				&	retrieve (only) metadata of samples specified by ID by \texttt{x} or \texttt{file}				\\[0.3cm]
 
-\bf{analysis and visualization} \\
+\bf{analysis utilities} (\texttt{x} is \texttt{matrix}) \\
 \hline
-\texttt{render(cc, view="normed", ...)}					&	summarize view diversity			&	graphical parameters as in \emph{boxplot}			\\
-\texttt{pco(cc, view="normed", comp=c(1,2,3),} 				&	compute and plot principal components		&	graphical parameters as in \emph{plot} and \emph{points}	\\
-\texttt{    method="bray-curtis", ...)}																			\\
-\texttt{heatmap(cc, view="normed", rows=TRUE, ...)} 			&	compute and view heatmap dendrogram		&	graphical parameters as in \emph{gplots::heatmap.2}		\\
-\texttt{sigtest(cc, view="normed", test, fdr.level, qvalue)}		&	apply significance test				&	may also be applied to an ordinary matrix			\\
-\texttt{asFile(x, file, ...)}						&	write analysis to text file												\\
+\texttt{remove.singletons(x, lim.entry=, lim.row=)}				&	replace entries with zero and/or remove rows below a threshold							\\
+\texttt{normalize(x, method=)}							&	apply logarithmic transformation, scale, and center to [0,1]							\\
+\texttt{dist(x, y=, groups=, method=)}						&	compute distance between columns of \texttt{x}; from \texttt{y} to each; or m.p.d. of \texttt{groups}		\\
+\texttt{sigtest(x, groups, test=, fdr.level=, qvalue=)}				&	apply significance \texttt{test} across rows to \texttt{groups} of columns of \texttt{x}			\\
+\texttt{randomize(x, n=, method=, seed=, FUN=)}					&	apply \texttt{FUN} to each of \texttt{n} permutations of \texttt{x} according to \texttt{method}		\\[0.3cm]
+
+\bf{analysis routines} (\texttt{cc} is \texttt{collection}) \\
+\hline
+\texttt{boxplot(cc, ..., view=)}					&	summarize distribution of annotations per sample; graphical parameters as in \emph{boxplot}		\\
+\texttt{pco(cc, comp=, method=, ..., view=, rows=)}			&	compute and plot principal coordinates; graphical parameters as in \emph{plot} and \emph{points}	\\
+\texttt{heatmap(cc, ..., view=, rows=)}					&	compute and view heatmap dendrogram; graphical parameters as in \emph{gplots::heatmap.2}		\\
+\texttt{parcoord(cc, groups=, test=, p.lim=, n.lim=, ..., view=)}	&	compute and plot parallel coordinates restricted by \texttt{p.lim} or \texttt{n.lim}			\\
 
 \end{tabular*}
+
+\end{document}
 
 
 
@@ -127,5 +137,3 @@
 \texttt{res <- sigtest(cc)}							&	apply default significance test						\\
 
 \end{tabular*}
-
-\end{document}

@@ -162,7 +162,7 @@ setMethod ("selection", "character", function (x, resource = c ("project", "samp
 setMethod ("selection", "numeric", getMethod ("selection", "character"))
 
 print.selection <- function (x, ...) {
-	if (is.null (names (x)) && 0 == length (groups (x))) print (selection (x))
+	if (is.null (names (x)) && 0 == length (groups (x))) cat (selection (x), "\n")
 	else {
 		s <- selection (x)
 		n <- names (x)

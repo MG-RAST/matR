@@ -83,7 +83,9 @@ group.dist <- function (x, groups = factor (rep (1, ncol (x))), method = "euclid
 # output:		vector of MPD distance(s) from given vector to given matrix or its groups
 ###########################################################################
 dist2groups <- function (v, x, groups = factor(1), ..., bycol = TRUE) {
-	...
+	merge (x, v)
+	group.dist
+	
 }
 
 

@@ -62,13 +62,18 @@ setAs ("character", "collection",
 setAs ("matrix", "collection",
 			 def = 
 			 	function (from) {
-			 		if (is.null (colnames (from))) warning ("samples are unidentified due to missing colnames")
+			 		if (is.null (colnames (from))) {
+			 			warning ("samples are unidentified due to missing colnames")
+			 			colnames (from) <- 1:ncol(from)
+			 		}
 			 		warning ("collection will have no metadata")
 			 		warning ("view of collection will be unidentified")
+			 		dummy.metadata <- character(0)
+			 		class (dummy.metadata) <- "metadata"
 			 		new ("collection",
-			 				 view = list (data = from),
-			 				 sel = new ("selection", ids = colnames (from), groups = factor(0), metadata = character(0), 
-			 				 					 id.spec = character(0), resource.spec = character(0), metadata.extent = "none"))
+			 				 views = list (data = from),
+			 				 sel = new ("selection", ids = colnames (from), groups = factor(), metadata = dummy.metadata, 
+			 				 					 ids.spec = character(0), resource.spec = character(0), metadata.extent = "none"))
 			 	})
 setAs ("biom", "collection",
 			 def = function (from) {

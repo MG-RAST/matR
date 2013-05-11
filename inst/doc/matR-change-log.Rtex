@@ -9,6 +9,11 @@
 
 Note: this document is a summary and skimps on some details.  See runtime help for exact function syntax.
 
+\section*{3 May 2013 --- Version 0.9.9}
+
+Quick reference revised and brought up-to-date.
+
+
 \section*{28 January 2013 --- Version 0.9.9}
 One-liners are here!  Analysis products are returned in a list as usual, additionally containing the implied metagenome collection.  For instance: \\
 \texttt{> p <- pco("4441679.3 4441680.3 4441696.3 4440463.3 4440464.3", main="my title", color="blue")} \\
