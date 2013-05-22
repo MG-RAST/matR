@@ -29,64 +29,66 @@
 # and we need additional arguments.
 #
 # this problem and solution are repeated for other analysis functions
-###########################################################################
-setMethod ("dist", "matrix", 
-					 function (x, 
-					 					method = c ("euclidean", "bray-curtis", "jaccard", "mahalanobis", "sorensen", 
-					 											"difference", "maximum", "manhattan", "canberra", "binary", "minkowski"), 
-					 					..., bycol = FALSE) {
-					 	if (bycol) x <- t (x)
-					 	method <- match.arg (method)
-					 	if (method %in% c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference")) {
-					 		reqPack ("ecodist")
-					 		ecodist::distance (x, method = method, ...)
-					 	}
-					 	else stats::dist (x, method = method, ...)
-					 } )
-setMethod ("dist", "ANY", prior ("dist"))
 
+#------> MUST RETURN STANDARD DISTANCE OBJECT FOR STANDARD CALLS
 
-###########################################################################
 # group.dist() gives both intra- and inter-group mean pairwise distance
 # input:		matrix with column groupings
 # output:		symmetric matrix with entry (i,j) equal to MPD between groups i and j
-###########################################################################
-group.dist <- function (x, groups = factor (rep (1, ncol (x))), method = "euclidean", ..., bycol = TRUE) {
-	x <- as.matrix (x)
-	groups <- as.factor (groups)
-	if (bycol) x <- t(x)
-	n <- nlevels (groups)
-	group.names <- levels (groups)
 
-	D <- as.matrix (dist (x, method))
-	rownames (D) <- colnames (D) <- groups
-	
-	dummy <- matrix (0, nrow = n, ncol = n, 
-									 dimnames = list (group.names, group.names))
-	row.groups <- as.vector (row (dummy, TRUE))
-	col.groups <- as.vector (col (dummy, TRUE))
-	
-	res <- matrix (mapply (function (r, c, D) mean (D [rownames (D) == r, colnames (D) == c]),
-												 row.groups, col.groups, MoreArgs = list (D)),
-								 nrow = n, ncol = n,
-								 dimnames = list (group.names, group.names))
-	
-	k <- as.vector (table (groups))
-	diag (res) <- diag (res) * k / (k - 1)
-	res
-}
-
-
-###########################################################################
-# dist2group() computes distance from a single metagenome to the groups inputs:
+# dist2group() computes distance from a single metagenome to groups:
 # input:		vector, matrix, and (optionally) groups for matrix columns
 # output:		vector of MPD distance(s) from given vector to given matrix or its groups
 ###########################################################################
-dist2groups <- function (v, x, groups = factor(1), ..., bycol = TRUE) {
-	merge (x, v)
-	group.dist
-	
-}
+setMethod ("dist", "matrix", 
+					 function (x, y = NULL, groups = NULL,
+					 					method = c ("euclidean", "bray-curtis", "jaccard", "mahalanobis", "sorensen", 
+					 											"difference", "maximum", "manhattan", "canberra", "binary", "minkowski"), 
+					 					..., bycol = FALSE) {
+					 	method <- match.arg (method)
+					 	if (bycol) x <- t (x)
+					 	if (is.null (groups)) {
+					 		groups <- if (!any (duplicated (rownames (x))) && !is.null (rownames (x)))
+					 			rownames (x)
+					 		else 1:nrow (x)
+					 		nogroups <- TRUE
+					 	}
+					 	groups <- as.factor (groups)
+					 	
+					 	dist.fun <- if (method %in% c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference")) {
+					 		reqPack ("ecodist")
+					 		ecodist::distance
+					 	}
+					 	else stats::dist
+					 	
+					 	if (!is.null (y)) return (
+					 		tapply (
+					 			apply (x, 1, function (x, y) dist.fun (rbind (x, y), method = method), y), 
+					 			groups, mean))
+
+					 	D <- as.matrix (dist.fun (x, method))
+					 	rownames (D) <- colnames (D) <- groups
+
+					 	n <- nlevels (groups)
+					 	group.names <- levels (groups)
+					 	dummy <- matrix (0, nrow = n, ncol = n, 
+					 									 dimnames = list (group.names, group.names))
+					 	row.groups <- as.vector (row (dummy, TRUE))
+					 	col.groups <- as.vector (col (dummy, TRUE))
+					 	res <- matrix (mapply (function (r, c, D) mean (D [rownames (D) == r, colnames (D) == c]),
+					 												 row.groups, col.groups, MoreArgs = list (D)),
+					 								 nrow = n, ncol = n,
+					 								 dimnames = list (group.names, group.names))
+
+# note: we assume table() gives results per level in the same _order_ as levels()
+# is it right??
+					 	k <- table (groups)
+					 	k <- k / ifelse (k == 1, 1, k - 1)
+					 	diag (res) <- k * diag (res)
+					 	if (nogroups) as.dist (res)
+					 	else res
+					 } )
+setMethod ("dist", "ANY", prior ("dist"))
 
 
 ###########################################################################

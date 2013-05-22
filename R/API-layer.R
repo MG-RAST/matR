@@ -35,19 +35,24 @@
 # always return file name(s) if result is a file
 #
 
-callRaw <- function (call, file = NULL) {
+callRaw <- function (call, parse = TRUE, file = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
 	urlStr <- paste (msession$server (), call, conj, "auth=", msession$getAuth (), sep = "")
 	optMessage ("requesting ", urlStr)
 	msession$urls (urlStr)
+  parse <- if (parse) {
+  	reqPack ("RJSONIO")
+  	function (x) fromJSON (x, asText = TRUE, simplify = TRUE)
+  } 
+	else identity
 	if (!is.null (file)) {
-		e <- try (download.file (urlStr, file, quiet = TRUE))
+		e <- try (parse (download.file (urlStr, file, quiet = TRUE)))
 		if (inherits (e, "try-error")) e
 		else file
-		}
-	else try (readLines (urlStr, warn = FALSE))
 	}
+	else try (parse (readLines (urlStr, warn = FALSE)))
+}
 
 ############################################
 ### Now these are routines intended for general use

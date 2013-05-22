@@ -69,7 +69,7 @@ setMethod ("pco", "collection", function (x,
 																					components = c (1,2,3), 
 																					method = "bray-curtis", ...) {
 	reqPack ("ecodist")
-	D <- dist (x [[view]], method, bycol = TRUE)
+	D <- as.dist (dist (x [[view]], method = method, bycol = TRUE))
 	P <- ecodist::pco (D)
 	scaled <- P$values / sum (P$values)
 	names (scaled) <- paste ("PCO", 1:length(scaled), sep = "")

@@ -355,12 +355,38 @@ matR:::view.finish(c(annot="org", hi="lca"))
 
 
 ####################################################################################
-### test: group.dist()
+### test: dist()
 ####################################################################################
-rm <- matrix (runif (30), nr = 5, nc = 6)
-groups <- factor (c ('a','a','a','b','b'))
-group.dist (rm, groups)
 
+
+m <- matrix (sample (45, repl = TRUE), nr = 5, nc = 9)
+
+rownames (m) <- letters [1:5]
+colnames (m) <- LETTERS [1:9]
+
+dist(m)
+dist(m, bycol = TRUE)
+dist(m, method = "bray-curtis")
+dist(m, method = "bray-curtis", bycol = TRUE)
+
+# get mpd intra- and inter-group
+dist(m, groups = c (1,1,2,2,2))
+dist(m, groups = c (1,1,1,2,2,2,3,3,3), bycol = TRUE)
+
+# singleton group has intra-group distance zero
+dist(m, groups = c (1,1,2,2,3))
+dist(m, groups = c (1,1,1,2,2,2,2,2,3), bycol = TRUE)
+
+y = runif (9)
+z = runif (5)
+dist(m, y)
+dist(m, z, bycol = TRUE)
+
+dist(m, y, groups = c (1,1,2,2,2))
+dist(m, z, groups = c (1,1,1,2,2,2,3,3,3), bycol = TRUE)
+
+dist(m, y, groups = c (1,1,2,2,3))
+dist(m, z, groups = c (1,1,1,2,2,2,2,2,3), bycol = TRUE)
 
 ####################################################################################
 ### test: randomize()

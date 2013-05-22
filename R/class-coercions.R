@@ -68,13 +68,14 @@ setAs ("matrix", "collection",
 			 		}
 			 		warning ("collection will have no metadata")
 			 		warning ("view of collection will be unidentified")
-			 		dummy.metadata <- character(0)
+			 		dummy.metadata <- character()
 			 		class (dummy.metadata) <- "metadata"
 			 		new ("collection",
 			 				 views = list (data = from),
 			 				 sel = new ("selection", ids = colnames (from), groups = factor(), metadata = dummy.metadata, 
-			 				 					 ids.spec = character(0), resource.spec = character(0), metadata.extent = "none"))
+			 				 					 ids.spec = character(), resource.spec = character(), metadata.extent = "none"))
 			 	})
+
 setAs ("biom", "collection",
 			 def = function (from) {
 			 	bb <- from.biom (from)

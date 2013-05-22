@@ -74,16 +74,16 @@
 \hline
 \texttt{remove.singletons(x, lim.entry=, lim.row=)}				&	replace entries with zero and/or remove rows below a threshold							\\
 \texttt{normalize(x, method=)}							&	apply logarithmic transformation, scale, and center to [0,1]							\\
-\texttt{dist(x, y=, groups=, method=)}						&	compute distance between columns of \texttt{x}; from \texttt{y} to each; or m.p.d. of \texttt{groups}		\\
+\texttt{dist(x, y=, groups=, method=)}						&	compute distances among columns of \texttt{x}; mean-pairwise among \texttt{groups}; or from \texttt{y} to each	\\
 \texttt{sigtest(x, groups, test=, fdr.level=, qvalue=)}				&	apply significance \texttt{test} across rows to \texttt{groups} of columns of \texttt{x}			\\
 \texttt{randomize(x, n=, method=, seed=, FUN=)}					&	apply \texttt{FUN} to each of \texttt{n} permutations of \texttt{x} according to \texttt{method}		\\[0.3cm]
 
 \bf{analysis routines} (\texttt{cc} is \texttt{collection}) \\
 \hline
-\texttt{boxplot(cc, ..., view=)}					&	summarize distribution of annotations per sample; graphical parameters as in \emph{boxplot}		\\
-\texttt{pco(cc, comp=, method=, ..., view=, rows=)}			&	compute and plot principal coordinates; graphical parameters as in \emph{plot} and \emph{points}	\\
-\texttt{heatmap(cc, ..., view=, rows=)}					&	compute and view heatmap dendrogram; graphical parameters as in \emph{gplots::heatmap.2}		\\
-\texttt{parcoord(cc, groups=, test=, p.lim=, n.lim=, ..., view=)}	&	compute and plot parallel coordinates restricted by \texttt{p.lim} or \texttt{n.lim}			\\
+\texttt{boxplot(cc, ..., view=)}						&	summarize distribution of annotations per sample; graphical parameters as in \emph{boxplot}		\\
+\texttt{pco(cc, comp=, method=, ..., view=, rows=)}				&	compute and plot principal coordinates; graphical parameters as in \emph{plot} and \emph{points}	\\
+\texttt{heatmap(cc, ..., view=, rows=)}						&	compute and view heatmap dendrogram; graphical parameters as in \emph{gplots::heatmap.2}		\\
+\texttt{parcoord(cc, groups=, test=, p.lim=, n.lim=, ..., view=, rows=)}	&	compute and plot \texttt{n.lim} parallel coordinates (or all with p-value less than \texttt{p.lim})	\\
 
 \end{tabular*}
 

@@ -16,7 +16,7 @@ exportMethods ("[[", "$", "[[<-", "$<-")
 exportMethods (samples, names, "names<-", groups, "groups<-", rownames, metadata, views, viewnames, "viewnames<-", selection, collection)
 
 exportMethods (dist)
-export (normalize, remove.singletons, randomize)
+export (normalize, remove.singletons, randomize, sigtest)
 
 exportMethods (boxplot, pco, heatmap, parcoord, render, asFile)
 
