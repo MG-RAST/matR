@@ -67,7 +67,7 @@ setMethod ("parcoord", "ANY", prior ("parcoord"))
 setMethod ("pco", "collection", function (x, 
 																					view = length (views (x)), 
 																					components = c (1,2,3), 
-																					method = "bray-curtis", ...) {
+																					method = "euclidean", ...) {
 	reqPack ("ecodist")
 	D <- as.dist (dist (x [[view]], method = method, bycol = TRUE))
 	P <- ecodist::pco (D)
@@ -147,3 +147,12 @@ setMethod ("heatmap", "collection", function (x,
 })
 setMethod ("heatmap", "ANY", prior ("heatmap"))
 
+
+####################################################################################
+### incomplete concept for permutation testing
+####################################################################################
+
+# summarize.dist <- function (x, groups) sapply (groups, function (g) mean (dist x [g,]))
+# iterations <- randomize (cc$nsn, n = 1000, method = ..., summarize.dist, metadata (cc) ["source.and.seqtype"])
+# iterations <- simplify2array (iterations)
+# averages <- apply (iterations, 1, mean)

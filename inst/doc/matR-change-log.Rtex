@@ -2,6 +2,7 @@
 %\VignetteKeyword{matR}
 
 \documentclass{article}
+\usepackage{soul}
 \setlength{\parindent}{0cm}
 \setlength{\parskip}{.3cm}
 
@@ -13,10 +14,10 @@ Note: this document is a summary and skimps on some details.  See runtime help f
 Quick reference has been thoroughly revised to reflect extended changes to plumbing and miscellaneous features.
 
 \section*{28 January 2013 --- Version 0.9.9}
-One-liners are here!  Analysis products are returned in a list as usual, additionally containing the implied metagenome collection.  For instance: \\
+\st{One-liners are here!  Analysis products are returned in a list as usual, additionally containing the implied metagenome collection.  For instance: \\
 \texttt{> p <- pco("4441679.3 4441680.3 4441696.3 4440463.3 4440464.3", main="my title", color="blue")} \\
 \texttt{> pco(p\$collection, main="and now, in red", color="red")} \\
-Similarly implemented for: \texttt{heatmap}, \texttt{sigtest}.
+Similarly implemented for: \texttt{heatmap}, \texttt{sigtest}.}
 
 These routines apply to any matrix: \\
 \texttt{dist(x, method="bray-curtis")}			\\

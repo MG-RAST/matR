@@ -93,10 +93,20 @@ setAs ("biom", "collection",
 setAs ("collection", "matrix",
 			 def = function (from)
 			 	from [[length (views (from)), plain = TRUE]])
+
 setAs ("biom", "matrix",
 			 def = function (from) {
-			 	from.biom (from) $ data
-			 })
+			 	m <- matrix (unlist (from$data), ncol = 3, byrow = TRUE)
+			 	m <- as.matrix (Matrix::sparseMatrix (i = 1 + m [,1], j = 1 + m [,2], x = m [,3]))
+			 	rownames (m) <- sapply (from$rows, `[[`, i = "id")
+			 	colnames (m) <- sapply (from$columns, `[[`, i = "id")
+
+			 	rownames.ext <- unname (sapply (from$rows, `[[`, "metadata", simplify = TRUE))
+			 	len <- max (sapply (rownames.ext, length))
+			 	rownames.ext <- sapply (rownames.ext, `length<-`, len, simplify = TRUE)
+			 	attr (m, "rownames.ext") <- if (len > 1) t (rownames.ext) else rownames.ext
+			 	m
+			 	})
 
 setAs ("list", "biom",
 			 def = function (from) { },

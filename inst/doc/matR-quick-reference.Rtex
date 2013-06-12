@@ -56,12 +56,12 @@
 
 \bf{data views in a collection} \\
 \hline
-\texttt{view.params; default.views}			&	see parameters that define data views and valid values; or see default data views	\\
-\texttt{cc\$raw}					&	extract data view named \texttt{raw} as an ordinary matrix				\\
-\texttt{cc[["raw", full=, plain=]]}			&	extract data view named \texttt{raw} with options					\\
-\texttt{views(cc); viewnames(cc) <- x}			&	see or rename data views of a collection						\\
-\texttt{x <- c(annot=, entry=, level=, source=, hit=)}	& 	 describe a data view by selecting values for view parameters				\\
-\texttt{cc\$new <- x}					&	add data view named \texttt{new}, as described by \texttt{x}, to an existing collection		\\[0.3cm]
+\texttt{view.parameters; view.descriptions; view.defaults}	&	see parameters that define data views and meaning of valid values; or see default views	\\
+\texttt{cc\$raw}						&	extract data view named \texttt{raw} as an ordinary matrix				\\
+\texttt{cc[["raw", full=, plain=]]}				&	extract data view named \texttt{raw} with options					\\
+\texttt{views(cc); viewnames(cc) <- x}				&	see or rename data views of a collection						\\
+\texttt{x <- c(annot=, entry=, level=, source=, hit=)}		& 	 describe a data view by selecting values for view parameters				\\
+\texttt{cc\$new <- x}						&	add data view named \texttt{new}, as described by \texttt{x}, to an existing collection		\\[0.3cm]
 
 \bf{metadata} \\
 \hline

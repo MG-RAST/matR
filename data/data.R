@@ -10,24 +10,73 @@
 # Note: objects declared here are not available to package code 
 # until runtime (an empirical discovery).
 
-view.params <- list (
+view.parameters <- list (
 	entry = c ("counts", "normed.counts", "ns.counts", "ns.normed.counts", "evalue", "length", "percentid"),
 	annot = c ("function", "organism"),
 	level = list (organism = c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain"),
 								`function` = c ("level1", "level2", "level3", "function")),
 	source = list (rna = c ("M5RNA", "RDP", "Greengenes", "LSU", "SSU"),
-									 ontology = c ("NOG", "COG", "KO", "Subsystems"),
-									 protein = c ("M5NR", "SwissProt", "GenBank", "IMG", "SEED", "TrEMBL", "RefSeq", "PATRIC", 
-									 						 "eggNOG", "KEGG")),
+								 ontology = c ("NOG", "COG", "KO", "Subsystems"),
+								 protein = c ("M5NR", "SwissProt", "GenBank", "IMG", "SEED", "TrEMBL", "RefSeq", "PATRIC", 
+								 						 "eggNOG", "KEGG")),
 	hit = list (organism = c ("all", "single", "lca"),
 							`function` = "na"))
 
-# possibly parameters should be specified in full for each view, here (and possibly not)
-default.views <- list (
+view.descriptions <- list (
+	entry = list (counts = "abundance counts per annotation and per sample", 
+								normed.counts = "abundance counts per annotation and per sample with normalize() applied",
+								ns.counts = "abundance counts per annotation and per sample with remove.singletons() applied",
+								ns.normed.counts = "abundance counts per annotation and per sample with remove.singletons() and then normalize() applied",
+								evalue = "average annotation evalue",
+								length = "average length of annotated reads per annotation and per sample",
+								percentid = "average percent identity of annotated reads with reference per annotation and per sample"),
+	annot = list (`function` = "functional annotations",
+								organism = "taxonomic annotations"),
+	level = list (domain = "taxonomic annotations at domain level",
+								phylum = "taxonomic annotations at phylum level",
+								class = "taxonomic annotations at class level",
+								order = "taxonomic annotations at order level",
+								family = "taxonomic annotations at family level",
+								genus = "taxonomic annotations at genus level",
+								species = "taxonomic annotations at species level",
+								strain = "taxonomic annotations at strain level",
+								level1 = "functional annotations at level1",
+								level2 = "functional annotations at level2",
+								level3 = "functional annotations at level3",
+								`function` = "functional annotations at \"level4\", i.e., function"),
+	source = list (M5RNA = "annotations from the M5RNA",
+								 RDP = "annotations from RDP",
+								 Greengenes = "annotations from Greengenes",
+								 LSU = "annotations from LSU",
+								 SSU = "annotations from SSU",
+								 NOG = "annotations from NOG",
+								 COG = "annotations from COG",
+								 KO = "annotations from KO",
+								 Subsystems = "annotations from Subsystems",
+								 M5NR = "annotations from the M5NR",
+								 SwissProt = "annotations from SwissProt",
+								 GenBank = "annotations from GenBank",
+								 IMG = "annotations from IMG",
+								 SEED = "annotations from SEED",
+								 TrEMBL = "annotations from TrEMBL",
+								 RefSeq = "annotations from RefSeq",
+								 PATRIC = "annotations from PATRIC",
+								 eggNOG = "annotations from eggNOG",
+								 KEGG = "annotations from KEGG"),
+	hit = list (all = "taxonomic abundance counts based on all organisms that map to top hit per read-feature",
+							single = "taxonomic abundance counts based on a single organism for top hit per read-feature",
+							lca = "taxonomic abundance counts based on the Least Common Ancestor for all organisms (M5NR and M5RNA only) that map to hits from a read-feature",
+							na = "hit parameter must be \"na\" for functional annotations"))
+
+view.defaults <- list (
 	raw = c (entry = "counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
 	nrm = c (entry = "normed.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
 	nsc = c (entry = "ns.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
 	nsn = c (entry = "ns.normed.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"))
+
+# backward-compatibility
+view.params <- view.parameters
+default.views <- view.defaults
 
 id.ex <- list (
 	project = "92",

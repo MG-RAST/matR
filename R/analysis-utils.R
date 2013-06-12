@@ -53,6 +53,7 @@ setMethod ("dist", "matrix",
 					 		else 1:nrow (x)
 					 		nogroups <- TRUE
 					 	}
+					 	else nogroups <- FALSE
 					 	groups <- as.factor (groups)
 					 	
 					 	dist.fun <- if (method %in% c ("bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference")) {
@@ -80,7 +81,7 @@ setMethod ("dist", "matrix",
 					 								 nrow = n, ncol = n,
 					 								 dimnames = list (group.names, group.names))
 
-# note: we assume table() gives results per level in the same _order_ as levels()
+# note: we assume table() gives results per level in the _same_order_ as levels()
 # is it right??
 					 	k <- table (groups)
 					 	k <- k / ifelse (k == 1, 1, k - 1)
@@ -109,17 +110,20 @@ remove.singletons <- function (x, lim.entry = 1, lim.row = 1, ...) {
 # it can occur that a column is uniformly zero;
 # na.rm is necessary for such cases
 ###########################################################################
-normalize <- function (x, method = c ("standard"), ...) {
-	method <- match.arg (method)
-	x <- as.matrix (x)
-	x [is.na (x)] <- 0
-	x <- log2 (x + 1)
-	mu <- colMeans (x)
-	sigm <- unlist (sapply (as.data.frame (x), sd))
-	x <- t ((t (x) - mu) / sigm)
-	shift <- min (x, na.rm = TRUE)
-	scale <- max (x, na.rm = TRUE) - shift
-	if (scale != 0) x <- (x - shift) / scale
+normalize <- function (x, method = c("standard"), ...) {
+	method <- match.arg(method)
+	x <- as.matrix(x)
+	x[is.na(x)] <- 0
+	x <- log2(x + 1)
+	mu <- matrix(apply(x, 2, mean), nr = nrow(x), nc = ncol(x),
+							 byrow = TRUE)
+	sigm <- apply(x, 2, sd)
+	sigm <- matrix(ifelse(sigm == 0, 1, sigm), nr = nrow(x),
+								 nc = ncol(x), byrow = TRUE)
+	x <- (x - mu)/sigm
+	shift <- min(x, na.rm = TRUE)
+	scale <- max(x, na.rm = TRUE) - shift
+	if (scale != 0) x <- (x - shift)/scale
 	x
 }
 
