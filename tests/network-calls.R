@@ -105,30 +105,50 @@ collection ("mgm4441679.3 mgm4441680.3 mgm4441682.3 mgm4441695.3 mgm4441696.3 mg
 # 	"similarity", "status", "user"
 # mGet is the generic matR interface to these; examples (not comprehesive) below
 
-temp.filename <- tempfile()
+tmp <- tempfile()
+
+######################################################
+### !!! THESE DO NOT CRASH BUT THEY DO NOT WORK EITHER
+######################################################
 
 # basic syntax and options available for any API resource
 mGet ("abundanceprofile", "mgm4441679.3")
-mGet ("abundanceprofile", "mgm4441679.3", file = temp.filename)
 mGet ("abundanceprofile", "mgm4441679.3", parse = FALSE)
+mGet ("abundanceprofile", "mgm4441679.3", file = tmp)
+mGet ("abundanceprofile", "mgm4441679.3", parse = FALSE, file = tmp)
 
+# a smattering of examples...
 # with optional parameters specific to the requested resource
+# THESE CALLS WORK ...
+mGet ("matrix", "4441679.3 4441680.3 4441682.3", name = "function")
+mGet ("matrix", "4441679.3 4441680.3 4441682.3", name = "function", asynchronous = 1)
+mGet ("project", "mgp24", verbosity = "minimal")
+mGet ("project", "mgp24", verbosity = "full")
+mGet ("project", NULL, verbosity = "full")
+mGet ("project", NULL, verbosity = "full", limit = 20)
+mGet ("metagenome", "mgm4441679.3", verbosity = "minimal")
+mGet ("metagenome", "mgm4441679.3", verbosity = "full")
+mGet ("metagenome", NULL, verbosity = "full")
+mGet ("metagenome", NULL, verbosity = "full", limit = 20)
+
+# THESE MAY OR MAY NOT ...
 mGet ("abundanceprofile", "mgm4441679.3", source = "NOG")
 mGet ("abundanceprofile", "mgm4441679.3", identity = 80)
 mGet ("abundanceprofile", "mgm4441679.3", length = 20)
 mGet ("abundanceprofile", "mgm4441679.3", evalue = 4)
 mGet ("abundanceprofile", "mgm4441679.3", type = "organism")
 
-mGet ("matrix", scrubIds (guts), name = "function")
-mGet ("matrix", scrubIds (guts), name = "function", asynchronous = 1)
-
-mGet ("project", "24", verbosity = "minimal")
-
-unlink (filename)
-
 ####################################################################################
 ### various invocations of callRaw()
 ####################################################################################
 
-callRaw ("matrix?id=mgm4441679.3&...")
+callRaw (call="project?verbosity=minimal&limit=0")
+callRaw (call="metagenome?verbosity=minimal&limit=0")
 
+callRaw (call="project?verbosity=minimal&limit=0", parse = FALSE)
+callRaw (call="metagenome?verbosity=minimal&limit=0", parse = FALSE)
+
+callRaw (call="project?verbosity=minimal&limit=0", parse = FALSE, file = tmp)
+callRaw (call="metagenome?verbosity=minimal&limit=0", parse = FALSE, file = tmp)
+
+unlink (tmp)

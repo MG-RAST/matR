@@ -18,9 +18,9 @@ setMethod ("collection", "selection", function (x, ...) {
 	views <- list (...)
 	if (! length (views)) views <- default.views
 	else if (is.list (views [[1]])) views <- views [[1]]
-	
+
 	L <- list()
-	#	length (L) <- length (names (views))
+#	length (L) <- length (names (views))
 	cc <- new ("collection", views = L, sel = x)
 	for (e in names (views)) cc [[e]] <- views [[e]]
 	cc
@@ -39,20 +39,17 @@ setMethod ("collection", "ANY", function (x = "", ..., wait = FALSE, file = NULL
 ## the logic of that is worked out in recursion that guarantees the existence of needed "auxiliary" view(s).
 ################################################################################################
 
-setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value = "character"), function (x, i, value) {
-	v <- view.finish (value)
-	if (! length (view.which (v, x))) {
-		
-		
-		
-		
-		x@views [[i]] <- view.container.create (mGet ("matrix", 
-																									selection (x), 
-																									with = view.as.API.call (v)), v)
-		message ("request posted: ", view.printable (v))
-	}
-	x
-})
+setMethod ("[[<-", signature (x = "collection", i= "ANY", j = "missing", value = "character"), 
+					 function (x, i, value) {
+					 	v <- view.finish (value)
+					 	if (! length (view.which (v, x))) {
+					 		x@views [[i]] <- view.container.create (mGet ("matrix", 
+					 																									selection (x), 
+					 																									with = view.as.API.call (v)), v)
+					 		message ("request posted: ", view.printable (v))
+					 	}
+					 	x
+					 })
 
 ################################################################################################
 ## to avoid interfering with attributes used by the Matrix package, we decide that "plain" requires "full"
@@ -123,12 +120,9 @@ setMethod ("names", "collection", function (x) names (x@sel))
 setMethod ("names<-", "collection", function (x, value) { names (x@sel) <- value ; x })
 setMethod ("groups", "collection", function (x) groups (x@sel))
 setMethod ("groups<-", "collection", function (x, value) { groups (x@sel) <- value ; x })
-
-# views as here returned are reusable to construct new collections
 setMethod ("views", "collection", function (x) lapply (x@views, view.extract))
 setMethod ("viewnames", "collection", function (x) names (x@views))
 setMethod ("viewnames<-", "collection", function (x, value) { names (x@views) <- value ; x })
-
 setMethod ("metadata", "collection", function (x) metadata (x@sel))
 
 print.collection <- function (x, ...) {
@@ -153,15 +147,12 @@ setMethod ("show", "collection", function (object) print.collection (object))
 # returns: the matrix --- or, terminates with error if it's not ready yet
 view.container.create <- function (ref, v)
 	function (want.dummy = FALSE) {
-		if (class (ref) == "character") {
-			ref <<- mGet ("status", ref)
-			if (class (ref) != "character")
-				attributes (ref) <<- append (attributes (ref), v)
-			else if (want.dummy) {
-				ref <- matrix ()
-				attributes (ref) <- append (attributes (ref), v)
-			}		
+		if (class (ref) != "matrix") {
+			r <- mGet ("status", ref)
+			if (class (r) == "matrix") ref <<- r
+			else if (want.dummy) ref <- matrix (r)
 			else stop ("data is pending")
+			attributes (ref) <<- append (attributes (ref), v)
 		}
 		ref
 	}

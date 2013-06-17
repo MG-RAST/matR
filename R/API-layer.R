@@ -39,7 +39,7 @@ callRaw <- function (call, parse = TRUE, file = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
 	urlStr <- paste (msession$server (), call, conj, "auth=", msession$getAuth (), sep = "")
-	optMessage ("requesting ", urlStr)
+  optMessage ("requesting ", urlStr)
 	msession$urls (urlStr)
   parse <- if (parse) {
   	reqPack ("RJSONIO")
@@ -90,11 +90,11 @@ mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
 ### ... callRaw etc ...
 	}
 
-# mGet will implement special handling of API resources, one-by-one.
-# but in the meantime, any resource can be called through a general interface,
+# mGet implements special handling of API resources, one-by-one
+# but also any resource can be called through the general interface.
 # named parameters specified in ... or as a list in "with"
 # additionally, parameter "x" represents the assumption that an ID of some kind is usually required
-mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClass = FALSE, file = NULL) { 
+mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClass = TRUE, file = NULL) { 
 	args <- append (with, list (...))
 
 # here we call the old API for metadata only
@@ -107,46 +107,43 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 		return (y)
 	}
 
-######################################
-### pre-process
-######################################
-	callStr <- 
-		switch (resource,
-						"matrix" = { name <- args$name
-												 args$name <- NULL
-												 paste (resource, "/", name, "?",
-												 			 paste ("id", x, sep = "=", collapse = "&"), "&",
-												 			 paste (names (args), unname (args), sep = "=", collapse = "&"),
-												 			 sep = "") },
-						"status" = paste (resource, "/", x, sep = ""),
-						paste (resource, "?", 
-									 paste (names (args), unname (args), sep = "=", collapse = "&"),
-									 sep = ""))
-
-######################################
-### request
-######################################
-	y <- try (callRaw (callStr, parse = FALSE, file))
-	if (!parse) return (y)
-	reqPack ("RJSONIO")
-	y <- try (fromJSON (y, asText = TRUE, simplify = FALSE))
-
-######################################
-### post-process
-######################################
+	callStr <- switch (resource,
+										 matrix = { name <- args$name
+										 					 args$name <- NULL
+										 					 paste (resource, "/", name, "?",
+										 					 			 paste ("id", scrubIds (x), sep = "=", collapse = "&"), "&",
+										 					 			 paste (names (args), unname (args), sep = "=", collapse = "&"),
+										 					 			 sep = "") },
+										 status = paste (resource, "/", x, sep = ""),
+										 sample = ,
+										 project = ,
+										 library = ,
+										 metagenome = paste (resource, "/",
+										 										scrubIds (x), "?",
+										 										paste (names (args), unname (args), sep = "=", collapse = "&"),
+										 										sep = ""),
+										 paste (resource, "?", paste (names (args), unname (args), sep = "=", collapse = "&"), sep = ""))
+# as.list() is needed for indexing in what follows, 
+# in case the JSON object is simplified to an atomic vector
+	y <- as.list (callRaw (callStr, parse, file))
+	if (!parse || !enClass) return (y)
 	switch (resource,
-					matrix =
-						if (! isTRUE (as.logical (args$asynchronous))) {
-							class (y) <- "biom"
-							as (y, "matrix")
-						}
-						else y$id,
-					status = 
-						if (isTRUE (y$status == "done")) {
-							class (y$data) <- "biom"
-							as (y$data, "matrix")
-						}
-						else y$id,
+					matrix = if (isTRUE (as.logical (args$asynchronous))) y$id else {
+						class (y) <- "biom"
+						as (y, "matrix") },
+					status = if (!isTRUE (y$status == "done")) y$id else {
+						y <- y$data
+						rownames.ext <- unname (sapply (y$rows, `[[`, "metadata", simplify = TRUE))
+						len <- max (sapply (rownames.ext, length))
+						rownames.ext <- sapply (rownames.ext, `length<-`, len, simplify = TRUE)
+						class (y) <- "biom"
+						y <- as (y, "matrix")
+						attr (y, "rownames.ext") <- if (len > 1) t (rownames.ext) else rownames.ext
+						y },
+					sample = ,
+					project = ,
+					library = ,
+					metagenome = ,
 					y)
 }
 

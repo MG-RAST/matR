@@ -19,6 +19,7 @@ boxplot (Guts, names = paste ("sample", 1:length (Guts), sep = ""))
 boxplot (Guts, names = projects (Guts, factor = TRUE))
 boxplot (Guts, names = samples (Guts))
 
+# !!! STILL ENTIRELY FANCIFUL
 # label by metadata 
 # boxplot (Guts, names = "*host_common_name")
 # boxplot (Guts, names = "*project.id")
@@ -49,16 +50,16 @@ pco (Guts, names = paste ("sample", 1:length (Guts), sep = ""))
 pco (Guts, names = projects (Guts, factor = TRUE))
 pco (Guts, names = samples (Guts))
 
+# !!! STILL ENTIRELY FANCIFUL
 # label by metadata
-pco (cc1, col = "*seq_meth", pch = "*project.id", labels = "")
-pco (cc2, col = "*env_package.type", pch = "*project.id", labels = "")
+# pco (cc1, col = "*seq_meth", pch = "*project.id", labels = "")
+# pco (cc2, col = "*env_package.type", pch = "*project.id", labels = "")
 # label, color, shape:  explicitly (as above), automatically, by metadata, by groups, by sample names, or by ID
-XXXXXXXXXXXXXXXXXXXXXXXXXXX
-colors1 <- c ("red", "red", "red", "blue", "blue", "orange", "orange")
-colors2 <- list (c ("red", "blue", "orange"))
-md <- "*host_common_name"
-pco (Guts, col = colors1)
-pco (Guts, col = c ())
+# colors1 <- c ("red", "red", "red", "blue", "blue", "orange", "orange")
+# colors2 <- list (c ("red", "blue", "orange"))
+# md <- "*host_common_name"
+# pco (Guts, col = colors1)
+# pco (Guts, col = c ())
 
 # graphical parameters as found in ?scatterplot3d::scatterplot3d and ?graphics::points:
 # pco (Guts, ...)
@@ -74,15 +75,17 @@ heatmap (Guts, view = "raw", rows = row.subset)
 # "labels", "names", and "labCol" synonymous
 heatmap (Guts, labels = paste ("sample", 1:length (Guts), sep = ""))
 heatmap (Guts, names = paste ("sample", 1:length (Guts), sep = ""))
+# !!! STILL ENTIRELY FANCIFUL
 # label: explicitly (as above), by metadata, by groups, by sample names, or by ID
-heatmap (Guts, labels = "*host_common_name")
+# heatmap (Guts, labels = "*host_common_name")
 gg <- groups (Guts) ; groups (Guts) <- c ("A", "A", "A", "B", "B", "C", "C") ; heatmap (Guts) ; groups (Guts) <- gg
 heatmap (Guts)
 nn <- names (Guts) ; names (Guts) <- NULL ; heatmap (Guts) ; names (Guts) <- nn
 # graphical parameters as found in ?gplots::heatmap2
 heatmap (Guts, main = "", colsep = "", labRow = "", labCol = "", col = )
+# !!! STILL ENTIRELY FANCIFUL
 # use of project information in analyses:
-heatmap (cc4, labels = "*project.id")
+# heatmap (cc4, labels = "*project.id")
 pnames <- factor (metadata (cc4) ["project.id"])
 levels (pnames) <- c ("A", "B", "C")
 heatmap (cc4, labels = as.character (pnames))
@@ -100,12 +103,12 @@ groups (Guts) <- c (1,1,1,2,2,3,3)
 parcoord (Guts)
 # plot top n significant functions, instead of functions meeting a significance threshhold
 parcoord (Guts, view = "nrm", groups = c (1,1,1,2,2,3,3), test = "Kruskal.Wallis", n.lim = 25)
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 # color, linetype, linewidth: explicitly, by metadata, by groups
-col, lty, lwd
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+# col, lty, lwd
+
 # ... function labels, sample labels ... needs to be worked out
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 # graphical parameters as found in ?MASS::parcoord and ?graphics::matplot
 parcoord (Guts, main = "my title")
 # restore groups

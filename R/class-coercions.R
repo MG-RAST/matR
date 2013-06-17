@@ -3,6 +3,81 @@
 ### Here we define coercions between "matrix", "biom", "collection", "character", and files.
 ##################################################################################################################
 
+#####################################################################################
+# For coercion I would rather have this syntax but don't yet really understand it.
+#
+# as.collection <- function (from) as (from, "collection")
+# as.biom <- function (from) as (from, "biom")
+# as.matrix <- ....?
+#####################################################################################
+
+setAs ("character", "biom",
+			 function (from) {
+			 	class (from) <- "biom"
+			 	from
+			 })
+
+#####################################################################################
+### we allow that a biom object is either parsed or unparsed JSON
+
+setAs ("biom", "list", 
+			 function (from) { 
+			 	if (typeof (from) != "list") {
+			 		reqPack ("RJSONIO")
+			 		from <- fromJSON (from, asText = TRUE, simplify = TRUE)
+			 	}
+			 	class (from) <- "list"
+			 	from
+			 })
+setAs ("biom", "matrix", 
+			 function (from) {
+			 	from <- as (from, "list")
+			 	m <- matrix (unlist (from$data), ncol = 3, byrow = TRUE)
+			 	m <- as.matrix (Matrix::sparseMatrix (i = 1 + m [,1], j = 1 + m [,2], x = m [,3]))
+			 	try (rownames (m) <- sapply (from$rows, `[[`, i = "id"))
+			 	try (colnames (m) <- sapply (from$columns, `[[`, i = "id"))
+			 	m
+			 })
+setAs ("biom", "collection",
+### !!! THIS SHOULD CHANGE SOONER OR LATER, TO PRESERVE METADATA FROM THE BIOM OBJECT
+			 def = function (from) as (as (from, "matrix"), "collection"))
+
+#####################################################################################
+
+# setAs ("matrix", "biom",
+# 			 def = function (from) {
+# ### THIS IS GOING TO TAKE SOME TIME; MUST cf. BIOME FORMAT...
+# 			 	})
+setAs ("matrix", "collection",
+			 def = 
+			 	function (from) {
+			 		if (is.null (colnames (from))) {
+			 			warning ("samples are unidentified due to missing colnames")
+			 			colnames (from) <- 1:ncol(from)
+			 		}
+			 		warning ("collection will have no metadata")
+			 		warning ("view of collection will be unidentified")
+			 		dummy.metadata <- character()
+			 		class (dummy.metadata) <- "metadata"
+			 		new ("collection",
+			 				 views = list (x = function (want.dummy = FALSE) from),
+### !!! AM I POSSIBLY REORDERING THE COLUMNS INCORRECTLY, HERE?
+			 				 sel = new ("selection", ids = colnames (from), groups = factor(), metadata = dummy.metadata, 
+			 				 					 ids.spec = character(), resource.spec = character(), metadata.extent = "none"))
+			 	})
+
+#####################################################################################
+
+setAs ("collection", "matrix",
+			 def = function (from)
+			 	from [[length (views (from)), plain = TRUE]])
+# setAs ("collection", "biom",
+# 			 def = function (from) { 
+# ### THIS IS GOING TO TAKE SOME TIME; MUST cf. BIOME FORMAT...
+# 			 	})
+
+
+
 ##################################################################################################################
 ### "asFile" methods to export matR objects.
 ### 
@@ -22,149 +97,66 @@
 ### should return name(s) of written file.
 ##################################################################################################################
 
-from.biom <- function (x) {
-	
-}
+### !!! NOT THE RIGHT WAY TO ESTABLISH A DEFAULT METHOD
+# asFile <- function (x, file, ...) save (x, file = file)
 
+# setMethod ("asFile", "list", function (x, file, ...)
+# 	for (j in 1:length(x)) asFile (x [[j]], file [j]))
 
-# this function should return a list of components in maximally simple data structures
-setAs ("biom", "list", 
-			 def = function (from) {
-			 	reqPack ("RJSONIO")
-			 	bb <- fromJSON (from, asText = TRUE, simplify = TRUE)
-			 	
-			 	# bulletproof this - do a better check
-# 			 	if (length (setdiff (c ("data", "rows", "columns"), names (y))) != 0) warning ("bad format in received resource")
-# 			 	
-# 			 	m <- matrix (unlist (bb$data), ncol = 3, byrow = TRUE)
-# 			 	m <- as.matrix (Matrix::sparseMatrix (i = 1 + m [,1], j = 1 + m [,2], x = m [,3]))
-# 			 	
-# 			 	# bulletproof this
-# 			 	rownames (m) <- sapply (y$rows, `[[`, i = "id")
-# 			 	colnames (m) <- sapply (y$columns, `[[`, i = "id")
-# 			 	
-# 			 	# need to confirm this understanding of the format - can't rely on what was asked for; have to look for what is there
-# 			 	s <- switch (name, `function` = "ontology", organism = "taxonomy", NULL)
-# 			 	
-# 			 	rh <- try(lapply(y$rows, function(x) unlist(x[[c("metadata", s)]])))
-# 			 	if (inherits(rh, "try-error")) warning ("annotation hierarchy unavailable")
-# 			 	hlen <- max(sapply(rh, length))
-# 			 	attr(m, "rowhier") <- sapply(rh, `length<-`, hlen)
-# 			 	if (hlen != 1) attr(m, "rowhier") <- t (attr(m, "rowhier"))
-			 	
-			 	# return list corresponding to biom format specification
-#			 	list ( = , = , = ,)
-			 })
+setMethod ("asFile", "character", 
+					 function (x, file, ...) {
+					 	write.table (data.frame (x), file = file, sep = "\t", quote = FALSE, 
+					 							 row.names = if (!is.null (names (x))) TRUE else FALSE, col.names = FALSE)
+					 	file
+					 })
 
-
-setAs ("character", "collection",
-			 def = function (from) collection (from))
-setAs ("matrix", "collection",
-			 def = 
-			 	function (from) {
-			 		if (is.null (colnames (from))) {
-			 			warning ("samples are unidentified due to missing colnames")
-			 			colnames (from) <- 1:ncol(from)
-			 		}
-			 		warning ("collection will have no metadata")
-			 		warning ("view of collection will be unidentified")
-			 		dummy.metadata <- character()
-			 		class (dummy.metadata) <- "metadata"
-			 		new ("collection",
-			 				 views = list (data = from),
-			 				 sel = new ("selection", ids = colnames (from), groups = factor(), metadata = dummy.metadata, 
-			 				 					 ids.spec = character(), resource.spec = character(), metadata.extent = "none"))
-			 	})
-
-setAs ("biom", "collection",
-			 def = function (from) {
-			 	bb <- from.biom (from)
-			 	new ("collection",
-			 			 view = list (data = bb$data),
-			 			 sel = new ("selection",
-			 			 					 ids = colnames (from), 
-			 			 					 groups = factor(0), 
-			 			 					 metadata = character(0), 
-			 			 					 id.spec = character(0), 
-			 			 					 resource.spec = character(0), 
-			 			 					 metadata.extent = "none"))
-			 })
-
-setAs ("collection", "matrix",
-			 def = function (from)
-			 	from [[length (views (from)), plain = TRUE]])
-
-setAs ("biom", "matrix",
-			 def = function (from) {
-			 	m <- matrix (unlist (from$data), ncol = 3, byrow = TRUE)
-			 	m <- as.matrix (Matrix::sparseMatrix (i = 1 + m [,1], j = 1 + m [,2], x = m [,3]))
-			 	rownames (m) <- sapply (from$rows, `[[`, i = "id")
-			 	colnames (m) <- sapply (from$columns, `[[`, i = "id")
-
-			 	rownames.ext <- unname (sapply (from$rows, `[[`, "metadata", simplify = TRUE))
-			 	len <- max (sapply (rownames.ext, length))
-			 	rownames.ext <- sapply (rownames.ext, `length<-`, len, simplify = TRUE)
-			 	attr (m, "rownames.ext") <- if (len > 1) t (rownames.ext) else rownames.ext
-			 	m
-			 	})
-
-setAs ("list", "biom",
-			 def = function (from) { },
-			 replace = function (from, value) { })
-setAs ("character", "biom",
-			 def = function (from) { },
-			 replace = function (from, value) { })
-setAs ("matrix", "biom",
-			 def = function (from) { },
-			 replace = function (from, value) { })
-setAs ("collection", "biom",
-			 def = function (from) { },
-			 replace = function (from, value) { })
-
-# as.collection <- function (from) as (from, "collection")
-# as.biom <- function (from) as (from, "biom")
-# as.matrix <- ....?
-
-asFile <- function (x, file, ...) save (x, file = file)
-
-setMethod ("asFile", "list", function (x, file, ...)
-	for (j in 1:length(x)) asFile (x [[j]], file [j]))
-
-setMethod ("asFile", "character", function (x, file, ...)					# for lists of IDs (this may be stupid)
-	stop ("matR: unimplemented method for class character"))
-
-setMethod ("asFile", "matrix", function (x, file, ...) {
-	args <- list (...)
-	p <- resolveMerge (args, msession$exp())
-	file <- paste (p$path, file, sep = "")
-	if (p$type != "binary")
-		write.table (x, file = file, append = p$append, quote = p$quote, sep = p$sep, na = p$na,
-								 row.names = p$row.names, col.names = p$col.names)
-	else
-		save (x, file = file)
-	file
-})
-
-setMethod ("asFile", "Matrix", function (x, file, ...)
-	asFile (as.matrix (x), file, ...))
-
-setMethod ("asFile", "collection", function (x, view = length (views (x)), file, ...)
-	asFile (x [[view]], file, ...))
-
-#setMethod ("asFile", "pco", function (x, file, ...) {
+setMethod ("asFile", "matrix", 
+					 function (x, file, ...) {
 # 	args <- list (...)
 # 	p <- resolveMerge (args, msession$exp())
 # 	file <- paste (p$path, file, sep = "")
-# 	write.table (x [[2]], file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
-# 							 row.names = p$row.names, col.names = p$col.names)
-# 	write.table (x [[3]], file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
-# 							 row.names = p$row.names, col.names = p$col.names)
-# 	write.table (as.matrix (x [[4]]), file = file, append = TRUE, quote = p$quote, sep = p$sep, na = p$na,
-# 							 row.names = p$row.names, col.names = p$col.names)
-# } )
+# 	if (p$type != "binary")
+# 	  ...
+# 	else
+# 		save (x, file = file)
+					 	write.table (x, file = file, quote = FALSE, sep = "\t",
+					 							 row.names = TRUE, col.names = TRUE)
+					 	file
+					 })
 
-### importing is a sort of separate problem
+
+# I REALLY WANT THIS TO WORK, BELOW !
+# name <- as.character (substitute (x, parent.frame (6)))
+# assign (name, x)
+# save (list = name, file = file)
+#
+# f <- function (x, view = length (views (x)), file, ...) {
+# 	name <- as.character (substitute (x))
+# 	print(name)
+# }
+	
+setMethod ("asFile", "collection", 
+					 function (x, view = length (views (x)), file, ...) {
+					 	if (is.null (view)) save (x, file = file)
+					 	else asFile (x [[view, plain = TRUE]], file, ...)
+					 	file
+					 	})
+
+setMethod ("asFile", "pco", 
+					 function (x, file, ...) {
+# MORE CLEVER TO CHECK IF .Rda IS PRESENT
+					 	suff <- ".Rda"
+					 	file.values <- paste (file, ".values", suff, sep = "")
+					 	file.vectors <- paste (file, ".vectors", suff, sep = "")
+					 	write.table (data.frame (x$values), file = file.values, sep = "\t", quote = FALSE, 
+					 							 row.names = TRUE, col.names = FALSE)
+					 	write.table (x$vectors, file = file.vectors, sep = "\t", quote = FALSE,
+					 							 row.names = TRUE, col.names = TRUE)
+					 	c (file.values, file.vectors)
+					 })
+
 ###
+### importing is a sort of separate problem
 ### for now we just have this function to read IDs in various formats:
 ###
 ### name ID
@@ -176,6 +168,7 @@ setMethod ("asFile", "collection", function (x, view = length (views (x)), file,
 ### ID
 ### ID
 ### ID
+###
 
 readIds <- function (file, ...) {
 	y <- read.table (file, colClasses = "character", ...)
