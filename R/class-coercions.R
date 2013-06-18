@@ -13,25 +13,29 @@
 
 setAs ("character", "biom",
 			 function (from) {
+			 	reqPack (RJSONIO)
+			 	from <- fromJSON (from [1], asText = TRUE, simplify = TRUE)
+			 	if (!all (c ("data", "rows", "columns") %in% names (from))) stop ("attempt to coerce non-biom object to biom")
+			 	class (from) <- "biom"
+			 	from
+			 })
+
+setAs ("list", "biom",
+			 function (from) {
+			 	if (!all (c ("data", "rows", "columns") %in% names (from))) stop ("attempt to coerce non-biom object to biom")
 			 	class (from) <- "biom"
 			 	from
 			 })
 
 #####################################################################################
-### we allow that a biom object is either parsed or unparsed JSON
 
 setAs ("biom", "list", 
 			 function (from) { 
-			 	if (typeof (from) != "list") {
-			 		reqPack ("RJSONIO")
-			 		from <- fromJSON (from, asText = TRUE, simplify = TRUE)
-			 	}
 			 	class (from) <- "list"
 			 	from
 			 })
 setAs ("biom", "matrix", 
 			 function (from) {
-			 	from <- as (from, "list")
 			 	m <- matrix (unlist (from$data), ncol = 3, byrow = TRUE)
 			 	m <- as.matrix (Matrix::sparseMatrix (i = 1 + m [,1], j = 1 + m [,2], x = m [,3]))
 			 	try (rownames (m) <- sapply (from$rows, `[[`, i = "id"))
@@ -40,7 +44,7 @@ setAs ("biom", "matrix",
 			 })
 setAs ("biom", "collection",
 ### !!! THIS SHOULD CHANGE SOONER OR LATER, TO PRESERVE METADATA FROM THE BIOM OBJECT
-			 def = function (from) as (as (from, "matrix"), "collection"))
+			 function (from) as (as (from, "matrix"), "collection"))
 
 #####################################################################################
 

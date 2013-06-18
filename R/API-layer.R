@@ -128,16 +128,14 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 	y <- as.list (callRaw (callStr, parse, file))
 	if (!parse || !enClass) return (y)
 	switch (resource,
-					matrix = if (isTRUE (as.logical (args$asynchronous))) y$id else {
-						class (y) <- "biom"
-						as (y, "matrix") },
+					matrix = if (isTRUE (as.logical (args$asynchronous))) y$id else
+						as (as (y, "biom"), "matrix"),
 					status = if (!isTRUE (y$status == "done")) y$id else {
 						y <- y$data
 						rownames.ext <- unname (sapply (y$rows, `[[`, "metadata", simplify = TRUE))
 						len <- max (sapply (rownames.ext, length))
 						rownames.ext <- sapply (rownames.ext, `length<-`, len, simplify = TRUE)
-						class (y) <- "biom"
-						y <- as (y, "matrix")
+						y <- as (as (y, "biom"), "matrix")
 						attr (y, "rownames.ext") <- if (len > 1) t (rownames.ext) else rownames.ext
 						y },
 					sample = ,

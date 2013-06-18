@@ -149,10 +149,13 @@ view.container.create <- function (ref, v)
 	function (want.dummy = FALSE) {
 		if (class (ref) != "matrix") {
 			r <- mGet ("status", ref)
-			if (class (r) == "matrix") ref <<- r
-			else if (want.dummy) ref <- matrix (r)
-			else stop ("data is pending")
-			attributes (ref) <<- append (attributes (ref), v)
+			if (class (r) == "matrix") {
+				ref <<- r
+				attributes (ref) <<- append (attributes (ref), v)
+			} else if (want.dummy) {
+				ref <- matrix (r)
+				attributes (ref) <- append (attributes (ref), v)
+			} else stop ("data is pending")
 		}
 		ref
 	}
