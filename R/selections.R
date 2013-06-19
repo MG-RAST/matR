@@ -39,7 +39,7 @@ setMethod ("metadata", "ANY", function (x = "", file = NULL, resource = c ("proj
 # three return types are possible:
 # metadata (single index), list of metadata (multiple index), data.frame (bygroup=TRUE)
 # it would be good for "names" of elements of the returned object to be set...
-`[.metadata` <- function (x, i, ..., unique = FALSE, bygroup = FALSE) {
+`[.metadata` <- function (x, i, ..., unique = FALSE, bygroup = TRUE) {
 # we accept an arbitrary number of user-specified index vectors
 # bear in mind that each index (vector) is possibly of length > 1
 	J <- append (list (i), list (...))
