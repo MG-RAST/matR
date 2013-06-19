@@ -278,3 +278,8 @@ xcall <- function (fun, ..., with = list(), without = character ()) {
 whereIam <- function () which (search () == "package:matR")
 
 prior <- function (f) function (x, ...) get (f, pos = whereIam() + 1) (x, ...)
+
+samples.of.project <- function (x) {
+	ll <- mGet ("project", scrubIds (x, "project"), verbosity = "full", enClass = FALSE) $ analyzed
+	sapply (ll, '[', 1)
+}

@@ -98,14 +98,14 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 	args <- append (with, list (...))
 
 # here we call the old API for metadata only
-	if (resource %in% c ("project", "sample", "library", "metagenome")) {
-		s <- msession$server()
-		msession$server (msession$servers()$test)
-		y <- try (oldmGet (resource, ID = x, namespace = args$namespace, annoType = args$annoType, seqType = args$seqType, org = args$org, 
-											 func = args$func, md5 = args$md5, param = args$param, parse = parse, enClass = enClass, toFile = file))
-		msession$server (s)
-		return (y)
-	}
+# 	if (resource %in% c ("project", "sample", "library", "metagenome")) {
+# 		s <- msession$server()
+# 		msession$server (msession$servers()$test)
+# 		y <- try (oldmGet (resource, ID = x, namespace = args$namespace, annoType = args$annoType, seqType = args$seqType, org = args$org, 
+# 											 func = args$func, md5 = args$md5, param = args$param, parse = parse, enClass = enClass, toFile = file))
+# 		msession$server (s)
+# 		return (y)
+# 	}
 
 	callStr <- switch (resource,
 										 matrix = { name <- args$name

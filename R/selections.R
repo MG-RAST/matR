@@ -29,7 +29,7 @@ setMethod ("metadata", "ANY", function (x = "", file = NULL, resource = c ("proj
 # names given to metagenome IDs are ignored, although maybe there could be a way to allow them...
 	names (x) <- x
 
-	res <- unlist (lapply (x, mGet, resource = resource, enClass = FALSE))
+	res <- unlist (lapply (x, function (x) mGet (resource, x, verbosity = "full", enClass = FALSE)))
 	class (res) <- "metadata"
 # it is understood that regroup may return NULL here, and that is ok...
 	attr (res, "grouped") <- regroup (res)

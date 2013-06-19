@@ -1,13 +1,13 @@
 
 # BUILD THE EXAMPLE DATASETS INCLUDED WITH matR
 
-Whalebone <- collection (unlist (mGet ("project", "mgp9", enClass = FALSE) $ analyzed))
+Whalebone <- collection (samples.of.project (9))
 
-Mat <- collection (unlist (mGet ("project", "mgp12", enClass = FALSE) $ analyzed))
+Mat <- collection (samples.of.project (12))
 
-Marine <- collection (unlist (mGet ("project", "mgp18", enClass = FALSE) $ analyzed))
+Marine <- collection (samples.of.project (18))
 
-Coral <- collection (unlist (mGet ("project", "mgp16", enClass = FALSE) $ analyzed))	     # no longer available
+Coral <- collection (samples.of.project (16))
 
 # Hospital <- collection (unlist (mGet ("project", "mgp757", enClass = FALSE) $ analyzed))     # no longer available
 
