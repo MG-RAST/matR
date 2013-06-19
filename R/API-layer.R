@@ -128,16 +128,27 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 	y <- as.list (callRaw (callStr, parse, file))
 	if (!parse || !enClass) return (y)
 	switch (resource,
-					matrix = if (isTRUE (as.logical (args$asynchronous))) y$id else
-						as (as (y, "biom"), "matrix"),
+					matrix = if (isTRUE (as.logical (args$asynchronous))) y$id else {
+						y <- as (as (y, "biom"), "matrix")
+# the following adjusts for the fact that the API does not guarantee a matrix of the requested shape
+# it may drop and/or reorder columns
+						z <- matrix (0, nr = nrow (y), nc = length (scrubIds (x)),
+												 dimnames = list (rownames (y), scrubIds (x)))
+						z [,colnames (y)] <- y
+						z },
 					status = if (!isTRUE (y$status == "done")) y$id else {
 						y <- y$data
+# extract extended rownames from the biom object given by the API
 						rownames.ext <- unname (sapply (y$rows, `[[`, "metadata", simplify = TRUE))
 						len <- max (sapply (rownames.ext, length))
 						rownames.ext <- sapply (rownames.ext, `length<-`, len, simplify = TRUE)
+# and again here, adjust to guarantee a matrix of the requested shape and column ordered
 						y <- as (as (y, "biom"), "matrix")
-						attr (y, "rownames.ext") <- if (len > 1) t (rownames.ext) else rownames.ext
-						y },
+						z <- matrix (0, nr = nrow (y), nc = length (scrubIds (x)),
+												 dimnames = list (rownames (y), scrubIds (x)))
+						z [,colnames (y)] <- y
+						attr (z, "rownames.ext") <- if (len > 1) t (rownames.ext) else rownames.ext
+						z },
 					sample = ,
 					project = ,
 					library = ,
