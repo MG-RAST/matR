@@ -132,6 +132,8 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 						y <- as (as (y, "biom"), "matrix")
 # the following adjusts for the fact that the API does not guarantee a matrix of the requested shape
 # it may drop and/or reorder columns
+# NOTE HOWEVER THAT THIS CORRECTION IS IMPOSSIBLE IN THE ASYNCHRONOUS CASE ---
+# THE API NEEDS TO BE FIXED
 						z <- matrix (0, nr = nrow (y), nc = length (scrubIds (x)),
 												 dimnames = list (rownames (y), scrubIds (x)))
 						z [,colnames (y)] <- y
@@ -142,13 +144,9 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 						rownames.ext <- unname (sapply (y$rows, `[[`, "metadata", simplify = TRUE))
 						len <- max (sapply (rownames.ext, length))
 						rownames.ext <- sapply (rownames.ext, `length<-`, len, simplify = TRUE)
-# and again here, adjust to guarantee a matrix of the requested shape and column ordered
 						y <- as (as (y, "biom"), "matrix")
-						z <- matrix (0, nr = nrow (y), nc = length (scrubIds (x)),
-												 dimnames = list (rownames (y), scrubIds (x)))
-						z [,colnames (y)] <- y
-						attr (z, "rownames.ext") <- if (len > 1) t (rownames.ext) else rownames.ext
-						z },
+						attr (y, "rownames.ext") <- if (len > 1) t (rownames.ext) else rownames.ext
+						y },
 					sample = ,
 					project = ,
 					library = ,

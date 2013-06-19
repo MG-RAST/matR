@@ -1,10 +1,10 @@
 # export everything (in development mode)
-# exportPattern(".*")
+exportPattern(".*")
 
-export(dependencies, hazPackages)
-export(callRaw, mListAllIds, mGet)
-export(readIds)
-export(demo2, scrubIds, scrapeResources)
+# export(dependencies, hazPackages)
+# export(callRaw, mListAllIds, mGet)
+# export(readIds)
+# export(demo2, scrubIds, scrapeResources)
 
 # CLASS AND METHOD EXPORTS
 # our S3 classes: metadata
@@ -13,7 +13,8 @@ exportClassPattern(".*")
 
 exportMethods (print, summary, show)
 exportMethods ("[[", "$", "[[<-", "$<-")
-exportMethods (samples, names, "names<-", groups, "groups<-", rownames, metadata, views, viewnames, "viewnames<-", selection, collection)
+exportMethods (samples, names, "names<-", groups, "groups<-", rownames, metadata, 
+							 views, viewnames, "viewnames<-", selection, collection)
 
 exportMethods (dist)
 export (normalize, remove.singletons, randomize, sigtest)
