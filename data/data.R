@@ -11,7 +11,9 @@
 # until runtime (an empirical discovery).
 
 view.parameters <- list (
-	entry = c ("counts", "normed.counts", "ns.counts", "ns.normed.counts", "evalue", "length", "percentid"),
+	entry = c ("counts", 
+#						 "normed.counts", "ns.counts", "ns.normed.counts", 
+						 "evalue", "length", "percentid"),
 	annot = c ("function", "organism"),
 	level = list (organism = c ("domain", "phylum", "class", "order", "family", "genus", "species", "strain"),
 								`function` = c ("level1", "level2", "level3", "function")),
@@ -24,9 +26,9 @@ view.parameters <- list (
 
 view.descriptions <- list (
 	entry = list (counts = "abundance counts per annotation and per sample", 
-								normed.counts = "abundance counts per annotation and per sample with normalize() applied",
-								ns.counts = "abundance counts per annotation and per sample with remove.singletons() applied",
-								ns.normed.counts = "abundance counts per annotation and per sample with remove.singletons() and then normalize() applied",
+# 								normed.counts = "abundance counts per annotation and per sample with normalize() applied",
+# 								ns.counts = "abundance counts per annotation and per sample with remove.singletons() applied",
+# 								ns.normed.counts = "abundance counts per annotation and per sample with remove.singletons() and then normalize() applied",
 								evalue = "average annotation evalue",
 								length = "average length of annotated reads per annotation and per sample",
 								percentid = "average percent identity of annotated reads with reference per annotation and per sample"),
@@ -69,10 +71,10 @@ view.descriptions <- list (
 							na = "hit parameter must be \"na\" for functional annotations"))
 
 view.defaults <- list (
-	raw = c (entry = "counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
-	nrm = c (entry = "normed.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
-	nsc = c (entry = "ns.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
-	nsn = c (entry = "ns.normed.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"))
+	raw = c (entry = "counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"))
+# 	nrm = c (entry = "normed.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
+# 	nsc = c (entry = "ns.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
+# 	nsn = c (entry = "ns.normed.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"))
 
 # backward-compatibility
 view.params <- view.parameters
