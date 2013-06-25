@@ -34,11 +34,12 @@ setMethod ("boxplot", "ANY", prior ("boxplot"))
 ### built on MASS::parcoord() and graphics::matplot() and matR::sigtest()
 ####################################################
 setMethod ("parcoord", "collection", function  (x, 
-																								view = length (views (x)),
 																								groups = groups (x),
 																								test = "Kruskal-Wallis", 
 																								p.lim = 0.05, 
-																								n.lim = 25, ...) {
+																								n.lim = 25, ...,
+																								view = length (views (x))
+																								) {
 	reqPack ("MASS")
 	par <- list ()
 	par$main <- "parallel coordinates"
@@ -66,9 +67,9 @@ setMethod ("parcoord", "ANY", prior ("parcoord"))
 setMethod ("pco", "collection", function (x, 
 																					view = length (views (x)), 
 																					components = c (1,2,3), 
-																					method = "bray-curtis", ...) {
+																					method = "euclidean", ...) {
 	reqPack ("ecodist")
-	D <- dist (x [[view]], method, bycol = TRUE)
+	D <- as.dist (dist (x [[view]], method = method, bycol = TRUE))
 	P <- ecodist::pco (D)
 	scaled <- P$values / sum (P$values)
 	names (scaled) <- paste ("PCO", 1:length(scaled), sep = "")
@@ -79,7 +80,7 @@ setMethod ("pco", "collection", function (x,
 # elements are: labels, colors, groups(x), names(x), samples(x)
 # see above: why do I use "rownames(x[[view]])"?
 # fix col v. color once and for all --- it is NOT impossible
-par <- list ()
+	par <- list ()
 	par$main <- "principal coordinates"
 	par$labels <- if (length (names (x)) != 0) names (x) else samples (x)
 	if (length (groups (x)) != 0) par$labels <- paste (par$labels, " (", groups (x), ")", sep = "")
@@ -147,60 +148,11 @@ setMethod ("heatmap", "collection", function (x,
 setMethod ("heatmap", "ANY", prior ("heatmap"))
 
 
-####################################################
-### statistical significance testing.
-### built on various stats tests from base R.
-####################################################
+####################################################################################
+### incomplete concept for permutation testing
+####################################################################################
 
-setMethod ("sigtest", "collection", function (x, 
-																							view = length (views (x)),
-																							groups = groups (x), 
-																							test = c ("Kruskal-Wallis", "t-test-paired", "Wilcoxon-paired", "t-test-unpaired", 
-																												"Mann-Whitney-unpaired-Wilcoxon", "ANOVA-one-way"),
-																							fdr.level = NULL, qvalue = FALSE, ...) {
-	x <- x [[view, plain = TRUE]]
-	groups <- as.factor (groups)
-	test <- match.arg (test)
-	res <- list()
-	res$samples <- colnames (x)
-	res$groups <- groups
-	res$mean <- t (apply (x, 1, function (row)
-		tapply (row, groups, mean)))
-	res$sd <- t (apply (x, 1, function (row)
-		tapply (row, groups, sd)))
-	fun <- switch (test,
-								 "t-test-unpaired" =
-								 	function (x1, x2) t.test (x1, x2),
-								 "t-test-paired" = 
-								 	function (x1, x2) t.test (x1, x2, paired = TRUE),
-								 "Mann-Whitney-unpaired-Wilcoxon" = 
-								 	function (x1, x2) wilcox.test (x1, x2, exact = TRUE),
-								 "Wilcoxon-paired" = 
-								 	function (x1, x2) wilcox.test (x1, x2, exact = TRUE, paired = TRUE),
-								 "Kruskal-Wallis" =
-								 	function (r) unlist (kruskal.test (r, groups) [c ("statistic", "p.value")], use.names = FALSE),
-								 "ANOVA-one-way" = 
-								 	function (r) {
-								 		a <- anova (aov (r ~ groups)) [c ("F value", "Pr(>F)")]
-								 		c (a ["F value"] [1,1], a ["Pr(>F)"] [1,1])
-								 	})
-	stat <- as.data.frame (t (
-		if (test %in% c ("Kruskal-Wallis", "ANOVA-one-way"))
-			apply (x, 1, fun)
-		else {
-			g1 <- lapply (apply (x [ ,groups == levels (groups) [1]], 1, list), unlist)
-			g2 <- lapply (apply (x [ ,groups == levels (groups) [2]], 1, list), unlist)
-			mapply (
-				function (x1, x2) 
-					unlist (fun (x1, x2) [c ("statistic", "p.value")], use.names = FALSE),
-				g1, g2)
-		}))
-	names (stat) <- c ("statistic", "p.value")
-	if (test != "ANOVA-one-way" && qvalue) {
-		reqPack ("qvalue")
-		stat [c ("q.value", "significant")] <- 
-			qvalue (stat$p.value, fdr.level = fdr.level) [c ("qvalues", "significant")]
-	}
-	invisible (append (res, stat))
-	#   new ("sigtest", res)
-}	)
+# summarize.dist <- function (x, groups) sapply (groups, function (g) mean (dist x [g,]))
+# iterations <- randomize (cc$nsn, n = 1000, method = ..., summarize.dist, metadata (cc) ["source.and.seqtype"])
+# iterations <- simplify2array (iterations)
+# averages <- apply (iterations, 1, mean)
