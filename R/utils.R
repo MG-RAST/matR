@@ -185,6 +185,8 @@ glom <- function (s) {
 # clean up a vector of ids to standard format for the API,
 # adding prefix as necessary ("mgp", etc).  optional argument
 # is recycled to specify the resource of each id.
+
+### !!! THIS DOESN'T WORK FOR INPUT: ""
 scrubIds <- function (ids, resources = c ("project", "library", "sample", "metagenome")) {
   names <- names (ids)
   ids <- strsplit (paste (ids, collapse = " "), "[^[:alnum:]\\.]+") [[1]]
@@ -276,3 +278,8 @@ xcall <- function (fun, ..., with = list(), without = character ()) {
 whereIam <- function () which (search () == "package:matR")
 
 prior <- function (f) function (x, ...) get (f, pos = whereIam() + 1) (x, ...)
+
+samples.of.project <- function (x) {
+	ll <- mGet ("project", scrubIds (x, "project"), verbosity = "full", enClass = FALSE) $ analyzed
+	sapply (ll, '[', 1)
+}
