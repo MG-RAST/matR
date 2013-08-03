@@ -182,31 +182,29 @@ glom <- function (s) {
 	paste (as.character (s), collapse = ";", sep = "")
 	}
 
-# clean up a vector of ids to standard format for the API,
-# adding prefix as necessary ("mgp", etc).  optional argument
+# clean up a vector of ids to standard format for the API by
+# adding prefix as necessary ("mgm", "mgp").  optional argument
 # is recycled to specify the resource of each id.
 
-### !!! THIS DOESN'T WORK FOR INPUT: ""
-scrubIds <- function (ids, resources = c ("project", "library", "sample", "metagenome")) {
-  names <- names (ids)
-  ids <- strsplit (paste (ids, collapse = " "), "[^[:alnum:]\\.]+") [[1]]
-  if (missing (resources)) resources <- "metagenome"
-	resources <- rep (
-		c (project = "mgp", library = "mgl", sample = "mgs", metagenome = "mgm")
-      [match.arg (resources, several.ok = TRUE)],
-		length.out = length (ids))
-	scrub <- ifelse (substr (ids, 1, 3) %in% c ("mgp", "mgl", "mgs", "mgm"), ids, paste (resources, ids, sep = ""))
-  names (scrub) <- names
-  scrub
-	}
+scrubIds <- function (IDs, resources = "metagenome") {
+	IDs <- unlist (sapply (as.list (IDs), strsplit, "[^[:alnum:]\\.]+"))
+	names <- names (IDs)
+	prefixes <- rep (resources, length.out = length (IDs))
+	prefixes <- match.arg (prefixes, c ("metagenome", "project"), TRUE)
+	scrubbed <- paste (ifelse (substr (IDs, 1, 3) %in% c("mgm", "mgp"), "",
+														 c (metagenome = "mgm", project = "mgp") [prefixes]), 
+										 IDs, sep = "")
+	names (scrubbed) <- names (IDs)
+	scrubbed
+}
 
-# identify the kbase resources specified by a vector of ids
-# prefixes of "mgp", "mgl", "mgs", "mgm" are understood
-# any other prefix (including no prefix) results in "metagenome"
+# identify the resources specified by a vector of ids
+# prefixes of "mgp" and "mgm" are understood
+# any other prefix is interpreted as "mgm"
 scrapeResources <- function (ids) {
-	res <- match (substr (ids, 1, 3), c ("mgp", "mgl", "mgs", "mgm"))
-	res [is.na (res)] <- 4
-	c ("project", "library", "sample", "metagenome") [res]
+	res <- match (substr (ids, 1, 3), c ("mgm", "mgp"))
+	res [is.na (res)] <- 1
+	c ("metagenome", "project") [res]
 	}
 
 ### tests first argument for equality with any of others

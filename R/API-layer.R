@@ -115,6 +115,7 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 										 					 			 paste (names (args), unname (args), sep = "=", collapse = "&"),
 										 					 			 sep = "") },
 										 status = paste (resource, "/", x, sep = ""),
+										 metagenome_statistics = ,
 										 sample = ,
 										 project = ,
 										 library = ,
@@ -147,6 +148,7 @@ mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClas
 						y <- as (as (y, "biom"), "matrix")
 						attr (y, "rownames.ext") <- if (len > 1) t (rownames.ext) else rownames.ext
 						y },
+					metagenome_statistics = ,
 					sample = ,
 					project = ,
 					library = ,

@@ -1,0 +1,88 @@
+
+\documentclass{article}
+
+%\VignetteIndexEntry{User Manual for the matR Package}
+%\VignetteKeyword{matR}
+
+\title{Short Tutorials for Metagenomic Analysis}
+\author{}
+\date{}
+\pagestyle{empty}
+\usepackage{fullpage,url}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle
+<<echo=FALSE>>=
+options(width=80)
+options(prompt="> ")
+library(matR)
+@
+\noindent This manual describes metagenomic analysis with the \texttt{matR} package (Metagenomic Analysis Tools for R).  The sections form a progressive set, but can also be rearranged, and many can be treated as independent 10-15 minute tutorials.  If this software helps your work, please cite us:  {\em Daniel T. Braithwaite and Kevin P. Keegan (2013). matR: Metagenomics Analysis Tools for R. R package version 0.9.9.}
+
+\vspace{10pt} \noindent Contact: \texttt{mg-rast@mcs.anl.gov}.
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\section{Preliminaries}
+\SweaveInput{sub/sec-preliminaries.Rnw}
+<<echo=FALSE>>=
+readLines("_data/sex")
+@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\section{Examples}
+\subsection{Functional Comparison of Lean and Obese Mouse}
+% \SweaveInput{sub/subsec-functional-comparison.Rnw}
+
+\subsection{HMP Samples with External Metadata}
+% \SweaveInput{sub/subsec-HMP-with-metadata.Rnw}
+
+\subsection{Variability of Clustering by Annotation Source}
+% \SweaveInput{sub/subsec-source-comparison.Rnw}
+
+\subsection{Parallel Coordinates of Brazilian Coastal Samples}
+% \SweaveInput{sub/subsec-brazilian-coast.Rnw}
+
+\subsection{Where to Find More}
+A gallery of additional simple examples is maintained at:  \url{http://dunkirk.mcs.anl.gov/~braithwaite}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\section{Basics}
+\SweaveInput{sub/sec-basics.Rnw}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\section{Analysis}
+\SweaveInput{sub/sec-analysis.Rnw}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\section{Miscellaneous}
+\subsection{API Calls for Extended Functionality}
+The full functionality of the MG-RAST API is available through \texttt{matR}.  For API details, see \url{http://api.metagenomics.anl.gov}.
+
+Many API resources are available with a convenient syntax using the mid-level interface function, \texttt{mGet}.
+<<eval=FALSE>>=
+mGet("metagenome_statistics", "mgm4472882.3")
+@
+For more control, use the low-level function \texttt{callRaw}.  This function simply prepends the API server name and appends the session authorization key (if set) to its argument.
+<<eval=FALSE>>=
+callRaw("metagenome_statistics/mgm4472882.3")
+@
+Most API resources are returned as JSON objects and automatically parsed by \texttt{mGet} (or \texttt{callRaw}) into a list structure.  JSON text can be retained with \texttt{parse=FALSE}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\subsection{Using \texttt{matR} within an iPython Notebook}
+\texttt{matR} is easily invoked from iPython Notebook to leverage the many advantages of that scripting environment.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\subsection{Other Packages: \texttt{ggplot2}, \texttt{vegan}, \texttt{picante}}
+\texttt{matR} interacts easily with other R software for graphics and analysis.
+
+\end{document}

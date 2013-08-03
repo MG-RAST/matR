@@ -1,0 +1,146 @@
+
+\subsection{Data in an Annotation Matrix}
+The columns of a \texttt{matR} matrix are labeled by sample, and rows are labeled by annotation.  The annotations may be taxonomic or functional, at various hierarchy levels.  Often, the matrix entries are raw counts of annotations per sample.  So an ``OTU table'' is just one kind of \texttt{matR} matrix.
+
+The matrix may also contain other quantities such as (for instance) normalized abundance counts, or average read length of annotated sequences, per annotation and per sample.  Matrix entries may also be qualified or limited.  For example, counts may be requested only from a particular annotation database.
+
+Suppose you have selected a particular set of metagenomes.  Next, in order to retrieve related data, you have to specify exactly what data you want.  Such a description is called a \texttt{view} of the data, and it is spelled out with predefined options.  Here are some examples of \texttt{view}s:
+<<eval=FALSE>>=
+c(level="level1")
+c(annot="organism",level="phylum")
+c(entry="normed.counts",source="NOG")
+@
+The first line indicates counts per functional annotation at level 1 of the Subsystems hierarchy.  The second indicates counts of {\em taxonomic} annotations at phylum level from the M5RNA database.  The third indicates {\em normalized} counts of functional annotations from only the NOG database.
+
+The options for data \texttt{view}s are listed and fully described in the \texttt{matR} package itself.  Examine these objects at the R prompt just by typing their names:
+<<eval=FALSE>>=
+view.descriptions
+view.parameters
+view.defaults
+@
+The last one, \texttt{view.defaults}, shows what data is retrieved if you don't choose explicitly.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\subsection{Metagenome Collections}
+Metagenome data is always retrieved by constructing a \texttt{collection}.  The samples of interest must be identified by ID.  Here are some examples.
+<<eval=FALSE>>=
+IDs <- c(gut1="4441695.3", gut2="4441696.3")
+cc <- collection(IDs)
+dd <- collection("4441679.3 4441680.3 4441682.3 4441695.3 4441696.3 4440463.3 4440464.3")
+ee <- collection(file="test-IDs.txt")
+@
+In the first example, the samples are given names.  The last example reads a list of IDs from a text file.  IDs in files should be whitespace-separated.  The file may also contain names in a first column and IDs in a second column.  In addition to metagenome IDs, project IDs may be used.  The effect is to request all metagenomes from that project.  Project IDs should begin with \texttt{"mgp"}.
+
+Choosing samples is only half the story:  various data pertaining to those samples can be requested.  In each of the following examples, each part of the \texttt{collection} function names and describes a distinct \texttt{view} of the data, as discussed above.
+<<eval=FALSE>>=
+collection(IDs,
+  raw=c(entry="count"), 
+  nrm=c(entry="normed.counts"))
+collection(IDs, 
+  L1=c(level="level1"), L2=c(level="level2"), 
+  L3=c(level="level3"), L4=c(level="function"))
+collection(IDs,
+  nog=c(source="NOG"), 
+  cog=c(source="COG"), 
+  ko=c(source="KO"))
+collection(IDs, 
+  lca=c(annot="organism", hit="lca"), 
+  repr=c(annot="organism", hit="single"), 
+  all=c(annot="organism", hit="all"))
+@
+A handy techniques is to make lists of \texttt{view}s:
+<<eval=FALSE>>=
+top.levels <- list(
+  L1=c(level="level1"), 
+  L2=c(level="level2"))
+all.ontologies <- list(
+  nog=c(source="NOG"), 
+  cog=c(source="COG"), 
+  ko=c(source="KO"),
+  sub=c(source="Subsystems"))
+all.count.methods <- list(
+  lca=c(annot="organism", hit="lca"), 
+  repr=c(annot="organism", hit="single"), 
+  all=c(annot="organism", hit="all"))
+@
+Such lists can then be used (and reused) as follows:
+<<eval=FALSE>>=
+cc <- collection (guts, top.levels)
+dd <- collection (guts, all.ontologies)
+ee <- collection (guts, all.count.methods)
+@
+The matrix of data corresponding to a \texttt{view} is accessed with \texttt{\$} plus the appropriate name:
+<<eval=FALSE>>=
+cc$L1
+dd$nog
+ee$all
+@
+\texttt{view}s can be specified when a \texttt{collection} is constructed, as shown above, and can also be added to an existing \texttt{collection} in this way:
+<<eval=FALSE>>=
+dd$cog <- c(source="COG")
+@
+Various common sense functions apply to \texttt{collection}s:
+<<eval=FALSE>>=
+samples(cc)      # show metagenomes in the collection
+projects(cc)     # show projects in the collection
+names(cc)        # show names of metagenomes
+views(cc)        # show the data views in the collection
+viewnames(cc)    # show just the names of the views
+groups(cc)       # show grouping of metagenomes (if assigned)
+metadata(cc)     # access metadata
+@
+(For more about metadata, see below.)  Values may be assigned to \texttt{names}, \texttt{viewnames}, and \texttt{groups}, as with:
+<<eval=FALSE>>=
+names(cc) <- c("new.name.1", "new.name.2")
+@
+Within each \texttt{view}, the names of annotations are accessed with \texttt{rownames}.  Annotation names are hierarchical, and the \texttt{sep} parameter affects how the hierarchy is presented.  There are four alternatives:
+<<eval=FALSE>>=
+rownames(Guts, view="raw", sep=NULL)
+rownames(Guts, view="raw", sep=FALSE)
+rownames(Guts, view="raw", sep=TRUE)
+rownames(Guts, view="raw", sep="\t")
+@
+The corresponding results are:  annotations named by terminal hierarchy level only; a matrix of annotation names with one column per hierarchy level; annotations named by semicolon-separated concatenation of all hierarchy level names; same as previous, but with specified separator character.
+
+Subsets may be taken of collections, as of other objects in R.  Here we extract the first three samples of \texttt{dd} into a new \texttt{collection}.
+<<eval=FALSE>>=
+ff <- dd[1:3]
+@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\subsection{Using Metadata}
+Collections have metadata elements, which are named.  The names of elements reflect the hierarchical nature of metadata.  To see all metadata of the collection \texttt{Guts}, which is prepackaged with \texttt{matR}, simply enter:
+<<eval=FALSE>>=
+metadata(Guts)
+@
+Analyses usually require picking out specific metadata elements, and metadata can be indexed for that purpose.  Metadata indexing is by element name(s), and an arbitrary number of indices may be specified.  This is best understood by example.  First, we use {\em one index} of {\em length one} to get all metadata from one sample of the collection:
+<<eval=FALSE>>=
+metadata(Guts)["4440464.3"]
+@
+Here is an example of metadata indexing using {\em two indices}, each of {\em length one}, to get sampling location information for all samples.
+<<eval=FALSE>>=
+metadata(Guts)["latitude", "longitude"]
+@
+An alternative form returns the same output in a more convenient form.
+<<eval=FALSE>>=
+metadata(Guts)["latitude", "longitude", bygroup=TRUE]
+@
+In this variant NA is placed when a field is missing, as in the next example.
+<<eval=FALSE>>=
+metadata(Guts)["host_common_name", "disease", ".age", bygroup=TRUE]
+@
+The next example obtains the entire environmental package from one metagenome using {\em one index} of {\em length two}.  Only metadata fields matching {\em both} strings are selected:
+<<eval=FALSE>>=
+metadata(Guts)[c("4440464.3","env_package.data")]
+@
+Finally, this example uses {\em three indices} all of {\em length two} to select miscellaneous elements:
+<<eval=FALSE>>=
+metadata(Guts)[c("env","temp"), c("4440464.3","PI_organization"), c("0464","biome")]
+@
+Actually, metadata can be handled independently of annotation data.  This saves time when annotation data is not needed.  Metadata can be retrieved by sample, just as with the \texttt{collection} function:
+<<eval=FALSE>>=
+mm <- metadata("4441679.3 4441680.3 4441682.3 4441695.3 4441696.3")
+@
+Now \texttt{mm} can be used just as \texttt{metadata(Guts)} was used above.

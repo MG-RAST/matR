@@ -33,13 +33,13 @@ z <- "4445571.3 mgp101 4445572.3"
 A <- scrubIds ( c (x,y,z))
 B <- scrubIds ("mgp101 mgp102 mgp103 mgp104 mgp105")
 C <- scrubIds ("101;102;103", res = "project")
-D <- scrubIds (c (22817, 22818, 22819), res = "samp")
+# D <- scrubIds (c (22817, 22818, 22819), res = "samp")
 
 scrapeResources (A)
 scrapeResources (B)
 scrapeResources (C)
-scrapeResources (D)
-l <- "mgl54248 mgl54250 mgl54252 mgl54254"
-scrapeResources (l)
-scrapeResources (scrubIds (l))
+# scrapeResources (D)
+# l <- "mgl54248 mgl54250 mgl54252 mgl54254"
+# scrapeResources (l)
+# scrapeResources (scrubIds (l))
 }

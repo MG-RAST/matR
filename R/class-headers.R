@@ -3,37 +3,30 @@
 ### Here we establish our classes and declare functions generic as necessary.
 ##################################################################################################################
 ###
-### "metadata" is an S3 class, a named character vector.
-### the attribute "grouped" factors the vector, 
-### currently only by metagenome, but potentially by project as well.
+### "metadata" is a data.frame:
+### rowname  value  sampleID  projectID  
+### "biome"  "gut"  "mgm4441234.3"  "mgp33"
 ###
-### "selection" enables flexible specification of metagenomes (user should not see this class)
+### "selection" contains metadata for a choice of metagenomes
+### specified by another data.frame:
+### rowname  sampleID  projectID  group
+### "cow"  "mgm4441234.3"  "mgp12"  "1"
 ###
-### "collection" is a "selection" plus a list of matrices.
+### "collection" is a "selection" plus annotation data
 ###
 ### "biom" is meant to be minimal
 ###
-### analysis functions return lists of computation products, as R does in many cases.
-### however, these outputs are classed, to allow S4-style dispatch.
+### analysis functions return lists of computation products, as base R does in many cases.
+### however, our outputs are classed, to allow S4-style dispatch.
 ####
 
+
 setOldClass ("metadata")
-setClass ("selection", representation (ids = "character", 
-																			 groups = "factor", 
-																			 metadata = "metadata",
-																			 ids.spec = "character",
-																			 resource.spec = "character", 
+setClass ("selection", representation (samples = "data.frame", 
+																			 metadata = "metadata", 
 																			 metadata.extent = "character"))
-
-
-# setClass ("selection", representation (metagenomes = "character",  ..... c("mgm4441980.3", "mgm4441980.3", "mgm4441980.3", ....)
-# 																			 projects = "factor", ...... factor("mgp10", "mgp10", "mgp12", "mgp12", "mgp12", ....)
-# 																			 groups = "factor", ..... factor(1,1,1,2,2,....)
-# 																			 metadata = "metadata",
-# 																			 metadata.extent = "numeric"))     # code 0 (none), 1 (minimal),2 (full)
-
-
-setClass ("collection", representation (views = "list", sel = "selection"))
+setClass ("collection", representation (sel = "selection", 
+																				views = "list"))
 setClass ("biom", repr = NULL, contains = "character")
 setClass ("pco", repr = NULL, contains = "list")
 setClass ("heatmap", repr = NULL, contains = "list")
@@ -50,6 +43,7 @@ setGeneric ("summary")
 
 # selections.R
 setGeneric ("samples", function (x, ...) standardGeneric ("samples"))
+setGeneric ("projects", function (x, ...) standardGeneric ("projects"))
 setGeneric ("metadata", function (x, ...) standardGeneric ("metadata"))
 setGeneric ("metadata<-", function (x, value, ...) standardGeneric ("metadata<-"))
 setGeneric ("names")
@@ -80,7 +74,6 @@ setGeneric ("render", function (x, ...) standardGeneric ("render"))
 
 # class-coercions.R
 setGeneric ("asFile", function (x, file, ...) standardGeneric ("asFile"))
-
 
 
 
