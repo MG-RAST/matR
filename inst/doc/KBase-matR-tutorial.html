@@ -20,44 +20,17 @@
 <b>Suggested Prerequisite Activities:</b> Gain some familiarity with R.  Online tutorials can be found at the <a href="http://www.r-project.org">R Language homepage</a>.  </p>
 
 <p>
-<b>Notes:</b> 
-The following tutorial provides a brief overvie of matR functions. For a more detailed description of matR's capabilities, please see the <a href="">matR manual</a> </b>
+<b>Related Tutorials:</b> None.
+</p>
 
-<p>
-<b>Related Tutorials:</b><a id="menu"> The following page presents a typical matR based analysis. The individual steps are highlighted below, you can proceed through them sequentially, or view each separately: </a>  
+<h1>Introduction</h1>
+matR is a client for analysis of metagenomic annotations built as an extension package to the popular R programming language for statistics.  It features facilities to build and examine metagenome collections, access to metadata, authentication for access to private data, customized analysis and visualization tools, and easy integration with the wide world of R extension packages.
 
-<p><a HREF="#introduction">Introduction</a></p>
-<p><a HREF="#installation">How do I install matR?</a></p>
-<p><a HREF="#collections">What are <i>Collections</i> and how do I use them?</a></p>
-<p><a HREF="#built_in_demo">How can I use built in demonstrations to learn more about matR functionality?</a></p>
-<p><a HREF="#built_in_data">What are the built in data sets, and how can I use them?</a></p>
-<p><a HREF="#download">How can I download my data with matR?</a></p>
-<p><a HREF="#norm-box">Should I normalize my data, and how can I tell?</a></p>
-<p><a HREF="#grouping">How can I group my samples for visualizations and statistical tests?</a></p>
-<p><a HREF="#pcoa">How can I generate 2 and 3 dimensional PCoAs from my data?</a></p>
-<p><a HREF="#heat-dend">How do I generate heatmap-dendrograms of my data</a></p>
-<p><a HREF="#stats">How can I perform statistical tests to identify signficaintly differenciated features in my data(taxa or functions)?</a></p>
-<p><a HREF="#stats_subselect">How can I use statistics to subselect my data?</a></p>
-<p><a HREF="#metadata">How can I view Metadata with matR</a></p>
-<p><a HREF="#example">An additional analysis example</a></p>
-<p><a HREF="#notes">Notes</a></p>
-<p></p>
-
-<a id="introduction"><h1>Introduction</h1></a>
-<p>matR is a client for analysis of metagenomic annotations built as an extension package to the popular R programming language for statistics.  It features facilities to build and examine metagenome collections, access to metadata, authentication for access to private data, customized analysis and visualization tools, and easy integration with the wide world of R extension packages.</p>
-<p><a HREF="#menu">menu</a></p>
-
-<a id="installation"><h1>Installation</h1></a>
-<p>There are two basic choices for running matR, you can <a HREF="http://kbase.science.energy.gov/for-users/get-started/">install a KBase virtual box image</a> that already has matR installed.</p>
-<p>If you would prefer to install matR locally, make sure you have R version 2.15 or latter (start R and check the version like this:) </p>
-<pre>>R.Version()$version.string</pre>
-<p>You can <a HREF="http://www.r-project.org/">update your version of R</a> if needed.</p>
-<p>Otherwise, start R, and proceed as follows.</p>
+<h1>Installation</h1>
 At the R prompt, enter: 
 <pre>
 > install.packages ("matR", type = "source",
-    repo = "INSERT-
-    KBASE-SOURCE-FOR-MATR")
+    repo = "http://dunkirk.mcs.anl.gov/~braithwaite/matR")
 </pre>
 And then, enter:
 <pre>
@@ -68,213 +41,27 @@ to load the package, and finally enter:
 > dependencies ()
 </pre>
 to install supporting packages.  Note that in the technical sense there are no dependencies, but without supporting packages, many features will be unusable.
-<p><a HREF="#menu">menu</a></p>
 
-<a id="collections"><h1>Collections</h1></a>
-<p>Collections are an R data object, built for matR, that can be used to download and process taxonomic and functional abundance data along with associated metadata. 
-Collections can contain abundance data (from one ore more samples), metadata related to the sample(s), and grouping information used for vizulizations and statsitical analyses of the data.</p>
-<p>Collections are created when data and/or metadata for a specified sample (or group of samples) are downlowed with matR from the KBase API.</p> 
-<p>To create a collection, first you have to create a list of KBase/MG-RAST ids</p>
-<pre>
-> ids <- c ("4441679.3", "4441680.3", "4441682.3", "4441695.3", "4441696.3", "4440463.3", "4440464.3")
-</pre>
-<p>Now you can use the list of id's to download data with the <i>collection</i> function (Note: alternate methods to download can be found in the <a HREF="#download"> Downloading data</a> section)</p>
-> cc <- collection (ids)
-</pre>
-
-<p>This creates a collection object containing metadata and abundance data for the identified metagenomes.  
-Note that the content of your collection may vary depending on the type of downloaded data (e.g. annotation of amplicon or wgs sequence data),
-and on any custom parameter settings (see<a HREF="#download"> Downloading data</a> for more details).</p> 
-
-<p>Various functions apply to collections:</p>
-<pre>
-> samples (cc)        # show ids of constituent metagenomes
-> names (cc)          # show names of metagenomes
-> views (cc)          # show the matrix views that the collection contains (see below)
-> viewnames (cc)      # show just the names of the views
-> metadata (cc)       # access metadata of the collection
-</pre>
-<p>Views of collections are accessed with "$".   For example, this command shows raw abundance counts of functional annotations at level 3 of the Subsystems hierarchy:</p>
-<pre>
-> cc$count
-</pre>
-<p>while this shows the same data, but normalized to lie between 0 and 1:</p>
-<pre>
-> cc$normed
-</pre>
-<p>Generally, the purpose of views is to show different aspects of the same selection of metagenomes.  Views can be specified when a collection is constructed:</p>
-<pre>
-> dd <- collection (ids, kegg = c (source = "KEGG"))
-</pre>
-<p>and can also be added to an existing collection:</p>
-<pre>
-> dd$cog <- c (source = "COG")
-</pre>
-<p>Subsets can be taken of collections, as of regular vector objects.  For instance, a subcollection is created by</p>
-<pre>
-> ee <- cc [1:4]
-</pre>
-<p>that contains only the first four metagenomes.</p>
-</pre>
-<p><a HREF="#menu">menu</a></p>
-
-<a id="built_in_demo">
-<h1>Using built-in demonstrations</h1>
-</a>
-<p>MatR has a number of demonstrations built in for the purpose of exploring many of matR's capabilities.  
-These demonstrations supplement the information provided in this overivew.  Remember that more advanced
-users can always refer to the <a href="">matR manual</a> for a complete list of matR functions.</p>
-To see built in demonstrations:
-<pre>
-> demo(package="matR")
-</pre>
-To run a demonstration, run the demo2 function with an analysis name returned from <i>demo(package="matR")</i>; here's an example:
-<pre>
-> demo2("analyses")
-</pre>
-The demo2 function stops for each line of comment or code it returns for easy viewing. Press enter to proceed through each line in a demonstration.
-The demonstrations are designed to take your through a number of typical analyses, showing how each step is executed in the process of a multi-step analysis.
-<p><a HREF="#menu">menu</a></p>
-
-<a id="built_in_data"><h1>Using built-in data sets</h1></a>
-MatR has a number of datasets built in for the purpose of exploring matR's capabilities without having to <a HREF="#download">download </a> data.  To see built in datasets:
-<pre>
-> data(package="matR")
-</pre>
-<p> Note that the majorty of built-in data sets are <a HREF="#collections">collection</a> objects; some are R matrices.
-matR functions are designed to operate on matR collections and R matrices.</p> 
-<p>To see the contents of a built in data set, simply type the name of the dataset (e.g.):</p>
-<pre>
-> Marine
-</pre>
-To see a summary of the samples contained in the data set <i>samples(data_set_name)</i>, e.g.:
-<pre>
->samples(Marine)
-</pre>
-<p><a HREF="#menu">menu</a></p>
-
-<a id="download"><h1>Downloading data</h1></a>
-<p>One of matR's most useful features is the ability to downlaoding annotation abunadnce data, along with corresponding metadata, from the KBase API using R syntax, and placing the data in objects that are easily processed in the R comuting envrionment.  This enables users to analyze their data, with matR, or with the ever expanding collection of packages available for R.</p>
-<p>A typical download involves three steps:</p>
-<p>(1) Creating a list of KBase/MG-RAST ids for the samples to be downloaded. Lists can be labeled or not.</p>
-<p>Here is an example of creating a labeled list:</p>
-<pre>
->my_list <- c("fresh1"="mgm4440424.3", "fresh2"="mgm4440423.3", "spring1"="mgm4441096.3", "spring2"="mgm4442583.3")
-</pre>
-Here, the same sample list is created without labels:
-<pre>
->my_list <- c("mgm4440424.3", "mgm4440423.3", "mgm4441096.3", "mgm4442583.3")
-</pre>
-<p>(2) Determining if you want to use the default matR download(the case considered directly below in 3a), or if you want to specifiy the parameters for your download(see 3b below). </p>
-<p>(3a) To perform a default download, for the list created above:
-<pre>
-my_collection <- collection(my_list)
-</pre>
-<p>The content of default downloads will depend on the type of seqeunce data that was annotated.  Whole genome shotgun data return subsystem level3 ("named subsystems") counts; amplicon
-data return species level abundance data by default.  Note that for all default downloads, 4 types of counts are returned, raw abunadnce values ("raw"), normlized abundance values "nrm", raw counts with singleton counts removed "nsc", and counts normalized after the removal of singleton counts "nsn". To view these four objects, use standard R referencing; e.g. to view the raw "count values: </p> 
-<pre>
->my_collection$raw
-</pre>
-<p>(3b) To perform a custom download, you have to specify the parameter values for each download</p>
-<p>You can see the complete list of parameters like this:</p>
-<pre>
->view.params
-</pre>
-<p>If you wanted to download the level2 subsystem counts, this would work</p>
-<pre>
->my_custom_collection <- collection(my_list, my_counts=c(entry="count", annot="func", level="level2", source="Subsystems"))
-</pre>
-<p>To view the counts, standard R referencing would be used:</p>
-<pre>
->my_custom_collection$my_counts
-</pre>
-<p><a HREF="#menu">menu</a></p>
-
-
-<a id="norm-box">
-<h1>Data normalization and vizualizing data distributions</h1>
-</a>
-A critical consideration in all analyses of abundance data is how to treat the data with respect to normalization and scaling.
-matR provides a simple function to all values in a single sample:
-
-<p><a href="http://www.codecogs.com/eqnedit.php?latex=x*_{s,i} = \frac{x_{s,i} - \bar{x}} {\sigma _{s}}" target="_blank"><img src="http://latex.codecogs.com/gif.latex?x*_{s,i} = \frac{x_{s,i} - \bar{x}} {\sigma _{s}}" title="x*_{s,i} = \frac{x_{s,i} - \bar{x}} {\sigma _{s}}" /></a></p> 
-
-<p>This procedure is outlined in <a HREF="http://catalog.loc.gov/cgi-bin/Pwebrecon.cgi?v3=1&ti=1,1&SEQ=20130417142822&Search_Arg=1-58488-327-8&Search_Code=STNO&CNT=100&PID=I61Qwpq77YeSlFk3loj6ROUmk80V&SID=1">Speed 2003 pp116-117</a>
-After this procedure has been applied to values from each sample, all values in the data set are scaled from [min..max] to [0..1].
-Briefly, each value (i) in a sample (s) is adjusted such that the mean of all values in the sample is 0 with a standard deviation of 1.</p>
-<p>You can perform matR normalization this way if your data is a matR collection:</p>
-<pre> >normed_data <- normalize(my_collection$my_counts) </pre>
-or this way if your data are in the form of a matrix:
-<pre> >normed_data <- normalize(my_matrix) </pre>
-<p>Before you generate visualizations from, or apply statistical anlayses to your data, t is crucial to look at the data distributions. The easiest way to do this is to use the R(base) boxplot function.</p>
-<p>To produce a boxplot for the raw and normalized values used in the example above: </p>
-<pre> >boxplot(my_collection$my_counts) </pre>
-<pre> >boxplot(normed_data) </pre>
-Note that in the first example, boxplot is applied to a matrix contained in a collection ( the matrix "my_counts" contained in the collection "my_collection").  In the second example, boxplot is applied directly to a matrix object ( "normed_data" )
-<p>Observation of data distributions is an easy way to identify samples that may need to be culled (exhibit distributions that are too dissimilar from others), and can be used as a means to determine the class of statistical tests that  are most appropriate for the data (e.g. parametric tests for data that exhibit a normal distribution and non-parametric tests for data with non-normal distributions).  This is an extremely brief overview - users are encouraged to contact informatic statistical experts if there are any questions/doubts concerning data distributions and how they infomr data analyses. </p>
-<p><a HREF="#menu">menu</a></p>
-
-<a id="grouping">
-<h1>Sample grouping</h1>
-</a>
-Segregation of samples with respect to metadata, or arbitrarily, defined groups is an essential precursor to most visulizations (e.g. heatmap dendrogram or PCoA), and all statistical tests. MatR will soon support 
-automated metadata driven creation of sample groups.  For now, the process is manual.  Groups are added to collections in the following way:
-<pre>
-groups(my_collection) <- c(1,1,2,2)
-</pre>
-It is also possible to specify groups when a visualization or statistical analysis is performed.
-<p><a HREF="#menu">menu</a></p>
-
-<a id="pcoa">
-<h1>Generate 2 and 3 dimensional PCoAs</h1>
-<p>Using matR, it is easy to generate 2 and 3 dimmensional PCoAs.</p>
-<p>Below are examples to produce 2 and 3 dimmensional PCoAs from built in data</p> 
-</a>
-<p>We use a prepackaged collection of 24 metagenomes (the "Waters" dataset), fifteen from a fresh water sample, the others from a hot spring.</p>
+<h1>Example</h1>
+We use a prepackaged collection of 24 metagenomes, fifteen from a fresh water sample, the others from a hot spring.
 <pre>
 > Waters
 > samples (Waters)
 </pre>
-We can see that the first 15 samples are "<i>fresh</i>" water, the last 9 are "<i>spring</i>" 
-We generate groupings with this information: 
+We look at a principal coordinates analysis with samples colored by group:
 <pre>
 > groups (Waters) <- c (rep (1, 15), rep (2, 9))
-</pre>
-Now the first 15 samples are in group "1", the last 9 are in group "2" -- note that group names can be numerical or text.
-Next we use the groupings to define colors for the PCoA plot:
-<pre>
 > col <- groups (Waters)
 > levels (col) <- c ("blue", "red")
 > col <- as.character (col)
-</pre>
-This created a "col" vector from the group numbers specified above, then changed each instance of "1" with "blue", "2" with "red"
-Note that R doesn't <i>know</i> which samples should be red and blue -- it uses the order of values in the "col" vector to determine coloring
-Now we can generate a simple 2 dimmensional PCoA - by default, we use the first two components (those that contain the largest amoung of variation in the data):
-<pre>
 > pco (Waters, comp = c (1,2), main = "fresh vs. spring water samples", col = col)
 </pre>
-Creating a 3 dimensional PCoA from the same data is easy:
+We can also look at principal coordinates in three dimensions, or a heatmap:
 <pre>
-pco (Waters, comp = c (1,2,3), main = "fresh vs. spring water samples", color = col)
-</pre>
-There are a number of additional options that will allow you to create PCoAs with additional options - specifying the distance metric etc. These are outlined in the <a href="">matR manual</a>  
-<p><a HREF="#menu">menu</a></p>
-
-<a id="heat-dend">
-<h1>Creating a heatmap-dendrogram</h1>
-<p>Using matR, you can also generate heatmap dendrograms of your data.</p>
-<p>Here we provide a simple a example using built-in data:</p>
-<pre>
+> pco (Waters, comp = c (1,2,3), main = "fresh vs. spring water samples", color = col)
 > heatmap (Waters)
 </pre>
-As with pcoa - there are a number of option that can be used to customize this visualization.  These are outlined in much greater detail in the 
-<p><a HREF="#menu">menu</a></p>
-
-<a id="stat">
-<h1>Performing statistical tests</h1>
-<p>One of the most useful features of matR is it's ability to perform multiple tests that have been optimized for metagenomic data.  In addition, users are encouraged to use other packages to perform desired tests on their data.</p>
-<p>Here we provide simple examples of statistical tests built into matR using the built in "Waters" dataset.  The <a href="">matR manual</a> contains a much more complete and detailed description of all available statistical functions</p>
-<p>A statistical test such as Kruskal-Wallis can help identify the most significant rows (annotations) and sharpen the picture:</p>
+A statistical test such as Kruskal-Wallis can help identify the most significant rows (annotations) and sharpen the picture:
 <pre>
 > results <- sigtest (Waters, test = "Kruskal-Wallis")
 </pre>
@@ -290,7 +77,7 @@ Using p-values, we check how many annotations are retained, at various significa
 > sum (results$stat$p.value < 0.005)
 > sum (results$stat$p.value < 0.0005)
 </pre>
-<a id="stats_subselect">It is easy to subselect data based on statistical results, leaving abundance data for the eighteen functional annotations of highest significance in differentiating the two groups:</a>
+It is easy to subselect, leaving abundance data for the eighteen functional annotations of highest significance in differentiating the two groups:
 <pre>
 > subm <- Waters$normed [results$stat$p.value < 0.0005, ]
 > dimnames (subm)
@@ -338,17 +125,51 @@ Significance testing could also be redone with annotations from a higher (or low
 > rownames (Waters$lev2) [results.lev2$stat$p.value < 0.005]
 </pre>
 We added a new view to the collection, and proceeded as before.
-<p><a HREF="#menu">menu</a></p>
 
 
 
+<h1>Functionality</h1>
+This tutorial provides an overview of functionality, by example.
 
+<h2>Collections</h2>
+Metagenome collections are constructed using metagenome IDs.  For example:
+<pre>
+> ids <- c ("4441679.3", "4441680.3", "4441682.3", "4441695.3", "4441696.3", "4440463.3", "4440464.3")
+> cc <- collection (ids)
+</pre>
+This creates a collection object containing metadata and abundance data for the identified metagenomes.  Various functions apply to collections:
+<pre>
+> samples (cc)        # show ids of constituent metagenomes
+> names (cc)          # show names of metagenomes
+> views (cc)          # show the matrix views that the collection contains (see below)
+> viewnames (cc)      # show just the names of the views
+> metadata (cc)       # access metadata of the collection
+</pre>
+Views of collections are accessed with "$".   For example, this command shows raw abundance counts of functional annotations at level 3 of the Subsystems hierarchy:
+<pre>
+> cc$count
+</pre>
+while this shows the same data, but normalized to lie between 0 and 1:
+<pre>
+> cc$normed
+</pre>
+Generally, the purpose of views is to show different aspects of the same selection of metagenomes.  Views can be specified when a collection is constructed:
+<pre>
+> dd <- collection (ids, kegg = c (source = "KEGG"))
+</pre>
+and can also be added to an existing collection:
+<pre>
+> dd$cog <- c (source = "COG")
+</pre>
+Subsets can be taken of collections, as of regular vector objects.  For instance, a subcollection is created by
+<pre>
+> ee <- cc [1:4]
+</pre>
+that contains only the first four metagenomes.
+</pre>
 
-<a id="metadata">
-<h1>Metadata</h1>
-</a>
-<p> Metadata, loosely referred to as <i>data about the the data</i>, is collected by KBase/MG-RAST in a manner that is complient with the <a HREF="http://gensc.org/gc_wiki/index.php/Main_Page">Genomic Standards Consortium</a>.
-matR <a HREF="#download"> downloads</a> include sample metadata; the metadata can be accessed as a list of named elements with a hierarchical structure.  To select elements, an arbitrary number of index vectors may be specified.  For instance, we can use one index (of length one) to get all metadata from one metagenome:</p>
+<h2>Metadata</h2>
+Metadata is a list of named elements with a hierarchical organization.  To select elements, an arbitrary number of index vectors may be specified.  For instance, we can use one index (of length one) to get all metadata from one metagenome:
 <pre>
 > mm <- metadata (cc)
 > mm ["4440464.3"]
@@ -370,14 +191,8 @@ These are just examples to show the flexibility of indexing metadata.  One other
 > mm ["host_common_name", "disease", ".age", bygroup = TRUE]
 </pre>
 If a requested metadata field is missing from a metagenome, NA is placed instead.
-<p>Future versions of matR will make it possible for users to easily group their samples based in information contained in the metadata.
-This is already possible, but only for users with a more advanced knowledge of R</p>
-<p><a HREF="#menu">menu</a></p>
 
-
-<a id="example">
-<h1>Basic Analysis Example</h1>
-</a>
+<h2>Basic Analysis</h2>
 A very large library of statistical tools is available in the R language.   matR provides convenient wrappings of some useful procedures and visualizations.  The following examples use prepackaged datasets.
 <p>
 <!--<img alt="" src="boxplot.svg"><br>-->
@@ -412,19 +227,10 @@ Significance testing of annotations is the starting point for detailed analysis.
 </pre>
 Such analyses can be fruitfully iterated.
 
-<p>This provides a simple example ofthe type of analyses that can be performed with matR. </p>
-<p>Users are strongly encourage to view the <a href="">matR manual</a> for a more detailed description of all functions and capabilities.</p>
-
-<p><a HREF="#menu">menu</a></p>
-
-<a id="notes"><h1>Notes</h1>
-<p>matR is a work in progress - we look forward to providing users with a forum where they can interact with matR developers in the near future.</p>
-<p>A more complete description of matR functions can be found in the <a href="">matR manual</a></p>
-
 <h2>Integration</h2>
 matR integrates easily with other R software.  Collection views are directly extracted as ordinary matrices with the $ operator, as above.  Metadata is an S3-classed character vector.  Visualization routines accept all standard graphical parameters.  Shortcuts are provided to write collection data and analyses to text files.
 
-<h2>Further Resources</h2>
+<h1>Further Resources</h1>
 Once the package is loaded in an R session, use:
 <pre>
 > demo (package = "matR")
@@ -437,8 +243,6 @@ To list prepackaged datasets, use:
 <pre>
 > data (package = "matR")
 </pre>
-
-<p><a HREF="#menu">menu</a></p>
 
 </body>
 </html>

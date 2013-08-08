@@ -1,0 +1,7 @@
+cow.rumen.1	4441679.3
+cow.rumen.2	4441680.3
+cow.rumen.3	4441682.3
+fish.gut.1	4441695.3
+fish.gut.2	4441696.3
+mouse.lean	4440463.3
+mouse.obese	4440464.3
