@@ -35,19 +35,24 @@
 # always return file name(s) if result is a file
 #
 
-callRaw <- function (call, file = NULL) {
+callRaw <- function (call, parse = TRUE, file = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
 	urlStr <- paste (msession$server (), call, conj, "auth=", msession$getAuth (), sep = "")
-	optMessage ("requesting ", urlStr)
+  optMessage ("requesting ", urlStr)
 	msession$urls (urlStr)
+  parse <- if (parse) {
+  	reqPack ("RJSONIO")
+  	function (x) fromJSON (x, asText = TRUE, simplify = TRUE)
+  } 
+	else identity
 	if (!is.null (file)) {
-		e <- try (download.file (urlStr, file, quiet = TRUE))
+		e <- try (parse (download.file (urlStr, file, quiet = TRUE)))
 		if (inherits (e, "try-error")) e
 		else file
-		}
-	else try (readLines (urlStr, warn = FALSE))
 	}
+	else try (parse (readLines (urlStr, warn = FALSE)))
+}
 
 ############################################
 ### Now these are routines intended for general use
@@ -57,7 +62,7 @@ callRaw <- function (call, file = NULL) {
 ### a convenience function for no-parameter calls
 mListAllIds <- function (resource = c ("project", "sample", "library", "annotation", "metagenome")) {
 	reqPack ("RJSONIO")
-	fromJSON (callRaw (match.arg (resource)), simplify = TRUE, asText = TRUE)
+	fromJSON (callRaw (match.arg (resource), parse = FALSE), simplify = TRUE, asText = TRUE)
 	}
 
 # perform an md5 lookup in the specified annotation database
@@ -73,7 +78,7 @@ mAnnotationLookup <- function (md5, namespace) {
 		}
 	x <- character( length (md5))
 	for (j in 1:length (md5))
-		x [ j ] <- fromJSON (callRaw ( paste ("annotation?md5=", md5 [ j ], sep = "")))
+		x [ j ] <- fromJSON (callRaw (paste ("annotation?md5=", md5 [ j ], sep = ""), , parse = FALSE))
 	x
 	}
 
@@ -85,72 +90,68 @@ mSearchMetagenomes <- function (resource, attribute = NULL, value = NULL) {
 ### ... callRaw etc ...
 	}
 
-# mGet will implement special handling of API resources, one-by-one.
-# but in the meantime, any resource can be called through a general interface,
+# mGet implements special handling of API resources, one-by-one
+# but also any resource can be called through the general interface.
 # named parameters specified in ... or as a list in "with"
 # additionally, parameter "x" represents the assumption that an ID of some kind is usually required
-mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClass = FALSE, file = NULL) { 
+mGet <- function (resource = "matrix", x, with = NULL, ..., parse = TRUE, enClass = TRUE, file = NULL) { 
 	args <- append (with, list (...))
 
 # here we call the old API for metadata only
-	if (resource %in% c ("project", "sample", "library", "metagenome")) {
-		s <- msession$server()
-		msession$server (msession$servers()$test)
-		y <- try (oldmGet (resource, ID = x, namespace = args$namespace, annoType = args$annoType, seqType = args$seqType, org = args$org, 
-											 func = args$func, md5 = args$md5, param = args$param, parse = parse, enClass = enClass, toFile = file))
-		msession$server (s)
-	}
+# 	if (resource %in% c ("project", "sample", "library", "metagenome")) {
+# 		s <- msession$server()
+# 		msession$server (msession$servers()$test)
+# 		y <- try (oldmGet (resource, ID = x, namespace = args$namespace, annoType = args$annoType, seqType = args$seqType, org = args$org, 
+# 											 func = args$func, md5 = args$md5, param = args$param, parse = parse, enClass = enClass, toFile = file))
+# 		msession$server (s)
+# 		return (y)
+# 	}
 
-	else {
-		callStr <- resource
-
-# per-resource preprocessors
-		switch (resource,
-						"matrix" =
-{
-	callStr <- paste (callStr, "/", args$name, sep = "")
-	name <- args$name
-	args$name <- NULL
-})
-
-# generic request procedure
-		callStr <- paste (callStr, "?",
-											paste ("id", x, sep = "=", collapse = "&"), "&",
-											paste (names (args), unname (args), sep = "=", collapse = "&"),
-											sep = "")
-		y <- callRaw (callStr, file)
-		if (inherits (y, "try-error")) warning ("resource request unsuccessful")
-		if (!parse) return (y)
-		reqPack ("RJSONIO")
-		valid <- try (isValidJSON (y, asText = TRUE))
-		if (!is.logical (valid) || !valid) warning ("cannot parse non-JSON object")
-		y <- fromJSON (y, asText = TRUE, simplify = TRUE)
-		optMessage (length (unlist (y)), " elements after JSON parsing")
-
-# per-resource postprocessors
-		switch (resource,
-						matrix = 
-{
-	if (length (setdiff (c ("data", "rows", "columns"), names (y))) != 0) warning ("bad format in received resource")
-	m <- matrix (unlist (y$data), ncol = 3, byrow = TRUE)
-	m <- as.matrix (Matrix::sparseMatrix (i = 1 + m [,1], j = 1 + m [,2], x = m [,3]))
-	rownames (m) <- sapply (y$rows, `[[`, i = "id")
-	colnames (m) <- sapply (y$columns, `[[`, i = "id")
-
-# need to confirm this understanding of the format
-
-s <- switch (name, `function` = "ontology", organism = "taxonomy", NULL)
-rh <- try(lapply(y$rows, function(x) unlist(x[[c("metadata", s)]])))
-if (inherits(rh, "try-error")) warning ("annotation hierarchy unavailable")
-hlen <- max(sapply(rh, length))
-attr(m, "rowhier") <- sapply(rh, `length<-`, hlen)
-if (hlen != 1) attr(m, "rowhier") <- t (attr(m, "rowhier"))
-
-	y <- m
-})
-
-	}
-	y
+	callStr <- switch (resource,
+										 matrix = { name <- args$name
+										 					 args$name <- NULL
+										 					 paste (resource, "/", name, "?",
+										 					 			 paste ("id", scrubIds (x), sep = "=", collapse = "&"), "&",
+										 					 			 paste (names (args), unname (args), sep = "=", collapse = "&"),
+										 					 			 sep = "") },
+										 status = paste (resource, "/", x, sep = ""),
+										 sample = ,
+										 project = ,
+										 library = ,
+										 metagenome = paste (resource, "/",
+										 										scrubIds (x), "?",
+										 										paste (names (args), unname (args), sep = "=", collapse = "&"),
+										 										sep = ""),
+										 paste (resource, "?", paste (names (args), unname (args), sep = "=", collapse = "&"), sep = ""))
+# as.list() is needed for indexing in what follows, 
+# in case the JSON object is simplified to an atomic vector
+	y <- as.list (callRaw (callStr, parse, file))
+	if (!parse || !enClass) return (y)
+	switch (resource,
+					matrix = if (isTRUE (as.logical (args$asynchronous))) y$id else {
+						y <- as (as (y, "biom"), "matrix")
+# the following adjusts for the fact that the API does not guarantee a matrix of the requested shape
+# it may drop and/or reorder columns
+# NOTE HOWEVER THAT THIS CORRECTION IS IMPOSSIBLE IN THE ASYNCHRONOUS CASE ---
+# THE API NEEDS TO BE FIXED
+						z <- matrix (0, nr = nrow (y), nc = length (scrubIds (x)),
+												 dimnames = list (rownames (y), scrubIds (x)))
+						z [,colnames (y)] <- y
+						z },
+					status = if (!isTRUE (y$status == "done")) y$id else {
+						y <- y$data
+# extract extended rownames from the biom object given by the API
+						rownames.ext <- unname (sapply (y$rows, `[[`, "metadata", simplify = TRUE))
+						len <- max (sapply (rownames.ext, length))
+						rownames.ext <- sapply (rownames.ext, `length<-`, len, simplify = TRUE)
+						y <- as (as (y, "biom"), "matrix")
+						attr (y, "rownames.ext") <- if (len > 1) t (rownames.ext) else rownames.ext
+						y },
+					sample = ,
+					project = ,
+					library = ,
+					metagenome = ,
+					y)
 }
 
 abundanceprofile.API.wrap <- function (...) {
@@ -373,9 +374,9 @@ paramStr <- paste (param, "?", sep = "")				# a string passed directly
 # a file resource (and we return the filename as
 # returned by callRaw)
 if (oneof (resource, "sequenceSet", "reads"))
-	return (callRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""), toFile))
+	return (callRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""), parse = FALSE, toFile))
 else
-	x <- callRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""))
+	x <- callRaw (paste (resourceStr, IDstr, paramStr, callStr, sep = ""), parse = FALSE)
 
 # otherwise, we process what we have received
 if (parse) {

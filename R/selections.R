@@ -29,7 +29,7 @@ setMethod ("metadata", "ANY", function (x = "", file = NULL, resource = c ("proj
 # names given to metagenome IDs are ignored, although maybe there could be a way to allow them...
 	names (x) <- x
 
-	res <- unlist (lapply (x, mGet, resource = resource, enClass = FALSE))
+	res <- unlist (lapply (x, function (x) mGet (resource, x, verbosity = "full", enClass = FALSE)))
 	class (res) <- "metadata"
 # it is understood that regroup may return NULL here, and that is ok...
 	attr (res, "grouped") <- regroup (res)
@@ -39,7 +39,7 @@ setMethod ("metadata", "ANY", function (x = "", file = NULL, resource = c ("proj
 # three return types are possible:
 # metadata (single index), list of metadata (multiple index), data.frame (bygroup=TRUE)
 # it would be good for "names" of elements of the returned object to be set...
-`[.metadata` <- function (x, i, ..., unique = FALSE, bygroup = FALSE) {
+`[.metadata` <- function (x, i, ..., unique = FALSE, bygroup = TRUE) {
 # we accept an arbitrary number of user-specified index vectors
 # bear in mind that each index (vector) is possibly of length > 1
 	J <- append (list (i), list (...))
@@ -162,7 +162,7 @@ setMethod ("selection", "character", function (x, resource = c ("project", "samp
 setMethod ("selection", "numeric", getMethod ("selection", "character"))
 
 print.selection <- function (x, ...) {
-	if (is.null (names (x)) && 0 == length (groups (x))) print (selection (x))
+	if (is.null (names (x)) && 0 == length (groups (x))) cat (selection (x), "\n")
 	else {
 		s <- selection (x)
 		n <- names (x)

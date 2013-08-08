@@ -73,65 +73,113 @@ setMethod ("render", "collection", function (x, view = length (views (x)), ...) 
 #              } 
 #            } )
 
-# relevant graphical parameters here are:
-# main, col, labels/names, type, width, height, 
-# pointsize, units, cex.axis, cex.lab, cex.pts, pos, ...
-setMethod ("render", "pco",
-           function (x, components = c (1,2), file = NA, ...) {
-             
-# default graphical parameters:
-             
-             par <- list (
 
-# for: plot()
-               
-               cex.axis = 1, cex.lab = 1, main = "Principal Coordinates Analysis",
-               
-# for: points()
-               
-               col = "blue",
-               
-# for: text()
-               
-               labels = "", cex.pts = .8, pos = 3, pch = 19)
-             
-# computed defaults:
-             
-             par [c ("xlab", "ylab", if (length (components) == 3) "zlab" else NULL)] <-
-               paste ("PC", components, ", R^2 = ", format (x$values [components], dig = 3), sep = "")
 
-# resolve graphical parameters
-             
-             par <- resolveParList (list (...), x$par, par)
-             
-# we make "names" and "labels" synonymous here and elsewhere, as a convenience
+setMethod ("render", "pco", function (x, components = c (1,2,3), ...) {
+	
+	# some investigation of whether behavior here is good would be good
+	# elements are: labels, colors, groups(x), names(x), samples(x)
+	# see above: why do I use "rownames(x[[view]])"?
+	# fix col v. color once and for all --- it is NOT impossible
+	par <- list ()
+	par$main <- "principal coordinates"
+	par$labels <- if (length (names (x$cc)) != 0) names (x$cc) else samples (x$cc)
+	if (length (groups (x$cc)) != 0) par$labels <- paste (par$labels, " (", groups (x$cc), ")", sep = "")
+	par [c ("xlab", "ylab", if (length (components) == 3) "zlab" else NULL)] <-
+		paste ("PC", components, ", R^2 = ", format (x$values [components], dig = 3), sep = "")
+	col <- if (length (groups (x$cc)) != 0) groups (x$cc) else factor (rep (1, length (samples (x$cc))))
+	levels (col) <- colors() [sample (length (colors()), nlevels (col))]
+	g <- as.character (col)
+	par$pch <- 19
+	par$cex <- 0.7
+	
+	i <- x$vectors [ ,components [1]]
+	j <- x$vectors [ ,components [2]]
+	k <- if (length (components) == 3) x$vectors [ ,components [3]] else NULL
+	if (is.null (k)) {
+		par$col <- col
+		par <- matR:::resolveMerge (list (...), par)
+		matR:::xcall (plot, x = i, y = j, with = par, without = "labels")
+		matR:::xcall (points, x = i, y = j, with = par, without = "labels")
+		grid ()
+	}
+	else {
+		# parameter "color" has to be specially handled.
+		# "points" above wants "col", scatterplot3d wants "color", and we
+		# want the user not to worry about it...
+		par$color <- col
+		par$type <- "h"
+		par$lty.hplot <- "dotted"
+		par$axis <- TRUE
+		par$box <- FALSE
+		par <- matR:::resolveMerge (list (...), par)
+		matR:::reqPack ("scatterplot3d")
+		xys <- matR:::xcall (scatterplot3d, x = i, y = j, z = k, with = par, 
+												 without = c ("cex", "labels")) $ xyz.convert (i, j, k)
+		i <- xys$x ; j <- xys$y
+	}
+	text (x = i, y = j, labels = par$labels, pos = 4, cex = par$cex)
+})
 
-             if (is.null (par$names)) par$names <- par$labels
-             if (is.null (par$labels)) par$labels <- par$names
-
-# open device if needed
-             dev.new ()
-
-             i <- x$vectors [ ,components [1]]
-             j <- x$vectors [ ,components [2]]
-             k <- if (length (components) == 3) x$vectors [ ,components [3]] else NULL
-             if (is.null (k)) {
-               xcall (plot, x = i, y = j, with = par)
-               xcall (points, x = i, y = j, with = par, without = "type")
-             }
-             else {
-               reqPack ("scatterplot3d")
-               xys <- xcall (scatterplot3d, x = i, y = j, z = k, with = par) $ xyz.convert (i, j, k)
-               i <- xys$x ; j <- xys$y
-             }
-             xcall (text, x = i, y = j, with = par)
-
-             if (is.na (file)) NULL
-             else {
-               dev.off()
-               file
-             }
-           } )
+# # relevant graphical parameters here are:
+# # main, col, labels/names, type, width, height, 
+# # pointsize, units, cex.axis, cex.lab, cex.pts, pos, ...
+# setMethod ("render", "pco",
+#            function (x, components = c (1,2), file = NA, ...) {
+#              
+# # default graphical parameters:
+#              
+#              par <- list (
+# 
+# # for: plot()
+#                
+#                cex.axis = 1, cex.lab = 1, main = "Principal Coordinates Analysis",
+#                
+# # for: points()
+#                
+#                col = "blue",
+#                
+# # for: text()
+#                
+#                labels = "", cex.pts = .8, pos = 3, pch = 19)
+#              
+# # computed defaults:
+#              
+#              par [c ("xlab", "ylab", if (length (components) == 3) "zlab" else NULL)] <-
+#                paste ("PC", components, ", R^2 = ", format (x$values [components], dig = 3), sep = "")
+# 
+# # resolve graphical parameters
+#              
+#              par <- resolveParList (list (...), x$par, par)
+#              
+# # we make "names" and "labels" synonymous here and elsewhere, as a convenience
+# 
+#              if (is.null (par$names)) par$names <- par$labels
+#              if (is.null (par$labels)) par$labels <- par$names
+# 
+# # open device if needed
+#              dev.new ()
+# 
+#              i <- x$vectors [ ,components [1]]
+#              j <- x$vectors [ ,components [2]]
+#              k <- if (length (components) == 3) x$vectors [ ,components [3]] else NULL
+#              if (is.null (k)) {
+#                xcall (plot, x = i, y = j, with = par)
+#                xcall (points, x = i, y = j, with = par, without = "type")
+#              }
+#              else {
+#                reqPack ("scatterplot3d")
+#                xys <- xcall (scatterplot3d, x = i, y = j, z = k, with = par) $ xyz.convert (i, j, k)
+#                i <- xys$x ; j <- xys$y
+#              }
+#              xcall (text, x = i, y = j, with = par)
+# 
+#              if (is.na (file)) NULL
+#              else {
+#                dev.off()
+#                file
+#              }
+#            } )
 # 
 # setMethod ("render", "heatmap", 
 #            function (x, ...) {
