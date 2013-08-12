@@ -7,13 +7,27 @@
 ### therefore we minimize actual dependencies in the DESCRIPTION file, check for libraries
 ### as necessary, and provide a function to install suggested "dependencies"
 
+# we want a start up version message containing the github commit hash,
+# like this:  (1.0.0 build a56cc8f)
+#
+# if the package is being built in the "matR" directory, preprocessing the source
+# in this way will do the trick:
+# 
+#  sed s/XXXBUILDXXX/$commit/g matR/R/init.R > init.Rtemp
+#  mv init.Rtemp matR/R/init.R
+
 .onAttach <- function (libname, pkgname) {
-	msession$server (msession$servers()$api2)
+	build <- "XXXBUILDXXX"
 	packageStartupMessage (
-    "matR: metagenomics analysis tools for R (", packageVersion ("matR"), ")")
+    "matR: metagenomics analysis tools for R (", 
+    packageVersion ("matR"), 
+    if (substr (build, 1, 8) != "XXXBUILD") paste (" build ", build, sep = "") else "", 
+    ")")
+
+	msession$server (msession$servers()$prod)
 	options (warn = 1, timeout = 300, digits = 2)
-	packageStartupMessage (
-		"help is available with package?matR, vignette(package=\"matR\"), or msession$debug()")
+#	packageStartupMessage (
+#		"help is available with package?matR, vignette(package=\"matR\"), or msession$debug()")
 # 	packageStartupMessage (
 # 		"access private data--\tmsession$setAuth()\n",
 # 		"demos and tutorials--\tdemo(package=\"matR\")\n",
