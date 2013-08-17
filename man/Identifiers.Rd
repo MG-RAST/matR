@@ -1,6 +1,7 @@
 \name{Identifiers}
 \alias{Identifiers}
 \alias{scrubIds}
+\alias{scrubIDs}
 \alias{scrapeResources}
 
 \title{Process Resource Identifiers}
