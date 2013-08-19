@@ -1,7 +1,7 @@
-matR: Metagenomics Analysis Tools for R
+matR: metagenomics analysis tools for R
 
 ABOUT
-matR is an analysis client for MG-RAST built as an extension package to the popular R programming language for statistics.  This package is in development.  Facilities are implemented to download annotation data from the MG-RAST metagenome analysis server.  Easy acccess to lightly structured metadata, authentication for access to private data, and customized versions of statistical and visualization tools are provided.
+matR is an analysis client for MG-RAST (http://metagenomics.anl.gov) built as an extension package to the popular R programming language for statistics.  This package is in development.  Facilities are implemented to download annotation data from the MG-RAST metagenome analysis server.  Easy acccess to lightly structured metadata, authentication for access to private data, and customized versions of statistical and visualization tools are provided.
 
 EXAMPLES, DOCUMENTATION, HELP
 Docs and examples are directly available at http://mcs.anl.gov/~braithwaite.  In an R session with matR loaded, try:
