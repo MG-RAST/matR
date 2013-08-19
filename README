@@ -25,4 +25,4 @@ Install matR within an R session:
 > install.packages("matR", repo="http://mcs.anl.gov/~braithwaite/R", type="source")
 > library(matR)
 > dependencies()
-Alternatively, download matR from GitHub (http://github.org/MG-RAST/matR).  Make sure to have a current version of the R language (http://www.r-project.org).
+Alternatively, download matR from GitHub (https://github.org/MG-RAST/matR).  Make sure to have a current version of the R language (http://www.r-project.org).
