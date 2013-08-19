@@ -1,26 +1,28 @@
 matR: Metagenomics Analysis Tools for R
 
 ABOUT
-matR is an analysis client for MG-RAST built as an extension package to the popular R programming language for statistics.  This package is in development.  Facilities are implemented to download annotation data from the MG-RAST metagenome analysis server.  Easy acccess to lightly structured metadata, authentication for access to private data, and customized versions of relevant statistical and visualization tools are provided.
+matR is an analysis client for MG-RAST built as an extension package to the popular R programming language for statistics.  This package is in development.  Facilities are implemented to download annotation data from the MG-RAST metagenome analysis server.  Easy acccess to lightly structured metadata, authentication for access to private data, and customized versions of statistical and visualization tools are provided.
 
-HELP AND DOCUMENTATION
-With matR loaded, help of various kinds is available:
-> vignette("matR-quick-reference")    # opens two-page pdf of commands and examples
-> vignette("matR-change-log")         # opens pdf of recent feature revisions
-> demo2("demo-name")            # step through a demo
-> demo(package="matR")          # list available demos
-> ?collection                   # help with a particular function
-> utils::example("collection")  # run examples for a particular function
-> package?matR                  # entry point for docs
-> library(help="matR")          # index of all help topics
-> data(package="matR")          # list datasets include with matR
+EXAMPLES, DOCUMENTATION, HELP
+Docs and examples are directly available at http://mcs.anl.gov/~braithwaite.  In an R session With matR loaded, try:
+> vignette("matR-user-manual")              # complete user manual (pdf)
+> vignette("matR-quick-reference")          # summary of commands (pdf)
+> vignette("matR-release-notes")            # latest updates (pdf)
+> demo(package="matR")                      # list demos
+> demo.step("analysis")                     # step through a demo
+> data(package="matR")                      # list included datasets
+> package?matR                              # integrated help homepage
+> library(help="matR")                      # integrated help index
+> ?collection                               # help with a particular function
+> example("collection")                     # examples for a particular function
 
 LOADING
-During an R session, matR functionality is only available after loading the package with:
+During an R session, load matR with:
 > library(matR)
 
 INSTALLATION
-A current installation of R (http://www.r-project.org) is required.  The package can be downloaded from GitHub, or easily installed from within R:
-> install.packages("matR", repo="http://dunkirk.mcs.anl.gov/~braithwaite/R", type="source")
+matR requires a current installation of the R language.  (See http://www.r-project.org.)  The package can be downloaded from GitHub (http://github.org/MG-RAST/matR) or installed during an R session with:
+> install.packages("matR", repo="http://mcs.anl.gov/~braithwaite/R", type="source")
 > library(matR)
 > dependencies()
+
