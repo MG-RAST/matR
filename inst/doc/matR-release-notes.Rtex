@@ -12,7 +12,7 @@ Note: this document is a summary.  See integrated help for complete detail.
 
 \section*{Version 1.0.0}
 
-For now, collections have only raw counts by default.  See \texttt{default.views}.
+For now, collections have only raw counts by default.  See \texttt{view.defaults}.
 
 \texttt{vignette("matR-user-manual")} for user manual (pdf).
 

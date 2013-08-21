@@ -34,5 +34,5 @@ S3method (summary, collection)
 # S3method (summary, heatmap)
 
 # IMPORTS FROM STANDARD PACKAGES
-importClassesFrom (Matrix, Matrix)
+# importClassesFrom (Matrix, Matrix)
 

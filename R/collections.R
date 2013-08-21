@@ -16,7 +16,7 @@
 
 setMethod ("collection", "selection", function (x, ...) {
 	views <- list (...)
-	if (! length (views)) views <- default.views
+	if (! length (views)) views <- view.defaults
 	else if (is.list (views [[1]])) views <- views [[1]]
 
 	L <- list()
@@ -190,12 +190,12 @@ view.printable <- function (v) paste (v, collapse = " : ")
 
 # assumes: a matrix, with attributes fully describing what view it is
 # returns: the view
-view.extract <- function (vc) unlist (attributes (vc (want.dummy = TRUE)) [names (view.params)])
+view.extract <- function (vc) unlist (attributes (vc (want.dummy = TRUE)) [names (view.parameters)])
 
 # assumes: a partial or complete view description (as a named character vector)
 # a best-guess complete view in a standard form
 view.finish <- function (spec) {
-	vp <- sapply (view.params, unlist, use.names = FALSE)
+	vp <- sapply (view.parameters, unlist, use.names = FALSE)
 	chooser <- array (0, dim = sapply (vp, length), dimnames = vp)
 	
 # we use a system of weights on all parameter combinations, to enable specifying views minimally
@@ -211,13 +211,13 @@ view.finish <- function (spec) {
 	chooser [,,,,"na"] <- chooser [,,,,"na"] + 1
 
 # nullify impossible combinations
-	chooser [,"function",view.params$level$organism,,] <- -1
-	chooser [,"function",,view.params$source$rna,] <- -1
-	chooser [,"function",,,view.params$hit$organism] <- -1
+	chooser [,"function",view.parameters$level$organism,,] <- -1
+	chooser [,"function",,view.parameters$source$rna,] <- -1
+	chooser [,"function",,,view.parameters$hit$organism] <- -1
 
-	chooser [,"organism",view.params$level$`function`,,] <- -1
-	chooser [,"organism",,view.params$source$ontology,] <- -1
-	chooser [,"organism",,,view.params$hit$`function`] <- -1
+	chooser [,"organism",view.parameters$level$`function`,,] <- -1
+	chooser [,"organism",,view.parameters$source$ontology,] <- -1
+	chooser [,"organism",,,view.parameters$hit$`function`] <- -1
 
 # see what has been requested and nullify others
 # should warn if no match to user input...

@@ -101,8 +101,8 @@
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l}
 \bf{collections and views} \\
 \hline
-\texttt{view.params}							&	show valid values of view parameters				\\
-\texttt{default.views}					&	show default collection views					\\
+\texttt{view.parameters}							&	show valid values of view parameters				\\
+\texttt{view.defaults}					&	show default collection views					\\
 \texttt{collection(c("4441679.3","4441680.3","4441682.3"))}		&	create collection of specified samples (with default views)	\\
 \texttt{collection(x, L1 = c(lev="level1"), L2 = c(lev="level2"))}	&	create collection with custom views				\\
 \texttt{L <- list (spec = c(annot="organism"),}				&	create a list of views \ldots					\\

@@ -76,17 +76,6 @@ view.defaults <- list (
 # 	nsc = c (entry = "ns.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"),
 # 	nsn = c (entry = "ns.normed.counts", annot = "function", level = "level3", source = "Subsystems", hit = "NA"))
 
-# backward-compatibility
-view.params <- view.parameters
-default.views <- view.defaults
-
-id.ex <- list (
-	project = "92",
-	project2 = "102",
-	sample = "mgs3482",
-	library = "mgl3482.4",
-	ids = c ("4443360.3","4443361.3", "4443362.3"),
-	ids2 = c ("4492992.3", "4492991.3", "4492990.3", "4492989.3", "4492988.3", "4492987.3", "4492986.3", "4492985.3", "4492984.3", "4492983.3", "4492982.3", "4492981.3", "4492980.3"))
 
 ############################################
 ### Session configuration information resides in

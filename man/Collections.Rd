@@ -32,7 +32,7 @@ rownames (x, ...)
 \author{Daniel T. Braithwaite}
 \seealso{
 	\code{\link{Authentication}}, 
-	\code{\link{default.views}}, 
+	\code{\link{view.defaults}}, 
 	\code{\link{collection-methods}},
 	\code{\link{coerce-methods}}}
 \examples{
