@@ -91,6 +91,7 @@ setMethod ("pco", "collection", function (x,
 	g <- as.character (col)
 	par$pch <- 19
 	par$cex <- 0.7
+	par$pos <- 4
 
 	i <- P$vectors [ ,components [1]]
 	j <- P$vectors [ ,components [2]]
@@ -98,8 +99,8 @@ setMethod ("pco", "collection", function (x,
 	if (is.null (k)) {
 		par$col <- col
 		par <- resolveMerge (list (...), par)
-		xcall (plot, x = i, y = j, with = par, without = "labels")
-		xcall (points, x = i, y = j, with = par, without = "labels")
+		xcall (plot, x = i, y = j, with = par, without = c("labels","pos"))
+		xcall (points, x = i, y = j, with = par, without = c("labels","pos"))
 		grid ()
 		}
 	else {
@@ -114,10 +115,10 @@ setMethod ("pco", "collection", function (x,
 		par <- resolveMerge (list (...), par)
 		reqPack ("scatterplot3d")
 		xys <- xcall (scatterplot3d, x = i, y = j, z = k, with = par, 
-									without = c ("cex", "labels")) $ xyz.convert (i, j, k)
+									without = c ("cex", "labels", "pos")) $ xyz.convert (i, j, k)
  		i <- xys$x ; j <- xys$y
 	}
-	text (x = i, y = j, labels = par$labels, pos = 4, cex = par$cex)
+	text (x = i, y = j, labels = par$labels, pos = par$pos, cex = par$cex)
 	invisible (P)
 })
 setMethod ("pco", "ANY", prior ("pco"))
