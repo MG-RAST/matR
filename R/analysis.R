@@ -13,6 +13,60 @@
 ### dispatching but not slots.
 ####################################################
 
+shapes <- c (square.open = 0,
+						 circle.open = 1,
+						 triangle.open = 2,
+						 diamond.open = 5,
+						 invert.triangle.open = 6,
+						 square.solid = 15,
+						 circle.solid = 16,
+						 triangle.solid = 17,
+						 diamond.solid = 18,
+						 square.fill = 22,
+						 circle.fill = 21,
+						 triangle.fill = 24,
+						 diamond.fill = 23,
+						 invert.triangle.fill = 25,						
+						 plus = 3,
+						 times = 4,
+						 star = 8)
+shapes <- function (n) {
+shapes [switch (n,
+								1 = "circle.solid",
+								2 = c("square.solid", "triangle.solid"),
+								3 = c("square.solid", "triangle.solid", "circle.solid"),
+								4 = c("square.open", "triangle.open", "circle.open", "diamond.open"),
+								5 = c("square.open", "triangle.open", "circle.open", "diamond.open", "invert.triangle.open"),
+								6 = c("square.solid", "triangle.solid", "circle.solid", "square.open", "triangle.open", "circle.open"),
+								7 = c("square.solid", "triangle.solid", "circle.solid", "square.open", "triangle.open", "circle.open", "diamond.open"),
+								8 = c("square.solid", "triangle.solid", "circle.solid", "square.open", "triangle.open", "circle.open", "plus", "times"),
+								9 = c("square.solid", "triangle.solid", "circle.solid", "square.open", "triangle.open", "circle.open", "plus", "times", "star"),
+								
+								]
+}	
+dont forget about pch='a', pch= 'b', etc.
+	
+
+	if(n==1)...	c (circle = , triangle = , )
+}
+colors <- function (n) {
+	if (n==1) "blue"
+	else if (n=2) c (...)	
+}
+
+
+graphics.opts <- list (
+	plot = list (...),
+	points = list (...),
+	scatterplot3d = list (...),
+	text = list (...),
+	boxplot = list (...),
+	parcoord - list (...),
+	heatmap.2 = list (...)
+	)
+lapply (graphics.opts, formals)
+
+
 ####################################################
 ### boxplot.
 ### built on graphics::boxplot()
