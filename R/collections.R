@@ -1,4 +1,3 @@
-
 ########################################################################################
 ## "collection" objects and related functions / methods are defined here.
 ## "collection" and "selection" are S4 classes, whereas "metadata" is S3.
@@ -155,7 +154,7 @@ view.container.create <- function (ref, v)
 			} else if (want.dummy) {
 				ref <- matrix (r)
 				attributes (ref) <- append (attributes (ref), v)
-			} else stop ("data is pending")
+			} else message ("data is pending")
 		}
 		ref
 	}
