@@ -16,10 +16,6 @@ Docs and examples are directly available at http://mcs.anl.gov/~braithwaite.  In
 > ?collection                               # help with a particular function
 > example("collection")                     # examples for a particular function
 
-LOADING
-During an R session, load matR with:
-> library(matR)
-
 INSTALLATION
 # All commands are run from an R prompt
 # Install matR and its dependencies from this github repository within an R session
@@ -35,3 +31,8 @@ dependencies()
 
 Alternatively, download matR from GitHub (https://github.org/MG-RAST/matR).  
 Make sure to have a current version of the R language (http://www.r-project.org).
+
+LOADING
+During an R session, load matR with:
+> library(matR)
+
