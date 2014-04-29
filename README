@@ -23,13 +23,13 @@ During an R session, load matR with:
 INSTALLATION
 # All commands are run from an R prompt
 # Install matR and its dependencies from this github repository within an R session
-# install packages required to install R directly from its github repository
+# Install devtools package (and its dependencies) to install matR directly from this repository
 install.packages("devtools", dependencies = TRUE)
-# source devtools
+# Load devtools
 library(devtools)
-# install matR from https://github.com/MG-RAST/matR
+# Install matR from this repository (https://github.com/MG-RAST/matR)
 install_github("MG-RAST/matR")  
-# load matR and make sure that all of its dependencies are installed
+# Load matR and make sure that all of its dependencies are installed
 library(matR)
 dependencies()    
 
