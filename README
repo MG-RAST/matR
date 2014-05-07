@@ -35,7 +35,7 @@ install_github("MG-RAST/matR")
 library(matR)
 dependencies()    
 
-Alternatively, download matR from GitHub (https://github.org/MG-RAST/matR).  
+Alternatively, download an archive of this repository (https://github.com/MG-RAST/matR/archive/master.zip).  
 Make sure to have a current version of the R language (http://www.r-project.org).
 
 LOADING
