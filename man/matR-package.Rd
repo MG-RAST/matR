@@ -10,7 +10,7 @@ matR is an analysis module, extending the MG-RAST metagenome annotation pipeline
 }
 \author{Daniel T. Braithwaite, Kevin P. Keegan}
 \references{
-\url{http://www.kbase.us}\cr
+\url{http://press.igsb.anl.gov/mg-rast/matr/}\cr
 }
 \seealso{
 \code{\link{Authentication}}\cr

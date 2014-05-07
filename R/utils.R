@@ -200,7 +200,7 @@ scrubIds <- function (ids, resources = c ("project", "library", "sample", "metag
   scrub
 	}
 
-# identify the kbase resources specified by a vector of ids
+# identify the resources specified by a vector of ids
 # prefixes of "mgp", "mgl", "mgs", "mgm" are understood
 # any other prefix (including no prefix) results in "metagenome"
 scrapeResources <- function (ids) {

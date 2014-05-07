@@ -16,7 +16,7 @@ Docs and examples are available from the package itself. In an R session with ma
 > ?collection                               # help with a particular function
 > example("collection")                     # examples for a particular function
 
-Additional examples are provided on the Blog:
+Additional examples are provided on the Blog (OFFLINE AT THE MOMENT):
 http://press.igsb.anl.gov/mg-rast/matr/
 
 Even more examples, help and discussions can be found on the matR-forum:
