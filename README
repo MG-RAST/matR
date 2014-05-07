@@ -4,7 +4,7 @@ ABOUT
 matR is an analysis client for MG-RAST (http://metagenomics.anl.gov) built as an extension package to the popular R programming language for statistics.  This package is in development.  Facilities are implemented to download annotation data from the MG-RAST metagenome analysis server.  Easy acccess to lightly structured metadata, authentication for access to private data, and customized versions of statistical and visualization tools are provided.
 
 EXAMPLES, DOCUMENTATION, HELP
-Docs and examples are directly available at http://mcs.anl.gov/~braithwaite.  In an R session with matR loaded, try:
+Docs and examples are available from the package itself. In an R session with matR loaded, try:
 > vignette("matR-user-manual")              # complete user manual (pdf)
 > vignette("matR-quick-reference")          # summary of commands (pdf)
 > vignette("matR-release-notes")            # latest updates (pdf)
@@ -15,6 +15,12 @@ Docs and examples are directly available at http://mcs.anl.gov/~braithwaite.  In
 > library(help="matR")                      # integrated help index
 > ?collection                               # help with a particular function
 > example("collection")                     # examples for a particular function
+
+Additional examples are provided on the Blog:
+http://press.igsb.anl.gov/mg-rast/matr/
+
+Even more examples, help and discussions can be found on the matR-forum:
+https://groups.google.com/forum/#!forum/matr-forum 
 
 LOADING
 During an R session, load matR with:
