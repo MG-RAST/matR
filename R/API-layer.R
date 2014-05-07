@@ -1,6 +1,6 @@
 ############################################
 ### CORE ROUTINES FOR COMMUNICATING
-### WITH MG-RAST AND KBASE
+### WITH MG-RAST
 ###
 ### this is the API interface layer
 ############################################
