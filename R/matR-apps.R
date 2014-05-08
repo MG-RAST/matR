@@ -1761,7 +1761,7 @@ load_metadata <- function(metadata_table, metadata_column){
                                           comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
                                           )
                                )
-  color_matrix <- create_colors(metadata_matrix, color_mode = "auto")
+  color_matrix <- create_colors_heatmap(metadata_matrix, color_mode = "auto")
   ncol.color_matrix <- ncol(color_matrix)
   metadata_factors <- as.factor(metadata_matrix[,metadata_column])
   metadata_levels <- levels(as.factor(metadata_matrix[,metadata_column]))
@@ -1995,25 +1995,25 @@ create_colors <- function(metadata_column, color_mode = "auto"){ # function to
 
 
 
-## ######################
-## # SUB(9): Automtically generate colors from metadata with identical text or values
-## ######################
-## create_colors <- function(color_matrix, color_mode = "auto"){ # function to     
-##   my_data.color <- data.frame(color_matrix)
-##   ids <- rownames(color_matrix)
-##   color_categories <- colnames(color_matrix)
-##   for ( i in 1:dim(color_matrix)[2] ){
-##     column_factors <- as.factor(color_matrix[,i])
-##     column_levels <- levels(as.factor(color_matrix[,i]))
-##     num_levels <- length(column_levels)
-##     color_levels <- col.wheel(num_levels)
-##     levels(column_factors) <- color_levels
-##     my_data.color[,i]<-as.character(column_factors)
-##   }
-##   return(my_data.color)
-## }
-## ######################
-## ######################
+######################
+# SUB(9): Automtically generate colors from metadata with identical text or values
+######################
+create_colors_heatmap <- function(color_matrix, color_mode = "auto"){ # function to     
+  my_data.color <- data.frame(color_matrix)
+  ids <- rownames(color_matrix)
+  color_categories <- colnames(color_matrix)
+  for ( i in 1:dim(color_matrix)[2] ){
+    column_factors <- as.factor(color_matrix[,i])
+    column_levels <- levels(as.factor(color_matrix[,i]))
+    num_levels <- length(column_levels)
+    color_levels <- col.wheel(num_levels)
+    levels(column_factors) <- color_levels
+    my_data.color[,i]<-as.character(column_factors)
+  }
+  return(my_data.color)
+}
+######################
+######################
 
 
 
