@@ -16,5 +16,5 @@ License: file LICENSE
 LazyLoad: yes
 LazyData: yes
 LazyDataCompression: xz
-Collate: utils.R class-headers.R selections.R collections.R class-coercions.R analysis-utils.R analysis.R render.R init.R API-layer.R
+Collate: utils.R class-headers.R selections.R collections.R class-coercions.R analysis-utils.R analysis.R render.R init.R API-layer.R matR-apps.R
 
