@@ -3,6 +3,12 @@
 # for inclusion in the package, but may need additional
 # optimization and documentation
 
+# RESOLVE CREATE_COLORS SUB
+
+
+######################################################################################################################
+################################### FUNCTION FOR PREPROCESSING THE DATA ##############################################
+######################################################################################################################
 matR_preprocessing <<- function(
                                   data_in,     # name of the input file (tab delimited text with the raw counts) or R matrix
                                   data_type             ="file",  # c(file, r_matrix)
@@ -28,9 +34,7 @@ matR_preprocessing <<- function(
                                   debug                 = FALSE                                  
                                   )
 
-  {
-
-        
+  {     
     # check for necessary packages, install if they are not there
     #require(matR) || install.packages("matR", repo="http://mcs.anl.gov/~braithwaite/R", type="source")
     #chooseCRANmirror()
@@ -43,9 +47,7 @@ matR_preprocessing <<- function(
     #library(preprocessCore)
     #library(DESeq)
     ###### MAIN
-
-
-    
+ 
     # get the name of the data object if an object is used -- use the filename if input is filename string
     if ( identical( data_type, "file") ){
       input_name <- data_in
@@ -55,14 +57,6 @@ matR_preprocessing <<- function(
       stop( paste( data_type, " is not a valid option for data_type", sep="", collapse=""))
     }
 
-
-    
-    
-    #if ( identical( method, "DESeq" ) ){
-
-   
-    
-
     # Generate names for the output file and object
     if ( identical( output_object, "default") ){
       output_object <- paste( input_name, ".", norm_method, ".PREPROCESSED" , sep="", collapse="")
@@ -70,8 +64,6 @@ matR_preprocessing <<- function(
     if ( identical( output_file, "default") ){
       output_file <- paste( input_name, ".", norm_method, ".PREPROCESSED.txt" , sep="", collapse="")
     }
-
-
     
     # Input the data
     if ( identical( data_type, "file") ){
@@ -81,8 +73,6 @@ matR_preprocessing <<- function(
     }else{
       stop( paste( data_type, " is not a valid option for data_type", sep="", collapse=""))
     }
-
-
     
     # sort the data (COLUMNWISE) by id
     input_data <- input_data[,order(colnames(input_data))]
@@ -92,21 +82,16 @@ matR_preprocessing <<- function(
  
     # non optional, convert "na's" to 0
     input_data[is.na(input_data)] <- 0
-
-
     
     # remove singletons
     if(removeSg==TRUE){
       input_data <- remove.singletons(x=input_data, lim.entry=removeSg_valueMin, lim.row=removeSg_rowMin, debug=debug)
     }
-
-
     
     # log transform log(x+1)2
     if ( log_transform==TRUE ){
       input_data <- log_data(input_data)
     }
-
 
     regression_message <- "DESeq regression:      NA"
     # Normalize -- stadardize or quantile norm (depends on user selection)
@@ -144,8 +129,6 @@ matR_preprocessing <<- function(
  
     # write flat file, with specified name, that contains the preprocessed data
     write.table(input_data, file=output_file, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
-
-
     
     # produce boxplots
     boxplot_message <- "output boxplot:        NA"
@@ -172,10 +155,8 @@ matR_preprocessing <<- function(
       boxplot_message <- paste("output boxplot:       ", boxplots_file, "\n", sep="", collapse="")
     }
 
-
     # message to send to the user after completion, given names for object and flat file outputs
     #writeLines( paste("Data have been preprocessed. Proprocessed, see ", log_file, " for details", sep="", collapse=""))
-
     
     if ( create_log==TRUE ){
       # name log file
@@ -215,48 +196,27 @@ matR_preprocessing <<- function(
                        ),
                  con=log_file
                  )
-    }
-
-
-    
+    }    
   }
 
+######################################################################################################################
+######################################################################################################################
+######################################################################################################################
 
 
 
-### Subs
-
-# Sub to load the metadata (for DESeq)
-
-matR_import_metadata_from_file <- function(file){
-
-  metadata_matrix <- as.matrix(
-                               read.table(
-                                          file=file,row.names=1,header=TRUE,sep="\t",
-                                          colClasses = "character", check.names=FALSE,
-                                          comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
-                                          )
-                               )
-  # return imported matrix
-  metadata_matrix
-}
-
-
-
-
-
-
-
-matR_plot_pco <- function(
-                            file_in,
-                            input_dir = "./",
-                            output_PCoA_dir = "./",
-                            print_dist = 1,
-                            output_DIST_dir = "./",
-                            dist_method = "euclidean",
-                            headers = 1
-                            )
-
+######################################################################################################################
+###################################           CREATE PCO FLAT FILE      ##############################################
+######################################################################################################################
+plot_pco <- function(
+                     file_in,
+                     input_dir = "./",
+                     output_PCoA_dir = "./",
+                     print_dist = 1,
+                     output_DIST_dir = "./",
+                     dist_method = "euclidean",
+                     headers = 1
+                     ) 
 {
   # load packages
   suppressPackageStartupMessages(library(matlab))      
@@ -403,35 +363,15 @@ matR_plot_pco <- function(
   write.table(eigen_vectors, file=PCoA_file_out, col.names=FALSE, row.names=TRUE, append = TRUE, sep="\t", eol="\n")
   
 }
-
-
-write_file <- function(file_name, data) {
-  write.table(data, file=file_name, col.names=NA, row.names=TRUE, append = FALSE, sep="\t", quote = FALSE, eol="\n")
-}
-
+######################################################################################################################
+######################################################################################################################
+######################################################################################################################
 
 
 
-# This script uses matR to generate 2 or 3 dimmensional pcoas
-
-# table_in is the abundance array as tab text -- columns are samples(metagenomes) rows are taxa or functions
-# color_table and pch_table are tab tables, with each row as a metagenome, each column as a metadata 
-# grouping/coloring. These tables are used to define colors and point shapes for the plot
-# It is assumed that the order of samples (left to right) in table_in is the same
-# as the order (top to bottom) in color_table and pch_table
-
-# basic operation is to produce a color-less pcoa of the input data
-
-# user can also input a table to specify colors
-# This table can contain colors (as hex or nominal) or can contain metadata
-# This is a PCoA plotting functions that can handle a number of different scenarios
-# It always requires a *.PCoA file (like that produce by AMETHST/plot_pco.r)
-# It can handle metadata as a table - producing plots for all or selected metadata columns (metadata used to generate colors automatically)
-# It can handle an amthst groups file as metadata (metadata used to generate colors automatically)
-# It can handle a list of colors - using them to pain the points directly
-# It can handle the case when there is no metadata - painting all of points the same
-# users can also specify a pch table to control the shape of plotted icons (this feature may not be ready yet)
-
+######################################################################################################################
+###############################     RENDER PCO FROM PRECALCULATED PCO AND METADATA    ################################
+######################################################################################################################
 matR_render_pcoa <- function(
                             PCoA_in="", # annotation abundance table (raw or normalized values)
                             image_out="default",
@@ -515,10 +455,7 @@ matR_render_pcoa <- function(
                 )
   }
   #####################################################################################
-  #####################################################################################
-
-
-  
+    
   #####################################################################################
   ########### PLOT WITH AMETHST GROUPS (colors generated by load_metadata) ############
   #####################################################################################
@@ -584,9 +521,6 @@ matR_render_pcoa <- function(
     
   }
   #####################################################################################
-  #####################################################################################
-
-
   
   #####################################################################################
   ############ PLOT WITH LIST OF COLORS (colors generated by load_metadata) ###########
@@ -618,10 +552,7 @@ matR_render_pcoa <- function(
                 )
   }
   #####################################################################################
-  #####################################################################################
 
-
-  
   #####################################################################################
   ########### PLOT WITH METADATA_TABLE (colors produced from color_matrix) ############
   ######## CAN HANDLE PLOTTING ALL OR A SINGLE SELECTED METADATA TABLE COLUMN #########
@@ -734,518 +665,16 @@ matR_render_pcoa <- function(
   }
   
 }
-#####################################################################################
-
-######################
-###### END MAIN ######
-######################
-  
-######################
-######## SUBS ########
-######################
-
-#######################
-######## SUB(1): Function to import the data from a pre-calculated PCoA
-######################
-load_pcoa_data <- function(PCoA_in){
-  con_1 <- file(PCoA_in)
-  con_2 <- file(PCoA_in)
-  # read through the first time to get the number of samples
-  open(con_1);
-  num_values <- 0
-  data_type = "NA"
-  while ( length(my_line <- readLines(con_1,n = 1, warn = FALSE)) > 0) {
-    if ( length( grep("PCO", my_line) ) == 1  ){
-      num_values <- num_values + 1
-    }
-  }
-  close(con_1)
-  # create object for values
-  eigen_values <- matrix("", num_values, 1)
-  dimnames(eigen_values)[[1]] <- 1:num_values
-  eigen_vectors <- matrix("", num_values, num_values)
-  dimnames(eigen_vectors)[[1]] <- 1:num_values
-  # read through a second time to populate the R objects
-  value_index <- 1
-  vector_index <- 1
-  open(con_2)
-  current.line <- 1
-  data_type = "NA"
-  while ( length(my_line <- readLines(con_2,n = 1, warn = FALSE)) > 0) {
-    if ( length( grep("#", my_line) ) == 1  ){
-      if ( length( grep("EIGEN VALUES", my_line) ) == 1  ){
-        data_type="eigen_values"
-      } else if ( length( grep("EIGEN VECTORS", my_line) ) == 1 ){
-        data_type="eigen_vectors"
-      }
-    }else{
-      split_line <- noquote(strsplit(my_line, split="\t"))
-      if ( identical(data_type, "eigen_values")==TRUE ){
-        dimnames(eigen_values)[[1]][value_index] <- noquote(split_line[[1]][1])
-        eigen_values[value_index,1] <- noquote(split_line[[1]][2])       
-        value_index <- value_index + 1
-      }
-      if ( identical(data_type, "eigen_vectors")==TRUE ){
-        dimnames(eigen_vectors)[[1]][vector_index] <- noquote(split_line[[1]][1])
-        for (i in 2:(num_values+1)){
-          eigen_vectors[vector_index, (i-1)] <- as.numeric(noquote(split_line[[1]][i]))
-        }
-        vector_index <- vector_index + 1
-      }
-    }
-  }
-  close(con_2)
-  # finish labeling of data objects
-  dimnames(eigen_values)[[2]] <- "EigenValues"
-  dimnames(eigen_vectors)[[2]] <- dimnames(eigen_values)[[1]]
-  class(eigen_values) <- "numeric"
-  class(eigen_vectors) <- "numeric"
-  # write imported data to global objects
-  #eigen_values <<- eigen_values
-  #eigen_vectors <<- eigen_vectors
-  return(list(eigen_values=eigen_values, eigen_vectors=eigen_vectors))
-  
-}
-######################
-######################
-######################
-
-
-## ######################
-## # SUB(2): Function to load the metadata/ generate or import colors for the points
-## ######################
-## #load_metadata <- function(metadata_table, metadata_column, color_list, amethst_groups){
-## load_metadata <- function(metadata_table, ...){
-  
-##   if ( identical( is.na(metadata_table), FALSE ) ){ # HANDLE METADATA TABLE for generating colors
-##     metadata_matrix <- as.matrix( # Import metadata table, use it to generate colors
-##                               read.table(
-##                                          file=metadata_table,row.names=1,header=TRUE,sep="\t",
-##                                          colClasses = "character", check.names=FALSE,
-##                                          comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
-##                                          )
-##                               )   
-##     metadata_matrix <- metadata_matrix[ order(rownames(metadata_matrix)),,drop=FALSE ]  # make sure that the metadata matrix is sorted (ROWWISE) by id
-##     return(metadata_matrix)
-    
-##   } else if ( identical( is.na(amethst_groups), FALSE ) ){ # HANDLE AMETHST GROUPS for generating colors
-
-##     con_grp <- file(amethst_groups)
-##     open(con_grp)
-##     line_count <- 1
-##     groups.list <- vector(mode="character")
-##     while ( length(my_line <- readLines(con_grp,n = 1, warn = FALSE)) > 0) {
-##       new_line <- my_line
-##       split_line <- unlist(strsplit(my_line, split=","))
-##       split_line.list <- rep(line_count, length(split_line))
-##       names(split_line.list) <- split_line
-##       groups.list <- c(groups.list, split_line.list)
-##       line_count <- line_count + 1
-##     }
-##     close(con_grp)
-##     if ( length(groups.list) != length(unique(names(groups.list))) ){
-##       stop("One or more groups have redundant entries - this is not allowed for coloring the PCoA")
-##     }
-##     metadata_matrix <- matrix(groups.list, ncol=1)
-##     metadata_matrix <- metadata_matrix[ order(metadata_matrix),,drop=FALSE ] # order by metadata value
-##     colnames(metadata_matrix) <- "amethst_metadata"
-##     #column_levels <<- levels(metadata_column)
-##     #num_levels <<- length(column_levels)
-##     #color_levels <<- col.wheel(num_levels)
-##     #ncol.color_matrix <<- 1
-##     #pcoa_colors <<- color_list
-##     return(metadata_matrix)
-    
-##   }else if ( identical( is.na(color_list), FALSE ) ){ # HANDLE COLOR LIST; use list of color if it is supplied
-    
-##     column_levels <<- levels(as.factor(as.matrix(color_list)))
-##     num_levels <<- length(column_levels)
-##     color_levels <<- col.wheel(num_levels)
-##     ncol.color_matrix <<- 1
-##     pcoa_colors <<- color_list
-   
-##   }else{ # HANDLE NO INPUT METADATA OR COLORS; use a default of black if no table or list is supplied
-                                     
-##     column_levels <<- "data"
-##     num_levels <<- 1
-##     color_levels <<- 1
-##     ncol.color_matrix <<- 1
-##     pcoa_colors <<- "black"    
-
-##   }
-## }
-## ######################
-## ######################
-
-  
-######################
-# SUB(3): Function to import the pch information for the points # load pch matrix if one is specified
-######################
-load_pch <- function(pch_table){
-  if ( identical( is.na(pch_table), FALSE ) ){
-    pch_matrix <- data.matrix(read.table(file=pch_table, row.names=1, header=TRUE, sep="\t", comment.char="", quote="", check.names=FALSE))
-    pch_matrix <- pch_matrix[order(rownames(pch_matrix)),]
-    plot_pch <- pch_matrix[,pch_column]
-  }else{
-    plot_pch <- 19
-  }
-  return(plot_pch)
-}
-######################
-######################
-  
-######################
-# SUB(4): Workhorse function that creates the plot
-######################
-create_plot <- function(
-                        PCoA_in,
-                        ncol.color_matrix,
-                        eigen_values, eigen_vectors, components,
-                        column_levels, num_levels, color_levels, pcoa_colors, plot_pch,
-                        image_out,figure_main,
-                        image_width_in, image_height_in, image_res_dpi,
-                        width_legend, width_figure,
-                        title_cex, legend_cex, figure_cex, bar_cex, label_points 
-                        ){                      
-  png( # initialize the png 
-      filename = image_out,
-      width = image_width_in,
-      height = image_height_in,
-      res = image_res_dpi,
-      units = 'in'
-      )
-  # CREATE THE LAYOUT
-  my_layout <- layout(  matrix(c(1,1,2,3,4,4), 3, 2, byrow=TRUE ), widths=c(width_legend,width_figure), heights=c(0.1,0.8,0.1) )
-  layout.show(my_layout)
-  # PLOT THE TITLE
-  plot.new()
-  text(x=0.5, y=0.5, figure_main, cex=title_cex)
-  # PLOT THE LEGEND
-  plot.new()
-  legend( x="center", legend=column_levels, pch=15, col=color_levels, cex=legend_cex)
-  # PLOT THE FIGURE
-  # set par options (Most of the code in this section is copied/adapted from Dan Braithwaite's pco plotting in matR)
-  par <- list ()
-  par$main <- ""#figure_main
-  #par$labels <- if (length (names (x)) != 0) names (x) else samples (x)
-  if ( label_points==TRUE ){
-    par$labels <-  rownames(eigen_vectors)
-  } else {
-    par$labels <- NA
-  }
-  #if (length (groups (x)) != 0) par$labels <- paste (par$labels, " (", groups (x), ")", sep = "")
-  par [c ("xlab", "ylab", if (length (components) == 3) "zlab" else NULL)] <- paste ("PC", components, ", R^2 = ", format (eigen_values [components], dig = 3), sep = "")
-  #col <- if (length (groups (x)) != 0) groups (x) else factor (rep (1, length (samples (x))))
-  #levels (col) <- colors() [sample (length (colors()), nlevels (col))]
-  #g <- as.character (col)
-  #par$pch <- 19
-  par$cex <- figure_cex
-  # main plot paramters - create the 2d or 3d plot
-  i <- eigen_vectors [ ,components [1]]
-  j <- eigen_vectors [ ,components [2]]
-  k <- if (length (components) == 3) eigen_vectors [ ,components [3]] else NULL
-  if (is.null (k)) {
-  #par$col <- col
-    par$col <- pcoa_colors ####<--------------
-    par$pch <- plot_pch
-    par <- resolveMerge (list (...), par)
-    xcall (plot, x = i, y = j, with = par, without = "labels")
-    xcall (points, x = i, y = j, with = par, without = "labels")
-    grid ()
-  } else {
-    # parameter "color" has to be specially handled.
-    # "points" above wants "col", scatterplot3d wants "color", and we
-    # want the user not to worry about it...
-    # par$color <- col
-    par$color <- pcoa_colors
-    par$pch <- plot_pch
-    par$type <- "h"
-    par$lty.hplot <- "dotted"
-    par$axis <- TRUE
-    par$box <- FALSE
-    #par <- resolveMerge (list (...), par)
-    reqPack ("scatterplot3d")
-    xys <- xcall (scatterplot3d, x = i, y = j, z = k, with = par,
-                  without = c ("cex", "labels")) $ xyz.convert (i, j, k)
-    i <- xys$x ; j <- xys$y
-  }
-  text (x = i, y = j, labels = par$labels, pos = 4, cex = par$cex)
-  #invisible (P)
-  #})
-  # PLOT THE COLOR BAR
-  bar_x <- 1:num_levels
-  bar_y <- 1
-  bar_z <- matrix(1:num_levels, ncol=1)
-  image(x=bar_x,y=bar_y,z=bar_z,col=color_levels,axes=FALSE,xlab="",ylab="")
-  loc <- par("usr")
-  # this worked ? #text(loc[1], loc[1], column_levels[1], pos = 1, xpd = T, cex=bar_cex)
-  # text(loc[1], loc[3], column_levels[1], pos = 4, xpd = T, cex=bar_cex)
-  text(loc[1], loc[1], column_levels[1], pos = 4, xpd = T, cex=bar_cex, adj=c(0,0))
-  text(loc[2], loc[3], column_levels[num_levels], pos = 2, xpd = T, cex=bar_cex, adj=c(0,1))
-  graphics.off()
-}
-######################
-######################
-
-
-######################
-# SUB(5): Handle partially formatted metadata to produce colors for a single column in a metadata table
-######################
-## column_color <- function( color_matrix, my_color_mode="auto", my_column ){
-##   ncol.color_matrix <<- ncol(color_matrix)
-##   plot_colors.matrix <<- create_colors(color_matrix, color_mode=my_color_mode)
-##   column_factors <<- as.factor(color_matrix[,my_column])
-##   column_levels <<- levels(as.factor(color_matrix[,my_column]))
-##   num_levels <<- length(column_levels)
-##   color_levels <<- col.wheel(num_levels)
-##   pcoa_colors <<- plot_colors.matrix[,my_column]
-## }
-######################
-######################
-
-  
-######################
-# SUB(6): Create optimal contrast color selection using a color wheel
-# adapted from https://stat.ethz.ch/pipermail/r-help/2002-May/022037.html 
-######################
-col.wheel <- function(num_col, my_cex=0.75) {
-  cols <- rainbow(num_col)
-  col_names <- vector(mode="list", length=num_col)
-  for (i in 1:num_col){
-    col_names[i] <- getColorTable(cols[i])
-  }
-  cols
-}
-######################
-######################
-
-
-######################
-# SUB(7): The inverse function to col2rgb()
-# adapted from https://stat.ethz.ch/pipermail/r-help/2002-May/022037.html
-######################
-rgb2col <- function(rgb) {
-  rgb <- as.integer(rgb)
-  class(rgb) <- "hexmode"
-  rgb <- as.character(rgb)
-  rgb <- matrix(rgb, nrow=3)
-  paste("#", apply(rgb, MARGIN=2, FUN=paste, collapse=""), sep="")
-}
-######################
-######################
-
-  
-######################
-# SUB(8): Convert all colors into format "#rrggbb"
-# adapted from https://stat.ethz.ch/pipermail/r-help/2002-May/022037.html
-######################
-getColorTable <- function(col) {
-  rgb <- col2rgb(col);
-  col <- rgb2col(rgb);
-  sort(unique(col))
-}
-######################
-######################
-
-
-######################
-# SUB(9): Automtically generate colors from metadata with identical text or values
-######################
-create_colors <- function(metadata_column, color_mode = "auto"){ # function to     
-  my_data.color <- data.frame(metadata_column)
-  #ids <- rownames(metadata_column)
-  #color_categories <- colnames(metadata_column)
-  #for ( i in 1:dim(metadata_matrix)[2] ){
-    column_factors <- as.factor(metadata_column[,1])
-    column_levels <- levels(as.factor(metadata_column[,1]))
-    num_levels <- length(column_levels)
-    color_levels <- col.wheel(num_levels)
-    levels(column_factors) <- color_levels
-    my_data.color[,1]<-as.character(column_factors)
-  #}
-  return(my_data.color)
-}
-## create_colors <- function(metadata_matrix, color_mode = "auto"){ # function to     
-##   #my_data.color <- data.frame(metadata_matrix)
-##   my_data.color <- vector(length=nrow(metadata_matrix), mode="character")
-##   ids <- rownames(metadata_matrix)
-##   color_categories <- colnames(metadata_matrix)
-##   for ( i in 1:dim(metadata_matrix)[2] ){
-##     column_factors <- as.factor(metadata_matrix[,i])
-##     column_levels <- levels(as.factor(metadata_matrix[,i]))
-##     num_levels <- length(column_levels)
-##     color_levels <- col.wheel(num_levels)
-##     levels(column_factors) <- color_levels
-##     my_data.color[i] <- as.character(column_factors)
-##   }
-##   return(my_data.color)
-## }
-######################
-######################
-
-
-## ######################
-## # SUB(10): Plot operations for a single metadata column
-## ######################
-
-## plot_column <- function(
-##                         metadata_matrix,i,
-##                         PCoA_in,
-##                         ncol.color_matrix,
-##                         eigen_values, eigen_vectors, components,
-##                         plot_pch,
-##                         image_width_in, image_height_in, image_res_dpi,
-##                         width_legend, width_figure,
-##                         title_cex, legend_cex, figure_cex, bar_cex, label_points
-##                         )
-## {
-##   metadata_column <- metadata_matrix[ ,i,drop=FALSE ] # get column i from the metadata matrix
-  
-##   suppressWarnings( numericCheck <- as.numeric(metadata_column) ) # check to see if metadata are numeric, and sort accordingly
-##   if( is.numeric(numericCheck[1]) ){
-##     column_name = colnames(metadata_column)[1]
-##     row_names = rownames(metadata_column)
-##     metadata_column <- matrix(numericCheck, ncol=1)
-##     colnames(metadata_column) <- column_name
-##     rownames(metadata_column) <- row_names
-##   }
-
-##   metadata_column <- metadata_column[ order(metadata_column),,drop=FALSE ] # order the metadata by value
-  
-##   color_column <- create_colors(metadata_matrix=metadata_column, color_mode = "auto")
-##   #pcoa_colors <<- #color_column[ ,1,drop=FALSE ]
-##   ncol.color_matrix <- 1 
-##   column_factors <- as.factor(metadata_column) 
-##   column_levels <- levels(as.factor(metadata_column))
-##   num_levels <- length(column_levels)
-##   color_levels <- col.wheel(num_levels)
-##   pcoa_colors <- color_column #[,1, drop=FALSE]
-
-##   image_out = paste(PCoA_in,".", colnames(metadata_column), ".pcoa.png", sep="", collapse="") # generate name for plot file
-##   figure_main = paste( PCoA_in,".", colnames(metadata_column),".PCoA", sep="", collapse="") # generate title for the plot
-
-##   #rownames(eigen_vectors) <<- noquote(rownames(eigen_vectors))
-##   # test2 <- test2[rownames(test1),,drop=FALSE]
-##   # eigen_vectors <<- eigen_vectors[ rownames(color_column),,drop=FALSE ] # sort vectors by ordering of colors
-##   #test2[match(row.names(test2), row.names(test1)),1,drop=FALSE]
-
-
-## ###### HERE
-  
-##   #vector_rownames <<- rownames(eigen_vectors)
-##   #vector_colnames <<- colnames(eigen_vectors)
-##   #color_column <<- as.matrix(color_column)
-##   #rownames(eigen_vectors) <<-
-
-##   #test_2 <- eigen_vectors
-##   #rownames(test_2) <- gsub("\"", "", rownames(test_2))
-
-##   rownames(eigen_vectors) <- gsub("\"", "", rownames(eigen_vectors))
-  
-##   #eigen_vectors[ match(rownames(eigen_vectors), rownames(pcoa_colors)),1,drop=FALSE]
-##   #eigen_vectors[ match(rownames(pcoa_colors), rownames(eigen_vectors)),1,drop=FALSE]
-##   eigen_vectors <- eigen_vectors[ rownames(pcoa_colors), ]
-##   #eigen_vectors[ rownames(pcoa_colors)),]
-  
-##   create_plot( # generate the  plot
-##               PCoA_in,
-##               ncol.color_matrix,
-##               eigen_values, eigen_vectors, components,
-##               column_levels, num_levels, color_levels, pcoa_colors, plot_pch,
-##               image_out,figure_main,
-##               image_width_in, image_height_in, image_res_dpi,
-##               width_legend, width_figure,
-##               title_cex, legend_cex, figure_cex, bar_cex, label_points              
-##               ) 
-## }
+######################################################################################################################
+######################################################################################################################
+######################################################################################################################
 
 
 
-  
-######################
-###### END SUBS ######
-######################
-
-
-
-
-# functions that will cull data from abundance table and metadata file for a list of ids
-
-data_cull <- function( data_in=NULL, metadata_in=NULL, cull_list="cull_ids.txt", pass_file_suffix="PASS", culled_file_suffix="CULLED", debug=FALSE){
-
-  # import list of ids to cull
- id_list <- import_idList(cull_list)
- 
-  # cull data file
-  if( is.null(data_in)==FALSE ){
-    data_matrix <- import_data(data_in)
-    # file  with data retained
-    pass_data_matrix <- data_matrix[ ,!(colnames(data_matrix) %in% id_list)]
-    pass_data_file_name = gsub("\\.\\.", "\\.", paste(data_in, ".", pass_file_suffix, ".txt", sep="", collapse="" ))
-    if(debug==TRUE){ test1 <<- pass_data_matrix; print(pass_data_file_name) }
-    write.table(pass_data_matrix, file=pass_data_file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
-    # file with data culled
-    culled_data_matrix <- data_matrix[ ,(colnames(data_matrix) %in% id_list)]
-    culled_data_file_name = gsub("\\.\\.", "\\.", paste(data_in, ".", culled_file_suffix, ".txt", sep="", collapse="" ))
-    if(debug==TRUE){ test2 <<- culled_data_matrix; print(culled_data_file_name) }
-    write.table(culled_data_matrix, file=culled_data_file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
-  }
-  
-  # cull metadata file
-  if( is.null(metadata_in)==FALSE ){
-    # file with metadata retained
-    metadata_matrix <- import_metadata(metadata_in)
-    pass_metadata_matrix <- metadata_matrix[!(rownames(metadata_matrix ) %in% id_list),]
-    pass_metadata_file_name = gsub("\\.\\.", "\\.", paste(metadata_in, ".", pass_file_suffix, ".txt", sep="", collapse="" ))
-    write.table(pass_metadata_matrix, file=pass_metadata_file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
-    # file with metadata culled
-    culled_metadata_matrix <- metadata_matrix[(rownames(metadata_matrix ) %in% id_list),]
-    culled_metadata_file_name = gsub("\\.\\.", "\\.", paste(metadata_in, ".", culled_file_suffix, ".txt", sep="", collapse="" ))
-    write.table(culled_metadata_matrix, file=culled_metadata_file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
-  }
-
-}
-
-
-### Replaced by readIDs.r
-# func to import single column list of ids to cull
-#import_idList <- function(cull_list){
-#  id_list <- scan(file=cull_list, what="character", quiet=TRUE, comment.char="#")
-#  return(id_list)
-#}
-
-# func to import the data; columns are samples, rows are categories
-import_data <- function(data_in){
-  data_matrix <- data.matrix(read.table(data_in, row.names=1, check.names=FALSE, header=TRUE, sep="\t", comment.char="", quote=""))
-  return(data_matrix)
-}
-
-# func to import metadata; columns are metadata conditions, rows are samples
-import_metadata <- function(metadata_in){
-  metadata_matrix <- as.matrix( # Load the metadata table (same if you use one or all columns)
-                               read.table(
-                                          file=metadata_in,row.names=1,header=TRUE,sep="\t",
-                                          colClasses = "character", check.names=FALSE,
-                                          comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
-                                          )
-                               )   
-  
-  return(metadata_matrix)
-}
-
-# http://stackoverflow.com/questions/9805507/deselecting-a-column-by-name-r
-# dd[ ,!(colnames(dd) %in% c("A", "B"))] # remove multiple
-# dd[ , names(dd) != "A"] # remove single
-  
-
-
-
-                                       
-
-
-
+######################################################################################################################
+#####################     HEATMAP DENDROGRAM _ WITH BELLS AND WHISTLES    ############################################
+######################################################################################################################
 # Majority of this code is adapted from heatmap.2{gplots}
-
 heatmap_dendrogram.from_file <- function (
 
                                           file_in,
@@ -1906,152 +1335,18 @@ heatmap_dendrogram.from_file <- function (
 
   invisible(retval)
   
-
-  # Add color bar at bottom
-
-  ## bar_x <- 1:num_levels
-  ## bar_y <- 1
-  ## bar_z <- matrix(1:num_levels, ncol=1)
-  ## image(x=bar_x,y=bar_y,z=bar_z,col=color_levels,axes=FALSE,xlab="",ylab="")
-  ## loc <- par("usr")
-  ## text(loc[1], loc[1], column_levels[1], pos = 1, xpd = T, cex=bar_cex)
-  ## text(loc[2], loc[3], column_levels[num_levels], pos = 1, xpd = T, cex=bar_cex)
-  ## graphics.off()
-  ## custom_palette
-  
   dev.off()
-
-##### New section Kevin added to kick out files that have the row and column labels 1-10-12
-  
-  ## Row_labels_file = gsub(" ", "", paste(file_in,".HD.Row_labels.txt")) 
-  ## for ( i in (dim(data.matrix(labRow))[1]):1 ){ # order of the rows in labRow is reverse of how they are plotted
-  ##   write( labRow[i], file = Row_labels_file, append=TRUE )  
-  ## }
-  
-  ## Col_labels_file = gsub(" ", "", paste(file_in,".HD.Col_labels.txt"))
-  ## for ( j in 1:(dim(data.matrix(labCol))[1]) ){ 
-  ##   write( labCol[j], file = Col_labels_file, append=TRUE )
-  ## }
-
-  ## #x_out <<- x
-  ## #t(mat[3:1,])
-  ## rot_x <- t(x[1:nrow(x),])
-  ## rowsort_rot_x <- rot_x[nrow(rot_x):1,]
-  ## output_filename <- gsub(" ", "", paste(file_in, ".HD_sorted_table.txt"))
-  ## write.table(rot_x, file = output_filename, col.names=NA, row.names = TRUE, sep="\t", quote=FALSE)
-  
     
 }
+######################################################################################################################
+######################################################################################################################
+######################################################################################################################
 
 
 
-######################
-# SUB( ): Function to load the metadata/ generate or import colors for the points
-######################
-load_metadata <- function(metadata_table, metadata_column){
-
-  metadata_matrix <- as.matrix( # Import metadata table, use it to generate colors
-                               read.table(
-                                          file=metadata_table,row.names=1,header=TRUE,sep="\t",
-                                          colClasses = "character", check.names=FALSE,
-                                          comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
-                                          )
-                               )
-
-  # make sure that the color matrix is sorted (ROWWISE) by id
-  # metadata_matrix <- metadata_matrix[order(rownames(metadata_matrix)),]
-  color_matrix <- create_colors(metadata_matrix, color_mode = "auto")
-  ncol.color_matrix <- ncol(color_matrix)
-  
-  metadata_factors <- as.factor(metadata_matrix[,metadata_column])
-  metadata_levels <- levels(as.factor(metadata_matrix[,metadata_column]))
-  num_levels <- length(metadata_levels)
-  color_levels <- col.wheel(num_levels)
-  all_colors <- color_matrix[,metadata_column]
-
-  return( list(metadata_levels=metadata_levels, color_levels=color_levels, all_colors=all_colors) )
-  
-  
-}
-######################
-######################
-
-######################
-# SUB(6): Create optimal contrast color selection using a color wheel
-# adapted from https://stat.ethz.ch/pipermail/r-help/2002-May/022037.html 
-######################
-col.wheel <- function(num_col, my_cex=0.75) {
-  cols <- rainbow(num_col)
-  col_names <- vector(mode="list", length=num_col)
-  for (i in 1:num_col){
-    col_names[i] <- getColorTable(cols[i])
-  }
-  cols
-}
-######################
-######################
-
-
-######################
-# SUB(7): The inverse function to col2rgb()
-# adapted from https://stat.ethz.ch/pipermail/r-help/2002-May/022037.html
-######################
-rgb2col <- function(rgb) {
-  rgb <- as.integer(rgb)
-  class(rgb) <- "hexmode"
-  rgb <- as.character(rgb)
-  rgb <- matrix(rgb, nrow=3)
-  paste("#", apply(rgb, MARGIN=2, FUN=paste, collapse=""), sep="")
-}
-######################
-######################
-
-  
-######################
-# SUB(8): Convert all colors into format "#rrggbb"
-# adapted from https://stat.ethz.ch/pipermail/r-help/2002-May/022037.html
-######################
-getColorTable <- function(col) {
-  rgb <- col2rgb(col);
-  col <- rgb2col(rgb);
-  sort(unique(col))
-}
-######################
-######################
-
-
-######################
-# SUB(9): Automtically generate colors from metadata with identical text or values
-######################
-create_colors <- function(color_matrix, color_mode = "auto"){ # function to     
-  my_data.color <- data.frame(color_matrix)
-  ids <- rownames(color_matrix)
-  color_categories <- colnames(color_matrix)
-  for ( i in 1:dim(color_matrix)[2] ){
-    column_factors <- as.factor(color_matrix[,i])
-    column_levels <- levels(as.factor(color_matrix[,i]))
-    num_levels <- length(column_levels)
-    color_levels <- col.wheel(num_levels)
-    levels(column_factors) <- color_levels
-    my_data.color[,i]<-as.character(column_factors)
-  }
-  return(my_data.color)
-}
-######################
-######################
-
-
-
-## R> functionReturningTwoValues <- function() {return(list(first=1, second=2))}
-## R> r <- functionReturningTwoValues()
-## R> r$first
-## [1] 1
-## R> r$second
-## [1] 2
-
-
-
-
+######################################################################################################################
+##########################                  STATS FUNCTION                ############################################
+######################################################################################################################
 stats_from_files <<- function(
                                data_table="HMP_WGS.data.quantile_norm.txt",
                                metadata_table="HMP_WGS.meta_data.tab_delim.txt.enviroment_package.groups.txt",
@@ -2063,11 +1358,7 @@ stats_from_files <<- function(
                                order_decreasing=FALSE,
                                ...)
 {
-
-# tests ("Kruskal-Wallis", )
   
-  require(matR)
-
   # create name for the output file
   if ( identical(file_out, "default") ){
     file_out = paste(data_table, ".STATS_RESULTS.txt", sep="", collapse="")
@@ -2163,11 +1454,16 @@ stats_from_files <<- function(
 # flat file output of the summary file
   write.table(my_stats.summary.ordered, file = file_out, col.names=NA, sep="\t", quote=FALSE)
   
- }
+}
+######################################################################################################################
+######################################################################################################################
+######################################################################################################################
 
 
 
-
+######################################################################################################################
+#################################       BATCH DOWNLOAD      ##########################################################
+######################################################################################################################
 matR_batch_dl <- function(
                           mgid_list,    # file with list of IDs - no header
                           list_is_file=TRUE,
@@ -2195,8 +1491,8 @@ matR_batch_dl <- function(
   # also make sure that RCurl and RJSONIO are installed
   
   # check for necessary arguments - show usage if they are not supplied
-  if ( nargs() == 0){print_usage()} 
-  if (identical(mgid_list, "") ){print_usage()}
+  if ( nargs() == 0){print_dl_usage()} 
+  if (identical(mgid_list, "") ){print_dl_usage()}
 
   # create name for "default" log
   if ( identical(my_log, "default")==TRUE ){ my_log=paste(mgid_list,".download_log",sep="", collapse="") }
@@ -2417,11 +1713,353 @@ matR_batch_dl <- function(
    
 }
   
-############################################################################
-############################################################################
-############################################################################
-### SUBS
+######################################################################################################################
+######################################################################################################################
+######################################################################################################################
 
+
+
+
+
+
+
+######################################################################################################################
+###################################                   SUBS              ##############################################
+######################################################################################################################
+
+######################################################################################################################
+# func to import the data; columns are samples, rows are categories
+import_data <- function(data_in){
+  data_matrix <- data.matrix(read.table(data_in, row.names=1, check.names=FALSE, header=TRUE, sep="\t", comment.char="", quote=""))
+  return(data_matrix)
+}
+######################################################################################################################
+
+######################################################################################################################
+# func to import metadata; columns are metadata conditions, rows are samples
+import_metadata <- function(metadata_in){
+  metadata_matrix <- as.matrix( # Load the metadata table (same if you use one or all columns)
+                               read.table(
+                                          file=metadata_in,row.names=1,header=TRUE,sep="\t",
+                                          colClasses = "character", check.names=FALSE,
+                                          comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
+                                          )
+                               )   
+  
+  return(metadata_matrix)
+}
+######################################################################################################################
+
+######################################################################################################################
+# SUB( ): Function to load the metadata/ generate or import colors for the points
+######################################################################################################################
+load_metadata <- function(metadata_table, metadata_column){
+  metadata_matrix <- as.matrix( # Import metadata table, use it to generate colors
+                               read.table(
+                                          file=metadata_table,row.names=1,header=TRUE,sep="\t",
+                                          colClasses = "character", check.names=FALSE,
+                                          comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
+                                          )
+                               )
+  color_matrix <- create_colors(metadata_matrix, color_mode = "auto")
+  ncol.color_matrix <- ncol(color_matrix)
+  metadata_factors <- as.factor(metadata_matrix[,metadata_column])
+  metadata_levels <- levels(as.factor(metadata_matrix[,metadata_column]))
+  num_levels <- length(metadata_levels)
+  color_levels <- col.wheel(num_levels)
+  all_colors <- color_matrix[,metadata_column]
+  return( list(metadata_levels=metadata_levels, color_levels=color_levels, all_colors=all_colors) )  
+}
+######################################################################################################################
+
+######################################################################################################################
+write_file <- function(file_name, data) {
+  write.table(data, file=file_name, col.names=NA, row.names=TRUE, append = FALSE, sep="\t", quote = FALSE, eol="\n")
+}
+######################################################################################################################
+
+######################################################################################################################
+######## SUB(1): Function to import the data from a pre-calculated PCoA
+######################################################################################################################
+load_pcoa_data <- function(PCoA_in){
+  con_1 <- file(PCoA_in)
+  con_2 <- file(PCoA_in)
+  # read through the first time to get the number of samples
+  open(con_1);
+  num_values <- 0
+  data_type = "NA"
+  while ( length(my_line <- readLines(con_1,n = 1, warn = FALSE)) > 0) {
+    if ( length( grep("PCO", my_line) ) == 1  ){
+      num_values <- num_values + 1
+    }
+  }
+  close(con_1)
+  # create object for values
+  eigen_values <- matrix("", num_values, 1)
+  dimnames(eigen_values)[[1]] <- 1:num_values
+  eigen_vectors <- matrix("", num_values, num_values)
+  dimnames(eigen_vectors)[[1]] <- 1:num_values
+  # read through a second time to populate the R objects
+  value_index <- 1
+  vector_index <- 1
+  open(con_2)
+  current.line <- 1
+  data_type = "NA"
+  while ( length(my_line <- readLines(con_2,n = 1, warn = FALSE)) > 0) {
+    if ( length( grep("#", my_line) ) == 1  ){
+      if ( length( grep("EIGEN VALUES", my_line) ) == 1  ){
+        data_type="eigen_values"
+      } else if ( length( grep("EIGEN VECTORS", my_line) ) == 1 ){
+        data_type="eigen_vectors"
+      }
+    }else{
+      split_line <- noquote(strsplit(my_line, split="\t"))
+      if ( identical(data_type, "eigen_values")==TRUE ){
+        dimnames(eigen_values)[[1]][value_index] <- noquote(split_line[[1]][1])
+        eigen_values[value_index,1] <- noquote(split_line[[1]][2])       
+        value_index <- value_index + 1
+      }
+      if ( identical(data_type, "eigen_vectors")==TRUE ){
+        dimnames(eigen_vectors)[[1]][vector_index] <- noquote(split_line[[1]][1])
+        for (i in 2:(num_values+1)){
+          eigen_vectors[vector_index, (i-1)] <- as.numeric(noquote(split_line[[1]][i]))
+        }
+        vector_index <- vector_index + 1
+      }
+    }
+  }
+  close(con_2)
+  # finish labeling of data objects
+  dimnames(eigen_values)[[2]] <- "EigenValues"
+  dimnames(eigen_vectors)[[2]] <- dimnames(eigen_values)[[1]]
+  class(eigen_values) <- "numeric"
+  class(eigen_vectors) <- "numeric"
+  return(list(eigen_values=eigen_values, eigen_vectors=eigen_vectors))
+  
+}
+######################################################################################################################
+  
+######################################################################################################################
+# SUB(3): Function to import the pch information for the points # load pch matrix if one is specified
+######################################################################################################################
+load_pch <- function(pch_table){
+  if ( identical( is.na(pch_table), FALSE ) ){
+    pch_matrix <- data.matrix(read.table(file=pch_table, row.names=1, header=TRUE, sep="\t", comment.char="", quote="", check.names=FALSE))
+    pch_matrix <- pch_matrix[order(rownames(pch_matrix)),]
+    plot_pch <- pch_matrix[,pch_column]
+  }else{
+    plot_pch <- 19
+  }
+  return(plot_pch)
+}
+######################
+  
+######################################################################################################################
+# SUB(4): Workhorse function that creates the plot
+######################################################################################################################
+create_plot <- function(
+                        PCoA_in,
+                        ncol.color_matrix,
+                        eigen_values, eigen_vectors, components,
+                        column_levels, num_levels, color_levels, pcoa_colors, plot_pch,
+                        image_out,figure_main,
+                        image_width_in, image_height_in, image_res_dpi,
+                        width_legend, width_figure,
+                        title_cex, legend_cex, figure_cex, bar_cex, label_points 
+                        ){                      
+  png( # initialize the png 
+      filename = image_out,
+      width = image_width_in,
+      height = image_height_in,
+      res = image_res_dpi,
+      units = 'in'
+      )
+  # CREATE THE LAYOUT
+  my_layout <- layout(  matrix(c(1,1,2,3,4,4), 3, 2, byrow=TRUE ), widths=c(width_legend,width_figure), heights=c(0.1,0.8,0.1) )
+  layout.show(my_layout)
+  # PLOT THE TITLE
+  plot.new()
+  text(x=0.5, y=0.5, figure_main, cex=title_cex)
+  # PLOT THE LEGEND
+  plot.new()
+  legend( x="center", legend=column_levels, pch=15, col=color_levels, cex=legend_cex)
+  # PLOT THE FIGURE
+  # set par options (Most of the code in this section is copied/adapted from Dan Braithwaite's pco plotting in matR)
+  par <- list ()
+  par$main <- ""#figure_main
+  #par$labels <- if (length (names (x)) != 0) names (x) else samples (x)
+  if ( label_points==TRUE ){
+    par$labels <-  rownames(eigen_vectors)
+  } else {
+    par$labels <- NA
+  }
+  #if (length (groups (x)) != 0) par$labels <- paste (par$labels, " (", groups (x), ")", sep = "")
+  par [c ("xlab", "ylab", if (length (components) == 3) "zlab" else NULL)] <- paste ("PC", components, ", R^2 = ", format (eigen_values [components], dig = 3), sep = "")
+  par$cex <- figure_cex
+  # main plot paramters - create the 2d or 3d plot
+  i <- eigen_vectors [ ,components [1]]
+  j <- eigen_vectors [ ,components [2]]
+  k <- if (length (components) == 3) eigen_vectors [ ,components [3]] else NULL
+  if (is.null (k)) {
+  #par$col <- col
+    par$col <- pcoa_colors ####<--------------
+    par$pch <- plot_pch
+    par <- resolveMerge (list (...), par)
+    xcall (plot, x = i, y = j, with = par, without = "labels")
+    xcall (points, x = i, y = j, with = par, without = "labels")
+    grid ()
+  } else {
+    # parameter "color" has to be specially handled.
+    # "points" above wants "col", scatterplot3d wants "color", and we
+    # want the user not to worry about it...
+    # par$color <- col
+    par$color <- pcoa_colors
+    par$pch <- plot_pch
+    par$type <- "h"
+    par$lty.hplot <- "dotted"
+    par$axis <- TRUE
+    par$box <- FALSE
+    #par <- resolveMerge (list (...), par)
+    reqPack ("scatterplot3d")
+    xys <- xcall (scatterplot3d, x = i, y = j, z = k, with = par,
+                  without = c ("cex", "labels")) $ xyz.convert (i, j, k)
+    i <- xys$x ; j <- xys$y
+  }
+  text (x = i, y = j, labels = par$labels, pos = 4, cex = par$cex)
+  # PLOT THE COLOR BAR
+  bar_x <- 1:num_levels
+  bar_y <- 1
+  bar_z <- matrix(1:num_levels, ncol=1)
+  image(x=bar_x,y=bar_y,z=bar_z,col=color_levels,axes=FALSE,xlab="",ylab="")
+  loc <- par("usr")
+  text(loc[1], loc[1], column_levels[1], pos = 4, xpd = T, cex=bar_cex, adj=c(0,0))
+  text(loc[2], loc[3], column_levels[num_levels], pos = 2, xpd = T, cex=bar_cex, adj=c(0,1))
+  graphics.off()
+}
+######################################################################################################################
+  
+######################################################################################################################
+# SUB(6): Create optimal contrast color selection using a color wheel
+# adapted from https://stat.ethz.ch/pipermail/r-help/2002-May/022037.html 
+######################################################################################################################
+col.wheel <- function(num_col, my_cex=0.75) {
+  cols <- rainbow(num_col)
+  col_names <- vector(mode="list", length=num_col)
+  for (i in 1:num_col){
+    col_names[i] <- getColorTable(cols[i])
+  }
+  cols
+}
+######################################################################################################################
+
+######################################################################################################################
+# SUB(7): The inverse function to col2rgb()
+# adapted from https://stat.ethz.ch/pipermail/r-help/2002-May/022037.html
+######################################################################################################################
+rgb2col <- function(rgb) {
+  rgb <- as.integer(rgb)
+  class(rgb) <- "hexmode"
+  rgb <- as.character(rgb)
+  rgb <- matrix(rgb, nrow=3)
+  paste("#", apply(rgb, MARGIN=2, FUN=paste, collapse=""), sep="")
+}
+######################################################################################################################
+  
+######################################################################################################################
+# SUB(8): Convert all colors into format "#rrggbb"
+# adapted from https://stat.ethz.ch/pipermail/r-help/2002-May/022037.html
+######################################################################################################################
+getColorTable <- function(col) {
+  rgb <- col2rgb(col);
+  col <- rgb2col(rgb);
+  sort(unique(col))
+}
+######################################################################################################################
+
+######################################################################################################################
+# SUB(9): Automtically generate colors from metadata with identical text or values
+######################################################################################################################
+create_colors <- function(metadata_column, color_mode = "auto"){ # function to     
+  my_data.color <- data.frame(metadata_column)
+  column_factors <- as.factor(metadata_column[,1])
+  column_levels <- levels(as.factor(metadata_column[,1]))
+  num_levels <- length(column_levels)
+  color_levels <- col.wheel(num_levels)
+  levels(column_factors) <- color_levels
+  my_data.color[,1]<-as.character(column_factors)
+  return(my_data.color)
+}
+######################################################################################################################
+
+
+
+
+
+## ######################
+## # SUB(9): Automtically generate colors from metadata with identical text or values
+## ######################
+## create_colors <- function(color_matrix, color_mode = "auto"){ # function to     
+##   my_data.color <- data.frame(color_matrix)
+##   ids <- rownames(color_matrix)
+##   color_categories <- colnames(color_matrix)
+##   for ( i in 1:dim(color_matrix)[2] ){
+##     column_factors <- as.factor(color_matrix[,i])
+##     column_levels <- levels(as.factor(color_matrix[,i]))
+##     num_levels <- length(column_levels)
+##     color_levels <- col.wheel(num_levels)
+##     levels(column_factors) <- color_levels
+##     my_data.color[,i]<-as.character(column_factors)
+##   }
+##   return(my_data.color)
+## }
+## ######################
+## ######################
+
+
+
+
+
+
+######################################################################################################################
+# functions that will cull data from abundance table and metadata file for a list of ids
+######################################################################################################################
+data_cull <- function( data_in=NULL, metadata_in=NULL, cull_list="cull_ids.txt", pass_file_suffix="PASS", culled_file_suffix="CULLED", debug=FALSE){
+
+  # import list of ids to cull
+ id_list <- import_idList(cull_list)
+ 
+  # cull data file
+  if( is.null(data_in)==FALSE ){
+    data_matrix <- import_data(data_in)
+    # file  with data retained
+    pass_data_matrix <- data_matrix[ ,!(colnames(data_matrix) %in% id_list)]
+    pass_data_file_name = gsub("\\.\\.", "\\.", paste(data_in, ".", pass_file_suffix, ".txt", sep="", collapse="" ))
+    if(debug==TRUE){ test1 <<- pass_data_matrix; print(pass_data_file_name) }
+    write.table(pass_data_matrix, file=pass_data_file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
+    # file with data culled
+    culled_data_matrix <- data_matrix[ ,(colnames(data_matrix) %in% id_list)]
+    culled_data_file_name = gsub("\\.\\.", "\\.", paste(data_in, ".", culled_file_suffix, ".txt", sep="", collapse="" ))
+    if(debug==TRUE){ test2 <<- culled_data_matrix; print(culled_data_file_name) }
+    write.table(culled_data_matrix, file=culled_data_file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
+  }
+  
+  # cull metadata file
+  if( is.null(metadata_in)==FALSE ){
+    # file with metadata retained
+    metadata_matrix <- import_metadata(metadata_in)
+    pass_metadata_matrix <- metadata_matrix[!(rownames(metadata_matrix ) %in% id_list),]
+    pass_metadata_file_name = gsub("\\.\\.", "\\.", paste(metadata_in, ".", pass_file_suffix, ".txt", sep="", collapse="" ))
+    write.table(pass_metadata_matrix, file=pass_metadata_file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
+    # file with metadata culled
+    culled_metadata_matrix <- metadata_matrix[(rownames(metadata_matrix ) %in% id_list),]
+    culled_metadata_file_name = gsub("\\.\\.", "\\.", paste(metadata_in, ".", culled_file_suffix, ".txt", sep="", collapse="" ))
+    write.table(culled_metadata_matrix, file=culled_metadata_file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
+  }
+
+}
+######################################################################################################################
+
+######################################################################################################################
 process_batch <- function(batch_count, batch_start, batch_end, mgid_list, my_log, my_entry, my_annot, my_source, my_level, sleep_int, debug){
 
   if( debug==TRUE ){ print("made it to process_batch 1") }
@@ -2462,9 +2100,9 @@ process_batch <- function(batch_count, batch_start, batch_end, mgid_list, my_log
       
   return(current_batch)
 }
+######################################################################################################################
 
-
-
+######################################################################################################################
 check_status <- function (collection_call, sleep_int, my_log, debug, batch_count)  {
 
   if( debug==TRUE ){ print("made it to check_status function") }
@@ -2481,16 +2119,18 @@ check_status <- function (collection_call, sleep_int, my_log, debug, batch_count
   }
   
 }
-     
+######################################################################################################################     
 
-
+######################################################################################################################
 print.tic <- function(x,...) {
     if (!exists("proc.time"))
         stop("cannot measure time")
     gc(FALSE)
     assign(".temp.tictime", proc.time(), envir = .GlobalEnv)
 }
+######################################################################################################################
 
+######################################################################################################################
 print.toc <- function(x,...) {
     if (!exists(".temp.tictime", envir = .GlobalEnv))
         stop("Did you tic?")
@@ -2500,17 +2140,17 @@ print.toc <- function(x,...) {
                            class = "proc_time"), ...)
     invisible(res)
 }
+######################################################################################################################
 
-
-
+######################################################################################################################
 source_https <- function(url, ...) {
   require(RCurl)
   sapply(c(url, ...), function(u) { eval(parse(text = getURL(u, followlocation = TRUE, cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"))), envir = .GlobalEnv) } )
 } # Sourced code is commented out below in case you need it
+######################################################################################################################
 
-
-
-print_usage <- function() {
+######################################################################################################################
+print_dl_usage <- function() {
   writeLines("  ------------------------------------------------------------------------------
   matR_batch_dl.r
   ------------------------------------------------------------------------------
@@ -2523,137 +2163,13 @@ print_usage <- function() {
   ")
   stop("You are vieiwing the usage because you did not supply an mgid_list")
 }
-
-# quotient 11%/%5
-# remainder 11%%5
-# readline() to pause the code
-# my_data <- collection(data.list, my_counts = c(entry="count", annot = "func", source = "Subsystem", level = "level3"))
+######################################################################################################################
 
 
-############# DAN's MERGE FUNCTION (BUGGED)
-## setMethod ("+", signature ("collection", "collection"), 
-##           function (e1, e2) {
-## #             mm <- merge (e1$count, e2$count, all = TRUE, by = 0, sort = TRUE)
-## #             rownames (mm) <- mm$Row.names
-## #             mm$Row.names <- NULL
-## #             as.matrix (mm)
-
-##             cc <- new("collection")
-##             mm <- character (0)
-##             class (mm) <- "metadata"
-##             cc@sel <- new ("selection",
-##						 ids = append (e1@sel@ids, e2@sel@ids),
-##															  groups = as.factor (append (groups (e1), groups (e2))),
-##             														  	   	     	     	     	   	                            metadata = mm)
-            
-##             if (length (metadata (e1)) != 0 && length (metadata (e2)) != 0) 
-##             	    warning ("dropping metadata")
-
-##             n <- sum (is.null (names (e1)), is.null (names (e2)))
-##             if (n == 1) warning ("not both collections are named; dropping names")
-##             else if (n == 2) names (cc) <- append (names (e1), names (e2))
-
-##             v <- intersect (viewnames (e1), viewnames (e2))
-##             if (!identical (viewnames (e1), viewnames (e2)))
-##             	    warning ("only views with names in common will be retained: ", paste (v, collapse = ", "))
-
-##             cc@views <- list()
-##             for (j in v) {
-##             	      view <- matR:::view.of.matrix (e1@views [[j]])
-##             	         if (!identical (view, matR:::view.of.matrix (e2@views [[j]]))) {
-##             		       warning ("not-same views named same; dropping: ", j)
-##             		                     next
-##						      }
-
-##							      m <- merge (e1@views [[j]], e2@views [[j]], all = TRUE, by = 0, sort = TRUE)
-##               rownames (m) <- m$Row.names
-##               m$Row.names <- NULL
-##             	  m <- as.matrix (m)
-##             	   attributes (m) [names (view)] <- view
-
-##             	    cc@views [[j]] <- m
-##             }
-##             cc
-##           } )
 
 
-######### TRYCATH EXAMPLE FROM http://stackoverflow.com/questions/12193779/how-to-write-trycatch-in-r
-## urls <- c(
-##     "http://stat.ethz.ch/R-manual/R-devel/library/base/html/connections.html",
-##     "http://en.wikipedia.org/wiki/Xz",
-##     "xxxxx"
-## )
-## readUrl <- function(url) {
-##     out <- tryCatch(
-##         {
-##             # Just to highlight: if you want to use more than one 
-##             # R expression in the "try" part then you'll have to 
-##             # use curly brackets.
-##             # 'tryCatch()' will return the last evaluated expression 
-##             # in case the "try" part was completed successfully
-
-##             message("This is the 'try' part")
-
-##             readLines(con=url, warn=FALSE) 
-##             # The return value of `readLines()` is the actual value 
-##             # that will be returned in case there is no condition 
-##             # (e.g. warning or error). 
-##             # You don't need to state the return value via `return()` as code 
-##             # in the "try" part is not wrapped insided a function (unlike that
-##             # for the condition handlers for warnings and error below)
-##         },
-##         error=function(cond) {
-##             message(paste("URL does not seem to exist:", url))
-##             message("Here's the original error message:")
-##             message(cond)
-##             # Choose a return value in case of error
-##             return(NA)
-##         },
-##         warning=function(cond) {
-##             message(paste("URL caused a warning:", url))
-##             message("Here's the original warning message:")
-##             message(cond)
-##             # Choose a return value in case of warning
-##             return(NULL)
-##         },
-##         finally={
-##         # NOTE:
-##         # Here goes everything that should be executed at the end,
-##         # regardless of success or error.
-##         # If you want more than one expression to be executed, then you 
-##         # need to wrap them in curly brackets ({...}); otherwise you could
-##         # just have written 'finally=<expression>' 
-##             message(paste("Processed URL:", url))
-##             message("Some other message at the end")
-##         }
-##     )    
-##     return(out)
-## }
-
-## > y <- lapply(urls, readUrl)
-## Processed URL: http://stat.ethz.ch/R-manual/R-devel/library/base/html/connections.html
-## Some other message at the end
-## Processed URL: http://en.wikipedia.org/wiki/Xz
-## Some other message at the end
-## URL does not seem to exist: xxxxx
-## Here's the original error message:
-## cannot open the connection
-## Processed URL: xxxxx
-## Some other message at the end
-## Warning message:
-## In file(con, "r") : cannot open file 'xxxxx': No such file or directory
 
 
-## > head(y[[1]])
-## [1] "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">"      
-## [2] "<html><head><title>R: Functions to Manipulate Connections</title>"      
-## [3] "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">"
-## [4] "<link rel=\"stylesheet\" type=\"text/css\" href=\"R.css\">"             
-## [5] "</head><body>"                                                          
-## [6] ""    
 
-## > length(y)
-## [1] 3
 
-## > y[[3]]
-## [1] NA
+
