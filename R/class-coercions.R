@@ -174,14 +174,26 @@ setMethod ("asFile", "pco",
 ### ID
 ###
 
-readIds <- function (file, ...) {
-	y <- read.table (file, colClasses = "character", ...)
-	if (nrow (y) > 1)
-		if (ncol (y) > 1) {
-			res <- as.character (y [,2])
-			names (res) <- as.character (y [,1])
-			res
-		}
-	else as.character (y [,1])
-	else unlist (y [1,], use.names = FALSE)
+# Kevin update: 5-8-14
+# first column has ids, second names for them, third plus are ignored
+readIDs <- function (filename, ...) {
+  y <- read.table (filename, colClasses = "character", sep="\t", ...)
+  if (nrow (y) > 1) {
+    if (ncol (y) > 1) {
+      if (ncol (y) > 1) { warning("Your list has more than two columns, only the first two are used") }
+      res <- as.character (y [,1])
+      names (res) <- as.character (y [,2])
+      res <- res[ order(res) ]
+      res
+    } else {
+      res <- as.character (y [,1])
+      res <- res[ order(res) ]
+      res
+    }
+  } else {
+    print("There was just one id in your list?")
+    res <- unlist (y [1,], use.names = FALSE)
+    res
+  }
 }
+
