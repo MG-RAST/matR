@@ -1,0 +1,1155 @@
+-bash
+my_sys:                                                                                            sysname 
+                                                                                          "Darwin" 
+                                                                                           release 
+                                                                                          "13.1.0" 
+                                                                                           version 
+"Darwin Kernel Version 13.1.0: Thu Jan 16 19:40:37 PST 2014; root:xnu-2422.90.20~2/RELEASE_X86_64" 
+                                                                                          nodename 
+                                                                            "mcswl214.mcs.anl.gov" 
+                                                                                           machine 
+                                                                                          "x86_64" 
+                                                                                             login 
+                                                                                           "kevin" 
+                                                                                              user 
+                                                                                           "kevin" 
+                                                                                    effective_user 
+                                                                                           "kevin" 
+------------------------------------------------------------------------
+my_r: /usr/bin/R
+------------------------------------------------------------------------
+r_version: $platform
+[1] "x86_64-apple-darwin10.8.0"
+
+$arch
+[1] "x86_64"
+
+$os
+[1] "darwin10.8.0"
+
+$system
+[1] "x86_64, darwin10.8.0"
+
+$status
+[1] ""
+
+$major
+[1] "3"
+
+$minor
+[1] "0.2"
+
+$year
+[1] "2013"
+
+$month
+[1] "09"
+
+$day
+[1] "25"
+
+$`svn rev`
+[1] "63987"
+
+$language
+[1] "R"
+
+$version.string
+[1] "R version 3.0.2 (2013-09-25)"
+
+$nickname
+[1] "Frisbee Sailing"
+------------------------------------------------------------------------
+installed_r_packages: 
+------------------------------------------------------------------------
+               Package         
+ade4           "ade4"          
+annotate       "annotate"      
+AnnotationDbi  "AnnotationDbi" 
+ape            "ape"           
+base           "base"          
+Biobase        "Biobase"       
+BiocGenerics   "BiocGenerics"  
+BiocInstaller  "BiocInstaller" 
+biom           "biom"          
+Biostrings     "Biostrings"    
+bitops         "bitops"        
+boot           "boot"          
+brew           "brew"          
+caTools        "caTools"       
+class          "class"         
+cluster        "cluster"       
+codetools      "codetools"     
+colorspace     "colorspace"    
+compiler       "compiler"      
+data.table     "data.table"    
+datasets       "datasets"      
+DBI            "DBI"           
+DESeq          "DESeq"         
+DESeq2         "DESeq2"        
+devtools       "devtools"      
+dichromat      "dichromat"     
+digest         "digest"        
+diptest        "diptest"       
+doParallel     "doParallel"    
+ecodist        "ecodist"       
+edgeR          "edgeR"         
+evaluate       "evaluate"      
+foreach        "foreach"       
+foreign        "foreign"       
+formatR        "formatR"       
+gdata          "gdata"         
+genefilter     "genefilter"    
+geneplotter    "geneplotter"   
+GenomicRanges  "GenomicRanges" 
+ggplot2        "ggplot2"       
+gplots         "gplots"        
+graphics       "graphics"      
+grDevices      "grDevices"     
+grid           "grid"          
+gtable         "gtable"        
+gtools         "gtools"        
+highr          "highr"         
+httr           "httr"          
+igraph         "igraph"        
+IRanges        "IRanges"       
+iterators      "iterators"     
+KernSmooth     "KernSmooth"    
+knitr          "knitr"         
+labeling       "labeling"      
+lattice        "lattice"       
+limma          "limma"         
+locfit         "locfit"        
+manipulate     "manipulate"    
+markdown       "markdown"      
+MASS           "MASS"          
+matlab         "matlab"        
+matR           "matR"          
+Matrix         "Matrix"        
+memoise        "memoise"       
+methods        "methods"       
+mgcv           "mgcv"          
+mixtools       "mixtools"      
+multtest       "multtest"      
+munsell        "munsell"       
+nlme           "nlme"          
+nnet           "nnet"          
+parallel       "parallel"      
+permute        "permute"       
+phyloseq       "phyloseq"      
+plyr           "plyr"          
+PoiClaClu      "PoiClaClu"     
+preprocessCore "preprocessCore"
+proto          "proto"         
+RColorBrewer   "RColorBrewer"  
+Rcpp           "Rcpp"          
+RcppArmadillo  "RcppArmadillo" 
+RCurl          "RCurl"         
+reshape2       "reshape2"      
+rgl            "rgl"           
+RJSONIO        "RJSONIO"       
+roxygen2       "roxygen2"      
+rpart          "rpart"         
+RSQLite        "RSQLite"       
+rstudio        "rstudio"       
+rstudioapi     "rstudioapi"    
+scales         "scales"        
+scatterplot3d  "scatterplot3d" 
+segmented      "segmented"     
+spatial        "spatial"       
+splines        "splines"       
+stats          "stats"         
+stats4         "stats4"        
+stringr        "stringr"       
+survival       "survival"      
+tcltk          "tcltk"         
+testthat       "testthat"      
+tools          "tools"         
+utils          "utils"         
+vegan          "vegan"         
+whisker        "whisker"       
+XML            "XML"           
+xtable         "xtable"        
+XVector        "XVector"       
+               LibPath                                                         
+ade4           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+annotate       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+AnnotationDbi  "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+ape            "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+base           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+Biobase        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+BiocGenerics   "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+BiocInstaller  "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+biom           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+Biostrings     "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+bitops         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+boot           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+brew           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+caTools        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+class          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+cluster        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+codetools      "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+colorspace     "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+compiler       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+data.table     "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+datasets       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+DBI            "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+DESeq          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+DESeq2         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+devtools       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+dichromat      "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+digest         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+diptest        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+doParallel     "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+ecodist        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+edgeR          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+evaluate       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+foreach        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+foreign        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+formatR        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+gdata          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+genefilter     "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+geneplotter    "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+GenomicRanges  "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+ggplot2        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+gplots         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+graphics       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+grDevices      "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+grid           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+gtable         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+gtools         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+highr          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+httr           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+igraph         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+IRanges        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+iterators      "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+KernSmooth     "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+knitr          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+labeling       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+lattice        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+limma          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+locfit         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+manipulate     "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+markdown       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+MASS           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+matlab         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+matR           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+Matrix         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+memoise        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+methods        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+mgcv           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+mixtools       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+multtest       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+munsell        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+nlme           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+nnet           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+parallel       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+permute        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+phyloseq       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+plyr           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+PoiClaClu      "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+preprocessCore "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+proto          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+RColorBrewer   "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+Rcpp           "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+RcppArmadillo  "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+RCurl          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+reshape2       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+rgl            "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+RJSONIO        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+roxygen2       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+rpart          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+RSQLite        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+rstudio        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+rstudioapi     "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+scales         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+scatterplot3d  "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+segmented      "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+spatial        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+splines        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+stats          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+stats4         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+stringr        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+survival       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+tcltk          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+testthat       "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+tools          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+utils          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+vegan          "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+whisker        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+XML            "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+xtable         "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+XVector        "/Library/Frameworks/R.framework/Versions/3.0/Resources/library"
+               Version     Priority     
+ade4           "1.6-2"     NA           
+annotate       "1.40.1"    NA           
+AnnotationDbi  "1.24.0"    NA           
+ape            "3.1-1"     NA           
+base           "3.0.2"     "base"       
+Biobase        "2.22.0"    NA           
+BiocGenerics   "0.8.0"     NA           
+BiocInstaller  "1.12.1"    NA           
+biom           "0.3.12"    NA           
+Biostrings     "2.30.1"    NA           
+bitops         "1.0-6"     NA           
+boot           "1.3-11"    "recommended"
+brew           "1.0-6"     NA           
+caTools        "1.16"      NA           
+class          "7.3-10"    "recommended"
+cluster        "1.15.2"    "recommended"
+codetools      "0.2-8"     "recommended"
+colorspace     "1.2-4"     NA           
+compiler       "3.0.2"     "base"       
+data.table     "1.9.2"     NA           
+datasets       "3.0.2"     "base"       
+DBI            "0.2-7"     NA           
+DESeq          "1.14.0"    NA           
+DESeq2         "1.2.10"    NA           
+devtools       "1.5"       NA           
+dichromat      "2.0-0"     NA           
+digest         "0.6.4"     NA           
+diptest        "0.75-5"    NA           
+doParallel     "1.0.8"     NA           
+ecodist        "1.2.9"     NA           
+edgeR          "3.4.2"     NA           
+evaluate       "0.5.3"     NA           
+foreach        "1.4.2"     NA           
+foreign        "0.8-61"    "recommended"
+formatR        "0.10"      NA           
+gdata          "2.13.3"    NA           
+genefilter     "1.44.0"    NA           
+geneplotter    "1.40.0"    NA           
+GenomicRanges  "1.14.4"    NA           
+ggplot2        "0.9.3.1"   NA           
+gplots         "2.13.0"    NA           
+graphics       "3.0.2"     "base"       
+grDevices      "3.0.2"     "base"       
+grid           "3.0.2"     "base"       
+gtable         "0.1.2"     NA           
+gtools         "3.3.1"     NA           
+highr          "0.3"       NA           
+httr           "0.3"       NA           
+igraph         "0.7.0"     NA           
+IRanges        "1.20.7"    NA           
+iterators      "1.0.7"     NA           
+KernSmooth     "2.23-12"   "recommended"
+knitr          "1.5"       NA           
+labeling       "0.2"       NA           
+lattice        "0.20-29"   "recommended"
+limma          "3.18.13"   NA           
+locfit         "1.5-9.1"   NA           
+manipulate     "0.98.501"  NA           
+markdown       "0.6.5"     NA           
+MASS           "7.3-31"    "recommended"
+matlab         "1.0.1"     NA           
+matR           "1.0.0"     NA           
+Matrix         "1.1-3"     "recommended"
+memoise        "0.1"       NA           
+methods        "3.0.2"     "base"       
+mgcv           "1.7-29"    "recommended"
+mixtools       "1.0.1"     NA           
+multtest       "2.18.0"    NA           
+munsell        "0.4.2"     NA           
+nlme           "3.1-117"   "recommended"
+nnet           "7.3-8"     "recommended"
+parallel       "3.0.2"     "base"       
+permute        "0.8-3"     NA           
+phyloseq       "1.7.24"    NA           
+plyr           "1.8.1"     NA           
+PoiClaClu      "1.0.2"     NA           
+preprocessCore "1.24.0"    NA           
+proto          "0.3-10"    NA           
+RColorBrewer   "1.0-5"     NA           
+Rcpp           "0.11.1"    NA           
+RcppArmadillo  "0.4.200.0" NA           
+RCurl          "1.95-4.1"  NA           
+reshape2       "1.2.2"     NA           
+rgl            "0.93.996"  NA           
+RJSONIO        "1.0-3"     NA           
+roxygen2       "3.1.0"     NA           
+rpart          "4.1-8"     "recommended"
+RSQLite        "0.11.4"    NA           
+rstudio        "0.98.501"  NA           
+rstudioapi     "0.1"       NA           
+scales         "0.2.3"     NA           
+scatterplot3d  "0.3-35"    NA           
+segmented      "0.3-0.0"   NA           
+spatial        "7.3-8"     "recommended"
+splines        "3.0.2"     "base"       
+stats          "3.0.2"     "base"       
+stats4         "3.0.2"     "base"       
+stringr        "0.6.2"     NA           
+survival       "2.37-7"    "recommended"
+tcltk          "3.0.2"     "base"       
+testthat       "0.8.1"     NA           
+tools          "3.0.2"     "base"       
+utils          "3.0.2"     "base"       
+vegan          "2.0-10"    NA           
+whisker        "0.3-2"     NA           
+XML            "3.95-0.2"  NA           
+xtable         "1.7-3"     NA           
+XVector        "0.2.0"     NA           
+               Depends                                                                                    
+ade4           "R (>= 2.10)"                                                                              
+annotate       "R (>= 2.10), AnnotationDbi (>= 0.1.15)"                                                   
+AnnotationDbi  "R (>= 2.7.0), methods, utils, BiocGenerics (>= 0.5.4), Biobase\n(>= 1.17.0)"              
+ape            "R (>= 2.6.0)"                                                                             
+base           NA                                                                                         
+Biobase        "R (>= 2.10), BiocGenerics (>= 0.3.2), utils"                                              
+BiocGenerics   "methods, graphics, stats, parallel"                                                       
+BiocInstaller  "R (>= 3.0.0)"                                                                             
+biom           "R (>= 3.0.0), methods"                                                                    
+Biostrings     "R (>= 2.8.0), methods, BiocGenerics (>= 0.5.4), IRanges (>=\n1.19.34), XVector (>= 0.1.3)"
+bitops         NA                                                                                         
+boot           "R (>= 3.0.0), graphics, stats"                                                            
+brew           NA                                                                                         
+caTools        "R (>= 2.2.0)"                                                                             
+class          "R (>= 3.0.0), stats, utils"                                                               
+cluster        "R (>= 2.12.0), stats, utils"                                                              
+codetools      "R (>= 2.1)"                                                                               
+colorspace     "R (>= 2.13.0), methods"                                                                   
+compiler       NA                                                                                         
+data.table     "R (>= 2.14.0)"                                                                            
+datasets       NA                                                                                         
+DBI            "R (>= 2.15.0), methods"                                                                   
+DESeq          "BiocGenerics (>= 0.7.5), Biobase (>= 2.21.7), locfit, lattice"                            
+DESeq2         "GenomicRanges, IRanges, Rcpp (>= 0.10.1), RcppArmadillo (>=\n0.3.4.4)"                    
+devtools       "R (>= 3.0.2)"                                                                             
+dichromat      "R (>= 2.10), stats"                                                                       
+digest         "R (>= 2.4.1)"                                                                             
+diptest        NA                                                                                         
+doParallel     "R (>= 2.14.0), foreach(>= 1.2.0), iterators(>= 1.0.0),\nparallel, utils"                  
+ecodist        "R (>= 3.0.0)"                                                                             
+edgeR          "R (>= 2.15.0), methods, limma"                                                            
+evaluate       "R (>= 2.14.0)"                                                                            
+foreach        "R (>= 2.5.0)"                                                                             
+foreign        "R (>= 3.0.0), stats"                                                                      
+formatR        NA                                                                                         
+gdata          "R (>= 2.13.0)"                                                                            
+genefilter     NA                                                                                         
+geneplotter    "R (>= 2.10), methods, Biobase, BiocGenerics, lattice, annotate"                           
+GenomicRanges  "R (>= 2.10), methods, BiocGenerics (>= 0.7.7), IRanges (>=\n1.20.3), XVector (>= 0.1.3)"  
+ggplot2        "R (>= 2.14), stats, methods"                                                              
+gplots         "R (>= 3.0)"                                                                               
+graphics       NA                                                                                         
+grDevices      NA                                                                                         
+grid           NA                                                                                         
+gtable         "R (>= 2.14), grid"                                                                        
+gtools         NA                                                                                         
+highr          NA                                                                                         
+httr           "R (>= 3.0.0)"                                                                             
+igraph         "methods"                                                                                  
+IRanges        "R (>= 2.8.0), methods, utils, stats, BiocGenerics (>= 0.7.7)"                             
+iterators      "R (>= 2.5.0), utils"                                                                      
+KernSmooth     "R (>= 2.5.0), stats"                                                                      
+knitr          "R (>= 2.14.1)"                                                                            
+labeling       NA                                                                                         
+lattice        "R (>= 2.15.1)"                                                                            
+limma          "R (>= 2.3.0), methods"                                                                    
+locfit         "R (>= 2.0.1)"                                                                             
+manipulate     "R (>= 2.10.0)"                                                                            
+markdown       "R (>= 2.11.1)"                                                                            
+MASS           "R (>= 3.0.0), grDevices, graphics, stats, utils"                                          
+matlab         "R (>= 2.15)"                                                                              
+matR           "R (>= 2.10), methods, utils"                                                              
+Matrix         "R (>= 2.15.2), methods"                                                                   
+memoise        NA                                                                                         
+methods        NA                                                                                         
+mgcv           "R (>= 2.14.0), nlme (>= 3.1-64)"                                                          
+mixtools       "R (>= 2.10.0), boot, MASS, segmented"                                                     
+multtest       "R (>= 2.10), methods, Biobase"                                                            
+munsell        NA                                                                                         
+nlme           "graphics, stats, R (>= 3.0.0)"                                                            
+nnet           "R (>= 2.14.0), stats, utils"                                                              
+parallel       NA                                                                                         
+permute        "R (>= 2.14.0)"                                                                            
+phyloseq       "\nR (>= 3.0.0)"                                                                           
+plyr           "R (>= 2.11.0)"                                                                            
+PoiClaClu      NA                                                                                         
+preprocessCore "methods"                                                                                  
+proto          NA                                                                                         
+RColorBrewer   "R (>= 2.0.0)"                                                                             
+Rcpp           "R (>= 3.0.0)"                                                                             
+RcppArmadillo  NA                                                                                         
+RCurl          "R (>= 2.7.0), methods, bitops"                                                            
+reshape2       NA                                                                                         
+rgl            "R (>= 2.15.0),stats,grDevices"                                                            
+RJSONIO        "methods"                                                                                  
+roxygen2       "R (>= 3.0.2)"                                                                             
+rpart          "R (>= 2.15.0), graphics, stats, grDevices"                                                
+RSQLite        "R (>= 2.10.0), methods, DBI (>= 0.2-5)"                                                   
+rstudio        "R (>= 2.10.0)"                                                                            
+rstudioapi     NA                                                                                         
+scales         "R (>= 2.12), methods"                                                                     
+scatterplot3d  "R (>= 2.7.0)"                                                                             
+segmented      NA                                                                                         
+spatial        "R (>= 3.0.0), graphics, stats, utils"                                                     
+splines        NA                                                                                         
+stats          NA                                                                                         
+stats4         "methods, graphics, stats"                                                                 
+stringr        "R (>= 2.14)"                                                                              
+survival       "stats, utils, graphics, splines, R (>= 2.13.0)"                                           
+tcltk          NA                                                                                         
+testthat       "R (>= 2.15.0)"                                                                            
+tools          NA                                                                                         
+utils          NA                                                                                         
+vegan          "permute (>= 0.8-0), lattice, R (>= 2.15.0)"                                               
+whisker        NA                                                                                         
+XML            "R (>= 1.2.0), methods, utils"                                                             
+xtable         "R (>= 2.10.0)"                                                                            
+XVector        "R (>= 2.8.0), methods, BiocGenerics (>= 0.7.2), IRanges (>=\n1.19.36)"                    
+               Imports                                                                                                                                                                                                                                                                                                                                      
+ade4           NA                                                                                                                                                                                                                                                                                                                                           
+annotate       "Biobase, AnnotationDbi, DBI, xtable, graphics, utils, stats,\nmethods, XML (>= 0.92-2), BiocGenerics (>= 0.1.13)"                                                                                                                                                                                                                           
+AnnotationDbi  "methods, utils, DBI, RSQLite, BiocGenerics, Biobase, IRanges"                                                                                                                                                                                                                                                                               
+ape            "nlme, lattice, graphics, stats, tools, utils"                                                                                                                                                                                                                                                                                               
+base           NA                                                                                                                                                                                                                                                                                                                                           
+Biobase        "methods, BiocGenerics"                                                                                                                                                                                                                                                                                                                      
+BiocGenerics   "methods, graphics, stats, parallel"                                                                                                                                                                                                                                                                                                         
+BiocInstaller  NA                                                                                                                                                                                                                                                                                                                                           
+biom           "plyr (>= 1.8), RJSONIO (>= 1.0.3), Matrix (>= 1.0.12)"                                                                                                                                                                                                                                                                                      
+Biostrings     "graphics, methods, stats, utils, BiocGenerics, IRanges,\nXVector"                                                                                                                                                                                                                                                                           
+bitops         NA                                                                                                                                                                                                                                                                                                                                           
+boot           NA                                                                                                                                                                                                                                                                                                                                           
+brew           NA                                                                                                                                                                                                                                                                                                                                           
+caTools        "bitops"                                                                                                                                                                                                                                                                                                                                     
+class          "MASS"                                                                                                                                                                                                                                                                                                                                       
+cluster        "graphics, grDevices"                                                                                                                                                                                                                                                                                                                        
+codetools      NA                                                                                                                                                                                                                                                                                                                                           
+colorspace     NA                                                                                                                                                                                                                                                                                                                                           
+compiler       NA                                                                                                                                                                                                                                                                                                                                           
+data.table     "methods, reshape2"                                                                                                                                                                                                                                                                                                                          
+datasets       NA                                                                                                                                                                                                                                                                                                                                           
+DBI            "methods"                                                                                                                                                                                                                                                                                                                                    
+DESeq          "genefilter, geneplotter, methods, MASS, RColorBrewer"                                                                                                                                                                                                                                                                                       
+DESeq2         "BiocGenerics (>= 0.7.5), methods, locfit, genefilter,\nRColorBrewer, lattice"                                                                                                                                                                                                                                                               
+devtools       "httr (>= 0.2), RCurl, utils, tools, methods, memoise, whisker,\nevaluate, digest"                                                                                                                                                                                                                                                           
+dichromat      NA                                                                                                                                                                                                                                                                                                                                           
+digest         NA                                                                                                                                                                                                                                                                                                                                           
+diptest        NA                                                                                                                                                                                                                                                                                                                                           
+doParallel     NA                                                                                                                                                                                                                                                                                                                                           
+ecodist        "stats"                                                                                                                                                                                                                                                                                                                                      
+edgeR          NA                                                                                                                                                                                                                                                                                                                                           
+evaluate       "stringr (>= 0.4)"                                                                                                                                                                                                                                                                                                                           
+foreach        "codetools, utils, iterators"                                                                                                                                                                                                                                                                                                                
+foreign        "methods, utils"                                                                                                                                                                                                                                                                                                                             
+formatR        NA                                                                                                                                                                                                                                                                                                                                           
+gdata          "gtools"                                                                                                                                                                                                                                                                                                                                     
+genefilter     "AnnotationDbi, annotate (>= 1.13.7), Biobase (>= 1.99.10),\ngraphics, methods, stats, survival"                                                                                                                                                                                                                                             
+geneplotter    "AnnotationDbi, graphics, grDevices, grid, RColorBrewer, stats,\nutils"                                                                                                                                                                                                                                                                      
+GenomicRanges  "methods, utils, stats, BiocGenerics, IRanges"                                                                                                                                                                                                                                                                                               
+ggplot2        "plyr (>= 1.7.1), digest, grid, gtable (>= 0.1.1), reshape2,\nscales (>= 0.2.3), proto, MASS"                                                                                                                                                                                                                                                
+gplots         "gtools, gdata, stats, caTools, KernSmooth"                                                                                                                                                                                                                                                                                                  
+graphics       "grDevices"                                                                                                                                                                                                                                                                                                                                  
+grDevices      NA                                                                                                                                                                                                                                                                                                                                           
+grid           "grDevices"                                                                                                                                                                                                                                                                                                                                  
+gtable         NA                                                                                                                                                                                                                                                                                                                                           
+gtools         NA                                                                                                                                                                                                                                                                                                                                           
+highr          NA                                                                                                                                                                                                                                                                                                                                           
+httr           "RCurl (>= 1.95-0), stringr (>= 0.6.1), digest, tools, methods"                                                                                                                                                                                                                                                                              
+igraph         "Matrix"                                                                                                                                                                                                                                                                                                                                     
+IRanges        "methods, utils, stats, BiocGenerics, stats4"                                                                                                                                                                                                                                                                                                
+iterators      NA                                                                                                                                                                                                                                                                                                                                           
+KernSmooth     NA                                                                                                                                                                                                                                                                                                                                           
+knitr          "evaluate (>= 0.4.7), digest, formatR (>= 0.9), highr (>= 0.2),\nmarkdown (>= 0.6.3), stringr (>= 0.6), tools"                                                                                                                                                                                                                               
+labeling       NA                                                                                                                                                                                                                                                                                                                                           
+lattice        "grid, grDevices, graphics, stats, utils"                                                                                                                                                                                                                                                                                                    
+limma          NA                                                                                                                                                                                                                                                                                                                                           
+locfit         "lattice"                                                                                                                                                                                                                                                                                                                                    
+manipulate     NA                                                                                                                                                                                                                                                                                                                                           
+markdown       NA                                                                                                                                                                                                                                                                                                                                           
+MASS           NA                                                                                                                                                                                                                                                                                                                                           
+matlab         "methods"                                                                                                                                                                                                                                                                                                                                    
+matR           "stats"                                                                                                                                                                                                                                                                                                                                      
+Matrix         "graphics, grid, stats, utils, lattice"                                                                                                                                                                                                                                                                                                      
+memoise        "digest"                                                                                                                                                                                                                                                                                                                                     
+methods        "utils"                                                                                                                                                                                                                                                                                                                                      
+mgcv           "methods, stats, graphics, Matrix"                                                                                                                                                                                                                                                                                                           
+mixtools       NA                                                                                                                                                                                                                                                                                                                                           
+multtest       "survival, MASS, stats4"                                                                                                                                                                                                                                                                                                                     
+munsell        "colorspace"                                                                                                                                                                                                                                                                                                                                 
+nlme           "lattice"                                                                                                                                                                                                                                                                                                                                    
+nnet           NA                                                                                                                                                                                                                                                                                                                                           
+parallel       "tools"                                                                                                                                                                                                                                                                                                                                      
+permute        NA                                                                                                                                                                                                                                                                                                                                           
+phyloseq       "\nade4 (>= 1.6.2),\nape (>= 3.0.8),\nbiom (>= 0.3.9),\nBiostrings (>= 2.28.0),\ncluster (>= 1.14.4),\ndata.table (>= 1.8.10),\nDESeq2 (>= 1.0.19),\nforeach (>= 1.4),\nggplot2 (>= 0.9.3.1),\nigraph (>= 0.6.5.2),\nmethods (>= 3.0.0),\nmulttest (>= 2.16.0),\nplyr (>= 1.8),\nreshape2 (>= 1.2.2),\nscales (>= 0.2.3),\nvegan (>= 2.0.10)"
+plyr           "Rcpp (>= 0.11.0)"                                                                                                                                                                                                                                                                                                                           
+PoiClaClu      NA                                                                                                                                                                                                                                                                                                                                           
+preprocessCore "stats"                                                                                                                                                                                                                                                                                                                                      
+proto          NA                                                                                                                                                                                                                                                                                                                                           
+RColorBrewer   NA                                                                                                                                                                                                                                                                                                                                           
+Rcpp           "methods"                                                                                                                                                                                                                                                                                                                                    
+RcppArmadillo  "Rcpp (>= 0.11.0)"                                                                                                                                                                                                                                                                                                                           
+RCurl          "methods"                                                                                                                                                                                                                                                                                                                                    
+reshape2       "plyr (>= 1.5), stringr, lattice"                                                                                                                                                                                                                                                                                                            
+rgl            NA                                                                                                                                                                                                                                                                                                                                           
+RJSONIO        NA                                                                                                                                                                                                                                                                                                                                           
+roxygen2       "stringr (>= 0.5), tools, brew, digest, codetools, methods,\nRcpp"                                                                                                                                                                                                                                                                           
+rpart          NA                                                                                                                                                                                                                                                                                                                                           
+RSQLite        "methods, DBI (>= 0.2-3)"                                                                                                                                                                                                                                                                                                                    
+rstudio        "utils"                                                                                                                                                                                                                                                                                                                                      
+rstudioapi     NA                                                                                                                                                                                                                                                                                                                                           
+scales         "RColorBrewer, stringr, dichromat, munsell (>= 0.2), plyr (>=\n1.2), labeling"                                                                                                                                                                                                                                                               
+scatterplot3d  NA                                                                                                                                                                                                                                                                                                                                           
+segmented      NA                                                                                                                                                                                                                                                                                                                                           
+spatial        NA                                                                                                                                                                                                                                                                                                                                           
+splines        "graphics, stats"                                                                                                                                                                                                                                                                                                                            
+stats          NA                                                                                                                                                                                                                                                                                                                                           
+stats4         NA                                                                                                                                                                                                                                                                                                                                           
+stringr        NA                                                                                                                                                                                                                                                                                                                                           
+survival       NA                                                                                                                                                                                                                                                                                                                                           
+tcltk          "utils"                                                                                                                                                                                                                                                                                                                                      
+testthat       "digest, methods"                                                                                                                                                                                                                                                                                                                            
+tools          NA                                                                                                                                                                                                                                                                                                                                           
+utils          NA                                                                                                                                                                                                                                                                                                                                           
+vegan          NA                                                                                                                                                                                                                                                                                                                                           
+whisker        NA                                                                                                                                                                                                                                                                                                                                           
+XML            "methods"                                                                                                                                                                                                                                                                                                                                    
+xtable         NA                                                                                                                                                                                                                                                                                                                                           
+XVector        "methods, BiocGenerics, IRanges"                                                                                                                                                                                                                                                                                                             
+               LinkingTo            
+ade4           NA                   
+annotate       NA                   
+AnnotationDbi  NA                   
+ape            NA                   
+base           NA                   
+Biobase        NA                   
+BiocGenerics   NA                   
+BiocInstaller  NA                   
+biom           NA                   
+Biostrings     "IRanges, XVector"   
+bitops         NA                   
+boot           NA                   
+brew           NA                   
+caTools        NA                   
+class          NA                   
+cluster        NA                   
+codetools      NA                   
+colorspace     NA                   
+compiler       NA                   
+data.table     NA                   
+datasets       NA                   
+DBI            NA                   
+DESeq          NA                   
+DESeq2         "Rcpp, RcppArmadillo"
+devtools       NA                   
+dichromat      NA                   
+digest         NA                   
+diptest        NA                   
+doParallel     NA                   
+ecodist        NA                   
+edgeR          NA                   
+evaluate       NA                   
+foreach        NA                   
+foreign        NA                   
+formatR        NA                   
+gdata          NA                   
+genefilter     NA                   
+geneplotter    NA                   
+GenomicRanges  "IRanges, XVector"   
+ggplot2        NA                   
+gplots         NA                   
+graphics       NA                   
+grDevices      NA                   
+grid           NA                   
+gtable         NA                   
+gtools         NA                   
+highr          NA                   
+httr           NA                   
+igraph         NA                   
+IRanges        NA                   
+iterators      NA                   
+KernSmooth     NA                   
+knitr          NA                   
+labeling       NA                   
+lattice        NA                   
+limma          NA                   
+locfit         NA                   
+manipulate     NA                   
+markdown       NA                   
+MASS           NA                   
+matlab         NA                   
+matR           NA                   
+Matrix         NA                   
+memoise        NA                   
+methods        NA                   
+mgcv           NA                   
+mixtools       NA                   
+multtest       NA                   
+munsell        NA                   
+nlme           NA                   
+nnet           NA                   
+parallel       NA                   
+permute        NA                   
+phyloseq       NA                   
+plyr           "Rcpp"               
+PoiClaClu      NA                   
+preprocessCore NA                   
+proto          NA                   
+RColorBrewer   NA                   
+Rcpp           NA                   
+RcppArmadillo  "Rcpp"               
+RCurl          NA                   
+reshape2       NA                   
+rgl            NA                   
+RJSONIO        NA                   
+roxygen2       "Rcpp (>= 0.10.6)"   
+rpart          NA                   
+RSQLite        NA                   
+rstudio        NA                   
+rstudioapi     NA                   
+scales         NA                   
+scatterplot3d  NA                   
+segmented      NA                   
+spatial        NA                   
+splines        NA                   
+stats          NA                   
+stats4         NA                   
+stringr        NA                   
+survival       NA                   
+tcltk          NA                   
+testthat       NA                   
+tools          NA                   
+utils          NA                   
+vegan          NA                   
+whisker        NA                   
+XML            NA                   
+xtable         NA                   
+XVector        "IRanges"            
+               Suggests                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+ade4           "waveslim, splancs, MASS, maptools, spdep, pixmap, ape,\ndeldir, ade4TkGUI"                                                                                                                                                                                                                                                                                                                                                                                     
+annotate       "Biobase, hgu95av2.db, genefilter, Biostrings (>= 2.25.10),\nrae230a.db, rae230aprobe, tkWidgets, GO.db, org.Hs.eg.db, XML\n(>= 0.92-2), org.Mm.eg.db, hom.Hs.inp.db, humanCHRLOC,\nRgraphviz, RUnit,"                                                                                                                                                                                                                                                          
+AnnotationDbi  "DBI (>= 0.2-4), RSQLite (>= 0.6-4), hgu95av2.db, GO.db,\norg.Sc.sgd.db, org.At.tair.db, KEGG.db, RUnit,\nTxDb.Hsapiens.UCSC.hg19.knownGene, hom.Hs.inp.db, org.Hs.eg.db,\nseqnames.db, reactome.db, AnnotationForge, graph,\norg.TguttataTestingSubset.eg.db"                                                                                                                                                                                                  
+ape            "gee, expm"                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+base           NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+Biobase        "tools, tkWidgets, ALL, RUnit, golubEsets"                                                                                                                                                                                                                                                                                                                                                                                                                      
+BiocGenerics   "Biobase, IRanges, GenomicRanges, AnnotationDbi, oligoClasses,\noligo, affyPLM, flowClust, affy, RUnit, DESeq2"                                                                                                                                                                                                                                                                                                                                                 
+BiocInstaller  "RUnit, BiocGenerics"                                                                                                                                                                                                                                                                                                                                                                                                                                           
+biom           "testthat (>= 0.7.1), knitr (>= 1.3)"                                                                                                                                                                                                                                                                                                                                                                                                                           
+Biostrings     "BSgenome (>= 1.13.14), BSgenome.Celegans.UCSC.ce2 (>=\n1.3.11), BSgenome.Dmelanogaster.UCSC.dm3 (>= 1.3.11),\nBSgenome.Hsapiens.UCSC.hg18, drosophila2probe, hgu95av2probe,\nhgu133aprobe, GenomicFeatures (>= 1.3.14), hgu95av2cdf, affy,\naffydata (>= 1.11.5), RUnit"                                                                                                                                                                                       
+bitops         NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+boot           "MASS, survival"                                                                                                                                                                                                                                                                                                                                                                                                                                                
+brew           NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+caTools        "MASS, rpart"                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+class          NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+cluster        "MASS"                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+codetools      NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+colorspace     "KernSmooth, MASS, kernlab, mvtnorm, vcd, tcltk, dichromat"                                                                                                                                                                                                                                                                                                                                                                                                     
+compiler       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+data.table     "chron, ggplot2 (>= 0.9.0), plyr, reshape, testthat (>= 0.4),\nhexbin, fastmatch, nlme, xts, bit64"                                                                                                                                                                                                                                                                                                                                                             
+datasets       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+DBI            NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+DESeq          "pasilla (>= 0.2.10), vsn, gplots"                                                                                                                                                                                                                                                                                                                                                                                                                              
+DESeq2         "RUnit, Biobase, parathyroidSE, pasilla (>= 0.2.10), vsn,\ngplots, BiocStyle"                                                                                                                                                                                                                                                                                                                                                                                   
+devtools       "testthat (>= 0.7), roxygen2 (>= 3.0.0), BiocInstaller, Rcpp\n(>= 0.10.0), MASS, knitr, rstudioapi"                                                                                                                                                                                                                                                                                                                                                             
+dichromat      NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+digest         NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+diptest        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+doParallel     "caret, mlbench, rpart"                                                                                                                                                                                                                                                                                                                                                                                                                                         
+ecodist        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+edgeR          "MASS, statmod, splines, locfit, KernSmooth"                                                                                                                                                                                                                                                                                                                                                                                                                    
+evaluate       "testthat, ggplot2"                                                                                                                                                                                                                                                                                                                                                                                                                                             
+foreach        "randomForest"                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+foreign        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+formatR        "codetools, gWidgetsRGtk2, testit, knitr"                                                                                                                                                                                                                                                                                                                                                                                                                       
+gdata          "RUnit"                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+genefilter     "Biobase (>= 1.99.10), class, hgu95av2.db, methods, tkWidgets,\nALL, ROC, DESeq, pasilla"                                                                                                                                                                                                                                                                                                                                                                       
+geneplotter    "Rgraphviz, fibroEset, hgu95av2.db, hu6800.db, hgu133a.db"                                                                                                                                                                                                                                                                                                                                                                                                      
+GenomicRanges  "AnnotationDbi (>= 1.21.1), AnnotationHub, BSgenome,\nBSgenome.Hsapiens.UCSC.hg19, BSgenome.Scerevisiae.UCSC.sacCer2,\nBSgenome.Dmelanogaster.UCSC.dm3, Biostrings (>= 2.25.3),\nRsamtools (>= 1.13.53), rtracklayer, KEGG.db, KEGGgraph,\nGenomicFeatures, TxDb.Dmelanogaster.UCSC.dm3.ensGene,\nTxDb.Hsapiens.UCSC.hg19.knownGene, seqnames.db, org.Sc.sgd.db,\nVariantAnnotation, edgeR, DESeq, DEXSeq, pasilla,\npasillaBamSubset, RUnit, digest, BiocStyle"
+ggplot2        "quantreg, Hmisc, mapproj, maps, hexbin, maptools, multcomp,\nnlme, testthat"                                                                                                                                                                                                                                                                                                                                                                                   
+gplots         "grid, MASS"                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+graphics       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+grDevices      NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+grid           "lattice"                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+gtable         "testthat, plyr"                                                                                                                                                                                                                                                                                                                                                                                                                                                
+gtools         NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+highr          "knitr, testit"                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+httr           "jsonlite, XML, testthat (>= 0.8.0), png, jpeg, httpuv"                                                                                                                                                                                                                                                                                                                                                                                                         
+igraph         "igraphdata, stats4, rgl, tcltk, graph, ape"                                                                                                                                                                                                                                                                                                                                                                                                                    
+IRanges        "XVector, GenomicRanges, BSgenome.Celegans.UCSC.ce2, RUnit"                                                                                                                                                                                                                                                                                                                                                                                                     
+iterators      "RUnit"                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+KernSmooth     "MASS"                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+knitr          "testit, rgl, codetools, XML, RCurl"                                                                                                                                                                                                                                                                                                                                                                                                                            
+labeling       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+lattice        "KernSmooth, MASS"                                                                                                                                                                                                                                                                                                                                                                                                                                              
+limma          "statmod (>= 1.2.2), splines, locfit, MASS, ellipse, affy,\nvsn, AnnotationDbi, org.Hs.eg.db"                                                                                                                                                                                                                                                                                                                                                                   
+locfit         "akima, gam"                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+manipulate     "graphics, grid, lattice, ggplot2"                                                                                                                                                                                                                                                                                                                                                                                                                              
+markdown       "knitr, RCurl"                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+MASS           "lattice, nlme, nnet, survival"                                                                                                                                                                                                                                                                                                                                                                                                                                 
+matlab         NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+matR           "Matrix, RJSONIO, ecodist, gplots, scatterplot3d"                                                                                                                                                                                                                                                                                                                                                                                                               
+Matrix         "expm, MASS"                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+memoise        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+methods        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+mgcv           "splines, parallel"                                                                                                                                                                                                                                                                                                                                                                                                                                             
+mixtools       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+multtest       "snow"                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+munsell        "ggplot2 (>= 0.9.2)"                                                                                                                                                                                                                                                                                                                                                                                                                                            
+nlme           "Hmisc, MASS"                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+nnet           "MASS"                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+parallel       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+permute        "vegan (>= 2.0-0), testthat (>= 0.5), parallel"                                                                                                                                                                                                                                                                                                                                                                                                                 
+phyloseq       "\ngenefilter (>= 1.42.0),\ntestthat (>= 0.7.1),\nknitr (>= 1.3)"                                                                                                                                                                                                                                                                                                                                                                                               
+plyr           "abind, testthat, tcltk, foreach, doMC, itertools, iterators"                                                                                                                                                                                                                                                                                                                                                                                                   
+PoiClaClu      NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+preprocessCore NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+proto          "graph, Rgraphviz"                                                                                                                                                                                                                                                                                                                                                                                                                                              
+RColorBrewer   NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+Rcpp           "RUnit, inline, rbenchmark, highlight"                                                                                                                                                                                                                                                                                                                                                                                                                          
+RcppArmadillo  "RUnit"                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+RCurl          "Rcompression, XML"                                                                                                                                                                                                                                                                                                                                                                                                                                             
+reshape2       "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+rgl            "MASS"                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+RJSONIO        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+roxygen2       "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+rpart          "survival"                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+RSQLite        "RUnit (>= 0.4.22)"                                                                                                                                                                                                                                                                                                                                                                                                                                             
+rstudio        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+rstudioapi     NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+scales         "testthat"                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+scatterplot3d  NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+segmented      NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+spatial        "MASS"                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+splines        NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+stats          NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+stats4         NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+stringr        "testthat (>= 0.3)"                                                                                                                                                                                                                                                                                                                                                                                                                                             
+survival       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+tcltk          NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+testthat       NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+tools          NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+utils          NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+vegan          "MASS, mgcv, cluster, scatterplot3d, rgl, tcltk"                                                                                                                                                                                                                                                                                                                                                                                                                
+whisker        "markdown"                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+XML            "bitops, RCurl"                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+xtable         NA                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+XVector        "Biostrings, drosophila2probe, RUnit"                                                                                                                                                                                                                                                                                                                                                                                                                           
+               Enhances                               
+ade4           NA                                     
+annotate       NA                                     
+AnnotationDbi  NA                                     
+ape            NA                                     
+base           NA                                     
+Biobase        NA                                     
+BiocGenerics   NA                                     
+BiocInstaller  NA                                     
+biom           NA                                     
+Biostrings     "Rmpi"                                 
+bitops         NA                                     
+boot           NA                                     
+brew           NA                                     
+caTools        NA                                     
+class          NA                                     
+cluster        NA                                     
+codetools      NA                                     
+colorspace     NA                                     
+compiler       NA                                     
+data.table     NA                                     
+datasets       NA                                     
+DBI            NA                                     
+DESeq          NA                                     
+DESeq2         NA                                     
+devtools       NA                                     
+dichromat      NA                                     
+digest         NA                                     
+diptest        NA                                     
+doParallel     "compiler, RUnit"                      
+ecodist        NA                                     
+edgeR          NA                                     
+evaluate       NA                                     
+foreach        "compiler, doMC, RUnit, doParallel"    
+foreign        NA                                     
+formatR        NA                                     
+gdata          NA                                     
+genefilter     NA                                     
+geneplotter    NA                                     
+GenomicRanges  NA                                     
+ggplot2        "sp"                                   
+gplots         NA                                     
+graphics       NA                                     
+grDevices      NA                                     
+grid           NA                                     
+gtable         NA                                     
+gtools         NA                                     
+highr          NA                                     
+httr           NA                                     
+igraph         NA                                     
+IRanges        NA                                     
+iterators      NA                                     
+KernSmooth     NA                                     
+knitr          NA                                     
+labeling       NA                                     
+lattice        "chron"                                
+limma          NA                                     
+locfit         NA                                     
+manipulate     NA                                     
+markdown       NA                                     
+MASS           NA                                     
+matlab         NA                                     
+matR           NA                                     
+Matrix         "MatrixModels, graph, SparseM, sfsmisc"
+memoise        NA                                     
+methods        NA                                     
+mgcv           NA                                     
+mixtools       NA                                     
+multtest       NA                                     
+munsell        NA                                     
+nlme           NA                                     
+nnet           NA                                     
+parallel       "snow, nws, Rmpi"                      
+permute        NA                                     
+phyloseq       "doParallel (>= 1.0.1)"                
+plyr           NA                                     
+PoiClaClu      NA                                     
+preprocessCore NA                                     
+proto          NA                                     
+RColorBrewer   NA                                     
+Rcpp           NA                                     
+RcppArmadillo  NA                                     
+RCurl          NA                                     
+reshape2       NA                                     
+rgl            NA                                     
+RJSONIO        NA                                     
+roxygen2       NA                                     
+rpart          NA                                     
+RSQLite        NA                                     
+rstudio        NA                                     
+rstudioapi     NA                                     
+scales         NA                                     
+scatterplot3d  NA                                     
+segmented      NA                                     
+spatial        NA                                     
+splines        NA                                     
+stats          NA                                     
+stats4         NA                                     
+stringr        NA                                     
+survival       NA                                     
+tcltk          NA                                     
+testthat       NA                                     
+tools          NA                                     
+utils          NA                                     
+vegan          NA                                     
+whisker        NA                                     
+XML            NA                                     
+xtable         NA                                     
+XVector        NA                                     
+               License                       License_is_FOSS
+ade4           "GPL (>= 2)"                  NA             
+annotate       "Artistic-2.0"                NA             
+AnnotationDbi  "Artistic-2.0"                NA             
+ape            "GPL (>= 2)"                  NA             
+base           "Part of R 3.0.2"             NA             
+Biobase        "Artistic-2.0"                NA             
+BiocGenerics   "Artistic-2.0"                NA             
+BiocInstaller  "Artistic-2.0"                NA             
+biom           "GPL-2"                       NA             
+Biostrings     "Artistic-2.0"                NA             
+bitops         "GPL (>= 2)"                  NA             
+boot           "Unlimited"                   NA             
+brew           "GPL-2"                       NA             
+caTools        "GPL-3"                       NA             
+class          "GPL-2 | GPL-3"               NA             
+cluster        "GPL (>= 2)"                  NA             
+codetools      "GPL"                         NA             
+colorspace     "BSD_3_clause + file LICENSE" NA             
+compiler       "Part of R 3.0.2"             NA             
+data.table     "GPL (>= 2)"                  NA             
+datasets       "Part of R 3.0.2"             NA             
+DBI            "LGPL (>= 2)"                 NA             
+DESeq          "GPL (>= 3)"                  NA             
+DESeq2         "GPL (>= 3)"                  NA             
+devtools       "GPL (>= 2)"                  NA             
+dichromat      "GPL-2"                       NA             
+digest         "GPL-2"                       NA             
+diptest        "GPL (>= 2)"                  NA             
+doParallel     "GPL-2"                       NA             
+ecodist        "GPL (>= 2)"                  NA             
+edgeR          "GPL (>=2)"                   NA             
+evaluate       "GPL"                         NA             
+foreach        "Apache License (== 2.0)"     NA             
+foreign        "GPL (>= 2)"                  NA             
+formatR        "GPL"                         NA             
+gdata          "GPL-2"                       NA             
+genefilter     "Artistic-2.0"                NA             
+geneplotter    "Artistic-2.0"                NA             
+GenomicRanges  "Artistic-2.0"                NA             
+ggplot2        "GPL-2"                       NA             
+gplots         "GPL-2"                       NA             
+graphics       "Part of R 3.0.2"             NA             
+grDevices      "Part of R 3.0.2"             NA             
+grid           "Part of R 3.0.2"             NA             
+gtable         "GPL-2"                       NA             
+gtools         "LGPL-2.1"                    NA             
+highr          "GPL"                         NA             
+httr           "MIT + file LICENSE"          NA             
+igraph         "GPL (>= 2)"                  NA             
+IRanges        "Artistic-2.0"                NA             
+iterators      "Apache License (== 2.0)"     NA             
+KernSmooth     "Unlimited"                   NA             
+knitr          "GPL"                         NA             
+labeling       "MIT | Unlimited"             NA             
+lattice        "GPL (>= 2)"                  NA             
+limma          "GPL (>=2)"                   NA             
+locfit         "GPL (>= 2)"                  NA             
+manipulate     ""                            NA             
+markdown       "GPL-2"                       NA             
+MASS           "GPL-2 | GPL-3"               NA             
+matlab         "Artistic-2.0"                NA             
+matR           "file LICENSE"                NA             
+Matrix         "GPL (>= 2)"                  NA             
+memoise        "MIT"                         NA             
+methods        "Part of R 3.0.2"             NA             
+mgcv           "GPL (>= 2)"                  NA             
+mixtools       "GPL (>= 2)"                  NA             
+multtest       "LGPL"                        NA             
+munsell        "MIT + file LICENSE"          NA             
+nlme           "GPL (>= 2)"                  NA             
+nnet           "GPL-2 | GPL-3"               NA             
+parallel       "Part of R 3.0.2"             NA             
+permute        "GPL-2"                       NA             
+phyloseq       "AGPL-3"                      NA             
+plyr           "MIT + file LICENSE"          NA             
+PoiClaClu      "GPL-2"                       NA             
+preprocessCore "LGPL (>= 2)"                 NA             
+proto          "GPL-2"                       NA             
+RColorBrewer   "Apache License 2.0"          NA             
+Rcpp           "GPL (>= 2)"                  NA             
+RcppArmadillo  "GPL (>= 2)"                  NA             
+RCurl          "BSD"                         NA             
+reshape2       "MIT"                         NA             
+rgl            "GPL"                         NA             
+RJSONIO        "BSD"                         NA             
+roxygen2       "GPL (>= 2)"                  NA             
+rpart          "GPL-2 | GPL-3"               NA             
+RSQLite        "LGPL (>= 2)"                 NA             
+rstudio        ""                            NA             
+rstudioapi     "MIT + file LICENSE"          NA             
+scales         "MIT"                         NA             
+scatterplot3d  "GPL-2"                       NA             
+segmented      "GPL"                         NA             
+spatial        "GPL-2 | GPL-3"               NA             
+splines        "Part of R 3.0.2"             NA             
+stats          "Part of R 3.0.2"             NA             
+stats4         "Part of R 3.0.2"             NA             
+stringr        "GPL-2"                       NA             
+survival       "LGPL (>= 2)"                 NA             
+tcltk          "Part of R 3.0.2"             NA             
+testthat       "MIT + file LICENSE"          NA             
+tools          "Part of R 3.0.2"             NA             
+utils          "Part of R 3.0.2"             NA             
+vegan          "GPL-2"                       NA             
+whisker        "GPL-3"                       NA             
+XML            "BSD"                         NA             
+xtable         "GPL (>= 2)"                  NA             
+XVector        "Artistic-2.0"                NA             
+               License_restricts_use OS_type MD5sum NeedsCompilation Built  
+ade4           NA                    NA      NA     "yes"            "3.0.2"
+annotate       NA                    NA      NA     NA               "3.0.2"
+AnnotationDbi  NA                    NA      NA     NA               "3.0.2"
+ape            NA                    NA      NA     "yes"            "3.0.2"
+base           NA                    NA      NA     NA               "3.0.2"
+Biobase        NA                    NA      NA     NA               "3.0.2"
+BiocGenerics   NA                    NA      NA     NA               "3.0.2"
+BiocInstaller  NA                    NA      NA     NA               "3.0.2"
+biom           NA                    NA      NA     "no"             "3.0.2"
+Biostrings     NA                    NA      NA     NA               "3.0.2"
+bitops         NA                    NA      NA     "yes"            "3.0.2"
+boot           NA                    NA      NA     "no"             "3.0.2"
+brew           NA                    NA      NA     NA               "3.0.2"
+caTools        NA                    NA      NA     "yes"            "3.0.2"
+class          NA                    NA      NA     "yes"            "3.0.2"
+cluster        NA                    NA      NA     "yes"            "3.0.2"
+codetools      NA                    NA      NA     NA               "3.0.2"
+colorspace     NA                    NA      NA     "yes"            "3.0.2"
+compiler       NA                    NA      NA     NA               "3.0.2"
+data.table     NA                    NA      NA     "yes"            "3.0.2"
+datasets       NA                    NA      NA     NA               "3.0.2"
+DBI            NA                    NA      NA     "no"             "3.0.2"
+DESeq          NA                    NA      NA     NA               "3.0.2"
+DESeq2         NA                    NA      NA     NA               "3.0.2"
+devtools       NA                    NA      NA     "yes"            "3.0.2"
+dichromat      NA                    NA      NA     NA               "3.0.2"
+digest         NA                    NA      NA     "yes"            "3.0.2"
+diptest        NA                    NA      NA     "yes"            "3.0.2"
+doParallel     NA                    NA      NA     "no"             "3.0.2"
+ecodist        NA                    NA      NA     "yes"            "3.0.2"
+edgeR          NA                    NA      NA     NA               "3.0.2"
+evaluate       NA                    NA      NA     "no"             "3.0.2"
+foreach        NA                    NA      NA     "no"             "3.0.2"
+foreign        NA                    NA      NA     "yes"            "3.0.2"
+formatR        NA                    NA      NA     "no"             "3.0.2"
+gdata          NA                    NA      NA     "no"             "3.0.2"
+genefilter     NA                    NA      NA     NA               "3.0.2"
+geneplotter    NA                    NA      NA     NA               "3.0.2"
+GenomicRanges  NA                    NA      NA     NA               "3.0.2"
+ggplot2        NA                    NA      NA     "no"             "3.0.2"
+gplots         NA                    NA      NA     "No"             "3.0.2"
+graphics       NA                    NA      NA     NA               "3.0.2"
+grDevices      NA                    NA      NA     NA               "3.0.2"
+grid           NA                    NA      NA     NA               "3.0.2"
+gtable         NA                    NA      NA     NA               "3.0.2"
+gtools         NA                    NA      NA     "yes"            "3.0.2"
+highr          NA                    NA      NA     "no"             "3.0.2"
+httr           NA                    NA      NA     "no"             "3.0.2"
+igraph         NA                    NA      NA     "yes"            "3.0.2"
+IRanges        NA                    NA      NA     NA               "3.0.2"
+iterators      NA                    NA      NA     "no"             "3.0.2"
+KernSmooth     NA                    NA      NA     "yes"            "3.0.2"
+knitr          NA                    NA      NA     "no"             "3.0.2"
+labeling       NA                    NA      NA     "no"             "3.0.2"
+lattice        NA                    NA      NA     "yes"            "3.0.2"
+limma          NA                    NA      NA     NA               "3.0.2"
+locfit         NA                    NA      NA     "yes"            "3.0.2"
+manipulate     NA                    NA      NA     NA               "3.0.2"
+markdown       NA                    NA      NA     "yes"            "3.0.2"
+MASS           NA                    NA      NA     "yes"            "3.0.2"
+matlab         NA                    NA      NA     "no"             "3.0.2"
+matR           NA                    NA      NA     NA               "3.0.2"
+Matrix         NA                    NA      NA     "yes"            "3.0.2"
+memoise        NA                    NA      NA     NA               "3.0.2"
+methods        NA                    NA      NA     NA               "3.0.2"
+mgcv           NA                    NA      NA     "yes"            "3.0.2"
+mixtools       NA                    NA      NA     "yes"            "3.0.2"
+multtest       NA                    NA      NA     NA               "3.0.2"
+munsell        NA                    NA      NA     "no"             "3.0.2"
+nlme           NA                    NA      NA     "yes"            "3.0.2"
+nnet           NA                    NA      NA     "yes"            "3.0.2"
+parallel       NA                    NA      NA     NA               "3.0.2"
+permute        NA                    NA      NA     "no"             "3.0.2"
+phyloseq       NA                    NA      NA     NA               "3.0.2"
+plyr           NA                    NA      NA     "yes"            "3.0.2"
+PoiClaClu      NA                    NA      NA     "no"             "3.0.2"
+preprocessCore NA                    NA      NA     NA               "3.0.2"
+proto          NA                    NA      NA     NA               "3.0.2"
+RColorBrewer   NA                    NA      NA     NA               "3.0.2"
+Rcpp           NA                    NA      NA     "yes"            "3.0.2"
+RcppArmadillo  NA                    NA      NA     "yes"            "3.0.2"
+RCurl          NA                    NA      NA     "yes"            "3.0.2"
+reshape2       NA                    NA      NA     NA               "3.0.2"
+rgl            NA                    NA      NA     "yes"            "3.0.2"
+RJSONIO        NA                    NA      NA     "yes"            "3.0.2"
+roxygen2       NA                    NA      NA     "yes"            "3.0.2"
+rpart          NA                    NA      NA     "yes"            "3.0.2"
+RSQLite        NA                    NA      NA     "yes"            "3.0.2"
+rstudio        NA                    NA      NA     NA               "3.0.2"
+rstudioapi     NA                    NA      NA     "no"             "3.0.2"
+scales         NA                    NA      NA     NA               "3.0.2"
+scatterplot3d  NA                    NA      NA     "no"             "3.0.2"
+segmented      NA                    NA      NA     "no"             "3.0.2"
+spatial        NA                    NA      NA     "yes"            "3.0.2"
+splines        NA                    NA      NA     NA               "3.0.2"
+stats          NA                    NA      NA     NA               "3.0.2"
+stats4         NA                    NA      NA     NA               "3.0.2"
+stringr        NA                    NA      NA     NA               "3.0.2"
+survival       NA                    NA      NA     "yes"            "3.0.2"
+tcltk          NA                    NA      NA     NA               "3.0.2"
+testthat       NA                    NA      NA     "no"             "3.0.2"
+tools          NA                    NA      NA     NA               "3.0.2"
+utils          NA                    NA      NA     NA               "3.0.2"
+vegan          NA                    NA      NA     "yes"            "3.0.2"
+whisker        NA                    NA      NA     "no"             "3.0.2"
+XML            NA                    NA      NA     "yes"            "3.0.0"
+xtable         NA                    NA      NA     "no"             "3.0.2"
+XVector        NA                    NA      NA     NA               "3.0.2"
+------------------------------------------------------------------------
