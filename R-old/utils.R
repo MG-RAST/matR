@@ -10,6 +10,8 @@
 ### simple stuff only here
 ############################################
 
+##--> don't need both of these
+
 ### two functions for demos: each will step through a script, line by line.
 ### this one reads the file as text and echoes each line exactly.
 ### each command must fit on a line, and blank lines are simply echoed.
@@ -57,6 +59,7 @@ matrixPrinter <- function (x, ...) {
 ### Pretty printing of a restricted class of list structures, adaptive to screen width:
 ### the only atomic (non-list) elements in a traversal are length-one character vectors
 ### this is for metadata but also handy in general; assumes that listify() has been applied
+##--> I'm sure with str and casting to matrix type etc there's a better way.
 listPrinter <- function (x) {
 	n <- 0
 	count <- function (x)
@@ -241,12 +244,14 @@ reqPack <- function (P) {
 	}
 
 ### print an optional message according to verbosity configuration
+##--> argument should be "..." only
 optMessage <- function (s, ...) if (msession$verbose ()) message (s, ...)
 
 ### helps pluralize output text when appropriate
 plur <- function (x) if (length (x) > 1) "s" else ""
 
 ### last element of a vector
+##--> rename, just: "last"
 lastof <- function (x) x [length (x)]
 
 ### checks for a obvious graphics type of
@@ -266,6 +271,7 @@ resolveMerge <- function (first, second)
 resolveParList <- function (call, object, defaults)
   resolveMerge (call, resolveMerge (object, resolveMerge (defaults, msession$par())))
 
+##--> remove this; it already exist somewhere in the default libraries
 xcall <- function (fun, ..., with = list(), without = character ()) {
 	call <- append (append (list (fun), list (...)), with)
 	call [without] <- NULL
@@ -273,6 +279,7 @@ xcall <- function (fun, ..., with = list(), without = character ()) {
 	eval (as.call (call))
 }
 
+##--> replace with match("package:matR", search())
 whereIam <- function () which (search () == "package:matR")
 
 prior <- function (f) function (x, ...) get (f, pos = whereIam() + 1) (x, ...)
