@@ -38,7 +38,8 @@
 callRaw <- function (call, parse = TRUE, file = NULL) {
 	if (!length (grep ("?", call, fixed = TRUE))) conj = "?"
 	else conj = "&"
-	urlStr <- paste (msession$server (), call, conj, "auth=", msession$getAuth (), sep = "")
+	#urlStr <- paste (msession$server (), call, conj, "auth=", msession$getAuth (), sep = "") # Kevin 6-2-14
+        urlStr <- paste (msession$server, call, conj, "auth=", msession$getAuth (), sep = "")     #
   optMessage ("requesting ", urlStr)
 	msession$urls (urlStr)
   parse <- if (parse) {

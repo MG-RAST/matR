@@ -66,7 +66,7 @@ heatmap (Waters)
 # further analysis.
 
 groups (Coral) <- c (rep (1, 6), rep (2,7))
-res <- sigtest (Coral, test = "Kruskal-Wallis")
+res <- sigtest (coral, test = "Kruskal-Wallis")
 
 # Try demo2("second") for more about this.
 

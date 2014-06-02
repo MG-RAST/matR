@@ -24,7 +24,8 @@
     if (substr (build, 1, 8) != "XXXBUILD") paste (" build ", build, sep = "") else "", 
     ")")
 
-	msession$server (msession$servers()$prod)
+	#msession$server (msession$servers()$prod) # Kevin 6-2-14
+        msession$server = msession$servers()$prod  #
 	options (warn = 1, timeout = 300, digits = 2)
 #	packageStartupMessage (
 #		"help is available with package?matR, vignette(package=\"matR\"), or msession$debug()")

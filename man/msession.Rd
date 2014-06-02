@@ -18,7 +18,8 @@ msession$getAuth()
 # show available and current servers, and set
 msession$servers()
 msession$server()
-msession$server("http://api.metagenomics.anl.gov")
+# msession$server ("http://api.metagenomics.anl.gov") # Kevin 6-2-14
+msession$server = "http://api.metagenomics.anl.gov"   #
 
 # show recent API calls for debugging
 msession$urls()
