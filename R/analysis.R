@@ -81,7 +81,7 @@ setMethod ("pco", "collection", function (x,
 # see above: why do I use "rownames(x[[view]])"?
 # fix col v. color once and for all --- it is NOT impossible
 	par <- list ()
-	par$main <- paste("principal coordinates ", attributes(x[[view]])$level, collapse="", sep="")
+	par$main <- paste("principal coordinates : ", attributes(x[[view]])$level, collapse="", sep="")
 	par$labels <- if (length (names (x)) != 0) names (x) else samples (x)
 	if (length (groups (x)) != 0) par$labels <- paste (par$labels, " (", groups (x), ")", sep = "")
 	par [c ("xlab", "ylab", if (length (components) == 3) "zlab" else NULL)] <-
