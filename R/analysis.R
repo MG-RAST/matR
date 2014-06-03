@@ -82,7 +82,7 @@ setMethod ("pco", "collection", function (x,
 # fix col v. color once and for all --- it is NOT impossible
 	par <- list ()
 	#par$main <- paste(method, " PCoA\nview=", views(x)[view], collapse="", sep="") #" : level=", attributes(x[[view]])$level, " : source=", as.character(views(Guts)[view][[1]]['source']), collapse="", sep="")
-        par$main <- paste(method, " PCoA\nannot=",attributes(x[[view]])$annot, "::level=", attributes(x[[view]])$level, "::source=", as.character(views(Guts)[view][[1]]['source']), collapse="", sep="")
+        par$main <- paste(method, " PCoA\nannot=",attributes(x[[view]])$annot, "  level=", attributes(x[[view]])$level, "  source=", as.character(views(Guts)[view][[1]]['source']), collapse="", sep="")
 	par$labels <- if (length (names (x)) != 0) names (x) else samples (x)
 	if (length (groups (x)) != 0) par$labels <- paste (par$labels, " (", groups (x), ")", sep = "")
 	par [c ("xlab", "ylab", if (length (components) == 3) "zlab" else NULL)] <-
