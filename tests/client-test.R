@@ -1,36 +1,63 @@
-#######################################################################
-## get data:
-##    with direct ID specification
-##    using a data.frame with metadata
-##    using file containing IDs only
-##    using file of IDs and metadata
-##    varying MG-RAST parameters
-## parameters to "matrix" resource:  (all optional)
-##    asynchronous source result_type filter group_level grep length evalue identity filter_source hide_metadata id filter_level
-############################################
-cc <- c("4441679.3 4441680.3 4441682.3 4441695.3 4441696.3 4440463.3 4440464.3")
-bb <- biom(biomRequest(cc))
+#  ways to get data:
+#    file containing IDs only
+#    file of IDs and metadata
+#    direct ID specification
+#    data.frame with metadata
+#    blocking, file output
+#    varying API parameters
+#
+#  API parameters for "matrix" resource; all optional:
+#    asynchronous source result_type filter group_level grep length 
+#    evalue identity filter_source hide_metadata id filter_level
+#
 
-ss <- c("mgm4441679.3", "mgm4441680.3", "mgm4441682.3", "mgm4441695.3", "mgm4441696.3", "mgm4440463.3", "mgm4440464.3")
-bb <- biom(biomRequest(ss))
-
-dd <- data.frame(samples=ss, group=c("alpha","alpha","bravo","charlie","delta","delta","charlie"))
-bb <- biom(biomRequest(dd))
+library(matR)
 
 tt <- tempfile()
-writeLines(ss, tt)
-bb <- biom(biomRequest(file=tt))
+ff <- sampleSets() [1]				# only IDs
+gg <- sampleSets () [2]				# also metadata
+
+xx <- readSet (ff)					# vector
+yy <- readSet (gg)					# data.frame
+
+biomRequest (file=ff)
+biomRequest (file=gg)
+biomRequest (xx)
+biomRequest (yy)
+
+biomRequest (xx, quiet=TRUE)
+biomRequest (xx, blocking=3)
+biomRequest (xx, outfile=tt)
+biomRequest (xx, blocking=3, outfile=tt)
 unlink(tt)
 
-tt <- tempfile()
-write.table(dd, file=tt, quote=F, row.names=F)
-bb <- biom(biomRequest(file=tt))
-unlink(tt)
+biomRequest (xx, request="function")
+biomRequest (xx, request="function", group_level="level1")
+biomRequest (xx, request="function", group_level="level2")
+biomRequest (xx, request="function", group_level="level3")
+biomRequest (xx, request="function", group_level="function")
+biomRequest (xx, request="function", group_level="level1", evalue=1)
+biomRequest (xx, request="function", group_level="level1", evalue=1, length=20)
+biomRequest (xx, request="function", group_level="level1", evalue=1, length=20, identity=85)
+biomRequest (xx, request="function", group_level="level1", evalue=1, length=20, identity=85, filter_source="NOG")
 
-biom(biomRequest(file=tt, result_type="identity"))
-biom(biomRequest(file=tt, group_level="level2"))
-biom(biomRequest(file=tt, identity=85))
-biom(biomRequest(file=tt, evalue=4))
-biom(biomRequest(file=tt, filter_source="SSU"))
-biom(biomRequest(file=tt, request="organism"))
-biom(biomRequest(file=tt, request="organism", filter_level="genus"))
+biomRequest (xx, request="organism")
+biomRequest (xx, request="organism", group_level="domain")
+biomRequest (xx, request="organism", group_level="phylum")
+biomRequest (xx, request="organism", group_level="species")
+biomRequest (xx, request="organism", group_level="strain")
+biomRequest (xx, request="organism", group_level="domain", evalue=1)
+biomRequest (xx, request="organism", group_level="domain", evalue=1, length=20)
+biomRequest (xx, request="organism", group_level="domain", evalue=1, length=20, filter_source="Greengenes")
+
+biomRequest (xx, request="organism", hit_type="all")
+biomRequest (xx, request="organism", hit_type="single")
+
+biomRequest (xx, request="organism", result_type="abundance")
+biomRequest (xx, request="organism", result_type="identity")
+
+ticket <- biomRequest (xx, wait=FALSE)
+# ... here you can go for a coffee break, or do some other calculations; then later:
+xx <- biom (ticket, wait=TRUE)
+
+#  metadata(...)

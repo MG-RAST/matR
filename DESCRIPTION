@@ -1,21 +1,21 @@
 Package: matR
 Type: Package
 Title: metagenomics analysis tools for R
-Version: 1.0.0
-Depends: R (>= 2.10), MGRASTer, BIOM.utils, methods, utils
-Imports: stats
-Suggests: Matrix, ecodist, gplots, scatterplot3d
+Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), email = "contact.dtb@gmail.com"),
+ person ("Kevin", "Keegan", role = "aut", email = "keegan@mcs.anl.gov"))
+Version: 0.9
+Depends: R (>= 2.10), MGRASTer, BIOM.utils, utils
+Imports: 
+Suggests: stats, graphics, qvalue, ecodist, gplots, scatterplot3d
 URL: https://github.com/MG-RAST/matR/
 Date: 2013-01-05
-Author: Daniel T. Braithwaite and Kevin P. Keegan
-Maintainer: Daniel T. Braithwaite <braithwaite@cels.anl.gov>
-Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), email = "braithwaite@uchicago.edu"),
-              person ("Kevin", "Keegan", role = "aut", email = "keegan@mcs.anl.gov"))
-Description: matR is an analysis module, extending the MG-RAST metagenome annotation pipeline.  Customized versions of statistical and visualization tools access metagenome annotations and metadata transparently, with authentication for private data.  As an add-on package to the popular R programming language for statistics, matR enables analysis to use the complete functionality of that environment and its extensions.
+Description: matR is an analysis module, extending the MG-RAST metagenome annotation pipeline.  
+ Customized versions of statistical and visualization tools access metagenome annotations and 
+ metadata transparently, with authentication for private data.  As an add-on package to the 
+ popular R programming language for statistics, matR enables analysis to use the complete 
+ functionality of that environment and its extensions.
 License: file LICENSE
-LazyLoad: yes
 LazyData: yes
-LazyDataCompression: xz
-BuildVignettes: no
-Collate: utils.R class-headers.R selections.R collections.R class-coercions.R analysis-utils.R analysis.R render.R init.R API-layer.R
+Collate: utils.R biom-ext.R client.R graphics.R analysis-support.R analysis-misc.R dist.R rowstats.R 
+ transform.R boxplot.R pco.R heatmap.R init.R
 
