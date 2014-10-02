@@ -40,13 +40,13 @@ transform.biom <- function (`_data`, ...) {
 	y
 	}
 
-t.NA2Zero <- function (x, ...) { x [is.na (x)] <- 0; x }
-t.Threshold <- function (x, entry.lim=1, row.lim=1, col.lim=1) {
+t_NA2Zero <- function (x, ...) { x [is.na (x)] <- 0; x }
+t_Threshold <- function (x, entry.lim=1, row.lim=1, col.lim=1) {
 	x [x <= entry.lim] <- 0 ; x <- x [rowSums (x) >= row.lim, ] ; x <- x [, colSums (x) >= col.lim] ; x
 	}
-t.Log <- function (x, ...) { log2 (1 + x) }
-t.ColCenter <- function (x, ...) { x - colMeans(x) [col(x)] }
-t.ColScale <- function (x, ...) {
+t_Log <- function (x, ...) { log2 (1 + x) }
+t_ColCenter <- function (x, ...) { x - colMeans(x) [col(x)] }
+t_ColScale <- function (x, ...) {
 	sigma <- apply (x, 2, sd) ; sigma <- ifelse (sigma == 0, 1, sigma) ; x / sigma [col(x)]
 	}
-t.DENorm <- function (x, DEparam, ...) { x }
+t_DENorm <- function (x, DEparam, ...) { x }

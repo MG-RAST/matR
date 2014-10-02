@@ -11,13 +11,15 @@ export(
 	biom.environment,
 
 	metadata.character,
+	search.MGRAST,
+	dir.MGRAST,
 
-	t.NA2Zero,
-	t.Threshold,
-	t.Log,
-	t.ColCenter,
-	t.ColScale,
-	t.DENorm,
+	t_NA2Zero,
+	t_Threshold,
+	t_Log,
+	t_ColCenter,
+	t_ColScale,
+	t_DENorm,
 	transform.biom,
 
 	boxplot.biom,
@@ -47,7 +49,10 @@ export(
 	hazPackages,
 	dependencies,
 	stepper,
-	demo.step)
+	demo.step,
+	collapse,
+	
+	.Last.lib)
 
 S3method ("dimnames<-", biom)
 S3method (merge, biom)
@@ -87,3 +92,9 @@ import (MGRASTer)
 #    "If the intention is to give an error 
 #    if the suggested package is not available, 
 #    simply use e.g. rgl::plot3d."
+
+#  except that these are necessary because the package namespace depends on them:
+
+importFrom (graphics, boxplot)
+importFrom (graphics, image)
+importFrom (stats, princomp)

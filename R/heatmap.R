@@ -55,7 +55,7 @@ image.biom <- function(
 		Rowv = Rowv,
 		Colv = Colv,
 		main = NULL,
-		col = rgb (colorRamp(c("red", "green")) (seq(0, 1, length = 20)), max = 255),
+		col = rgb (colorRamp(c("red", "green")) (seq(0, 1, length = 20)), maxColorValue = 255),
 
 		colsep = 1:ncol(x),				# separate all columns
 #		rowsep = 1:nrow(x),				# omit: this takes forever!

@@ -4,9 +4,9 @@ Title: metagenomics analysis tools for R
 Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), email = "contact.dtb@gmail.com"),
  person ("Kevin", "Keegan", role = "aut", email = "keegan@mcs.anl.gov"))
 Version: 0.9
-Depends: R (>= 2.10), MGRASTer, BIOM.utils, utils
+Depends: R (>= 2.10), MGRASTer, BIOM.utils, graphics, stats, utils
 Imports: 
-Suggests: stats, graphics, qvalue, ecodist, gplots, scatterplot3d
+Suggests: qvalue, ecodist, gplots, scatterplot3d
 URL: https://github.com/MG-RAST/matR/
 Date: 2013-01-05
 Description: matR is an analysis module, extending the MG-RAST metagenome annotation pipeline.  

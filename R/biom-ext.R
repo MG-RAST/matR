@@ -197,7 +197,7 @@ merge.biom <- function (x, y, ...) {
 			warning ("\"sparse\" expanded to merge with \"dense\"")
 		sparse <- NULL
 		mm <- matrix(
-			0, nr=nr, nc=nc,
+			0, nrow=nr, ncol=nc,
 			dimnames=list(
 				new.row.names,
 				new.column.names))

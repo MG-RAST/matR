@@ -1,21 +1,42 @@
 
+#---------------------------------------------------------------------------------
+#  idea for handling "user form" input:
+#
+#  if (!is.null (file)) x <- readSet(x)
+#  x <- scrubSetx(x)
+#---------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+#  input a list
+#  break down nested lists to a single level, keeping names of top-level list entries
+#  compute the union of all names of elements
+#  create a data.frame with one row per original list element, and one column per element name
+#  t() must not be applied in the case when each list entry is, itself, a single element
+#  final result:  NA's are placed where a list element did not contain an element name
+#---------------------------------------------------------------------------------
+
+list2df <- function (li) {
+	li <- sapply (li, unlist, simplify=FALSE)				
+	vars <- sort (unique (unlist (lapply (li, names))))		
+	y <- sapply (li, "[", vars)
+	if (is.matrix (y)) y <- t(y)
+	as.data.frame (y, stringsAsFactors=FALSE)
+	}
+
 #---------------------------------------------------------------
 #  package name, requires preprocessing source with:
 #	 sed s/XXXBUILDXXX/$commit/g matR/R/init.R > init.Rtemp
 #	 mv init.Rtemp matR/R/init.R
-#
 #---------------------------------------------------------------
 
 tagline <- function () {
 	ss <- " XXXBUILDXXX"
 	if (substr (ss, 2, 9) == "XXXBUILD") ss <- ""
-
 	paste0 ("matR: metagenomics analysis tools for R (", packageVersion("matR"), ss, ")")
 	}
 
 #---------------------------------------------------------------
 #  stylish warnings
-#
 #---------------------------------------------------------------
 
 warning <- function (...) {
@@ -24,11 +45,10 @@ warning <- function (...) {
 
 #---------------------------------------------------------------
 # miscellaneous little things for nicer expression
-#
 #---------------------------------------------------------------
 
 collapse <- function (x, ..., sep = " ") {
-	paste(x, ..., , sep = sep, collapse = sep)
+	paste(x, ..., sep = sep, collapse = sep)
 	}
 
 #---------------------------------------------------------------------------------
@@ -48,37 +68,63 @@ collapse <- function (x, ..., sep = " ") {
 #
 #---------------------------------------------------------------------------------
 
+##  ok!
 readSet <- function (file) {
-	df <- read.table(file, header=F, sep="\t", colClasses="character", stringsAsFactors=T)
+	df <- read.table(file, header=F, sep="\t", colClasses="character", stringsAsFactors=TRUE)
 	if(ncol(df) > 1) {
-		colnames(df) <- df[1, , drop=T]
-		rownames(df) <- df[,1]
-		df[-1, -1, drop=F]
-	} else df[, , drop=T]
+		colnames(df) <- df[1, , drop=TRUE]
+		rownames(df) <- df[, 1, drop=TRUE]
+		df[-1, -1, drop=FALSE]
+	} else df[, , drop=TRUE]
 	}
 
-scrubSet <- function (IDs, resources = "metagenome") {
-	IDs <- unlist (sapply (as.list (IDs), strsplit, "[^[:alnum:]\\.]+"))
-	names <- names (IDs)
-	prefixes <- rep (resources, length.out = length (IDs))
-	prefixes <- match.arg (prefixes, c ("metagenome", "project"), TRUE)
-	scrubbed <- paste (ifelse (substr (IDs, 1, 3) %in% c("mgm", "mgp"), "",
-														 c (metagenome = "mgm", project = "mgp") [prefixes]), 
-										 IDs, sep = "")
-	names (scrubbed) <- names (IDs)
-	scrubbed
+##  ok!
+scrubSet <- function (x, resources = "metagenome") {
+	y <- strsplit (collapse (as.character (x)), "[[:space:]+]") [[1]]
+	y <- y [y != ""]
+	pfx <- match.arg(
+		rep(resources, len=length(y)),
+		c("metagenome", "project"),
+		several.ok = TRUE)
+	paste0(
+		ifelse (substr(y,1,3) %in% c("mgm", "mgp"), 
+			"",
+			c (metagenome="mgm", project="mgp") [pfx]), 
+		y)
 	}
 
-scrapeSet <- function (ids) {
-	res <- match (substr (ids, 1, 3), c ("mgm", "mgp"))
-	res [is.na (res)] <- 1
-	c ("metagenome", "project") [res]
+##  ok!
+scrapeSet <- function (x) {
+	if (is.data.frame (x)) {
+		scrapeSet (rownames (x))
+	} else
+		c("metagenome", "project") [match (substr(x, 1, 3), c("mgm", "mgp"), nomatch=1)]
+	}
+
+##  ok!
+expandSet <- function (x) {
+	if (is.data.frame (x)) {
+		y <- scrapeSet (rownames (x))
+		if (!any (y == "project")) return (x)
+		z <- as.list (rownames (x))
+		z [y == "project"] <- metadata (rownames (x) [y == "project"])
+		j <- rep (1:length(z), sapply(z, length))
+		x <- x [j, , drop=FALSE]
+ 		rownames (x) <- unlist (z)
+ 		x
+	} else {
+		x <- scrubSet (x)
+		y <- scrapeSet (x)
+		if (!any (y == "project")) return (x)
+		z <- as.list (x)
+		z [y == "project"] <- metadata (x [y == "project"])
+		unlist (z)
+		}
 	}
 
 sampleSets <- function () {
 	paste (file.path (path.package ("matR"), "extdata", "set-"), 1:7, ".tsv", sep="")
 	}
-
 
 buildSets <- function (file="sample-sets.rda") {
 	ee <- new.env()
@@ -98,6 +144,14 @@ buildSets <- function (file="sample-sets.rda") {
 	li[[6]] <- biom(list())
 #		li[[7]] <- biomRequest (file = ff[7], "organism")
 	li[[7]] <- biom(list())
+
+#	fix up non-ASCII characters in metadata
+
+	li[[1]]$columns <- rapply (li[[1]]$columns, iconv, "character", how='replace', to='ASCII', sub='?')
+	li[[2]]$columns <- rapply (li[[2]]$columns, iconv, "character", how='replace', to='ASCII', sub='?')
+	li[[3]]$columns <- rapply (li[[3]]$columns, iconv, "character", how='replace', to='ASCII', sub='?')
+	li[[4]]$columns <- rapply (li[[4]]$columns, iconv, "character", how='replace', to='ASCII', sub='?')
+
 	mapply (assign, paste0 ("xx", 1:length(li)), li, MoreArgs = list(ee))
 
 
@@ -205,5 +259,3 @@ seeDoc <- function (f) {
 buildHTMLDocs <- function (docs) {
 	for (d in docs) tools::Rd2HTML (d, paste ("./html/", unlist (strsplit (d, ".", fixed = TRUE)) [1], ".html", sep=""), Links = tools::findHTMLlinks ())
 	}
-
-

@@ -6,8 +6,8 @@
 
 princomp.biom <- function(
 		x,
-		method=c("euclidean", "bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference", "maximum", "manhattan", "canberra", "binary", "minkowski"),
-		dim=c(1,2,3),
+		method="euclidean",
+		dim=1:3,
 		..., 
 		map=NULL, 
 		rows=TRUE, 

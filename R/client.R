@@ -4,7 +4,7 @@
 #
 #---------------------------------------------------------------------
 
-biomRequest <- function (IDs, request=c("function", "organism"), ..., blocking, quiet=FALSE, wait=TRUE, file=NULL, outfile=NULL) {
+biomRequest <- function (IDs, request=c("function", "organism"), ..., blocking, wait=TRUE, quiet=FALSE, file=NULL, outfile=NULL) {
 
 	request <- match.arg(request)
 
@@ -67,7 +67,7 @@ biomRequest <- function (IDs, request=c("function", "organism"), ..., blocking, 
 # !quiet=TRUE is used to report on the download in complete detail
 #---------------------------------------------------------------------
 
-biom.environment <- function (x, quiet=FALSE, wait=TRUE, ...) {
+biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 
 	assign("quiet", quiet, x)
 	assign("wait", wait, x)
@@ -110,18 +110,110 @@ biom.environment <- function (x, quiet=FALSE, wait=TRUE, ...) {
 		})
 	}
 
-#---------------------------------------------------------------------
-# data retrieval: get metadata only
+
+metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file=NULL) {
+#-----------------------------------------------------------------------------------------
+# get metadata without data.
 #
-# this will be a direct implementation of the "metadata" API call (?)
-#---------------------------------------------------------------------
+# detail = NULL			for projects, returns metagnomes		(list, because one-to-many)
+#						for metagenomes, returns projects		(named vector, because one-to-one)
+#
+# detail = TRUE			equivalent to "verbosity=minimal"		(data.frame, for both samples and projects)
+#
+# detail = c("minimal","verbose","full")				for projects		(data.frame)
+# 		 = c("minimal","metadata","stats","full")		for metagenomes		(data.frame)
+# relayed directly as "verbosity" to call.MGRAST()
+#
+# suppressWarnings() is necessary here since API doesn't return everything it says it will
+#-----------------------------------------------------------------------------------------
 
-metadata.character <- function (IDs, quiet=FALSE, ...) {
-	stop ("metadata retrieval is not implemented yet")
+	if (!is.null (file)) x <- readSet(file)
+	x <- scrubSet(x)
+	y <- scrapeSet(x) [1]
+
+	if (is.null(detail) && y=="project") {
+		f <- function (x) simplify2array (suppressWarnings (call.MGRAST (					# keep IDs, drop URLs
+			"project", "instance", id=x, verbosity='full', quiet=quiet)) $ metagenomes,
+			higher=FALSE) [1,]
+		sapply (x, f, simplify=FALSE)											# sapply gives names to the result
+
+	} else if (is.null(detail) && y=="metagenome") {
+		f <- function (x) suppressWarnings (call.MGRAST (
+			"metagenome", "instance", id=x, verbosity='min', quiet=quiet)) $ project [1]
+		sapply (x, f)
+
+	} else {
+		if (isTRUE (detail)) detail <- "minimal"
+		f <- function (x) suppressWarnings (call.MGRAST (
+			y, "instance", id=x, verbosity=detail, ..., quiet=quiet))
+		z <- list2df (sapply (x, f, simplify=FALSE))
+		z$id <- z$url <- NULL											# get rid of some annoying things
+		z$library2 <- z$project2 <- z$sample2 <- NULL					# same, for metagenome metadata only
+		z
+		}
 	}
 
 
-samples.of.project <- function (x) {
-	ll <- mGet ("project", scrubSet (x, "project"), verbosity = "full", enClass = FALSE) $ analyzed
-	sapply (ll, '[', 1)
+dir.MGRAST <- function (from, to, length.out=0, ..., quiet=TRUE) {
+#-----------------------------------------------------------------------------------------
+#  here we translate just a bit:
+#  arg names "from", "to", "length.out" are familiar to R people,
+#  as are indices starting at 1.
+#
+#  --> allow "from" and "to" to contain names; retrieve in chunks & provide assembly)
+#-----------------------------------------------------------------------------------------
+
+	if (missing (length.out))
+		length.out <- to - from + 1
+	else if (!missing (from))
+		to <- from + length.out - 1
+	else if (!missing (to))
+		from <- to - length.out + 1
+
+	args <- resolve (list (...), list(
+		resource = "project",
+		request = "query",
+		verbosity = "minimal",
+		order = "name",
+		limit = length.out,
+		offset = from - 1))
+	y <- list2df (do.call (call.MGRAST, args) $ data)
+
+#-----------------------------------------------------------------------------------------
+#  make a data.frame.
+#  content will vary according to "verbosity".
+#  remove certain junk fields, and turn "status" (public/private) into a factor.
+#  rownames of the data.frame will always be "mgpXX"
+#-----------------------------------------------------------------------------------------
+	rownames(y) <- y$id
+	y$id <- y$created <- y$url <- y$version <- NULL
+	y$status <- as.factor (y$status)
+	y
 	}
+
+
+#-----------------------------------------------------------------------------------------
+# search() has some defaults and allows opts
+#
+# --> would want no limit
+#-----------------------------------------------------------------------------------------
+
+search.MGRAST <- function (..., quiet=FALSE) {
+#public.only=FALSE   [status],  
+#any=FALSE			[match]
+#verbosity=NA  ? .. no
+
+# 	arg <- resolve (list (...), 
+# 		resource = "metagenome",
+# 		request = "query",
+# 		verbosity = "minimal",
+# 		status = "both",
+# 		match = "all",
+# 		offset = 0,
+# 		limit = 50)
+# 	y <- do.call (call.MGRAST, args)
+# 	if (length (y) ...) 
+# 		message ("limit reached; more results may be available with... follow on call")
+# #  here must cleanup received list structure
+# 	y
+ 	}
