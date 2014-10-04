@@ -12,22 +12,21 @@ for specified samples or projects into an object of class "biom".
 }
 
 \usage{
-biomRequest(IDs, request=c("function", "organism"), ..., 
-	blocking, wait=TRUE, quiet=FALSE, file=NULL, outfile=NULL)
+biomRequest(x, request=c("function", "organism", "feature"), ..., 
+	block, wait=TRUE, quiet=FALSE, file=NULL, outfile=NULL)
 
 \method{biom}{environment}(x, wait=TRUE, ..., quiet=FALSE)
 }
 
 \arguments{
-  \item{IDs}{IDs for the samples or projects of interest ("character")}
-  \item{request}{choice of functional or taxonomic annotations (string)}
+  \item{x}{a set of samples or projects; or a request ticket ("character" or "environment")}
+  \item{request}{choice of annotation type (string)}
   \item{\dots}{arguments specifying or qualifying the data desired ("biomRequest" only)}
-  \item{blocking}{number of samples per API call ("integer")}
+  \item{block}{number of samples per API call ("integer")}
   \item{wait}{return only when data is complete? ("logical")}
   \item{quiet}{suppress messages and warnings? ("logical")}
-  \item{file}{file containing sample or project IDs (string)}
+  \item{file}{file containing a set of samples or projects (string)}
   \item{outfile}{file to save the retrieved data (string)}
-  \item{x}{an object returned by "biomRequest"}
 }
 
 \details{

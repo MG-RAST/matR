@@ -1,9 +1,7 @@
-
 #---------------------------------------------------------------------
 #  Data transformations:
 #    matrix transformations:  set of primitives
 #    biom transformations:  function transform() as common interface
-#
 #---------------------------------------------------------------------
 
 transform.biom <- function (`_data`, ...) {

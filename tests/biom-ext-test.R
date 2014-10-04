@@ -1,12 +1,3 @@
-#  a big concern: is the API still returning columns out of order?  does this code rely on it?
-
-#  biom manipulations:
-#
-#    rownames/colnames --- behaves as matrix
-#    rows/columns --- specialized, for metadata
-#    subselection
-#
-
 library(matR)
 
 dim(xx1)
@@ -35,6 +26,9 @@ length (intersect (rownames(xx2), rownames(xx4)))
 length (setdiff (rownames(xx2), rownames(xx4)))
 length (setdiff (rownames(xx4), rownames(xx2)))
 
+#-----------------------------------------------------------------------------------------
+#  merge()
+#-----------------------------------------------------------------------------------------
 applyBiomMethods (merge (xx1,xx2))
 applyBiomMethods (merge (xx2,xx1))
 applyBiomMethods (merge (xx1,xx3))
@@ -48,6 +42,9 @@ applyBiomMethods (merge (xx4,xx2))
 applyBiomMethods (merge (xx3,xx4))
 applyBiomMethods (merge (xx4,xx3))
 
+#-----------------------------------------------------------------------------------------
+#  rows() and columns()
+#-----------------------------------------------------------------------------------------
 rows (xx2)
 dim (rows (xx2))
 dimnames (rows (xx2))
@@ -71,18 +68,20 @@ columns (xx1,"samp_store_temp")
 columns (xx1,"collection_time")
 columns (xx1,"altitude")
 
+#-----------------------------------------------------------------------------------------
+#  subselection
+#-----------------------------------------------------------------------------------------
 xx1 [1:20, ]
 xx1 [, c(1,2,4)]
 xx1 [1:20, c(1,2,4)]
 
+#-----------------------------------------------------------------------------------------
+#  rows<-() and columns<-()
+#-----------------------------------------------------------------------------------------
 rows (xx1, "junk") <- 1:nrow(xx1)
 columns (xx1, "junk") <- 1:ncol(xx1)
 
-rownames(xx1)
-colnames(xx1)
-
-#  later:
-#  
-#  rownames(xx) <- 1:nrow(xx)
-#  colnames(xx) <- 1:ncol(xx)
+#-----------------------------------------------------------------------------------------
+#  rownames<-() and colnames<-()
+#-----------------------------------------------------------------------------------------
 

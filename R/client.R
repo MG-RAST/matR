@@ -1,74 +1,87 @@
+#-----------------------------------------------------------------------------------------
+#  General goals for API wrapping:
+#    restricting access to API functionality is ok...
+#    ...but it must be for the sake of creating clear concepts
+#    give useful defaults to users
+#    an R-intuitive interface
+#    clear relationships between R terminology (concepts) and API terminology (concepts)
+#    leave the API room to grow:
+#		build in as little dependency on its current version, as possible
+#-----------------------------------------------------------------------------------------
 
+biomRequest <- function (x, request=c("function", "organism", "feature"), ..., 
+	block, wait=TRUE, quiet=FALSE, file=NULL, outfile=NULL) {
 #---------------------------------------------------------------------
-#  Post and fulfill data requests
+#  Post and fulfill data requests.  Important capabilities:
+#    file containing IDs only
+#    file of IDs and metadata
+#    specification of IDs as string or character vector
+#    specification of IDs as data.frame with metadata
+#    block, file output
+#    varying API parameters
 #
+#  for "..." arguments see:
+#    doc.MGRAST(2, head=c('matrix','organism','parameters','options'))
+#    doc.MGRAST(2, head=c('matrix','function','parameters','options'))
+#    doc.MGRAST(2, head=c('matrix','feature','parameters','options'))
+#
+#    asynchronous 	source 		result_type 	filter 			group_level 	grep 	length 
+#    evalue 		identity	 filter_source 	hide_metadata 	id 				filter_level
 #---------------------------------------------------------------------
+	if (missing (request)) {
+		request <- match.arg(request)
+		warning ("\'request\' is defaulting to \'", request, "\'")
+	} else
+		request <- match.arg(request)
 
-biomRequest <- function (IDs, request=c("function", "organism"), ..., blocking, wait=TRUE, quiet=FALSE, file=NULL, outfile=NULL) {
+	if (!is.null (file)) x <- readSet (file)
+	x <- expandSet (x)
+	add.metadata <- NULL
+	if (is.data.frame (x)) {
+		add.metadata <- x
+		x <- rownames(x)
+	}
 
-	request <- match.arg(request)
+	if (missing (block))
+		block <- length(x)
 
-#-------read IDs in from file, if provided
-
-	if (!is.null(file))
-		IDs <- readSet(file)
-
-
-#-------separate IDs from any included metadata
-
-	if (is.data.frame (IDs)) {
-		add.metadata <- IDs
-		IDs <- rownames(IDs)
-	} else add.metadata <- NULL
-
-#-------clean up IDs
-
-	IDs <- scrubSet(IDs)
-	if (!all(scrapeSet(IDs) == "metagenome"))
-		stop("only data retrieval by metagenome is currently implemented")
-
-#-------set up requested blocking size
-
-	if (missing (blocking))
-		blocking <- length(IDs)
-
+#-------set up requested block size
 #-------set up the download scheme, and an environment to hold it
 
 	req <- new.env (parent = globalenv())
 	param <- append (list (resource='matrix', request=request, asynchronous=1), list(...))
 
-	ledger <- data.frame (start = seq(1, length(IDs), blocking), stringsAsFactors = F)
-	ledger$stop 		<- c (ledger$start[-1] - 1, length(IDs))
+	ledger <- data.frame (start = seq(1, length(x), block), stringsAsFactors = F)
+	ledger$stop 		<- c (ledger$start[-1] - 1, length(x))
 	ledger$requested 	<- FALSE
 	ledger$ticket		<- ""
 	ledger$file			<- ""
 
-	ledger[1,"ticket"] <- do.call (call.MGRAST, append (param, list (id=IDs [ledger[1,"start"] : ledger[1,"stop"]]))) ["id"]
+	ledger[1,"ticket"] <- do.call (call.MGRAST, append (param, list (id=x [ledger[1,"start"] : ledger[1,"stop"]]))) ["id"]
 	ledger[1,"requested"] <- TRUE
 
-	assign("IDs", IDs, req)
+	assign("IDs", x, req)
 	assign("n", 1, req)
 	assign("ledger", ledger, req)
 	assign("param", param, req)
  	assign("add.metadata", add.metadata, req)
  	assign("outfile", outfile, req)
 
-	if (!wait) {
+	if (wait) {
+		biom(req)
+	} else {
 		message("returning ticket for queued request; apply biom() to fulfill")
 		invisible(req)
-	} else biom(req)
+		}
 	}
 
-
+biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 #---------------------------------------------------------------------
 # data retrieval: function to fulfill requests
 #
 # "..." in prototype is just good practice for generics
 # !quiet=TRUE is used to report on the download in complete detail
 #---------------------------------------------------------------------
-
-biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
-
 	assign("quiet", quiet, x)
 	assign("wait", wait, x)
 	with (x, {
@@ -110,7 +123,6 @@ biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 		})
 	}
 
-
 metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file=NULL) {
 #-----------------------------------------------------------------------------------------
 # get metadata without data.
@@ -126,7 +138,6 @@ metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file=NULL) {
 #
 # suppressWarnings() is necessary here since API doesn't return everything it says it will
 #-----------------------------------------------------------------------------------------
-
 	if (!is.null (file)) x <- readSet(file)
 	x <- scrubSet(x)
 	y <- scrapeSet(x) [1]
@@ -153,23 +164,32 @@ metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file=NULL) {
 		}
 	}
 
-
 dir.MGRAST <- function (from, to, length.out=0, ..., quiet=TRUE) {
 #-----------------------------------------------------------------------------------------
 #  here we translate just a bit:
 #  arg names "from", "to", "length.out" are familiar to R people,
 #  as are indices starting at 1.
 #
-#  --> allow "from" and "to" to contain names; retrieve in chunks & provide assembly)
+#  for "..." arguments see:
+#    doc.MGRAST(3, head=c('project','query','parameters','options'))}
+#
+#  verbosity = c("minimal", "verbose", "full")
+#  order = c("id", "name")
+#  limit = ["integer"]
+#  offset = ["integer"]
+#
+#  --> allow "from" and "to" to contain names
 #-----------------------------------------------------------------------------------------
-
-	if (missing (length.out))
-		length.out <- to - from + 1
-	else if (!missing (from))
-		to <- from + length.out - 1
-	else if (!missing (to))
+	if (missing(from) && missing(to)) {					# length.out given or ==0
+		from <- 1
+	} else if (missing(from) && length.out) {			# to and length.out given
 		from <- to - length.out + 1
-
+	} else if (missing(from))	{						# to given, only
+		from <- 1
+		length.out <- to
+		}
+	else if (!missing(to))
+		length.out <- to - from + 1
 	args <- resolve (list (...), list(
 		resource = "project",
 		request = "query",
@@ -191,29 +211,37 @@ dir.MGRAST <- function (from, to, length.out=0, ..., quiet=TRUE) {
 	y
 	}
 
-
+search.MGRAST <- function (public=NULL, detail=NULL, match.all=TRUE, ..., quiet=FALSE) {
 #-----------------------------------------------------------------------------------------
-# search() has some defaults and allows opts
+#  for "..." arguments see:
+#    doc.MGRAST(3, head=c('metagenome','query','parameters','options'))}
 #
-# --> would want no limit
+#  verbosity = c("minimal","mixs","metadata","stats","full")
+#  status = c("both","public","private")
+#  match = c("all","any")
+#  offset = [integer]
+#  limit = [integer]
+#  order = [string]
+#  direction = c("asc","desc")
+#  ----
+#  function		"search parameter: query string for function"
+#  metadata		"search parameter: query string for any metadata field"
+#  md5				"search parameter: md5 checksum of feature sequence"
+#  organism		"search parameter: query string for organism"
+#
+#  --> would want no limit on search results, right?
+#  --> maybe retrieve in chunks & provide assembly)
 #-----------------------------------------------------------------------------------------
-
-search.MGRAST <- function (..., quiet=FALSE) {
-#public.only=FALSE   [status],  
-#any=FALSE			[match]
-#verbosity=NA  ? .. no
-
-# 	arg <- resolve (list (...), 
-# 		resource = "metagenome",
-# 		request = "query",
-# 		verbosity = "minimal",
-# 		status = "both",
-# 		match = "all",
-# 		offset = 0,
-# 		limit = 50)
-# 	y <- do.call (call.MGRAST, args)
-# 	if (length (y) ...) 
-# 		message ("limit reached; more results may be available with... follow on call")
-# #  here must cleanup received list structure
-# 	y
+	args <- resolve (list (...), list(
+		resource = "metagenome",
+		request = "query",
+		verbosity = if (is.null (detail)) "minimal" else if (isTRUE (detail)) "metadata" else detail,
+		status = if (is.null (public)) "both" else if (isTRUE (public)) "public" else "private",
+		match = if (match.all) "all" else "any",
+		offset = 0,
+		limit = 50))
+	y <- list2df (do.call (call.MGRAST, args) $ data)
+	if (args$limit && nrow(y) == args$limit)
+		message ("limit reached; more results may be available")
+	y
  	}

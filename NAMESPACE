@@ -41,15 +41,17 @@ export(
 	parMapper,
 	parAuto,
 
-	sampleSets,
-	buildSets,
 	readSet,
 	scrubSet,
 	scrapeSet,
+	expandSet,
+
+	demoSets,
+	buildDemoSets,
 	hazPackages,
 	dependencies,
 	stepper,
-	demo.step,
+	step.through,
 	collapse,
 	
 	.Last.lib)

@@ -1,11 +1,10 @@
-#  make sure package sample data and related functions are in order
-#
-
 library(matR)
 
-ff <- sampleSets()
+#-----------------------------------------------------------------------------------------
+#  check package sample data and related functions
+#-----------------------------------------------------------------------------------------
+ff <- demoSets()
 cat ("Sample files:", ff, sep="\n")
 li <- lapply (ff, readSet)
-
-gg <- buildSets()
+gg <- buildDemoSets()
 unlink (gg)

@@ -1,7 +1,5 @@
-
 #---------------------------------------------------------------------
 # 	Heatmap-Dendrogram
-#
 #---------------------------------------------------------------------
 
 image.biom <- function(
@@ -26,7 +24,6 @@ image.biom <- function(
 # inherits (rerender, 'dist')
 # 	compute:		as.dendrogram (<hclustfun> (rerender))	(or, t(rerender))
 # 	and pass as:	Rowv (or Colv...)
-#
 #---------------------------------------------------------------------
 	Rowv <- Colv <- TRUE
 	if (inherits (rerender, 'heatmap')) {
@@ -44,7 +41,6 @@ image.biom <- function(
 #---------------------------------------------------------------------
 #  apply metadata references if present
 #  apply metadata mapping
-#
 #---------------------------------------------------------------------
 	arg$labRow <- subMetRows (arg$labRow, x)
 	arg$labCol <- subMetColumns (arg$labCol, x)
@@ -82,7 +78,6 @@ image.biom <- function(
 
 #---------------------------------------------------------------------
 #  add class and 'call'
-#
 #---------------------------------------------------------------------
 	yy$call <- match.call()
 	class (yy) <- c("heatmap", "list")

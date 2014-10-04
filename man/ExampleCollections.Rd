@@ -39,7 +39,7 @@ yy4
 \details{
 "xx1" to "xx7" are collections of metagenomes prebuilt with "biomRequest()", 
 included for demonstration purposes and to help users get started.
-They are objects of class "biom" built by "buildSets()", 
+They are objects of class "biom" built by "buildDemoSets()", 
 which is undocumented but exported.
 
 "yy1" to "yy4" correspond to the example lists "li1" to "li4" from package BIOM.utils.

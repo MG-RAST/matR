@@ -1,16 +1,17 @@
-sampleSets()
-lapply (sampleSets(), readSet)
-lapply (lapply (sampleSets(), readSet), scrubSet)
-lapply (lapply (sampleSets(), readSet), scrapeSet)
+library(matR)
 
+#-----------------------------------------------------------------------------------------
+#  readSet(), scrubSet(), scrapeSet(), expandSet()
+#-----------------------------------------------------------------------------------------
+xx <- demoSets()
+yy <- lapply (xx, readSet)
+lapply (yy, scrubSet)
+lapply (yy, scrapeSet)
+lapply (yy, expandSet)
 
-scrubSet
-scrapeSet
-readSet
-expandSet
-metadata( ..project.. )
-
-
+#-----------------------------------------------------------------------------------------
+#  expandSet()
+#-----------------------------------------------------------------------------------------
 expandSet('mgp9')
 expandSet('mgp24')
 expandSet('mgp24 mgp9')
@@ -18,19 +19,16 @@ expandSet('mgp24 mgp9 mgm4440463.3')
 expandSet('mgp24 mgm4440463.3 mgp9')
 expandSet('mgm4440463.3 mgp24 mgp9')
 expandSet('mgm4440463.3')
-
-df <- readSet(sampleSets()[6])
-df
+df <- readSet(demoSets()[6]) ; df
 expandSet (df)
-
-df ['mgm4440463.3',] <- 'foo'
-df
+df ['mgm4440463.3',] <- 'foo' ; df
 expandSet (df)
-
-xx <- readSet(sampleSets()[7])
-xx
+zz <- readSet(demoSets()[7]) ; zz
 expandSet (xx)
 
+#-----------------------------------------------------------------------------------------
+#  scrubSet()
+#-----------------------------------------------------------------------------------------
 li <- list (
 	"mgm4440066.3",
 	"mgm4440066.3 mgm4440062.3",
@@ -75,5 +73,4 @@ li <- list (
 	c("mgp21"),
 	c("mgp21", "mgp24"),
 	c("mgp21", "mgp24", "mgp30"))
-
 lapply (li, scrubSet)

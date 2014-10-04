@@ -1,134 +1,23 @@
-
-#---------------------------------------------------------------------------------
-#  idea for handling "user form" input:
+#-----------------------------------------------------------------------------------------
+#  demoSets()		return filenames
+#  buildDemoSets()		create the .rda of "biom" objects included as package data
 #
-#  if (!is.null (file)) x <- readSet(x)
-#  x <- scrubSetx(x)
-#---------------------------------------------------------------------------------
+#  set-1.tsv		7 metagenomes (in three groups)
+#  set-2.tsv		24 metagenomes (in two groups)
+#  set-3.tsv		32 metagenomes (in three groups)
+#  set-4.tsv		16 metagenomes (in three groups)
+#  set-5.tsv		1606 metagenomes (HMP)
+#  set-6.tsv		4 projects of various sizes
+#  set-7.tsv		10 metagenomes and 3 projects
+#-----------------------------------------------------------------------------------------
 
-#---------------------------------------------------------------------------------
-#  input a list
-#  break down nested lists to a single level, keeping names of top-level list entries
-#  compute the union of all names of elements
-#  create a data.frame with one row per original list element, and one column per element name
-#  t() must not be applied in the case when each list entry is, itself, a single element
-#  final result:  NA's are placed where a list element did not contain an element name
-#---------------------------------------------------------------------------------
-
-list2df <- function (li) {
-	li <- sapply (li, unlist, simplify=FALSE)				
-	vars <- sort (unique (unlist (lapply (li, names))))		
-	y <- sapply (li, "[", vars)
-	if (is.matrix (y)) y <- t(y)
-	as.data.frame (y, stringsAsFactors=FALSE)
+demoSets <- function (n=TRUE) {
+	paste (file.path (path.package ("matR"), "extdata", "set-"), 1:7, ".tsv", sep="") [n]
 	}
 
-#---------------------------------------------------------------
-#  package name, requires preprocessing source with:
-#	 sed s/XXXBUILDXXX/$commit/g matR/R/init.R > init.Rtemp
-#	 mv init.Rtemp matR/R/init.R
-#---------------------------------------------------------------
-
-tagline <- function () {
-	ss <- " XXXBUILDXXX"
-	if (substr (ss, 2, 9) == "XXXBUILD") ss <- ""
-	paste0 ("matR: metagenomics analysis tools for R (", packageVersion("matR"), ss, ")")
-	}
-
-#---------------------------------------------------------------
-#  stylish warnings
-#---------------------------------------------------------------
-
-warning <- function (...) {
-	base::warning ("matR: ", ...,  call.=FALSE)
-	}
-
-#---------------------------------------------------------------
-# miscellaneous little things for nicer expression
-#---------------------------------------------------------------
-
-collapse <- function (x, ..., sep = " ") {
-	paste(x, ..., sep = sep, collapse = sep)
-	}
-
-#---------------------------------------------------------------------------------
-#  readSet() -- utility to read IDs, possibly with metadata, from a file in matR standard format.  returns data.frame or character vector
-#  scrubSet() -- clean up a specification of "ids"
-#  scrapSet() -- return vector of "resources"
-#  sampleSets() -- return file names of ids, some with metadata
-#  buildSets() -- create the .rda included with the matR package.
-#
-#  Set 1		7 metagenomes (in three groups)
-#  Set 2		24 metagenomes (in two groups)
-#  Set 3		32 metagenomes (in three groups)
-#  Set 4		16 metagenomes (in three groups)
-#  Set 5		1606 metagenomes (HMP)
-#  Set 6		4 projects of various sizes
-#  Set 7		10 metagenomes and 3 projects
-#
-#---------------------------------------------------------------------------------
-
-##  ok!
-readSet <- function (file) {
-	df <- read.table(file, header=F, sep="\t", colClasses="character", stringsAsFactors=TRUE)
-	if(ncol(df) > 1) {
-		colnames(df) <- df[1, , drop=TRUE]
-		rownames(df) <- df[, 1, drop=TRUE]
-		df[-1, -1, drop=FALSE]
-	} else df[, , drop=TRUE]
-	}
-
-##  ok!
-scrubSet <- function (x, resources = "metagenome") {
-	y <- strsplit (collapse (as.character (x)), "[[:space:]+]") [[1]]
-	y <- y [y != ""]
-	pfx <- match.arg(
-		rep(resources, len=length(y)),
-		c("metagenome", "project"),
-		several.ok = TRUE)
-	paste0(
-		ifelse (substr(y,1,3) %in% c("mgm", "mgp"), 
-			"",
-			c (metagenome="mgm", project="mgp") [pfx]), 
-		y)
-	}
-
-##  ok!
-scrapeSet <- function (x) {
-	if (is.data.frame (x)) {
-		scrapeSet (rownames (x))
-	} else
-		c("metagenome", "project") [match (substr(x, 1, 3), c("mgm", "mgp"), nomatch=1)]
-	}
-
-##  ok!
-expandSet <- function (x) {
-	if (is.data.frame (x)) {
-		y <- scrapeSet (rownames (x))
-		if (!any (y == "project")) return (x)
-		z <- as.list (rownames (x))
-		z [y == "project"] <- metadata (rownames (x) [y == "project"])
-		j <- rep (1:length(z), sapply(z, length))
-		x <- x [j, , drop=FALSE]
- 		rownames (x) <- unlist (z)
- 		x
-	} else {
-		x <- scrubSet (x)
-		y <- scrapeSet (x)
-		if (!any (y == "project")) return (x)
-		z <- as.list (x)
-		z [y == "project"] <- metadata (x [y == "project"])
-		unlist (z)
-		}
-	}
-
-sampleSets <- function () {
-	paste (file.path (path.package ("matR"), "extdata", "set-"), 1:7, ".tsv", sep="")
-	}
-
-buildSets <- function (file="sample-sets.rda") {
+buildDemoSets <- function (file="sample-sets.rda") {
 	ee <- new.env()
-	ff <- sampleSets()
+	ff <- demoSets()
 
 	li <- lapply (mget (paste0 ("li", 1:4), inherits=TRUE), biom)
 	mapply (assign, paste0 ("yy", 1:length(li)), li, MoreArgs = list(ee))
@@ -162,11 +51,115 @@ buildSets <- function (file="sample-sets.rda") {
 	file
 	}
 
-#----------------------------------------------------
-#  utilities to handle "suggested dependencies".
-#  official dependencies are minimized to remove obstacles to installation.
+#---------------------------------------------------------------------------------
+#  readSet()		read ids/metadata from a tsv file		(character or data.frame)
+#  scrubSet()		clean up a specification of "ids"		(character)
+#  scrapeSet()		return "resources" per specification	(character)
+#  expandSet()		expand projects to metagenomes			(character or data.frame)
+#---------------------------------------------------------------------------------
+
+readSet <- function (file) {
+	df <- read.table(file, header=F, sep="\t", colClasses="character", stringsAsFactors=TRUE)
+	if(ncol(df) > 1) {
+		colnames(df) <- df[1, , drop=TRUE]
+		rownames(df) <- df[, 1, drop=TRUE]
+		df[-1, -1, drop=FALSE]
+	} else df[, , drop=TRUE]
+	}
+
+scrubSet <- function (x, resources = "metagenome") {
+	if (is.data.frame (x)) {
+		scrubSet (rownames (x), resources)
+	} else {
+		y <- strsplit (collapse (as.character (x)), "[[:space:]+]") [[1]]
+		y <- y [y != ""]
+		pfx <- match.arg(
+			rep(resources, len=length(y)),
+			c("metagenome", "project"),
+			several.ok = TRUE)
+		paste0(
+			ifelse (substr(y,1,3) %in% c("mgm", "mgp"), 
+				"",
+				c (metagenome="mgm", project="mgp") [pfx]), 
+			y)
+		}
+	}
+
+scrapeSet <- function (x) {
+	if (is.data.frame (x)) {
+		scrapeSet (rownames (x))
+	} else
+		c("metagenome", "project") [match (substr(x, 1, 3), c("mgm", "mgp"), nomatch=1)]
+	}
+
+expandSet <- function (x) {
+	if (is.data.frame (x)) {
+		rownames (x) <- scrubSet (rownames (x))
+		y <- scrapeSet (rownames (x))
+		if (!any (y == "project")) return (x)
+		z <- as.list (rownames (x))
+		z [y == "project"] <- metadata (rownames (x) [y == "project"])
+		j <- rep (1:length(z), sapply(z, length))
+		x <- x [j, , drop=FALSE]
+ 		rownames (x) <- unlist (z)
+ 		x
+	} else {
+		x <- scrubSet (x)
+		y <- scrapeSet (x)
+		if (!any (y == "project")) return (x)
+		z <- as.list (x)
+		z [y == "project"] <- metadata (x [y == "project"])
+		unlist (z)
+		}
+	}
+
+list2df <- function (li) {
+#-----------------------------------------------------------------------------------------
+#  support for bringing nested list structures into a data.frame with NAs where needed
 #
-#----------------------------------------------------
+#  unlist to depth one, while keeping names of top-level list entries
+#  the df variables will be the union of all names
+#  data.frame has one row per element of the original list; one column per variable
+#  don't apply t() in case of a single variable
+#  final result:  NA placed wherever a variable is missing from a list entry
+#-----------------------------------------------------------------------------------------
+	li <- sapply (li, unlist, simplify=FALSE)				
+	vars <- sort (unique (unlist (lapply (li, names))))		
+	y <- sapply (li, "[", vars)
+	if (is.matrix (y)) y <- t(y)
+	as.data.frame (y, stringsAsFactors=FALSE)
+	}
+
+tagline <- function () {
+#-----------------------------------------------------------------------------------------
+#  package name.
+#  preprocess source with:
+#	 sed s/XXXBUILDXXX/$commit/g matR/R/init.R > init.Rtemp
+#	 mv init.Rtemp matR/R/init.R
+#-----------------------------------------------------------------------------------------
+	ss <- " XXXBUILDXXX"
+	if (substr (ss, 2, 9) == "XXXBUILD") ss <- ""
+	paste0 ("matR: metagenomics analysis tools for R (", packageVersion("matR"), ss, ")")
+	}
+
+warning <- function (...) {
+#-----------------------------------------------------------------------------------------
+#  stylish warnings
+#-----------------------------------------------------------------------------------------
+	base::warning ("matR: ", ...,  call.=FALSE)
+	}
+
+collapse <- function (x, ..., sep = " ") {
+#-----------------------------------------------------------------------------------------
+#  make length-one string from a character vector
+#-----------------------------------------------------------------------------------------
+	paste(x, ..., sep = sep, collapse = sep)
+	}
+
+#-----------------------------------------------------------------------------------------
+#  handle "suggested dependencies".
+#  official dependencies are minimized to remove obstacles to installation.
+#-----------------------------------------------------------------------------------------
 
 hazPackages <- function() {
 	me <- packageDescription ("matR")
@@ -197,8 +190,7 @@ dependencies <- function (prompt = TRUE) {
 	}
 
 #---------------------------------------------------------------------------------
-# 'stepping' functions to help with demo'ing.
-#
+# 'step' function to help with demo'ing.
 #  read the file as text and echoes each line exactly.
 #  each command must fit on a line, and blank lines are simply echoed.
 #---------------------------------------------------------------------------------
@@ -217,6 +209,7 @@ stepper <- function (file) {
 	}
 
 #---------------------------------------------------------------------------------
+# 'step' function to help with demo'ing.
 #  parses the whole file first.  commands may span lines.
 #  comments are not displayed.  commands are reformatted to standard appearance.
 #---------------------------------------------------------------------------------
@@ -230,7 +223,7 @@ stepper2 <- function (file) {
 		}
 	}
 
-demo.step <- function (s) {
+step.through <- function (s) {
 	stepper (file.path (path.package ("matR"), "demo", paste0 (s, ".R")))
 	}
 

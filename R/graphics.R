@@ -1,4 +1,3 @@
-
 parAuto <- function (par.name, n) {
 	switch (par.name,
 		pch = {

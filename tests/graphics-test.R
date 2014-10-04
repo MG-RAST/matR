@@ -1,3 +1,6 @@
+library(matR)
+
+#-----------------------------------------------------------------------------------------
 #  parMapper() is the workhorse enabling user calls such as:
 #
 #  princomp(xx,
@@ -11,10 +14,7 @@
 #    pch = c (
 #      "-80"="+",
 #      "NA"="x"))
-#
-
-library(matR)
-
+#-----------------------------------------------------------------------------------------
 parMapper (xx1, 
 		name.map = c (
 			col="host_common_name",

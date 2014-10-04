@@ -1,23 +1,18 @@
-
+resolve <- function (first, second) {
 #---------------------------------------------------------------
 #  merge two named lists, eliminating duplicates and giving priority to the first
-#
 #---------------------------------------------------------------
-
-resolve <- function (first, second) {
 	append (first, second) [ !duplicated (c (names (first), names(second))) ]
 	}
 
 
+parMapper <- function (object, name.map, value.map) {
 #---------------------------------------------------------------------
 #	produce par values given mappings.  input is:
 #		xx			biom object (with metadata)
 #		map			mapping of names of par to names of metadata
 #		values		list _possibly_ including a specific mapping for each mapped par
-#
 #---------------------------------------------------------------------
-
-parMapper <- function (object, name.map, value.map) {
 	if (is.null (name.map)) return (list())
 
 	pars <- names (name.map)
@@ -92,8 +87,9 @@ parMapper <- function (object, name.map, value.map) {
 	}
 
 #---------------------------------------------------------------------
-#  to facilitate metadata mapping
-#  and literal metadata substitutions
+#  facilitate:
+#    (1) metadata mapping
+#    (2) literal metadata substitutions
 #---------------------------------------------------------------------
 
 getMetColumns <- function (name, xx) {

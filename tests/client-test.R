@@ -1,25 +1,11 @@
-
-#-----------------------------------------------------------------------------------------
-#  biomRequest
-#
-#  important variations:
-#    file containing IDs only
-#    file of IDs and metadata
-#    direct ID specification
-#    data.frame with metadata
-#    blocking, file output
-#    varying API parameters
-#
-#  API parameters for "matrix" resource; all optional:
-#    asynchronous source result_type filter group_level grep length 
-#    evalue identity filter_source hide_metadata id filter_level
-#-----------------------------------------------------------------------------------------
-
 library(matR)
 
+#-----------------------------------------------------------------------------------------
+#  biomRequest()
+#-----------------------------------------------------------------------------------------
 tt <- tempfile()
-ff <- sampleSets() [1]				# only IDs
-gg <- sampleSets () [2]				# also metadata
+ff <- demoSets() [1]				# only IDs
+gg <- demoSets () [2]				# also metadata
 
 xx <- readSet (ff)					# vector
 yy <- readSet (gg)					# data.frame
@@ -66,11 +52,8 @@ xx <- biom (ticket, wait=TRUE)
 
 
 #-----------------------------------------------------------------------------------------
-#  metadata(detail=NULL)
-#
-#  ...which means just lookup ids
+#  metadata(detail=NULL)			...which means just lookup ids
 #-----------------------------------------------------------------------------------------
-
 metadata ("mgp21")
 metadata ("mgp21 mgp24")
 metadata ("mgp21 mgp24 mgp30")				# example
@@ -92,10 +75,8 @@ metadata("mgm4440066.3 mgm4440062.3 mgm4441681.3 mgm4440463.3 mgm4440464.3")
 metadata("mgm4440066.3 mgm4440062.3 mgm4440055.3 mgm4441681.3 mgm4440463.3 mgm4440464.3")   # example
 
 #-----------------------------------------------------------------------------------------
-#  metadata(detail=TRUE)
-#  ...which just means verbosity="minimal"
+#  metadata(detail=TRUE)			...which just means verbosity="minimal"
 #-----------------------------------------------------------------------------------------
-
 metadata ("mgp21", detail=TRUE)
 metadata ("mgp21 mgp24", detail=TRUE)
 metadata ("mgp21 mgp24 mgp30", detail=TRUE)			# example
@@ -105,13 +86,10 @@ metadata ("mgm4440463.3 mgm4440464.3 mgm4441679.3", detail=TRUE)
 metadata ("mgm4440066.3 mgm4440062.3 mgm4440055.3 mgm4441681.3 mgm4440463.3 mgm4440464.3", detail=TRUE) # example
 
 #-----------------------------------------------------------------------------------------
-#  metadata(detail=...
-#    ...for projects:		c("minimal","verbose","full")
-#    ...for metagenomes:	c("minimal","metadata","stats","full")
-#
-#  ...which are relayed directly as "verbosity" to call.MGRAST()
+#  metadata(detail=		c("minimal","verbose","full")				for projects
+#						c("minimal","metadata","stats","full")		for metagenomes
+#  ...relayed directly as "verbosity" to call.MGRAST()
 #-----------------------------------------------------------------------------------------
-
 metadata ("mgp21", detail="verbose")
 metadata ("mgp21 mgp24", detail="verbose")
 metadata ("mgp21 mgp24 mgp30", detail="verbose")	# example; show names() of
@@ -131,9 +109,8 @@ metadata ("mgm4440463.3 mgm4440464.3", detail="full")							# bad idea..
 metadata ("mgm4440463.3 mgm4440464.3 mgm4441679.3", detail="full")				# bad idea..
 
 #-----------------------------------------------------------------------------------------
-#  metadata, input from file
+#  metadata(file=)
 #-----------------------------------------------------------------------------------------
-
 tt <- tempfile()
 writeLines ("mgm4440463.3", file=tt) 
 metadata (map=TRUE, file=tt)
@@ -158,19 +135,9 @@ writeLines (c ("mgp21", "mgp24"), file=tt); metadata (map=FALSE, file=tt)
 writeLines (c ("mgp21", "mgp24", "mgp30"), file=tt) ; metadata (map=FALSE, file=tt)
 unlink(tt)
 
-
 #-----------------------------------------------------------------------------------------
-#  dir.MGRAST(from=1, to=50, length.out, ..., quiet=FALSE)
-#
-#  "..." can be:
-#    verbosity = c("minimal", "verbose", "full")
-#    order = c("id", "name")
-#    limit = ["integer"]
-#    offset = ["integer"]
-#  cf:
-#    doc.MGRAST(3, head=c('project','query','parameters','options'))}
+#  dir.MGRAST()
 #-----------------------------------------------------------------------------------------
-
 dir.MGRAST()
 dir.MGRAST (1, 50)
 dir.MGRAST (1, 100)
@@ -267,25 +234,8 @@ dir.MGRAST (offset=499, limit=100)
 dir.MGRAST (offset=499, limit=200)
 dir.MGRAST (offset=499, limit=500)
 
-
 #-----------------------------------------------------------------------------------------
-#  search.MGRAST(...)
-#
-#  "..." can be:
-#    verbosity = c("minimal","mixs","metadata","stats","full")
-#    status = c("both","public","private")
-#    match = c("all","any")
-#    offset = [integer]
-#    limit = [integer]
-#    order = [string]
-#    direction = c("asc","desc")
-#    ----
-#    function		"search parameter: query string for function"
-#    metadata		"search parameter: query string for any metadata field"
-#    md5			"search parameter: md5 checksum of feature sequence"
-#    organism		"search parameter: query string for organism"
-#  cf:
-#    doc.MGRAST(3, head=c('metagenome','query','parameters','options'))}
+#  search.MGRAST()
 #-----------------------------------------------------------------------------------------
 
 
