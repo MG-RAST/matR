@@ -1,0 +1,7 @@
+browseURL("http://metagenomics.anl.gov")
+browseURL("http://api.metagenomics.anl.gov")
+browseURL("http://cran.r-project.org")
+browseURL("http://cran.r-project.org/web/views/")
+browseURL("http://bioconductor.org/")
+browseURL("http://github.org/MG-RAST/")
+browseURL("http://github.org/MG-RAST/matR")
