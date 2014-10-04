@@ -1,38 +1,102 @@
-# export everything (in development mode)
-exportPattern(".*")
+export(
+	rows,
+	columns,
+	"rows<-",
+	"columns<-",
+	"dimnames<-.biom",
+	merge.biom,
+	"[.biom",
 
-# export(dependencies, hazPackages)
-# export(callRaw, mListAllIds, mGet)
-# export(readIds)
-# export(demo2, scrubIds, scrapeResources)
+	biomRequest,
+	biom.environment,
 
-# CLASS AND METHOD EXPORTS
-# our S3 classes: metadata
-# our S4 classes: sigtest, selection, collection
-exportClassPattern(".*")
+	metadata.character,
+	search.MGRAST,
+	dir.MGRAST,
 
-exportMethods (print, summary, show)
-exportMethods ("[[", "$", "[[<-", "$<-")
-exportMethods (samples, names, "names<-", groups, "groups<-", rownames, metadata, 
-							 views, viewnames, "viewnames<-", selection, collection)
+	t_NA2Zero,
+	t_Threshold,
+	t_Log,
+	t_ColCenter,
+	t_ColScale,
+	t_DENorm,
+	transform.biom,
 
-exportMethods (dist)
-export (normalize, remove.singletons, randomize, sigtest)
+	boxplot.biom,
+	princomp.biom,
+  	image.biom,
 
-exportMethods (boxplot, pco, heatmap, parcoord, render, asFile)
+	rowstats,
+	rowstats.matrix,
+	rowstats.biom,
 
-S3method (print, metadata)
-S3method (summary, metadata)
-S3method (`[`, metadata)
-S3method (print, selection)
-S3method (summary, selection)
-S3method (print, collection)
-S3method (summary, collection)
-# S3method (print, pca)
-# S3method (summary, pca)
-# S3method (print, heatmap)
-# S3method (summary, heatmap)
+	distx,
+	distx.matrix,
+	distx.biom,
 
-# IMPORTS FROM STANDARD PACKAGES
-# importClassesFrom (Matrix, Matrix)
+	getMetRows,
+	getMetColumns,
+	subMetRows,
+	subMetColumns,
+	parMapper,
+	parAuto,
 
+	readSet,
+	scrubSet,
+	scrapeSet,
+	expandSet,
+
+	demoSets,
+	buildDemoSets,
+	hazPackages,
+	dependencies,
+	stepper,
+	step.through,
+	collapse,
+	
+	.Last.lib)
+
+S3method ("dimnames<-", biom)
+S3method (merge, biom)
+S3method ("[", biom)
+
+S3method (biom, environment)
+
+S3method (metadata, character)
+
+S3method (transform, biom)
+
+S3method (boxplot, biom)
+S3method (princomp, biom)
+S3method (image, biom)
+
+S3method (rowstats, matrix)
+S3method (rowstats, biom)
+
+S3method (distx, matrix)
+S3method (distx, biom)
+
+
+#  package BIOM.utils is a strict dependency, declared in "Depends:"
+#  also (this is a separate point) methods for class "biom" are used throughout,
+#  so it makes sense to import the entire package namespace.
+
+import (BIOM.utils)
+
+#  package MGRASTer ought not to be considered a dependency, perhaps, yet is declared in "Depends:"
+#  because its environment seems to fail if not loaded this way.  (nonetheless, the
+#  following namespace import might reasonably be removed, in favor of explicit references.)
+
+import (MGRASTer)
+
+#  all other packages are optional, each provided specific and limited analysis functionality.
+#  we adopt the approach described in this remark from the (forthcoming) R-ext manual:
+#    "If the intention is to give an error 
+#    if the suggested package is not available, 
+#    simply use e.g. rgl::plot3d."
+
+#  except that these are necessary because the package namespace depends on them:
+
+importFrom (graphics, boxplot)
+importFrom (graphics, image)
+importFrom (stats, princomp)

@@ -1,9 +1,0 @@
-first	demonstrates basic analysis functions (runs offline)
-second	demonstrates further analysis functions (runs offline)
-collections	how-to: build and use collections
-metadata	how-to: use metadata
-analyses	how-to: apply standard analyses
-barchart	graphics package integration
-another	one more for show
-offline	explains features requiring network access (but runs offline)
-datasets	builds the example datasets included with matR

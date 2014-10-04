@@ -1,14 +1,15 @@
 \name{hazPackages}
 \alias{hazPackages}
-\title{Report Present and Missing Package Dependencies}
-\description{See \code{dependencies()} below}
+
+\title{Check for presence of recommnded packages}
+
+\description{Check for presence of recommnded packages.}
+
 \usage{
 hazPackages()
 }
-%\details{...}
-%\value{...}
+
+\details{Internal and undocumented at present.}
+\value{Internal and undocumented at present. }
 \author{Daniel T. Braithwaite}
-\seealso{\code{\link{dependencies}}}
-\examples{
-hazPackages()
-}
+\keyword{internal}

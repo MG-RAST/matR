@@ -1,33 +1,219 @@
+#-----------------------------------------------------------------------------------------
+#  demoSets()		return filenames
+#  buildDemoSets()		create the .rda of "biom" objects included as package data
+#
+#  set-1.tsv		7 metagenomes (in three groups)
+#  set-2.tsv		24 metagenomes (in two groups)
+#  set-3.tsv		32 metagenomes (in three groups)
+#  set-4.tsv		16 metagenomes (in three groups)
+#  set-5.tsv		1606 metagenomes (HMP)
+#  set-6.tsv		4 projects of various sizes
+#  set-7.tsv		10 metagenomes and 3 projects
+#-----------------------------------------------------------------------------------------
 
-############################################
-### MISC ROUTINES NEEDED ACROSS THE PACKAGE
-###
-### generally we err on the side of moving
-### simple helper functions into this file,
-### out of the source file where they might
-### mainly be used
-###
-### simple stuff only here
-############################################
+demoSets <- function (n=TRUE) {
+	paste (file.path (path.package ("matR"), "extdata", "set-"), 1:7, ".tsv", sep="") [n]
+	}
 
-### two functions for demos: each will step through a script, line by line.
-### this one reads the file as text and echoes each line exactly.
-### each command must fit on a line, and blank lines are simply echoed.
+buildDemoSets <- function (file="sample-sets.rda") {
+	ee <- new.env()
+	ff <- demoSets()
+
+	li <- lapply (mget (paste0 ("li", 1:4), inherits=TRUE), biom)
+	mapply (assign, paste0 ("yy", 1:length(li)), li, MoreArgs = list(ee))
+
+	li <- list()
+	li[[1]] <- biomRequest (file = ff[1], request="function", group_level="level2")
+	li[[2]] <- biomRequest (file = ff[2], request="organism", group_level="phylum")
+	li[[3]] <- biomRequest (file = ff[3], request="function", group_level="level1", evalue=1)
+	li[[4]] <- biomRequest (file = ff[4], request="organism", group_level="domain", source="Greengenes")
+#		li[[5]] <- biomRequest (file = ff[5], request="organism", group_level="domain")
+	li[[5]] <- biom(list())
+#		li[[6]] <- biomRequest (file = ff[6], "organism")
+	li[[6]] <- biom(list())
+#		li[[7]] <- biomRequest (file = ff[7], "organism")
+	li[[7]] <- biom(list())
+
+#	fix up non-ASCII characters in metadata
+
+	li[[1]]$columns <- rapply (li[[1]]$columns, iconv, "character", how='replace', to='ASCII', sub='?')
+	li[[2]]$columns <- rapply (li[[2]]$columns, iconv, "character", how='replace', to='ASCII', sub='?')
+	li[[3]]$columns <- rapply (li[[3]]$columns, iconv, "character", how='replace', to='ASCII', sub='?')
+	li[[4]]$columns <- rapply (li[[4]]$columns, iconv, "character", how='replace', to='ASCII', sub='?')
+
+	mapply (assign, paste0 ("xx", 1:length(li)), li, MoreArgs = list(ee))
+
+
+	save (list=ls(ee), file=file, envir=ee)
+	message (
+		"Created file \"", file, "\" in ", getwd(),
+		".\nFor package build move to \"matR/data\"")
+	file
+	}
+
+#---------------------------------------------------------------------------------
+#  readSet()		read ids/metadata from a tsv file		(character or data.frame)
+#  scrubSet()		clean up a specification of "ids"		(character)
+#  scrapeSet()		return "resources" per specification	(character)
+#  expandSet()		expand projects to metagenomes			(character or data.frame)
+#---------------------------------------------------------------------------------
+
+readSet <- function (file) {
+	df <- read.table(file, header=F, sep="\t", colClasses="character", stringsAsFactors=TRUE)
+	if(ncol(df) > 1) {
+		colnames(df) <- df[1, , drop=TRUE]
+		rownames(df) <- df[, 1, drop=TRUE]
+		df[-1, -1, drop=FALSE]
+	} else df[, , drop=TRUE]
+	}
+
+scrubSet <- function (x, resources = "metagenome") {
+	if (is.data.frame (x)) {
+		scrubSet (rownames (x), resources)
+	} else {
+		y <- strsplit (collapse (as.character (x)), "[[:space:]+]") [[1]]
+		y <- y [y != ""]
+		pfx <- match.arg(
+			rep(resources, len=length(y)),
+			c("metagenome", "project"),
+			several.ok = TRUE)
+		paste0(
+			ifelse (substr(y,1,3) %in% c("mgm", "mgp"), 
+				"",
+				c (metagenome="mgm", project="mgp") [pfx]), 
+			y)
+		}
+	}
+
+scrapeSet <- function (x) {
+	if (is.data.frame (x)) {
+		scrapeSet (rownames (x))
+	} else
+		c("metagenome", "project") [match (substr(x, 1, 3), c("mgm", "mgp"), nomatch=1)]
+	}
+
+expandSet <- function (x) {
+	if (is.data.frame (x)) {
+		rownames (x) <- scrubSet (rownames (x))
+		y <- scrapeSet (rownames (x))
+		if (!any (y == "project")) return (x)
+		z <- as.list (rownames (x))
+		z [y == "project"] <- metadata (rownames (x) [y == "project"])
+		j <- rep (1:length(z), sapply(z, length))
+		x <- x [j, , drop=FALSE]
+ 		rownames (x) <- unlist (z)
+ 		x
+	} else {
+		x <- scrubSet (x)
+		y <- scrapeSet (x)
+		if (!any (y == "project")) return (x)
+		z <- as.list (x)
+		z [y == "project"] <- metadata (x [y == "project"])
+		unlist (z)
+		}
+	}
+
+list2df <- function (li) {
+#-----------------------------------------------------------------------------------------
+#  support for bringing nested list structures into a data.frame with NAs where needed
+#
+#  unlist to depth one, while keeping names of top-level list entries
+#  the df variables will be the union of all names
+#  data.frame has one row per element of the original list; one column per variable
+#  don't apply t() in case of a single variable
+#  final result:  NA placed wherever a variable is missing from a list entry
+#-----------------------------------------------------------------------------------------
+	li <- sapply (li, unlist, simplify=FALSE)				
+	vars <- sort (unique (unlist (lapply (li, names))))		
+	y <- sapply (li, "[", vars)
+	if (is.matrix (y)) y <- t(y)
+	as.data.frame (y, stringsAsFactors=FALSE)
+	}
+
+tagline <- function () {
+#-----------------------------------------------------------------------------------------
+#  package name.
+#  preprocess source with:
+#	 sed s/XXXBUILDXXX/$commit/g matR/R/init.R > init.Rtemp
+#	 mv init.Rtemp matR/R/init.R
+#-----------------------------------------------------------------------------------------
+	ss <- " XXXBUILDXXX"
+	if (substr (ss, 2, 9) == "XXXBUILD") ss <- ""
+	paste0 ("matR: metagenomics analysis tools for R (", packageVersion("matR"), ss, ")")
+	}
+
+warning <- function (...) {
+#-----------------------------------------------------------------------------------------
+#  stylish warnings
+#-----------------------------------------------------------------------------------------
+	base::warning ("matR: ", ...,  call.=FALSE)
+	}
+
+collapse <- function (x, ..., sep = " ") {
+#-----------------------------------------------------------------------------------------
+#  make length-one string from a character vector
+#-----------------------------------------------------------------------------------------
+	paste(x, ..., sep = sep, collapse = sep)
+	}
+
+#-----------------------------------------------------------------------------------------
+#  handle "suggested dependencies".
+#  official dependencies are minimized to remove obstacles to installation.
+#-----------------------------------------------------------------------------------------
+
+hazPackages <- function() {
+	me <- packageDescription ("matR")
+	need <- unlist (strsplit (c (me$Imports, me$Suggests), "[^[:alnum:]\\.]+"))
+	sapply (need, function (x) length (find.package (x, quiet = TRUE)) > 0)
+	}
+
+dependencies <- function (prompt = TRUE) {
+	need <- !hazPackages()
+	if (any (need)) {
+		message("matR uses other software.. blah blah blah.. here is what we\'ll do")
+		message("Suggested package(s) missing: ", collapse (names(need) [need]), "\n")
+		if (prompt) {
+			chooseBioCmirror (graphics = FALSE)
+			cat ("\n")
+			chooseCRANmirror (graphics = FALSE)
+			cat ("\n")
+			setRepositories (graphics = FALSE)
+			cat ("\n")
+			}
+		install.packages (names (need) [need])
+		haz <- hazPackages()
+		if (all (haz)) {
+			message("\nAll suggested packages have been installed.\nNow quit and restart R.")
+		} else message("\nPackage(s) could not be installed: ", collapse (names(haz) [!haz]))
+	} else 
+		message ("All suggested packages appear to be installed.")
+	}
+
+#---------------------------------------------------------------------------------
+# 'step' function to help with demo'ing.
+#  read the file as text and echoes each line exactly.
+#  each command must fit on a line, and blank lines are simply echoed.
+#---------------------------------------------------------------------------------
+
 stepper <- function (file) {
 	lines <- readLines (file)
 	for (j in 1:length (lines))
 		if (lines [j] != "") {
 			cat (getOption ("prompt"), lines [j], sep = "")
 			readLines (n = 1, warn = FALSE)
-### NOTE: probably change eval() to occur in parent environment
+# NOTE: probably change eval() to occur in parent environment
 			R <- withVisible (eval.parent (parse (text = lines [j])))
 			if (R$visible && !is.null (R$value)) print (R$value)
 			}
 		else cat ("\n")
 	}
 
-### this one parses the whole file first.  commands may span lines.
-### comments are not displayed.  commands are reformatted to standard appearance.
+#---------------------------------------------------------------------------------
+# 'step' function to help with demo'ing.
+#  parses the whole file first.  commands may span lines.
+#  comments are not displayed.  commands are reformatted to standard appearance.
+#---------------------------------------------------------------------------------
+
 stepper2 <- function (file) {
 	exprs <- parse (file = file)
 	for (j in 1:length (exprs)) {
@@ -37,85 +223,15 @@ stepper2 <- function (file) {
 		}
 	}
 
-demo.step <- demo2 <- function (s) stepper (paste (path.package ("matR"), "/demo/", s, ".R", sep = ""))
-
-
-### custom matrix and list printing for general use and also for our class methods
-matrixPrinter <- function (x, ...) {
-	m <- min (nrow (x), 15)
-	n <- min (ncol (x), 5)
-	if (m > 0 && n > 0) {
-# not fully sure why ths is necessary
-# seems "rownames<-" is somwhat sloppily implemented for "Matrix"
-		if (length (rownames (x)) > 0) rownames (x) <- abbrev (rownames (x), getOption ("width") / 3, "middle")
-		print (x [1:m, 1:n])
-		cat ("  <truncated from", nrow (x), "rows and", ncol (x), "columns>\n")
-		}
-	else cat ("  <zero rows and/or columns>\n")
+step.through <- function (s) {
+	stepper (file.path (path.package ("matR"), "demo", paste0 (s, ".R")))
 	}
 
-### Pretty printing of a restricted class of list structures, adaptive to screen width:
-### the only atomic (non-list) elements in a traversal are length-one character vectors
-### this is for metadata but also handy in general; assumes that listify() has been applied
-listPrinter <- function (x) {
-	n <- 0
-	count <- function (x)
-		if (length (x) > 0)
-			for (j in 1:length (x)) {
-				n <<- n + 1
-				if (length (x [[j]]) > 1) count (x [[j]])
-				}
-	count (x)
+#---------------------------------------------------------------------------------
+# abbreviates each element of a character vector to fit a given width
+#  adds "..." where text is omitted (left, middle, or right)
+#---------------------------------------------------------------------------------
 
-	items <- character (n)
-	k <- 1
-	build <- function (x, prefix)
-		if (length (x) > 0)
-			for (j in 1:length (x))
-				if (length (x [[j]]) == 1) {
-					items [k] <<- x [[j]]
-					names (items) [k] <<- 
-						if (is.null (names (x) [j]) || is.na (names (x) [j]) || nchar (names (x) [j]) == 0)
-							paste (prefix, "[[", j, "]]", sep = "")
-						else paste (prefix, "$", names (x) [j], sep = "")
-					k <<- k + 1
-					}
-				else {
-					items [k] <<- ""
-					names (items) [k] <<- 
-						if (is.null (names (x) [j]) || is.na (names (x) [j]) || nchar (names (x) [j]) == 0)
-							paste (prefix, "unnamed: [[", j, "]]", sep = "")
-						else paste (prefix, "$", names (x) [j], sep = "")
-					k <<- k + 1
-					build (x [[j]], paste ("  ", prefix, sep = ""))
-					}
-	build (x, "")
-
-	twoColPrint (items, "middle", "right")
-	}
-
-### convert metadata into a uniform, recursive structure:
-###
-### the only atomic (non-list) elements in a traversal are length-one character vectors
-### This makes element access very simple, e.g.:
-###   m$metadata$env_package$habitat
-listify <- function (L) {
-	if (length (L) > 0)
-		for (j in 1:length (L))
-			if (length (L [[j]]) == 0)							
-				L [[j]] <- ""
-			else if (length (L [[j]]) == 1)
-				L [[j]] <- as.character (L [[j]]) [1]
-			else if (! inherits (L [[j]], "list"))
-				L [[j]] <- as.list (as.character (L [[j]]))
-			else
-				L [[j]] <- listify (L [[j]])
-	L
-	}
-
-### abbreviates each element of a character vector
-### to fit a given width, and adds "..." where 
-### text is omitted (left, middle, or right)
 abbrev <- function (s, n, where = "right") {
 	toolong <- function (s, n) sapply (s, function (x) { nchar (x) > n - 3 }, USE.NAMES = FALSE)
 	paste (strtrim (s, width = n - 3), 
@@ -124,162 +240,15 @@ abbrev <- function (s, n, where = "right") {
 ### ... need abbrev from middle and left ...
 	}
 
-### nicely prints a named character vector in two columns,
-### one line per element, sensitive to screen dimensions
-twoColPrint <- function (v, Labbrev, Rabbrev) {
-	w1 <- getOption ("width") / 3
-	w2 <- getOption ("width") - w1 - 1
-	m <- matrix ( c (names (v), v), ncol = 2)
-	m [,1] <- format (abbrev (m [,1], w1, Labbrev), width = w1)
-	m [,2] <- format (abbrev (m [,2], w2, Rabbrev), width = w2)
-	write.table (m, quote = FALSE, sep = " ", row.names = FALSE, col.names = FALSE)
-	}
+#---------------------------------------------------------------------------------
+#  utilities for docs
+#---------------------------------------------------------------------------------
 
-### a handy object inspector, sometimes more handy than str()
-shew <- function (a) { 
-	cat ("class:", class (a), "\n")
-	cat ("mode:", mode (a), "\n")
-	cat ("typeof:", typeof (a), "\n")
-	cat ("length:", length (a), "\n")
-	cat ("dim:", dim (a), "\n")
-	cat ("names of attributes:", names (attributes (a)), "\n")
-	cat ("summary:\n")
-	print (summary (a))
-	cat ("you could also look at names(), rownames(), colnames(), and dimnames()\n")
-	}
-
-### just an abbreviation
-shh <- suppressPackageStartupMessages
-
-### this is good for building demos
-hold <- function (msg = NULL, cmd = NULL) { 
-	message (msg); 
-	if (!is.null (cmd)) writeLines (paste (options ("prompt"), cmd, sep=""))
-	invisible (readLines (n=1, warn=FALSE))
-	}
-
-### open documentation page in a browser
 seeDoc <- function (f) {
 	outfile <- tempfile (fileext = ".html")
 	browseURL (tools::Rd2HTML (f, outfile))
 	}
 
-### I forgot why exactly I wanted this
 buildHTMLDocs <- function (docs) {
 	for (d in docs) tools::Rd2HTML (d, paste ("./html/", unlist (strsplit (d, ".", fixed = TRUE)) [1], ".html", sep=""), Links = tools::findHTMLlinks ())
 	}
-
-### split a character vector at all semicolons
-chomp <- function (s) {
-	if (is.null (s)) return (NULL)
-	unlist (strsplit (paste (as.character (s), collapse = ";", sep = ""), ";", fixed = TRUE))
-	}
-
-### concatenates to a single string, separating by semicolons
-### that is how the API wants to see multiple values of the same parameter
-glom <- function (s) { 
-	if (is.null (s)) return (NULL)
-	paste (as.character (s), collapse = ";", sep = "")
-	}
-
-# clean up a vector of ids to standard format for the API,
-# adding prefix as necessary ("mgp", etc).  optional argument
-# is recycled to specify the resource of each id.
-
-### !!! THIS DOESN'T WORK FOR INPUT: ""
-scrubIds <- function (ids, resources = c ("project", "library", "sample", "metagenome")) {
-  names <- names (ids)
-  ids <- strsplit (paste (ids, collapse = " "), "[^[:alnum:]\\.]+") [[1]]
-  if (missing (resources)) resources <- "metagenome"
-	resources <- rep (
-		c (project = "mgp", library = "mgl", sample = "mgs", metagenome = "mgm")
-      [match.arg (resources, several.ok = TRUE)],
-		length.out = length (ids))
-	scrub <- ifelse (substr (ids, 1, 3) %in% c ("mgp", "mgl", "mgs", "mgm"), ids, paste (resources, ids, sep = ""))
-  names (scrub) <- names
-  scrub
-	}
-
-# identify the kbase resources specified by a vector of ids
-# prefixes of "mgp", "mgl", "mgs", "mgm" are understood
-# any other prefix (including no prefix) results in "metagenome"
-scrapeResources <- function (ids) {
-	res <- match (substr (ids, 1, 3), c ("mgp", "mgl", "mgs", "mgm"))
-	res [is.na (res)] <- 4
-	c ("project", "library", "sample", "metagenome") [res]
-	}
-
-### tests first argument for equality with any of others
-oneof <- function (x, ...) any (x == unlist ( list (...)))
-
-### same but raises error if not among
-oneofmust <- function (x, ...) {
-	if ( any (x == unlist ( list (...)))) return (TRUE)
-	stop (x, " should be among ", paste (unlist ( list (...)), collapse = " "))
-	}
-
-### same but raises error if among
-oneofmusnt <- function (x, ...) {
-	if ( !any (x == unlist ( list (...)))) return (TRUE)
-	stop (x, " should not be among ", paste (unlist ( list (...)), collapse = " "))
-	}
-
-### this is useful several times
-semiwarn <- function (s) {
-	if (length( grep (";", s, fixed = TRUE))) {
-		message ("matR: semicolon interpreted as separator")
-		TRUE
-		} 
-	else FALSE
-	}
-
-### insist on loading a package
-### we load additional packages _after_ matR on the search path
-reqPack <- function (P) {
-	if ( !library (P, pos = whereIam() + 1, character.only = TRUE, quietly = TRUE, 
-		warn.conflicts = FALSE, logical.return = TRUE))
-		stop ("matR: package ", P, " required")   ########## revisit this
-	else TRUE
-	}
-
-### print an optional message according to verbosity configuration
-optMessage <- function (s, ...) if (msession$verbose ()) message (s, ...)
-
-### helps pluralize output text when appropriate
-plur <- function (x) if (length (x) > 1) "s" else ""
-
-### last element of a vector
-lastof <- function (x) x [length (x)]
-
-### checks for a obvious graphics type of
-### a provided file name
-grType <- function (fileName) {
-	s <- lastof (strsplit (fileName, ".") [[1]])
-	if (oneof (s, "jpeg", "pdf", "png", "ps")) s
-	else "png"
-	}
-
-### merge two named lists, eliminating duplicates and giving priority to the first
-### this is for resolving import / export / graphical parameters
-resolveMerge <- function (first, second)
-	append (first, second) [ !duplicated (c (names (first), names(second))) ]
-
-### further specialized list-combining function for use in "render" methods
-resolveParList <- function (call, object, defaults)
-  resolveMerge (call, resolveMerge (object, resolveMerge (defaults, msession$par())))
-
-xcall <- function (fun, ..., with = list(), without = character ()) {
-	call <- append (append (list (fun), list (...)), with)
-	call [without] <- NULL
-	if (msession$verbose()) message (paste (names (call [-1]), ":", as.character (call [-1]), sep = "", collapse = "  "), "\n")
-	eval (as.call (call))
-}
-
-whereIam <- function () which (search () == "package:matR")
-
-prior <- function (f) function (x, ...) get (f, pos = whereIam() + 1) (x, ...)
-
-samples.of.project <- function (x) {
-	ll <- mGet ("project", scrubIds (x, "project"), verbosity = "full", enClass = FALSE) $ analyzed
-	sapply (ll, '[', 1)
-}

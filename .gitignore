@@ -1,2 +1,10 @@
-.DS_Store
+.R*
+*.aux
+*.log
+.DS*
+*.aux
+*.log
+*.txt
+_*
+*~
 
