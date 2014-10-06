@@ -22,9 +22,9 @@ some matR functionality be temporarily unavaialable in the most current version.
 
 To install the last stable release of matR, you can use the following commands:
 
-# uninstall current matR
+\# uninstall current matR
 remove.packages("matR")
-# install devtools, then use it to install matR from the July 10 2014 commit
+\# install devtools, then use it to install matR from the July 10 2014 commit
 library(devtools)
 install_github(repo="MG-RAST/matR", dependencies=FALSE, ref="3d068d0c4c644083f588379ca111a575a409c797")
 library(matR)
