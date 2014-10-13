@@ -76,16 +76,17 @@ boxplot.biom <- function(
 		zz$call <- match.call()
 		return(invisible(zz))
 		}
-	split.screen(c(2,1))
+	screen.n <- split.screen(c(2,1))
 
-	screen (1)
+	screen (screen.n [1])
 	zz$x <- do.call (graphics::boxplot, par)
 
-	screen (2)
+	screen (screen.n [2])
 	par0$x <- y
 	par <- resolve (y.arg, par0)
 	zz$y <- do.call (graphics::boxplot, par)
 
+	close.screen (screen.n)
 	zz$call <- match.call()
 	return(invisible(zz))
 	}

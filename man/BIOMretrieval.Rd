@@ -48,4 +48,36 @@ Otherwise, and for "biom.environment()", a "biom" object.
 }
 
 \examples{
+#  several files demonstrate valid formats for ID input
+demoSets()
+
+\dontrun{
+ff <- demoSets()
+
+#  simple retrieval of annotation data
+yy <- biomRequest (file=ff[1])
+head (rows (yy))
+
+#  many arguments can modify what is retrieved
+yy <- biomRequest (file=ff[1], group_level="level1")
+rownames (yy)
+
+#  taxonomic annotations
+yy <- biomRequest (file=ff[4], request="organism", group_level="phylum", source="Greengenes")
+
+#  IDs can be given directly, while output can be to a file
+biomRequest ("mgp9", request="function", outfile="mgp9.biom")
+biomRequest ("mgm4441619.3 mgm4441620.3 mgm4441656.4", 
+  request="function", outfile="mgp9.biom")
+
+#  place an asynchronous request...
+yy <- biomRequest ("mgp9", wait=FALSE)
+#  ...and receive the data when convenient
+yy <- biom (yy)
+}
+
+#  full detail for available options
+doc.MGRAST (3, head=c("matrix","function","parameters","options"))
+doc.MGRAST (3, head=c("matrix","organism","parameters","options"))
+doc.MGRAST (3, head=c("matrix","feature","parameters","options"))
 }

@@ -12,6 +12,15 @@ parMapper <- function (object, name.map, value.map) {
 #		xx			biom object (with metadata)
 #		map			mapping of names of par to names of metadata
 #		values		list _possibly_ including a specific mapping for each mapped par
+#
+#  the workhorse enabling user calls such as:
+#
+#  princomp(xx,
+#    map = c (col="host_common_name", pch="samp_store_temp"),
+#    col = c (Mouse="blue", cow="red", "striped bass"="brown"),
+#    pch = c ("-80"="+", "NA"="x"))
+#-----------------------------------------------------------------------------------------
+
 #---------------------------------------------------------------------
 	if (is.null (name.map)) return (list())
 

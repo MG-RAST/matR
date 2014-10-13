@@ -103,7 +103,7 @@ insertHelper <- function (xx, yy, name) {
 	x$rows <- x$rows [match (rownames(m), rownames(x))]
 	x$columns <- x$columns [match (colnames(m), colnames(x))]
 	x$date <- strftime (Sys.time())
-	x$id <- paste0 ("derived with ", deparse (match.call()))
+	x$id <- paste0 ("derived with ", deparse (match.call(), width=500))
 	x$generated_by <- tagline()
 
 	if (is.null (x$sparse)) {
@@ -188,7 +188,7 @@ merge.biom <- function (x, y, ...) {
 	zz <- biom (mm, x$type, sparse)
 	zz$rows <- new.rows
 	zz$columns <- new.columns
-	zz$id <- paste0 ("derived with ", deparse (match.call()))
+	zz$id <- paste0 ("derived with ", deparse (match.call(), width=500))
 	zz$generated_by <- tagline()
 	zz
 	}

@@ -1,4 +1,5 @@
 \name{image.biom}
+\alias{image}
 \alias{image.biom}
 
 \title{
@@ -34,6 +35,13 @@ For the current preliminary release, please refer
 to the examples and vignettes provided.
 }
 
+\note{
+The function "image()" is declared S3 generic in the base package "graphics".
+The method documented here does not apply any existing methods, however,
+but rather relies on entirely different libraries for computation and graphical rendering.
+(See below.)
+}
+
 \author{Daniel T. Braithwaite and Kevin P. Keegan}
 
 \seealso{
@@ -42,4 +50,16 @@ to the examples and vignettes provided.
 }
 
 \examples{
+#  simple heatmap; using log transformation makes interesting things more apparent
+image (xx2)
+xx2t <- transform (xx2, t_Log)
+image (xx2t, labCol="$$project.id")
+
+#  clustering analysis restricted to Archaea
+image (xx2t, labCol="$$project.id", rows=rows(xx2t,"taxonomy1")=="Archaea")
+
+#  clustering analysis restricted by significance test p values
+p <- rowstats (xx2t, test="t-test-unpaired", groups="$$material") $ p.value
+p [is.na(p)] <- p [is.nan(p)] <- FALSE
+image (xx2t [rows = p < 0.05, ], labCol="$$material")
 }

@@ -23,11 +23,6 @@ or (simply) look up corresponding IDs in an index of projects and metagenomes.
   \item{file}{file containing project or metagenome IDs (string)}
 }
 
-\note{
-Although associated to the same generic, "BIOM.utils::metadata.biom()" 
-is conceptually distinct from the function documented here.
-}
-
 \details{
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
@@ -40,6 +35,13 @@ Otherwise, a "data.frame".
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
 to the examples and vignettes provided.
+}
+
+\note{
+The function "metadata()" is declared S3 generic in required package "BIOM.utils",
+and a method is defined there for class "biom".  
+Although here is documented a further method of the same function,
+the actual functionality is almost entirely unrelated.
 }
 
 \author{Daniel T. Braithwaite}
@@ -58,7 +60,7 @@ metadata (xx)
 metadata (xx, detail=TRUE)
 names (metadata (xx, detail="verbose"))
 
-##  similarly (but not identically) for metagenome metadata
+##  similar (but not identical) for metagenome metadata
 yy <- "mgm4440066.3 mgm4440062.3 mgm4440055.3 mgm4441681.3 mgm4440463.3 mgm4440464.3"
 metadata (yy)
 metadata (yy, detail=TRUE)

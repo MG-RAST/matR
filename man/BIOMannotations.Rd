@@ -47,8 +47,27 @@ the object "x" with updated metadata.
 
 \seealso{
 \code{BIOM.utils::\link{biom}}
+\code{\link{regex}}
 }
 
 \examples{
-# ex with [,] to get single factor
+#  exact sampling locations returned in a data.frame
+columns (xx3, "latitude|longitude")
+
+#  project IDs and environmental package metadata -- note regex here and above
+colnames (columns (xx2, "project\\.id|^env_package"))
+
+#  row metadata makes annotation hierarchy levels available,
+#  so typical row metadata has few components -- here just two
+names (rows (xx1))
+rows (xx1, "ontology1")
+
+#  here, the rownames and the variable of the data.frame coincide
+rows (xx1, "ontology2")
+
+#  a data.frame is returned even in case of a single metadata field
+is.data.frame (columns (xx1, "sample.data.biome"))
+
+#  and variables are almost always coded as factors
+is.factor (columns (xx1, "sample.data.biome") [[1]])
 }

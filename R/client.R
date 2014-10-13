@@ -39,26 +39,35 @@ biomRequest <- function (x, request=c("function", "organism", "feature"), ...,
 	add.metadata <- NULL
 	if (is.data.frame (x)) {
 		add.metadata <- x
-		x <- rownames(x)
+		x <- rownames(x)					#  look out for reordering!
 	}
 
-	if (missing (block))
-		block <- length(x)
-
-#-------set up requested block size
-#-------set up the download scheme, and an environment to hold it
+	if (missing (block)) block <- length(x)
 
 	req <- new.env (parent = globalenv())
-	param <- append (list (resource='matrix', request=request, asynchronous=1), list(...))
+	param <- append (
+		list (
+			resource='matrix',
+			request=request,
+			asynchronous=1,
+			verify=FALSE), 				#  otherwise, an erroneous message will always print
+		list(...))
 
-	ledger <- data.frame (start = seq(1, length(x), block), stringsAsFactors = F)
+	ledger <- data.frame (start = seq(1, length(x), block), stringsAsFactors=FALSE)
 	ledger$stop 		<- c (ledger$start[-1] - 1, length(x))
 	ledger$requested 	<- FALSE
 	ledger$ticket		<- ""
 	ledger$file			<- ""
 
-	ledger[1,"ticket"] <- do.call (call.MGRAST, append (param, list (id=x [ledger[1,"start"] : ledger[1,"stop"]]))) ["id"]
-	ledger[1,"requested"] <- TRUE
+	yy <- do.call (call.MGRAST, c (param, list (id = x [ledger[1,"start"]:ledger[1,"stop"]])))
+	if ("id" %in% names (yy)) {
+		ledger[1,"ticket"] <- yy ["id"]
+		ledger[1,"requested"] <- TRUE
+	} else {
+		print (yy)
+		stop ("can\'t interpret API response")
+		}
+	if (!quiet) print (ledger [1,])
 
 	assign("IDs", x, req)
 	assign("n", 1, req)
@@ -67,12 +76,11 @@ biomRequest <- function (x, request=c("function", "organism", "feature"), ...,
  	assign("add.metadata", add.metadata, req)
  	assign("outfile", outfile, req)
 
-	if (wait) {
-		biom(req)
-	} else {
+	if (!wait) {
 		message("returning ticket for queued request; apply biom() to fulfill")
 		invisible(req)
-		}
+	} else
+		biom(req, wait=TRUE, quiet=quiet)
 	}
 
 biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
@@ -86,28 +94,40 @@ biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 	assign("wait", wait, x)
 	with (x, {
 		repeat {
-			yy <- call.MGRAST("status", "instance", id=ledger[n, "ticket"])
-			if("data" %in% names(yy)) {
-				message (ledger[n,"start"], " to ", ledger[n,"stop"], " received")
+			zz <- call.MGRAST("status", "instance", id=ledger[n, "ticket"], verify=FALSE)
+			if("data" %in% names(zz)) {										#  otherwise, data not ready
+				yy <- try (biom(zz$data))
+				if (inherits (yy, "try-error")) {							#  got something other than biom
+					print (zz$data)
+					stop ("can\'t interpret API response as BIOM data")
+					}
+#				message (ledger[n,"start"], " to ", ledger[n,"stop"], " received")
 				tt <- tempfile()
-				yy <- biom(yy$data)
 				save (yy, file=tt)
 				ledger[n, "file"] <- tt
+				if (!quiet) print (ledger [n,])
 				if (n == nrow(ledger)) break
+
 				n <- n+1
-				ledger[n,"ticket"] <- do.call (call.MGRAST, append (param, list (id=IDs [ledger[n,"start"] : ledger[n,"stop"]]))) ["id"]
-				ledger[n,"requested"] <- TRUE
+				yy <- do.call (call.MGRAST, c (param, list (id = IDs [ledger[n,"start"]:ledger[n,"stop"]])))
+				if ("id" %in% names (yy)) {
+					ledger[n,"ticket"] <- yy ["id"]
+					ledger[n,"requested"] <- TRUE
+				} else {
+					print (yy)
+					stop ("can\'t interpret API response")
+					}
+				if (!quiet) print (ledger [n,])
 				}
-			if(!wait) {
-				warning("data retrieval with blocking will not complete with wait=FALSE")
-				if (!quiet) print(ledger)
-				stop("request cannot be fulfilled")
+			if (!wait) {
+				warning ("blocked data retrieval with wait=FALSE completes one block at a time")
+				return()
 				}
 			Sys.sleep(5)
 			}
 
-		if (!quiet) {
-			message("assembling from:")
+		if (!quiet && nrow (ledger) > 1) {
+			message("assembling:")
 			print(ledger)
 			}
 		ll <- lapply(
@@ -115,7 +135,7 @@ biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 				function (ff) { 
 					load(ff); unlink(ff); yy
 					})
-		yy <- Reduce (merge.biom, ll)
+		yy <- suppressWarnings (Reduce (merge.biom, ll))			#   we intend to suppress the warning about dup rows; not ideal
 
 #		if(!is.null("add.metadata")) columns(yy) <- add.metadata
 		if(!is.null(outfile)) writeLines(as.character(yy), file=outfile)

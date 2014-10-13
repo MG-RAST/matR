@@ -19,7 +19,7 @@ Example collections of metagenomic samples
 
 \description{
 Collections of metagenomes prebuilt as objects of class "biom", 
-for demonstrations purposes and getting started.
+for demonstration purposes and getting started.
 }
 
 \usage{
@@ -38,10 +38,10 @@ yy4
 
 \details{
 "xx1" to "xx7" are collections of metagenomes prebuilt with "biomRequest()", 
-included for demonstration purposes and to help users get started.
+included as examples to help users get started.
 They are objects of class "biom" built by "buildDemoSets()", 
 which is undocumented but exported.
 
 "yy1" to "yy4" correspond to the example lists "li1" to "li4" from package BIOM.utils.
-That is, "yyN" is equal to "biom(liN)".  These contain (all but the last) vacuous data.
+That is, "yy#" is equal to "biom(li#)".  These contain (all but the last) vacuous data.
 }

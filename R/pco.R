@@ -13,7 +13,7 @@ princomp.biom <- function(
 		rerender=NULL) {
 
 	x <- x [rows, columns]
-	method <- match.arg (method)
+#	method <- match.arg (method)			# need a more elegant solution
 	arg <- list (...)
 
 	if (inherits (rerender, "pco")) {

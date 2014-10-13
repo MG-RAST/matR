@@ -41,6 +41,8 @@ to the examples and vignettes provided.
 }
 
 \examples{
+
+
 ##  relevant documentation for the underlying API call
 doc.MGRAST(3, head=c('metagenome','query','parameters','options'))
 }

@@ -59,6 +59,9 @@ dir.MGRAST(len=25, order="id")
 ##  detailed information about them
 names (dir.MGRAST(len=25, order="id", verbosity="verbose"))
 
+##  quick look at public projects
+strtrim (dir.MGRAST (verbosity="verbose")$description, 70)
+
 ##  relevant documentation for the underlying API call
 doc.MGRAST(3, head=c('project','query','parameters','options'))
 }
