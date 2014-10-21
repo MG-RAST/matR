@@ -13,15 +13,11 @@ INSTALLATION (SEE INSTALLATION NOTE BELOW!)
 
 \## Make sure to have a current version of the R language (http://www.r-project.org).
 
-\## Then install during an R session with:
-
-\##
-
-\##     install.packages(matR)
-
-\##     library(matR)
-
-\##     dependencies()
+\## Then install during an R session with: 
+\## 
+\##     install.packages(matR)	
+\##     library(matR)		
+\##     dependencies()		
 
 INSTALLTION NOTE (October 2014)
 We are in the process of updating matR code - during this time, it is possible that 
