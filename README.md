@@ -9,12 +9,13 @@ LOADING
 During an R session, load matR with:
 > library(matR)
 
-INSTALLATION
-Make sure to have a current version of the R language (http://www.r-project.org).
-Then install during an R session with:
-> install.packages(matR)
-> library(matR)
-> dependencies()
+INSTALLATION (SEE INSTALLATION NOTE BELOW!)
+\## Make sure to have a current version of the R language (http://www.r-project.org).
+\## Then install during an R session with:
+\##
+\##     install.packages(matR)
+\##     library(matR)
+\##     dependencies()
 
 INSTALLTION NOTE (October 2014)
 We are in the process of updating matR code - during this time, it is possible that 
@@ -28,10 +29,7 @@ remove.packages("matR")
 
 \# install devtools, then use it to install matR from the July 10 2014 commit
 
-library(devtools)
-
-install_github(repo="MG-RAST/matR", dependencies=FALSE, ref="3d068d0c4c644083f588379ca111a575a409c797")
-
-library(matR)
-
-dependencies()
+   library(devtools)
+   install_github(repo="MG-RAST/matR", dependencies=FALSE, ref="3d068d0c4c644083f588379ca111a575a409c797")
+   library(matR)
+   dependencies()
