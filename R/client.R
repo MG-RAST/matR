@@ -1,4 +1,6 @@
 #-----------------------------------------------------------------------------------------
+#  "Client" routines, for data transfering via MG-RAST API
+#
 #  General goals for API wrapping:
 #    restricting access to API functionality is ok...
 #    ...but it must be for the sake of creating clear concepts

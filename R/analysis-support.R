@@ -20,8 +20,6 @@ parMap <- function (object, name.map, value.map) {
 #    col = c (Mouse="blue", cow="red", "striped bass"="brown"),
 #    pch = c ("-80"="+", "NA"="x"))
 #-----------------------------------------------------------------------------------------
-
-#---------------------------------------------------------------------
 	if (is.null (name.map)) return (list())
 
 	pars <- names (name.map)
