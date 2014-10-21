@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------
 
 transform.biom <- function (`_data`, ...) {
-	xx <- `_data`
+	x <- `_data`
 	li <- list (...)
 	if (is.null (names (li))) {
 		f.list <- li
@@ -22,19 +22,19 @@ transform.biom <- function (`_data`, ...) {
 		}
 
 	ll <- append(										#	this is:  list(x, list(list of functions, list of argument lists))
-			list (as.matrix (xx, expand=TRUE)),
+			list (as.matrix (x, expand=TRUE)),
 			mapply (list, f.list, a.list, SIMPLIFY=FALSE))
 	pass.to <- function (x, funcWithArgs) {
 		do.call (funcWithArgs [[1]], append (list (x), funcWithArgs [[2]]))				# some issue; args being passed in a list capsule should not be
 		}
 	data1 <- Reduce (pass.to, ll)
 
-	y <- xx [rownames(xx) %in% rownames (data1), colnames (xx) %in% colnames (data1)]
+	y <- x [rownames(x) %in% rownames (data1), colnames (x) %in% colnames (data1)]
 	y$data <- data1
 	y$sparse <- NULL
 	y$generated_by <- tagline()
 	y$date <- strftime(Sys.time())
-	y$id <- paste0 ("derived with ", deparse (match.call(), width=500))
+	y$id <- paste0 ("derived with ", deparse (match.call(), width.cutoff=500))
 	y
 	}
 

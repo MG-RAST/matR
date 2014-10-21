@@ -16,6 +16,6 @@ Description: matR is an analysis module, extending the MG-RAST metagenome annota
  functionality of that environment and its extensions.
 License: file LICENSE
 LazyData: yes
-Collate: utils.R biom-ext.R client.R graphics.R analysis-support.R analysis-misc.R dist.R rowstats.R 
- transform.R boxplot.R pco.R heatmap.R init.R
+Collate: utils.R biom-ext.R client.R graphics.R analysis-support.R analysis-misc.R distx.R rowstats.R 
+ transform.R boxplot.R princomp.R image.R init.R
 

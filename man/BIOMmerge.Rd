@@ -6,7 +6,7 @@ Merge BIOM data
 }
 
 \description{
-Merge two objects of class "biom", maintaining metadata and other class structure.
+Merge two objects of class \code{biom}, maintaining metadata and other class structure.
 }
 
 \usage{
@@ -14,8 +14,8 @@ Merge two objects of class "biom", maintaining metadata and other class structur
 }
 
 \arguments{
-  \item{x}{an object ("biom")}
-  \item{y}{an object ("biom")}
+  \item{x}{an object (\code{biom})}
+  \item{y}{an object (\code{biom})}
   \item{\dots}{unused}
 }
 
@@ -26,7 +26,7 @@ to the examples and vignettes provided.
 }
 
 \value{
-A "biom" object resulting from merging "x" and "y".
+A \code{biom} object resulting from merging \code{x} and \code{y}.
 }
 
 \author{Daniel T. Braithwaite}

@@ -7,7 +7,7 @@ Summarize BIOM data in boxplots
 }
 
 \description{
-Summarize distribution of a "biom" object in columnwise boxplots.
+Summarize distribution of a \code{biom} object in columnwise boxplots.
 }
 
 \usage{
@@ -15,11 +15,11 @@ Summarize distribution of a "biom" object in columnwise boxplots.
 }
 
 \arguments{
-  \item{x}{an object ("biom")}
-  \item{y}{optionally, a second object for comparison ("biom")}
-  \item{\dots}{arguments to "graphics::boxplot()"}
-  \item{map}{assignment of "par" variables to metadata fields ("character")}
-  \item{columns}{subselection of columns ("integer", "character" or "logical")}
+  \item{x}{an object (\code{biom})}
+  \item{y}{optionally, a second object for comparison (\code{biom})}
+  \item{\dots}{arguments to \code{graphics::boxplot()}}
+  \item{map}{assignment of \code{par} variables to metadata fields (\code{character})}
+  \item{columns}{subselection of columns (\code{integer}, \code{character} or \code{logical})}
 }
 
 \details{
@@ -48,8 +48,9 @@ boxplot (xx2t, main="log transformed data", notch=FALSE)
 
 #  plotting raw and normalized against each other
 columns (xx2t, "material")
-boxplot (xx2t, xx2, x.main="log-transformed data", y.main="raw data", notch=FALSE, map=c(col="material"), 
- col=c("freshwater"="darkorange", "hot spring"="slateblue", "hot spring ; microbial mat"="chocolate4"))
+boxplot (xx2t, xx2, x.main="log of data", y.main="raw data", map=c(col="material"),
+  col=c("freshwater"="darkorange", "hot spring"="slateblue", 
+  "hot spring ; microbial mat"="chocolate4"), notch=FALSE)
 
 #  label by metadata
 columns (xx4, "sample_name")

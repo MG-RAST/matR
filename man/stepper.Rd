@@ -10,7 +10,7 @@ stepper(file)
 }
 
 \arguments{
-  \item{file}{path to source file ("character")}
+  \item{file}{path to source file (\code{character})}
 }
 
 \details{Internal and undocumented at present.}

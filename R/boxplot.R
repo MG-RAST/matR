@@ -12,7 +12,7 @@ boxplot.biom <- function(
 	if (!missing(y)) {
 		y <- y [, columns]
 		if (!all.equal (colnames (x), colnames (y)))
-			stop ("\"x\" and \"y\" must have identical column ids")
+			stop ("\'x\' and \'y\' must have identical column ids")
 		}
 	arg <- list(...)
 
@@ -37,8 +37,8 @@ boxplot.biom <- function(
 		substring(names(y.arg),3),
 		names(y.arg))
 
-	x.arg$names <- subMetColumns(x.arg$names, x)
-	y.arg$names <- subMetColumns(y.arg$names, y)
+	x.arg$names <- subColumn(x.arg$names, x)
+	y.arg$names <- subColumn(y.arg$names, y)
 
 	map <- as.list (map)
 	x.map <- map [substr(names(map),1,2) != "y."]
@@ -55,14 +55,14 @@ boxplot.biom <- function(
 		names(y.map))
 	y.map <- unlist (y.map)
 
-	x.arg [names (x.map)] <- parMapper (x, x.map, x.arg)
-	y.arg [names (y.map)] <- parMapper (y, y.map, y.arg)
+	x.arg [names (x.map)] <- parMap (x, x.map, x.arg)
+	y.arg [names (y.map)] <- parMap (y, y.map, y.arg)
 
 	par0 <- list(
 		x = as.matrix (x, TRUE),
 		main = NULL,				# no title
 		names = colnames(x),		# x-axis annotations
-		notch = TRUE,				# box notch
+#		notch = TRUE,				# box notch -- often looks bad & produces warnings
 		las	= 2, 			 		# label orientation (x: vertical; y: horizontal)
 		cex.axis = 0.5, 			# axis annotation size (smallish)
 		font.axis = 3,				# axis annotation font style (italic)

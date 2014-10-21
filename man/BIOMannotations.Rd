@@ -9,8 +9,8 @@ Search and change row or column annotations of BIOM data
 }
 
 \description{
-For an object of class "biom",
-find row or column annotations (that is, within the BIOM "metadata") 
+For an object of class code{biom},
+find row or column annotations (that is, within the BIOM \code{metadata}) 
 that match by name a given pattern,
 or append new annotations.
 }
@@ -24,9 +24,9 @@ columns(x, name) <- value
 }
 
 \arguments{
-  \item{x}{an object ("biom")}
-  \item{pattern}{literal string or regular expression identifying metadata field(s) by name ("character")}
-  \item{name}{name for new metadata annotation ("character")}
+  \item{x}{an object (\code{biom})}
+  \item{pattern}{literal string or regular expression identifying metadata field(s) by name (\code{character})}
+  \item{name}{name for new metadata annotation (\code{character})}
   \item{value}{new metadata annotations, one per row (or column)}
 }
 
@@ -37,16 +37,16 @@ to the examples and vignettes provided.
 }
 
 \value{
-For "rows()" and "columns()", 
-a "data.frame" consisting of the metadata fields of "x" that match "pattern".
+For \code{rows()} and \code{columns()}, 
+a \code{data.frame} consisting of the metadata fields of \code{x} that match \code{pattern}.
 For the replacement functions,
-the object "x" with updated metadata.
+the object \code{x} with updated metadata.
 }
 
 \author{Daniel T. Braithwaite}
 
 \seealso{
-\code{BIOM.utils::\link{biom}}
+\code{BIOM.utils::\link{biom}},
 \code{\link{regex}}
 }
 
@@ -55,7 +55,7 @@ the object "x" with updated metadata.
 columns (xx3, "latitude|longitude")
 
 #  project IDs and environmental package metadata -- note regex here and above
-colnames (columns (xx2, "project\\.id|^env_package"))
+colnames (columns (xx2, "project\\\.id|^env_package"))
 
 #  row metadata makes annotation hierarchy levels available,
 #  so typical row metadata has few components -- here just two

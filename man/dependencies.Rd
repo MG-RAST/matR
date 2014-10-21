@@ -10,16 +10,10 @@ dependencies(prompt=TRUE)
 }
 
 \arguments{
-  \item{prompt}{interactively? ("logical")}
+  \item{prompt}{interactively? (\code{logical})}
 }
 
 \details{Internal and undocumented at present.}
 \value{Internal and undocumented at present. }
 \author{Daniel T. Braithwaite}
-
-\examples{
-\dontrun{
-dependencies()
-}
-}
 \keyword{internal}

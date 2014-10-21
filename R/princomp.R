@@ -24,7 +24,7 @@ princomp.biom <- function(
 		} else if (is.null (rerender)) {
 			D <- distx (x, method = method)
 		} else
-			stop ("class of \"rerender\" is unsupported")
+			stop ("\'rerender\' is of an unsupported class")
 
 		P <- ecodist::pco(D)
 		scaled <- P$values / sum(P$values)
@@ -39,10 +39,10 @@ princomp.biom <- function(
 #  save arguments "labels.*" for later
 #---------------------------------------------------------------------
 
-	arg$labels <- subMetColumns (arg$labels, x)
+	arg$labels <- subColumn (arg$labels, x)
 	names (arg) [names (arg) == "labels"] <- "label.labels"
 
-	arg [names (map)] <- parMapper (x, map, arg)
+	arg [names (map)] <- parMap (x, map, arg)
 
 	arg.plot <- arg [substr(names(arg),1,6) != 'label.']
 	arg.labels <- arg [substr(names(arg),1,6) == 'label.']

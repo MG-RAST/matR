@@ -1,161 +1,108 @@
 library(matR)
-N.examples <- 1:4
-ExList <- mget (paste0 ("xx", N.examples), inherits=TRUE)
+N <- 1:4
+List <- mget (paste0 ("xx", N), inherits=TRUE)
 
 #-----------------------------------------------------------------------------------------
-#  CRAN tests
+#  OK FOR CRAN
 #-----------------------------------------------------------------------------------------
 
-
-
-
-
+for (xx in List) {
 #-----------------------------------------------------------------------------------------
-#  DEVEL tests and feature demonstrationss
+#  distx()		...biom method
 #-----------------------------------------------------------------------------------------
+	uu <- as.matrix (xx, TRUE) [,1]
+	vv <- as.matrix (xx, TRUE) [1,]
+	distx (xx)														# distance between columns
+	distx (xx, bycol=FALSE)											# distance between rows
+	distx (xx, method="bray-curtis")								# alt measure
+	distx (xx, method="bray-curtis", bycol=FALSE)
+	distx (xx, groups=1:ncol(xx) %% 4)								# mean pairwise distance between groups
+	distx (xx, groups=1:nrow(xx) %% 4, bycol=FALSE)					# row groups
+	distx (xx, p=uu)												# from each col to a given vector
+	distx (xx, p=vv, bycol=FALSE)									# from each row
+	distx (xx, p=uu, groups=1:ncol(xx) %% 4)						# from each group to given vector
+	distx (xx, p=vv, groups=1:nrow(xx) %% 4, bycol=FALSE)			# row groups
+}
 
-#-----------------------------------------------------------------------------------------
-#  distx()		...matrix method
-#-----------------------------------------------------------------------------------------
-xx <- as.matrix (xx1, TRUE)
-yy <- as.matrix (xx2, TRUE)
-distx (xx)														# distance between columns
-distx (xx, bycol=FALSE)											# distance between rows
-distx (xx, method="bray-curtis")								# alt measure
-distx (xx, method="bray-curtis", bycol=FALSE)
-distx (xx, groups = columns(xx1, "host_common_name")[[1]])		# mean pairwise distance between groups
-distx (yy, groups = rows(xx2, "taxonomy1")[[1]], bycol=FALSE)	# row groups
-distx (xx, xx[,1])												# from each col to a given vector
-distx (xx, xx[1,], bycol=FALSE)									# from each row
-distx (xx, xx[,1], groups=columns(xx1, "host_common_name")[[1]])		# from each group to given vector
-distx (yy, yy[1,], groups=rows(xx2, "taxonomy1")[[1]], bycol=FALSE)		# row groups
-
-#-----------------------------------------------------------------------------------------
-#  distx()		...biom method (almost same)
-#-----------------------------------------------------------------------------------------
-uu <- as.matrix (xx1, TRUE) [,1]
-vv <- as.matrix (xx1, TRUE) [1,]
-ww <- as.matrix (yy1, TRUE) [1,]
-distx (xx1)														# distance between columns
-distx (xx1, bycol=FALSE)										# distance between rows
-distx (xx1, method="bray-curtis")								# alt measure
-distx (xx1, method="bray-curtis", bycol=FALSE)
-distx (xx1, groups="$$host_common_name")						# mean pairwise distance between groups
-distx (xx2, groups="$$taxonomy1", bycol=FALSE)					# row groups
-distx (xx1, uu)													# from each col to a given vector
-distx (xx1, vv, bycol=FALSE)									# from each row
-distx (xx1, uu, groups="$$host_common_name")					# from each group to given vector
-distx (xx2, ww, groups="$$taxonomy1", bycol=FALSE)				# row groups
-
+for (xx in List) {
 #-----------------------------------------------------------------------------------------
 #  rowstats()	...biom method
 #-----------------------------------------------------------------------------------------
-str (rowstats (xx1, groups=seq(along=colnames(xx1)) %% 2, test="Kr"))
-str (rowstats (xx1, groups=seq(along=colnames(xx1)) %% 2, test="t-test-un"))
-str (rowstats (xx1, groups=seq(along=colnames(xx1)) %% 2, test="t-test-p"))
-str (rowstats (xx1, groups=seq(along=colnames(xx1)) %% 2, test="Mann"))
-str (rowstats (xx1, groups=seq(along=colnames(xx1)) %% 2, test="Wilc"))
-str (rowstats (xx1, groups=seq(along=colnames(xx1)) %% 2, test="AN"))
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="Kr"))
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 3, test="Kr"))
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="t-test-un"))
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="Mann"))		# gives warning re. ties
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="AN"))
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 3, test="AN"))
+	if (ncol(xx) %% 2 != 1) {
+		str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="t-test-p"))
+		str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="Wilc"))
+		}
+}
 
-str (rowstats (xx2, groups=seq(along=colnames(xx2)) %% 2, test="Kr"))
-str (rowstats (xx2, groups=seq(along=colnames(xx2)) %% 2, test="t-test-un"))
-str (rowstats (xx2, groups=seq(along=colnames(xx2)) %% 2, test="t-test-p"))
-str (rowstats (xx2, groups=seq(along=colnames(xx2)) %% 2, test="Mann"))
-str (rowstats (xx2, groups=seq(along=colnames(xx2)) %% 2, test="Wilc"))
-str (rowstats (xx2, groups=seq(along=colnames(xx2)) %% 2, test="AN"))
-
-str (rowstats (xx3, groups=seq(along=colnames(xx3)) %% 2, test="Kr"))
-str (rowstats (xx3, groups=seq(along=colnames(xx3)) %% 2, test="t-test-un"))
-str (rowstats (xx3, groups=seq(along=colnames(xx3)) %% 2, test="t-test-p"))
-str (rowstats (xx3, groups=seq(along=colnames(xx3)) %% 2, test="Mann"))
-str (rowstats (xx3, groups=seq(along=colnames(xx3)) %% 2, test="Wilc"))
-str (rowstats (xx3, groups=seq(along=colnames(xx3)) %% 2, test="AN"))
-
-str (rowstats (xx4, groups=seq(along=colnames(xx4)) %% 2, test="Kr"))
-str (rowstats (xx4, groups=seq(along=colnames(xx4)) %% 2, test="t-test-un"))
-str (rowstats (xx4, groups=seq(along=colnames(xx4)) %% 2, test="t-test-p"))
-str (rowstats (xx4, groups=seq(along=colnames(xx4)) %% 2, test="Mann"))
-str (rowstats (xx4, groups=seq(along=colnames(xx4)) %% 2, test="Wilc"))
-str (rowstats (xx4, groups=seq(along=colnames(xx4)) %% 2, test="AN"))
-
-
-str (rowstats (xx1, groups="$$host_common_name", test="Kr"))
-str (rowstats (xx1, groups="$$host_common_name", test="t-test-un"))
-str (rowstats (xx1, groups="$$host_common_name", test="t-test-p"))
-str (rowstats (xx1, groups="$$host_common_name", test="Mann"))
-str (rowstats (xx1, groups="$$host_common_name", test="Wilc"))
-str (rowstats (xx1, groups="$$host_common_name", test="AN"))
-
-str (rowstats (xx2, groups="$$sample.data.material", test="Kr"))
-str (rowstats (xx2, groups="$$sample.data.material", test="t-test-un"))		# use this to demonstrate subselection
-str (rowstats (xx2, groups="$$sample.data.material", test="t-test-p"))
-str (rowstats (xx2, groups="$$sample.data.material", test="Mann"))
-str (rowstats (xx2, groups="$$sample.data.material", test="Wilc"))
-str (rowstats (xx2, groups="$$sample.data.material", test="AN"))
-
-str (rowstats (xx3, groups="$$project_name", test="Kr"))
-str (rowstats (xx3, groups="$$project_name", test="t-test-un"))
-str (rowstats (xx3, groups="$$project_name", test="t-test-p"))
-str (rowstats (xx3, groups="$$project_name", test="Mann"))					# investigate "ties" warnings with this
-str (rowstats (xx3, groups="$$project_name", test="Wilc"))
-str (rowstats (xx3, groups="$$project_name", test="AN"))
-
-str (rowstats (xx4, groups="$$sample.data.biome", test="Kr"))
-str (rowstats (xx4, groups="$$sample.data.biome", test="t-test-un"))
-str (rowstats (xx4, groups="$$sample.data.biome", test="t-test-p"))
-str (rowstats (xx4, groups="$$sample.data.biome", test="Mann"))
-str (rowstats (xx4, groups="$$sample.data.biome", test="Wilc"))
-str (rowstats (xx4, groups="$$sample.data.biome", test="AN"))
-
+for (xx in List) {
 #-----------------------------------------------------------------------------------------
 #  transform()				
 #-----------------------------------------------------------------------------------------
-transform (xx1, t_NA2Zero)
-transform (xx1, t_NA2Zero, t_Threshold)
-transform (xx1, t_NA2Zero, t_Threshold = list(entry=3))
-transform (xx1, t_NA2Zero, t_Threshold = list(row=6))
-transform (xx1, t_NA2Zero, t_Threshold = list(row=6,col=9))
-transform (xx1, t_NA2Zero, t_Threshold = list(entry=5))
-transform (xx1, t_NA2Zero, t_Threshold = list(entry=5), t_Log)
-transform (xx1, t_NA2Zero, t_Threshold = list(entry=5), t_Log, t_ColCenter)
-transform (xx1, t_NA2Zero, t_Threshold = list(entry=5), t_Log, t_ColCenter,  t_ColScale)
+	transform (xx, t_NA2Zero)
+	transform (xx, t_NA2Zero, t_Threshold)
+	transform (xx, t_NA2Zero, t_Threshold = list(entry=3))
+	transform (xx, t_NA2Zero, t_Threshold = list(row=6))
+	transform (xx, t_NA2Zero, t_Threshold = list(row=6,col=9))
+	transform (xx, t_NA2Zero, t_Threshold = list(entry=5))
+	transform (xx, t_NA2Zero, t_Threshold = list(entry=5), t_Log)
+	transform (xx, t_NA2Zero, t_Threshold = list(entry=5), t_Log, t_ColCenter)
+}
 
+for (xx in List) {
 #-----------------------------------------------------------------------------------------
 #  boxplot()
 #-----------------------------------------------------------------------------------------
-xx1.normed <- transform (xx1, t.Log)
-graphics.off() ; boxplot(xx1)
-graphics.off() ; boxplot(
-	xx1, 
-	xx1,
-	main="so good they named it twice")
-graphics.off() ; boxplot(
-	xx1, 
-	xx1.normed)
-graphics.off() ; boxplot( 
-	xx1, 
-	xx1.normed,
-	columns=2:4)
-graphics.off() ; boxplot(
-	xx1, 
-	xx1.normed,
-	x.main="raw",
-	y.main="log")
-graphics.off() ; boxplot(
-	xx1,
-	xx1.normed,
+	xx.normed <- transform (xx, t_Log)
+	boxplot(xx)
+	boxplot(
+		xx, 
+		xx,
+		main="so good they named it twice")
+	boxplot(
+		xx, 
+		xx.normed)
+	boxplot( 
+		xx, 
+		xx.normed,
+		columns=2:4)
+	boxplot(
+		xx, 
+		xx.normed,
+		x.main="raw",
+		y.main="log")
+	boxplot(
+		xx,
+		xx.normed,
+		x.main="raw",
+		y.main="log",
+		cex.main=2,
+		x.names="$$project.id",
+		x.cex.axis=1.5,
+		y.names="$$metagenome.id",
+		y.cex.axis=0.75)
+}
+xx <- xx1 ; xx.normed <- transform (xx, t_Log)
+boxplot(
+	xx,
+	xx.normed,
 	map=c(
 		col="host_common_name"))
-graphics.off() ; boxplot(
-	xx1, 
-	xx1.normed,
+boxplot(
+	xx, 
+	xx.normed,
 	x.main="raw",
 	y.main="log",
 	map=c(
 		col="host_common_name"))
-graphics.off() ; boxplot(
-	xx1.normed,
-	xx1.normed,
+boxplot(
+	xx.normed,
+	xx.normed,
 	x.main="log",
 	y.main="log",
 	map=c(
@@ -164,16 +111,6 @@ graphics.off() ; boxplot(
 	y.col=c(
 		"-80"="salmon",
 		"NA"="orange"))
-graphics.off() ; boxplot(
-	xx1,
-	xx1.normed,
-	x.main="raw",
-	y.main="log",
-	cex.main=2,
-	x.names="$$project.id",
-	x.cex.axis=1.5,
-	y.names="$$metagenome.id",
-	y.cex.axis=0.75)
 
 #-----------------------------------------------------------------------------------------
 #  princomp()				
@@ -213,7 +150,7 @@ princomp(
 # 		"cow"="blue",
 # 		"striped bass"="brown",
 # 		"Mouse"="brown"))
-princomp (xx3, dim=3, labels="", col="biom")
+princomp (xx3, dim=3, labels="", map=c(col="biome"))
 
 princomp(														# plotting character variations
 	xx1,
@@ -334,8 +271,8 @@ princomp(
 #-----------------------------------------------------------------------------------------
 #  image()				
 #-----------------------------------------------------------------------------------------
-xx1.log <- transform (xx1, t.Log)
-xx2.log <- transform (xx2, t.Log)
+xx1.log <- transform (xx1, t_Log)
+xx2.log <- transform (xx2, t_Log)
 image(
 	xx1.log,
 	margins=c(6,13),

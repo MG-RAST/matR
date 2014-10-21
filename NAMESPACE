@@ -36,9 +36,9 @@ export(
 
 	getMetRows,
 	getMetColumns,
-	subMetRows,
-	subMetColumns,
-	parMapper,
+	subRow,
+	subColumn,
+	parMap,
 	parAuto,
 
 	readSet,

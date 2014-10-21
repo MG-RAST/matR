@@ -1,23 +1,20 @@
 #---------------------------------------------------------------------
 #  Significance testing of rows (annotations)
+#
+#  "biom" method is deliberately prototyped with only the arguments
+#  that it actually touches
 #---------------------------------------------------------------------
 
 rowstats <- function (x, ...) UseMethod("rowstats")
 
-rowstats.biom <- function(
-	x, groups, 
-	test=c("Kruskal-Wallis", "t-test-paired", "Wilcoxon-paired", "t-test-unpaired", "Mann-Whitney-unpaired-Wilcoxon", "ANOVA-one-way"), 
-	fdr.level = NULL, 
-	qvalue=FALSE, ...) {
-
-	rowstats (as.matrix (x, TRUE), subMetColumns (groups, x), test, fdr.level, qvalue)
+rowstats.biom <- function(x, groups, ...) {
+	rowstats (as.matrix (x, TRUE), subColumn (groups, x), ...)
 	}
 
 rowstats.matrix <- function(
 	x, groups, 
 	test=c("Kruskal-Wallis", "t-test-paired", "Wilcoxon-paired", "t-test-unpaired", "Mann-Whitney-unpaired-Wilcoxon", "ANOVA-one-way"), 
-	fdr.level = NULL, 
-	qvalue=FALSE, ...) {
+	qvalue=FALSE, fdr.level=NULL, ...) {
 
 	test <- match.arg (test)
 	groups <- addNA (as.factor (groups), ifany=TRUE)

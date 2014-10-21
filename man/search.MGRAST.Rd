@@ -2,22 +2,25 @@
 \alias{search.MGRAST}
 
 \title{
-Search metagenomes in MG-RAST
+Find metagenomes matching specified criteria
 }
 
 \description{
-Find metagenomes in MG-RAST matching search terms
+Find metagenomes matching search terms
 specified for metadata, annotations, and/or md5s,
 giving minimal or detailed metadata per metagenome.
 }
 
 \usage{
-search.MGRAST(..., quiet=FALSE)
+search.MGRAST(public=NULL, detail=NULL, match.all=TRUE, ..., quiet=TRUE)
 }
 
 \arguments{
-  \item{\dots}{arguments to "call.MGRAST()"}
-  \item{quiet}{suppress messages and warnings? ("logical")}
+  \item{public}{... (\code{logical})}
+  \item{detail}{... (\code{logical} or \code{character})}
+  \item{match.all}{... (\code{logical})}
+  \item{\dots}{arguments to \code{call.MGRAST()}}
+  \item{quiet}{suppress messages and warnings? (\code{logical})}
 }
 
 \details{
@@ -41,8 +44,8 @@ to the examples and vignettes provided.
 }
 
 \examples{
-
-
-##  relevant documentation for the underlying API call
-doc.MGRAST(3, head=c('metagenome','query','parameters','options'))
+\dontrun{
+}
+#  relevant documentation for the underlying API call
+doc.MGRAST (3, head=c('metagenome','query','parameters','options'))
 }

@@ -7,7 +7,7 @@ Display heatmap of BIOM data with optional dendrograms
 }
 
 \description{
-Display heatmap of a "biom" object with optional row and column dendrograms.
+Display heatmap of a \code{biom} object with optional row and column dendrograms.
 }
 
 \usage{
@@ -15,12 +15,12 @@ Display heatmap of a "biom" object with optional row and column dendrograms.
 }
 
 \arguments{
-  \item{x}{an object ("biom")}
-  \item{\dots}{arguments to "gplots::heatmap.2()"}
-  \item{map}{assignment of "par" variables to metadata fields ("character")}
-  \item{rows}{subselection of rows ("integer", "character" or "logical")}
-  \item{columns}{subselection of columns ("integer", "character" or "logical")}
-  \item{rerender}{previous computation to reuse in this call ("heatmap", "dclust", "list" or "dist")}
+  \item{x}{an object (\code{biom})}
+  \item{\dots}{arguments to \code{gplots::heatmap.2()}}
+  \item{map}{assignment of \code{par} variables to metadata fields (\code{character})}
+  \item{rows}{subselection of rows (\code{integer}, \code{character} or \code{logical})}
+  \item{columns}{subselection of columns (\code{integer}, \code{character} or \code{logical})}
+  \item{rerender}{previous computation to reuse in this call (\code{heatmap}, \code{dclust}, \code{list} or \code{dist})}
 }
 
 \details{
@@ -36,7 +36,7 @@ to the examples and vignettes provided.
 }
 
 \note{
-The function "image()" is declared S3 generic in the base package "graphics".
+The function \code{image()} is declared S3 generic in the base package "graphics".
 The method documented here does not apply any existing methods, however,
 but rather relies on entirely different libraries for computation and graphical rendering.
 (See below.)

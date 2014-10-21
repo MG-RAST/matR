@@ -10,7 +10,7 @@
 #-----------------------------------------------------------------------------------------
 
 biomRequest <- function (x, request=c("function", "organism", "feature"), ..., 
-	block, wait=TRUE, quiet=FALSE, file=NULL, outfile=NULL) {
+	block, wait=TRUE, quiet=FALSE, file, outfile) {
 #---------------------------------------------------------------------
 #  Post and fulfill data requests.  Important capabilities:
 #    file containing IDs only
@@ -34,7 +34,7 @@ biomRequest <- function (x, request=c("function", "organism", "feature"), ...,
 	} else
 		request <- match.arg(request)
 
-	if (!is.null (file)) x <- readSet (file)
+	if (!missing (file)) x <- readSet (file)
 	x <- expandSet (x)
 	add.metadata <- NULL
 	if (is.data.frame (x)) {
@@ -65,22 +65,22 @@ biomRequest <- function (x, request=c("function", "organism", "feature"), ...,
 		ledger[1,"requested"] <- TRUE
 	} else {
 		print (yy)
-		stop ("can\'t interpret API response")
+		stop ("can\'t interpret server response")
 		}
-	if (!quiet) print (ledger [1,])
 
 	assign("IDs", x, req)
 	assign("n", 1, req)
 	assign("ledger", ledger, req)
 	assign("param", param, req)
  	assign("add.metadata", add.metadata, req)
- 	assign("outfile", outfile, req)
+ 	assign("outfile", if (missing (outfile)) NULL else outfile, req)
 
-	if (!wait) {
+	if (wait) {
+		biom(req, wait=TRUE, quiet=quiet)
+	} else {
 		message("returning ticket for queued request; apply biom() to fulfill")
 		invisible(req)
-	} else
-		biom(req, wait=TRUE, quiet=quiet)
+		}
 	}
 
 biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
@@ -99,9 +99,8 @@ biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 				yy <- try (biom(zz$data))
 				if (inherits (yy, "try-error")) {							#  got something other than biom
 					print (zz$data)
-					stop ("can\'t interpret API response as BIOM data")
+					stop ("can\'t interpret server response as BIOM data")
 					}
-#				message (ledger[n,"start"], " to ", ledger[n,"stop"], " received")
 				tt <- tempfile()
 				save (yy, file=tt)
 				ledger[n, "file"] <- tt
@@ -117,25 +116,22 @@ biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 					print (yy)
 					stop ("can\'t interpret API response")
 					}
-				if (!quiet) print (ledger [n,])
 				}
 			if (!wait) {
-				warning ("blocked data retrieval with wait=FALSE completes one block at a time")
+				warning ("retrieval in blocks with wait=FALSE only checks one block per call")
 				return()
 				}
 			Sys.sleep(5)
 			}
 
-		if (!quiet && nrow (ledger) > 1) {
-			message("assembling:")
-			print(ledger)
-			}
+		if (!quiet && nrow (ledger) > 1) message("assembling...")
 		ll <- lapply(
 				ledger[,"file"], 
 				function (ff) { 
 					load(ff); unlink(ff); yy
 					})
 		yy <- suppressWarnings (Reduce (merge.biom, ll))			#   we intend to suppress the warning about dup rows; not ideal
+		if (!quiet && nrow (ledger) > 1) message("done")
 
 #		if(!is.null("add.metadata")) columns(yy) <- add.metadata
 		if(!is.null(outfile)) writeLines(as.character(yy), file=outfile)
@@ -143,7 +139,7 @@ biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 		})
 	}
 
-metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file=NULL) {
+metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file) {
 #-----------------------------------------------------------------------------------------
 # get metadata without data.
 #
@@ -158,7 +154,7 @@ metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file=NULL) {
 #
 # suppressWarnings() is necessary here since API doesn't return everything it says it will
 #-----------------------------------------------------------------------------------------
-	if (!is.null (file)) x <- readSet(file)
+	if (!missing (file)) x <- readSet(file)
 	x <- scrubSet(x)
 	y <- scrapeSet(x) [1]
 
@@ -231,7 +227,7 @@ dir.MGRAST <- function (from, to, length.out=0, ..., quiet=TRUE) {
 	y
 	}
 
-search.MGRAST <- function (public=NULL, detail=NULL, match.all=TRUE, ..., quiet=FALSE) {
+search.MGRAST <- function (public=NULL, detail=NULL, match.all=TRUE, ..., quiet=TRUE) {
 #-----------------------------------------------------------------------------------------
 #  for "..." arguments see:
 #    doc.MGRAST(3, head=c('metagenome','query','parameters','options'))}

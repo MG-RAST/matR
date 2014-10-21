@@ -8,7 +8,7 @@ parAuto <- function (par.name, n) {
 			} else if (n <= length (LETTERS)) {
 				LETTERS [1:n]
 			} else
-				stop ("automatic \"pch\" values are insufficient; specify explicit values") },
+				stop ("automatic \'pch\' values are insufficient; specify explicit values") },
 		col = {
 			if (missing (n)) {
 				"grey50"
@@ -19,7 +19,7 @@ parAuto <- function (par.name, n) {
 			} else if (n <= length (colors ())) {
 				colors () [floor (seq (1, length (colors ()), len=n))]
 			} else
-				stop ("automatic \"col\" values are insufficient; specify explicit values") },
+				stop ("automatic \'col\' values are insufficient; specify explicit values") },
 		cex = {
 			if (missing (n)) {
 				0.8
@@ -28,7 +28,7 @@ parAuto <- function (par.name, n) {
 				max <- 2 - 1.0 / n
 				seq (min, max, len=n)
 			} },
-		stop ("automatic \"", par.name, "\" values are unavailable; specify explicit values"))
+		stop ("automatic \'", par.name, "\' values are unavailable; specify explicit values"))
 	}
 
 pchByName <- c(

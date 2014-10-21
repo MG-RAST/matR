@@ -8,24 +8,24 @@ Get annotation information of samples as BIOM data
 
 \description{
 Retrieve annotation pipeline information (such as abundance profiles) 
-for specified samples or projects into an object of class "biom".
+for specified metagenomes and projects into an object of class \code{biom}.
 }
 
 \usage{
 biomRequest(x, request=c("function", "organism", "feature"), ..., 
-	block, wait=TRUE, quiet=FALSE, file=NULL, outfile=NULL)
+  block, wait=TRUE, quiet=FALSE, file, outfile)
 
 \method{biom}{environment}(x, wait=TRUE, ..., quiet=FALSE)
 }
 
 \arguments{
-  \item{x}{a set of samples or projects; or a request ticket ("character" or "environment")}
+  \item{x}{a set of metagenomes and/or projects; or a request ticket (\code{character} or \code{environment})}
   \item{request}{choice of annotation type (string)}
-  \item{\dots}{arguments specifying or qualifying the data desired ("biomRequest" only)}
-  \item{block}{number of samples per API call ("integer")}
-  \item{wait}{return only when data is complete? ("logical")}
-  \item{quiet}{suppress messages and warnings? ("logical")}
-  \item{file}{file containing a set of samples or projects (string)}
+  \item{\dots}{arguments specifying or qualifying the data desired (\code{biomRequest()} only)}
+  \item{block}{number of metagenomes per API call (\code{integer})}
+  \item{wait}{return only when data is complete? (\code{logical})}
+  \item{quiet}{suppress messages and warnings? (\code{logical})}
+  \item{file}{file containing a set of metagenomes or projects (string)}
   \item{outfile}{file to save the retrieved data (string)}
 }
 
@@ -36,8 +36,8 @@ to the examples and vignettes provided.
 }
 
 \value{
-For "biomRequest()", an "environment", if "wait" is "FALSE".
-Otherwise, and for "biom.environment()", a "biom" object.
+For \code{biomRequest()}, an \code{environment}, if \code{wait=FALSE}.
+Otherwise, and for \code{biom.environment()}, a \code{biom} object.
 }
 
 \author{Daniel T. Braithwaite}

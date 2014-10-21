@@ -11,11 +11,11 @@
 #  set-7.tsv		10 metagenomes and 3 projects				#  not built, for now
 #-----------------------------------------------------------------------------------------
 
-demoSets <- function (n=TRUE) {
-	dir (file.path (path.package ("matR"), "extdata"), pattern="set-*", full.names=TRUE) [n]
+demoSets <- function () {
+	dir (file.path (path.package ("matR"), "extdata"), pattern="set-*", full.names=TRUE)
 	}
 
-buildDemoSets <- function (which=TRUE, file="sample-sets.rda") {
+buildDemoSets <- function (n=TRUE, file="demoObjects.rda") {
 
 	setParams <- list(
 		list (request="function", group_level="level2"),							# set-1
@@ -200,8 +200,8 @@ dependencies <- function (prompt = TRUE) {
 #  comments are not displayed.  commands are reformatted to standard appearance.
 #---------------------------------------------------------------------------------
 
-step.through <- function (demo, file=NULL) {
-	stepper (if (!is.null (file)) {
+step.through <- function (demo, file) {
+	stepper (if (!missing (file)) {
 			file
 		} else
 			file.path (path.package ("matR"), "demo", paste0 (demo, ".R")))

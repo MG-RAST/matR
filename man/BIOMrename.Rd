@@ -1,4 +1,4 @@
-\name{BIOMidReplace}
+\name{BIOMrename}
 \alias{dimnames<-.biom}
 
 \title{
@@ -6,7 +6,7 @@ Change row and column identifiers of BIOM data
 }
 
 \description{
-Change the "dimnames" (that is, the BIOM row and column "ids") of an object of class "biom".
+Change the \code{dimnames} (that is, the BIOM row and column \code{ids}) of an object of class \code{biom}.
 }
 
 \usage{
@@ -14,8 +14,8 @@ Change the "dimnames" (that is, the BIOM row and column "ids") of an object of c
 }
 
 \arguments{
-  \item{x}{an object ("biom")}
-  \item{value}{new row and column identifiers ("list" of "character")}
+  \item{x}{an object (\code{biom})}
+  \item{value}{new row and column identifiers (\code{list} of \code{character})}
 }
 
 \details{
@@ -25,7 +25,7 @@ to the examples and vignettes provided.
 }
 
 \value{
-The argument "x" with updated row and column "id"s (that is, "dimnames").
+The argument \code{x} with updated row and column \code{id}s (that is, \code{dimnames}).
 }
 
 \author{Daniel T. Braithwaite}

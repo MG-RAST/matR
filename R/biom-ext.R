@@ -103,7 +103,7 @@ insertHelper <- function (xx, yy, name) {
 	x$rows <- x$rows [match (rownames(m), rownames(x))]
 	x$columns <- x$columns [match (colnames(m), colnames(x))]
 	x$date <- strftime (Sys.time())
-	x$id <- paste0 ("derived with ", deparse (match.call(), width=500))
+	x$id <- paste0 ("derived with ", deparse (match.call(), width.cutoff=500))
 	x$generated_by <- tagline()
 
 	if (is.null (x$sparse)) {
@@ -144,9 +144,9 @@ merge.biom <- function (x, y, ...) {
 	if (anyDuplicated (new.column.names))
 		stop("merge prevented by duplicated columns")
 	if (anyDuplicated (c(rownames(x), rownames(y))))
-		warning ("merging with rows in common takes metadata from \"x\"")
+		warning ("merging with rows in common takes row metadata from \'x\'")
 	if (x$type != y$type)
-		warning ("merging different \"type\"s forces common \"type\"")
+		warning ("merging different \'type\'s forces common \'type\'")
 
 	nc <- length (new.column.names)
 	new.columns <- append (x$columns, y$columns)
@@ -164,7 +164,7 @@ merge.biom <- function (x, y, ...) {
 
 	if (is.null (x$sparse) || is.null (y$sparse)) {
 		if (!is.null (x$sparse) || !is.null (y$sparse))
-			warning ("\"sparse\" expanded to merge with \"dense\"")
+			warning ("\'sparse\' expanded to merge with \'dense\'")
 		sparse <- NULL
 		mm <- matrix(
 			0, nrow=nr, ncol=nc,
@@ -188,7 +188,7 @@ merge.biom <- function (x, y, ...) {
 	zz <- biom (mm, x$type, sparse)
 	zz$rows <- new.rows
 	zz$columns <- new.columns
-	zz$id <- paste0 ("derived with ", deparse (match.call(), width=500))
+	zz$id <- paste0 ("derived with ", deparse (match.call(), width.cutoff=500))
 	zz$generated_by <- tagline()
 	zz
 	}

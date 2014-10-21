@@ -1,28 +1,15 @@
 library(matR)
-N.examples <- 1:4
-ExList <- mget (paste0 ("xx", N.examples), inherits=TRUE)
+N <- 1:4
 
 #-----------------------------------------------------------------------------------------
-#  CRAN tests
+#  OK FOR CRAN
 #-----------------------------------------------------------------------------------------
 
-
-
-
-
-#-----------------------------------------------------------------------------------------
-#  DEVEL tests and feature demonstrationss
-#-----------------------------------------------------------------------------------------
-	
-#-----------------------------------------------------------------------------------------
-#  build example BIOM objects
-#-----------------------------------------------------------------------------------------
-gg <- buildDemoSets()
-unlink (gg)
+sapply (demoSets(), readSet, simplify=FALSE)		#  check example ID files are available
+names (.Last.value)
 
 #-----------------------------------------------------------------------------------------
-#  check example ID files are available
+#  NOT OK FOR CRAN
 #-----------------------------------------------------------------------------------------
-ff <- demoSets()
-cat ("Sample files:", ff, sep="\n")
-li <- sapply (ff, readSet, simplify=FALSE)
+
+# unlink (buildDemoSets (N))						#  build example BIOM objects

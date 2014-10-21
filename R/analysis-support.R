@@ -6,7 +6,7 @@ resolve <- function (first, second) {
 	}
 
 
-parMapper <- function (object, name.map, value.map) {
+parMap <- function (object, name.map, value.map) {
 #---------------------------------------------------------------------
 #	produce par values given mappings.  input is:
 #		xx			biom object (with metadata)
@@ -104,33 +104,33 @@ parMapper <- function (object, name.map, value.map) {
 getMetColumns <- function (name, xx) {
 	yy <- columns (xx, name)
 	if (ncol (yy) != 1)
-		stop ("\"", name, "\" does not identify a unique column metadata field")
+		stop ("\'", name, "\' does not identify a unique column metadata field")
 	yy [[1]]
 	}
 
 getMetRows <- function (name, xx) {
 	yy <- rows (xx, name)
 	if (ncol (yy) != 1)
-		stop ("\"", name, "\" does not identify a unique row metadata field")
+		stop ("\'", name, "\' does not identify a unique row metadata field")
 	yy [[1]]
 	}
 
-subMetColumns <- function (name, xx) {
+subColumn <- function (name, xx) {
 	if (length (name) != 1 ||
 		!is.character (name) ||
 		substr (name, 1, 2) != "$$") return (name)
 	yy <- columns (xx, substring (name, 3))
 	if (ncol (yy) != 1)
-		stop ("\"", name, "\" does not identify a unique column metadata field")
+		stop ("\'", name, "\' does not identify a unique column metadata field")
 	as.character (yy [[1]])
 	}
 
-subMetRows <- function (name, xx) {
+subRow <- function (name, xx) {
 	if (length (name) != 1 ||
 		!is.character (name) ||
 		substr (name, 1, 2) != "$$") return (name)
 	yy <- rows (xx, substring (name, 3))
 	if (ncol (yy) != 1)
-		stop ("\"", name, "\" does not identify a unique row metadata field")
+		stop ("\'", name, "\' does not identify a unique row metadata field")
 	as.character (yy [[1]])
 	}

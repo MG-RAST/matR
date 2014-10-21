@@ -42,9 +42,9 @@ image.biom <- function(
 #  apply metadata references if present
 #  apply metadata mapping
 #---------------------------------------------------------------------
-	arg$labRow <- subMetRows (arg$labRow, x)
-	arg$labCol <- subMetColumns (arg$labCol, x)
-	arg [names (map)] <- parMapper (x, map, arg)
+	arg$labRow <- subRow (arg$labRow, x)
+	arg$labCol <- subColumn (arg$labCol, x)
+	arg [names (map)] <- parMap (x, map, arg)
 
 	par <- resolve (arg, list(
 		x = as.matrix (x, TRUE),

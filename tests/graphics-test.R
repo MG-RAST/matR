@@ -1,34 +1,21 @@
 library(matR)
-N.examples <- 1:4
-ExList <- mget (paste0 ("xx", N.examples), inherits=TRUE)
 
 #-----------------------------------------------------------------------------------------
-#  CRAN tests
+#  OK FOR CRAN
 #-----------------------------------------------------------------------------------------
 
-
-
-
-
-#-----------------------------------------------------------------------------------------
-#  DEVEL tests and feature demonstrationss
-#-----------------------------------------------------------------------------------------
-	
-#-----------------------------------------------------------------------------------------
-#  parMapper()
-#-----------------------------------------------------------------------------------------
-parMapper (xx1, 								# extraneous element in map
-		name.map = c (							# no map for "col"
-			col="host_common_name",				# full map for "pch" includes "NA"
+parMap (xx1, 								# extraneous element in map
+		name.map = c (						# no map for "col"
+			col="host_common_name",			# full map for "pch" includes "NA"
 			pch="samp_store_temp"),
 		value.map = list (
 			pch = c (
 				"-80"="+",
 				"NA"="x"),
 			extraneous = 5000))
-parMapper (xx1, 								# extraneous element in map
-		name.map = c (							# partial map for "col" (1 specified)
-			col="host_common_name",				# full map for "pch" includes "NA"
+parMap (xx1, 								# extraneous element in map
+		name.map = c (						# partial map for "col" (1 specified)
+			col="host_common_name",			# full map for "pch" includes "NA"
 			pch="samp_store_temp"),
 		value.map = list (
 			col = c (Mouse="blue"),
@@ -36,9 +23,9 @@ parMapper (xx1, 								# extraneous element in map
 				"-80"="+",
 				"NA"="x"),
 			extraneous = 5000))
-parMapper (xx1, 								# extraneous element in map
-		name.map = c (							# partial map for "col" (2 specified)
-			col="host_common_name",				# full map for "pch" includes "NA"
+parMap (xx1, 								# extraneous element in map
+		name.map = c (						# partial map for "col" (2 specified)
+			col="host_common_name",			# full map for "pch" includes "NA"
 			pch="samp_store_temp"),
 		value.map = list (
 			col = c (
@@ -48,9 +35,9 @@ parMapper (xx1, 								# extraneous element in map
 				"-80"="+",
 				"NA"="x"),
 			extraneous = 5000))
-parMapper (xx1, 								# extraneous element in map
-		name.map = c (							# partial map for "col" with "NA" specification for "other"
-			col="host_common_name",				# full map for "pch" includes "NA"
+parMap (xx1, 								# extraneous element in map
+		name.map = c (						# partial map for "col" with "NA" specification for "other"
+			col="host_common_name",			# full map for "pch" includes "NA"
 			pch="samp_store_temp"),
 		value.map = list (
 			col = c (

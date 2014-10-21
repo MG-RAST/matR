@@ -14,7 +14,7 @@ Apply mathematical transformations to BIOM data
 }
 
 \description{
-Prepare an object of class "biom" for further analysis 
+Prepare an object of class \code{biom} for further analysis 
 by applying selected transformations with specified parameters.
 }
 
@@ -26,17 +26,17 @@ t_ColScale(x, ...)
 t_DENorm(x, DEparam, ...)
 t_Log(x, ...)
 t_NA2Zero(x, ...)
-t_Threshold(x, entry.min=1, row.min=1, col.min=1)
+t_Threshold(x, entry.min=2, row.min=2, col.min=2)
 }
 
 \arguments{
-  \item{_data}{an object ("biom")}
-  \item{x}{"matrix"}
+  \item{_data}{an object (\code{biom})}
+  \item{x}{\code{matrix}}
   \item{DEparam}{arguments to differential expression normalization}
-  \item{entry.lim}{make zero entries not exceeding this number ("numeric")}
-  \item{row.lim}{remove rows with sum not exceeding this number ("numeric")}
-  \item{col.lim}{remove columns with sum not exceeding this number ("numeric")}
-  \item{\dots}{transformations to apply and parameters thereto (see below)}
+  \item{entry.min}{make zero entries not exceeding this number (\code{numeric})}
+  \item{row.min}{remove rows with sum not exceeding this number (\code{numeric})}
+  \item{col.min}{remove columns with sum not exceeding this number (\code{numeric})}
+  \item{\dots}{transformations to apply and arguments to them (see below)}
 }
 
 \details{
@@ -52,19 +52,12 @@ to the examples and vignettes provided.
 }
 
 \note{
-The function "transform()" is an S3 generic in base R.
-However, the method documented here does not apply any existing methods,
+The function \code{transform()} is an S3 generic in base R.
+However, the method documented here does not apply any existing methods
 and offers rather different functionality.
 }
 
 \author{Daniel T. Braithwaite and Kevin P. Keegan}
-
-\note{
-The function "transform()" is declared S3 generic in the base package "stats".
-The method documented here does not apply any existing methods, however,
-but rather relies on entirely different libraries for computation and graphical rendering.
-(See below.)
-}
 
 \seealso{
 \code{BIOM.utils::\link{biom}},
@@ -76,7 +69,7 @@ but rather relies on entirely different libraries for computation and graphical 
 transform (xx1, t_Log)
 
 #  additional filters
-transform (xx1, NA2Zero, t_Threshold, t_Log)
+transform (xx1, t_NA2Zero, t_Threshold, t_Log)
 
 #  what is lost with more stringent filtering of low-abundance annotations
 yy <- transform (xx2, t_NA2Zero, t_Threshold, t_Log)

@@ -6,11 +6,12 @@
 \description{Step through a demo line-by-line.}
 
 \usage{
-step.through(s)
+step.through(demo, file)
 }
 
 \arguments{
-  \item{s}{path to source file ("character")}
+  \item{demo}{name of demo (\code{character})}
+  \item{file}{path to source file (\code{character})}
 }
 
 \details{Internal and undocumented at present.}

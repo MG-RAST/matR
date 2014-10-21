@@ -1,23 +1,26 @@
 #---------------------------------------------------------------------
 #  Distance, with expanded functionality
+#
+#  "biom" method is deliberately prototyped with only the arguments
+#  that it actually touches, plus those (i.e., "method") preceding.
 #---------------------------------------------------------------------
 
 distx <- function (x, ...) UseMethod ("distx")
 
-distx.biom <- function (
-	x, y=NULL, 
-	groups=NULL, 
-	method=c("euclidean", "bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference", "maximum", "manhattan", "canberra", "binary", "minkowski"),
-	..., 
-	bycol=TRUE) {
-
-	distx (as.matrix (x, expand=TRUE), y, subMetColumns (groups, x), match.arg (method), ..., bycol)
+distx.biom <- function (x, method="euclidean", groups=NULL, ..., bycol=TRUE) {
+	distx(
+		as.matrix (x, expand=TRUE), 
+		method, 
+		if (bycol) subColumn (groups, x) else subRow (groups, x),
+		...,
+		bycol=bycol)
 	}
 
 distx.matrix <- function(
-	x, y=NULL,
-	groups=NULL, 
+	x, 
 	method=c("euclidean", "bray-curtis", "jaccard", "mahalanobis", "sorensen", "difference", "maximum", "manhattan", "canberra", "binary", "minkowski"),
+	groups=NULL, 
+	p=NULL,
 	..., 
 	bycol=TRUE) {
 
@@ -27,14 +30,14 @@ distx.matrix <- function(
 		ecodist::distance
 	} else stats::dist
 
-	if (!is.null (y)) {
-		dist2y <- apply (x, 1, 
-				function (r, y, m) dist.fun (rbind (r, y), m),
-				y, method)
+	if (!is.null (p)) {
+		dist2p <- apply (x, 1, 
+				function (r, p, m) dist.fun (rbind (r, p), m),
+				p, method)
 		return(
 			if (is.null (groups)) {
-				dist2y
-			} else tapply (dist2y, groups, mean))
+				dist2p
+			} else tapply (dist2p, groups, mean))
 		}
 
 	if (is.null (groups)) return (dist.fun (x, method))

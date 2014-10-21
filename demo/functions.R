@@ -1,0 +1,10 @@
+example("biomRequest")
+example("boxplot.biom")
+example("[.biom")
+example("princomp.biom")
+example("merge.biom")
+example("rowstats")
+example("image.biom")
+example("distx")
+example("transform.biom")
+

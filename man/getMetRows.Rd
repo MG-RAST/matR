@@ -10,8 +10,8 @@ getMetRows(name, xx)
 }
 
 \arguments{
-  \item{name}{string ("character")}
-  \item{xx}{object ("biom")}
+  \item{name}{string (\code{character})}
+  \item{xx}{object (\code{biom})}
 }
 
 \details{Internal and undocumented at present.}
