@@ -10,6 +10,7 @@ During an R session, load matR with:
 > library(matR)
 
 INSTALLATION (SEE INSTALLATION NOTE BELOW!)
+
 \## Make sure to have a current version of the R language (http://www.r-project.org).
 \## Then install during an R session with:
 \##
