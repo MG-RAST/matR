@@ -26,8 +26,8 @@ distx(x, ...)
 \arguments{
   \item{x}{{a matrix-like object (\code{matrix} or \code{biom})}}
   \item{method}{name of distance or dissimilarity measure (\code{character})}
-  \item{groups}{a grouping of columns (or rows) (\code{character} or \code{factor})}
-  \item{p}{a single column (or row) (\code{numeric})}
+  \item{groups}{a grouping of columns/rows (\code{character} or \code{factor})}
+  \item{p}{a single column/row (\code{numeric})}
   \item{\dots}{unused}
   \item{bycol}{compute columnwise rather than rowwise? (\code{logical})}
 }
@@ -35,13 +35,13 @@ distx(x, ...)
 \details{
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
-to the examples and vignettes provided.
+to the examples provided.
 }
 
 \value{
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
-to the examples and vignettes provided.
+to the examples provided.
 }
 
 \author{Daniel T. Braithwaite and Kevin P. Keegan}
@@ -52,15 +52,15 @@ to the examples and vignettes provided.
 }
 
 \examples{
-#  Euclidean distance between samples based on raw counts
+####  Euclidean distance between samples based on raw counts
 distx (xx1)
 
-#  alternate dissimilarity measure
+####  alternate dissimilarity measure
 distx (xx1, method="bray-curtis")
 
-#  distance in log-transformed data
+####  distance in log-transformed data
 distx (transform (xx2, t_Log))
 
-#  mean pairwise distance between biomes
+####  mean pairwise distance between biomes
 distx (xx3, groups="$$biome", method="bray-curtis")
 }

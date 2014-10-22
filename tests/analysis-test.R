@@ -269,60 +269,60 @@ princomp(
 	mar=c(1,1,0,0))
 
 #-----------------------------------------------------------------------------------------
-#  image()				
+#  image() --- omitted for CRAN
 #-----------------------------------------------------------------------------------------
-xx1.log <- transform (xx1, t_Log)
-xx2.log <- transform (xx2, t_Log)
-image(
-	xx1.log,
-	margins=c(6,13),
-	lwid=c(1,1.75), lhei=c(1,10),
-	cexRow=0.3, cexCol=0.8)
-image(
-	xx2.log,
-	margins=c(6,6),
-	lwid=c(1,2.5), lhei=c(1,10),
-	cexRow=0.5, cexCol=0.8)
-image(
-	xx2.log,
-	margins=c(9,6),
-	lwid=c(1,2.5), lhei=c(1,10),
-	cexRow=0.5, cexCol=0.8,
-	labCol="$$material")
-image(
-	xx2.log,
-	margins=c(4,6),
-	lwid=c(1,2.5), lhei=c(1,10),
-	cexRow=0.5, cexCol=0.8,
-	labCol="$$project.id")
- 
-zz <- image (xx1.log)
-image (xx1.log, 											# is this working?
-	main = "title added without recompute",
-	margins=c(5,5),
-	lhei=c(1,3), lwid=c(1,3),
-	labRow=NA,
-	rerender=zz)
-
-image (xx1.log, 											# row subselection
-	rows = (rows(xx1,"ontology1")[[1]] == "Clustering-based subsystems"),
-	labRow="$$ontology2",
-	lwid=c(1,3),
-	cexRow=0.5,
-	margins=c(5,10))
-
-image (xx1.log, columns = c(1,2,4))							# column subselection
-
-image (xx1.log, labCol=letters[1:7])
-image (xx1.log, labCol = "$$data.age")
-image (xx1.log, labCol=columns(xx1, "data.age") [[1]])		# same as previous
-
-image (xx1.log, rows=1:20, labRow=1:20)
-image (xx1.log, labRow="$$ontology1")
-image (xx1.log, labRow=rows(xx1, "ontology1")[[1]])			# same as previous
-
-image(														# no dendrograms
-	xx2.log,
-	dendrogram='none',
-	lwid=c(1,5), lhei=c(1,10),
-	margins=c(5,7))
+# xx1.log <- transform (xx1, t_Log)
+# xx2.log <- transform (xx2, t_Log)
+# image(
+# 	xx1.log,
+# 	margins=c(6,13),
+# 	lwid=c(1,1.75), lhei=c(1,10),
+# 	cexRow=0.3, cexCol=0.8)
+# image(
+# 	xx2.log,
+# 	margins=c(6,6),
+# 	lwid=c(1,2.5), lhei=c(1,10),
+# 	cexRow=0.5, cexCol=0.8)
+# image(
+# 	xx2.log,
+# 	margins=c(9,6),
+# 	lwid=c(1,2.5), lhei=c(1,10),
+# 	cexRow=0.5, cexCol=0.8,
+# 	labCol="$$material")
+# image(
+# 	xx2.log,
+# 	margins=c(4,6),
+# 	lwid=c(1,2.5), lhei=c(1,10),
+# 	cexRow=0.5, cexCol=0.8,
+# 	labCol="$$project.id")
+#  
+# zz <- image (xx1.log)
+# image (xx1.log, 											# is this working?
+# 	main = "title added without recompute",
+# 	margins=c(5,5),
+# 	lhei=c(1,3), lwid=c(1,3),
+# 	labRow=NA,
+# 	rerender=zz)
+# 
+# image (xx1.log, 											# row subselection
+# 	rows = (rows(xx1,"ontology1")[[1]] == "Clustering-based subsystems"),
+# 	labRow="$$ontology2",
+# 	lwid=c(1,3),
+# 	cexRow=0.5,
+# 	margins=c(5,10))
+# 
+# image (xx1.log, columns = c(1,2,4))							# column subselection
+# 
+# image (xx1.log, labCol=letters[1:7])
+# image (xx1.log, labCol = "$$data.age")
+# image (xx1.log, labCol=columns(xx1, "data.age") [[1]])		# same as previous
+# 
+# image (xx1.log, rows=1:20, labRow=1:20)
+# image (xx1.log, labRow="$$ontology1")
+# image (xx1.log, labRow=rows(xx1, "ontology1")[[1]])			# same as previous
+# 
+# image(														# no dendrograms
+# 	xx2.log,
+# 	dendrogram='none',
+# 	lwid=c(1,5), lhei=c(1,10),
+# 	margins=c(5,7))

@@ -6,7 +6,7 @@ Change row and column identifiers of BIOM data
 }
 
 \description{
-Change the \code{dimnames} (that is, the BIOM row and column \code{ids}) of an object of class \code{biom}.
+Change the \code{dimnames} (BIOM row and column \code{ids}) of an object of class \code{biom}.
 }
 
 \usage{
@@ -21,7 +21,7 @@ Change the \code{dimnames} (that is, the BIOM row and column \code{ids}) of an o
 \details{
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
-to the examples and vignettes provided.
+to the examples provided.
 }
 
 \value{
@@ -36,10 +36,10 @@ The argument \code{x} with updated row and column \code{id}s (that is, \code{dim
 }
 
 \examples{
-#  even if not particularly useful, this is allowed
+####  even if not particularly useful, this is allowed
 yy <- xx4
-dimnames (yy) <- list (letters [1:nrow(yy)], LETTERS [1:nrow(yy)])
+dimnames (yy) <- list (letters [1:nrow(yy)], LETTERS [1:ncol(yy)])
 
-#  more useful: renaming columns by codes taken from metadata
+####  more useful: renaming columns by codes taken from metadata
 colnames (yy) <- columns (yy, "sample.data.sample_name")
 }

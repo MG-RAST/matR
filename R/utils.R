@@ -13,7 +13,7 @@
 #  set-3.tsv		32 metagenomes (in three groups)
 #  set-4.tsv		16 metagenomes (in three groups)
 #
-#  not included, for now:
+#  do not use these for now:
 #  set-5.tsv		1606 metagenomes (HMP)
 #  set-6.tsv		4 projects of various sizes
 #  set-7.tsv		10 metagenomes and 3 projects

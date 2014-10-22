@@ -16,9 +16,9 @@ search.MGRAST(public=NULL, detail=NULL, match.all=TRUE, ..., quiet=TRUE)
 }
 
 \arguments{
-  \item{public}{... (\code{logical})}
-  \item{detail}{... (\code{logical} or \code{character})}
-  \item{match.all}{... (\code{logical})}
+  \item{public}{optional restriction on sharing status (\code{NULL} or \code{logical})}
+  \item{detail}{level of metadata detail (\code{NULL}, \code{TRUE}, or \code{character})}
+  \item{match.all}{require match on all provided criteria? (\code{logical})}
   \item{\dots}{arguments to \code{call.MGRAST()}}
   \item{quiet}{suppress messages and warnings? (\code{logical})}
 }
@@ -26,13 +26,13 @@ search.MGRAST(public=NULL, detail=NULL, match.all=TRUE, ..., quiet=TRUE)
 \details{
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
-to the examples and vignettes provided.
+to the examples provided.
 }
 
 \value{
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
-to the examples and vignettes provided.
+to the examples provided.
 }
 
 \author{Daniel T. Braithwaite}
@@ -44,8 +44,6 @@ to the examples and vignettes provided.
 }
 
 \examples{
-\dontrun{
-}
-#  relevant documentation for the underlying API call
+####  relevant documentation for the underlying API call
 doc.MGRAST (3, head=c('metagenome','query','parameters','options'))
 }

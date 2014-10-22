@@ -1,22 +1,22 @@
 Package: matR
 Type: Package
 Title: metagenomics analysis tools for R
-Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), email = "contact.dtb@gmail.com"),
- person ("Kevin", "Keegan", role = "aut", email = "keegan@mcs.anl.gov"))
+Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), 
+ email = "contact.dtb@gmail.com"), person ("Kevin", "Keegan", role = "aut", 
+ email = "keegan@mcs.anl.gov"))
 Version: 0.9
 Depends: R (>= 2.10), MGRASTer, BIOM.utils, graphics, stats, utils
 Imports: 
 Suggests: RJSONIO, qvalue, ecodist, gplots, scatterplot3d
 URL: https://github.com/MG-RAST/matR/
 Date: 2014-10-22
-Description: matR is an analysis module, extending the MG-RAST metagenome annotation pipeline.  
- Customized versions of statistical and visualization tools access metagenome annotations and 
- metadata transparently, with authentication for private data.  As an add-on package to the 
- popular R programming language for statistics, matR enables analysis to use the complete 
- functionality of that environment and its extensions.
+Description: matR is an analysis platform for metagenomics combining 
+ specialized analysis tools and workflows, easy handling of the BIOM 
+ format, and transparent access to MG-RAST resources.  matR integrates 
+ easily with other R packages.
 License: BSD_2_clause + file LICENSE
 Copyright: University of Chicago
 LazyData: yes
-Collate: utils.R biom-ext.R client.R graphics.R analysis-support.R analysis-misc.R distx.R rowstats.R 
- transform.R boxplot.R princomp.R image.R init.R
-
+Collate: utils.R biom-ext.R client.R graphics.R analysis-support.R 
+ analysis-misc.R distx.R rowstats.R transform.R boxplot.R princomp.R 
+ image.R init.R

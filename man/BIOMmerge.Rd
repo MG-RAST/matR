@@ -22,7 +22,7 @@ Merge two objects of class \code{biom}, maintaining metadata and other class str
 \details{
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
-to the examples and vignettes provided.
+to the examples provided.
 }
 
 \value{
@@ -36,11 +36,11 @@ A \code{biom} object resulting from merging \code{x} and \code{y}.
 }
 
 \examples{
-#  merging only requires all colnames to be unique, so nonsense can be performed
+####  merging requires only that all colnames be unique, so nonsense can be performed
 merge (xx1, xx4)
 
-#  a more reasonable example could come from using different normalizations
+####  a more likely example, based on applying different normalizations
 aa <- transform (xx4 [,1:8], t_Threshold, t_Log)
 bb <- transform (xx4 [,9:16], t_Threshold=list(entry.min=5), t_Log)
-xx_norm <- merge (aa, bb)
+xx4_norm <- merge (aa, bb)
 }

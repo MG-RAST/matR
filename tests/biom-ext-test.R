@@ -8,11 +8,11 @@ List <- mget (paste0 ("xx", N), inherits=TRUE)
 
 f <- function (x, y) {										# merge and check integrity
 	z <- merge (x,y)
-	applyBiomMethods (z)
-	message ("rows:\t", nrow(x), "(x)\t", nrow(y), "(y)\t", nrow(z), "(merge)\t", 
-		length (intersect (rownames(x), rownames(y))), "(in common)\n")
-	message ("cols:\t", ncol(x), "(x)\t", ncol(y), "(y)\t", ncol(z), "(merge)\t", 
-		length (intersect (colnames(x), colnames(y))), "(in common)\n")
+#	applyBiomMethods (z)									# truncated for CRAN
+#	message ("rows:\t", nrow(x), "(x)\t", nrow(y), "(y)\t", nrow(z), "(merge)\t", 
+#		length (intersect (rownames(x), rownames(y))), "(in common)\n")
+#	message ("cols:\t", ncol(x), "(x)\t", ncol(y), "(y)\t", ncol(z), "(merge)\t", 
+#		length (intersect (colnames(x), colnames(y))), "(in common)\n")
 	}
 
 for (j in matrix2list (t (combn (N, 2)))) {

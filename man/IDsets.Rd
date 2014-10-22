@@ -10,8 +10,9 @@ Handle sets of metagenome and project IDs
 }
 
 \description{
-Utility functions to handle sets of metagenome and project IDs,
-possibly with metadata, and to establish a standard format.
+Utility functions to to establish a standard format
+and handle sets of metagenome and project IDs,
+possibly with metadata.
 }
 
 \usage{

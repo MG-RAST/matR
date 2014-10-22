@@ -25,14 +25,11 @@ dir.MGRAST(from, to, length.out=0, ..., quiet=TRUE)
 \details{
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
-to the examples and vignettes provided.
+to the examples provided.
 }
 
 \value{
-A \code{data.frame}.
-Complete technical documentation is forthcoming.  
-For the current preliminary release, please refer
-to the examples and vignettes provided.
+A \code{data.frame} of project information.
 }
 
 \author{Daniel T. Braithwaite}
@@ -45,25 +42,25 @@ to the examples and vignettes provided.
 
 \examples{
 \dontrun{
-#  names of all public projects
+####  names of all public projects
 dir.MGRAST()$name
 
-#  ids of all public projects
+####  ids of all public projects
 rownames (dir.MGRAST())
 
-#  investigators who have contributed public projects
+####  investigators who have contributed public projects
 unique (dir.MGRAST()$pi)
 
-#  first 25 projects submitted to MG-RAST
+####  first 25 projects submitted to MG-RAST
 dir.MGRAST (len=25, order="id")
 
-#  detailed information about them
+####  detailed information about them
 names (dir.MGRAST(len=25, order="id", verbosity="verbose"))
 
-#  quick look at public projects
+####  quick look at public projects
 strtrim (dir.MGRAST (verbosity="verbose")$description, 70)
 }
 
-#  relevant documentation for the underlying API call
+####  relevant documentation for the underlying API call
 doc.MGRAST (3, head=c('project','query','parameters','options'))
 }

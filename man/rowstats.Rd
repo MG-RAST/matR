@@ -35,13 +35,13 @@ rowstats(x, ...)
 \details{
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
-to the examples and vignettes provided.
+to the examples provided.
 }
 
 \value{
 Complete technical documentation is forthcoming.  
 For the current preliminary release, please refer
-to the examples and vignettes provided.
+to the examples provided.
 }
 
 \author{Kevin P. Keegan and Daniel T. Braithwaite}
@@ -54,11 +54,11 @@ to the examples and vignettes provided.
 }
 
 \examples{
-#  Kruskal test applied, for the case of more than two metagenome groups
+####  Kruskal test applied, for the case of more than two metagenome groups
 columns (xx1, "host_common_name")
 str (rowstats (xx1, groups="$$host_common_name", test="Kruskal"))
 
-#  force a desired grouping of metagenomes
+####  force a desired grouping of metagenomes
 gg <- columns (xx2, "material") [[1]]
 gg
 levels (gg) <- levels (gg) [c(1,2,2)]

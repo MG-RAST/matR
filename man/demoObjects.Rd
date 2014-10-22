@@ -16,8 +16,8 @@ BIOM annotation data for certain metagenomes and projects
 }
 
 \description{
-Objects of class \code{biom} containing annotation data for certain sets of metagenomes,
-packaged for demonstration purposes.
+Objects of class \code{biom} for demonstration purposes,
+containing annotation data for certain sets of metagenomes.
 }
 
 \usage{
@@ -33,11 +33,11 @@ yy4
 
 \details{
 \code{xx1} to \code{xx4} are packaged as examples to help users get started.
-They are objects of class \code{biom} that could be built with \code{biomRequest()}
-(but were in fact built by \code{buildDemoSets()}).
+They are objects of class \code{biom} that could be built with \code{biomRequest()}.
+They can be built in an automated way by \code{buildDemoSets()}.
 
 
-\code{yy1} to \code{yy4} correspond to the example lists \code{li1} to \code{li4} from package BIOM.utils.
+\code{yy1} to \code{yy4} correspond to the example lists \code{li1} to \code{li4} from \code{BIOM.utils}.
 That is, \code{yy#} is equal to \code{biom(li#)}.  These contain (all but the last) vacuous data.
 }
 

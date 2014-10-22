@@ -1,4 +1,5 @@
-###  a quick web tour of sites relevant to the matR project.
+
+####  a quick tour of websites relevant to the matR project.
 
 browseURL("http://cran.r-project.org")
 browseURL("http://cran.r-project.org/web/views/")

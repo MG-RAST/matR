@@ -19,7 +19,6 @@ export(
 	t_Log,
 	t_ColCenter,
 	t_ColScale,
-	t_DENorm,
 	transform.biom,
 
 	boxplot.biom,
