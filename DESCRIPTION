@@ -5,9 +5,9 @@ Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"),
  email = "contact.dtb@gmail.com"), person ("Kevin", "Keegan", role = "aut", 
  email = "keegan@mcs.anl.gov"))
 Version: 0.9
-Depends: R (>= 2.10), MGRASTer, BIOM.utils, graphics, stats
+Depends: R (>= 2.10), MGRASTer, BIOM.utils, graphics, stats, utils
 Imports: 
-Suggests: RJSONIO, qvalue, ecodist, gplots, scatterplot3d, utils
+Suggests: RJSONIO, qvalue, ecodist, gplots, scatterplot3d
 URL: https://github.com/MG-RAST/matR/
 Date: 2014-10-22
 Description: matR is an analysis platform for metagenomics combining 
