@@ -1,6 +1,7 @@
-#---------------------------------------------------------------------
-#  Principal coordinates analysis
-#---------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------
+#  principal coordinates analysis of biom object.
+#-----------------------------------------------------------------------------------------
 
 princomp.biom <- function(
 		x,
@@ -13,7 +14,7 @@ princomp.biom <- function(
 		rerender=NULL) {
 
 	x <- x [rows, columns]
-#	method <- match.arg (method)			# need a more elegant solution
+#	method <- match.arg (method)						# need to resolve this
 	arg <- list (...)
 
 	if (inherits (rerender, "pco")) {
@@ -33,11 +34,9 @@ princomp.biom <- function(
 		P <- list (values = scaled, vectors = P$vectors, dist = D)
 		}
 
-#---------------------------------------------------------------------
-#  apply metadata substitution to "labels"
-#  apply metadata mapping
-#  save arguments "labels.*" for later
-#---------------------------------------------------------------------
+####  apply metadata substitution to "labels"
+####  apply metadata mapping
+####  save arguments "labels.*" for later
 
 	arg$labels <- subColumn (arg$labels, x)
 	names (arg) [names (arg) == "labels"] <- "label.labels"
@@ -48,9 +47,9 @@ princomp.biom <- function(
 	arg.labels <- arg [substr(names(arg),1,6) == 'label.']
 	names (arg.labels) <- substring (names (arg.labels), 7)
 
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 #  one-dimensional plot
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 	if (length (dim) == 1) {
 		par <- resolve (arg.plot, list(
 			x = P$vectors [ ,dim],
@@ -67,9 +66,9 @@ princomp.biom <- function(
 		do.call (points, par)
 		abline (h=0, lty="dotted")
 
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 #  two-dimensional plot
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 	} else if (length (dim) == 2) {
 		par <- resolve (arg.plot, list(
 			x = P$vectors [ ,dim [1]],
@@ -83,12 +82,14 @@ princomp.biom <- function(
 		do.call (points, par)
 		grid ()
 
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 #  three-dimensional plot.
-#  tweak to enable consistent use of "col" and "cex".
-#  a hack:  update x and y after the call for label placement (below).
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 	} else if (length (dim) == 3) {
+
+####  tweak to enable consistent use of "col" and "cex".
+####  and a hack:  update x and y after the call for label placement (below).
+
 		names (arg.plot) [names(arg.plot) == "col"] <- "color"
 		names (arg.plot) [names(arg.plot) == "cex"] <- "cex.symbols"
 		par <- resolve (arg.plot, list(
@@ -109,10 +110,9 @@ princomp.biom <- function(
  		par [c('x','y')] <- xy [c('x','y')]
 		}
 
-#---------------------------------------------------------------------
-#  add labels, now using only arguments beginning with "label."
-#  this includes "labels" itself, per earlier tweak
-#---------------------------------------------------------------------
+####  add labels, now using only arguments beginning with "label."
+####  this includes "labels" itself, per earlier tweak
+
 	do.call (text, resolve (arg.labels, list(
 		x = par$x,
 		y = par$y,
@@ -121,9 +121,8 @@ princomp.biom <- function(
 		pos = if (length (dim) == 1) ifelse (P$vectors [,dim] > 0, 2, 4) else 4,
 		srt = if (length (dim) == 1) 60)))
 
-#---------------------------------------------------------------------
-#  structure return value
-#---------------------------------------------------------------------
+####  structure return value
+
 	P$call <- match.call()
 	class (P) <- c("pco", "list")
 	invisible (P)

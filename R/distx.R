@@ -1,9 +1,10 @@
-#---------------------------------------------------------------------
-#  Distance, with expanded functionality
+
+#-----------------------------------------------------------------------------------------
+#  distance, with expanded functionality.
 #
 #  "biom" method is deliberately prototyped with only the arguments
 #  that it actually touches, plus those (i.e., "method") preceding.
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 
 distx <- function (x, ...) UseMethod ("distx")
 
@@ -48,9 +49,8 @@ distx.matrix <- function(
 	to <- unlist (mapply (rep, 1 : (nrow(x)-1), (nrow(x)-1) : 1))
 	zz <- tapply (D, list (groups [from], groups [to]), mean)
 
-#---------------------------------------------------------------------
-#  make symmetric by replacing NA's across the diagonal
-#---------------------------------------------------------------------
+####  make symmetric by replacing NA's across the diagonal
+
 	dd <- diag (zz)
 	zz [is.na (zz)] <- 0
 	zz <- zz + t(zz)

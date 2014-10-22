@@ -11,8 +11,8 @@ library(matR)
 # ff <- demoSets() [1]
 # gg <- demoSets () [4]
 # 
-# xx <- readSet (ff)					#  7 metagenomes; IDs only --- vector
-# yy <- readSet (gg)					#  32 metagenomes; with metadata --- data.frame
+# xx <- readSet (ff)							#  7 metagenomes; IDs only --- vector
+# yy <- readSet (gg)							#  32 metagenomes; with metadata --- data.frame
 # 
 # biomRequest (file=ff)
 # biomRequest (file=gg)

@@ -5,11 +5,11 @@ N <- 1:4
 #  OK FOR CRAN
 #-----------------------------------------------------------------------------------------
 
-sapply (demoSets(), readSet, simplify=FALSE)		#  check example ID files are available
+sapply (demoSets(), readSet, simplify=FALSE)					# check demo ID files are available
 names (.Last.value)
 
 #-----------------------------------------------------------------------------------------
 #  NOT OK FOR CRAN
 #-----------------------------------------------------------------------------------------
 
-# unlink (buildDemoSets (N))						#  build example BIOM objects
+ # unlink (buildDemoSets (N))									# build demo objects

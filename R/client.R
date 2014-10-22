@@ -1,5 +1,6 @@
+
 #-----------------------------------------------------------------------------------------
-#  "Client" routines, for data transfering via MG-RAST API
+#  "Client" routines:  for data transfer using MG-RAST API.
 #
 #  General goals for API wrapping:
 #    restricting access to API functionality is ok...
@@ -11,9 +12,10 @@
 #		build in as little dependency on its current version, as possible
 #-----------------------------------------------------------------------------------------
 
+
 biomRequest <- function (x, request=c("function", "organism", "feature"), ..., 
 	block, wait=TRUE, quiet=FALSE, file, outfile) {
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 #  Post and fulfill data requests.  Important capabilities:
 #    file containing IDs only
 #    file of IDs and metadata
@@ -29,7 +31,7 @@ biomRequest <- function (x, request=c("function", "organism", "feature"), ...,
 #
 #    asynchronous 	source 		result_type 	filter 			group_level 	grep 	length 
 #    evalue 		identity	 filter_source 	hide_metadata 	id 				filter_level
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 	if (missing (request)) {
 		request <- match.arg(request)
 		warning ("\'request\' is defaulting to \'", request, "\'")
@@ -41,7 +43,7 @@ biomRequest <- function (x, request=c("function", "organism", "feature"), ...,
 	add.metadata <- NULL
 	if (is.data.frame (x)) {
 		add.metadata <- x
-		x <- rownames(x)					#  look out for reordering!
+		x <- rownames(x)									# look out for reordering!
 	}
 
 	if (missing (block)) block <- length(x)
@@ -52,7 +54,7 @@ biomRequest <- function (x, request=c("function", "organism", "feature"), ...,
 			resource='matrix',
 			request=request,
 			asynchronous=1,
-			verify=FALSE), 				#  otherwise, an erroneous message will always print
+			verify=FALSE), 									# avoid misleading warings
 		list(...))
 
 	ledger <- data.frame (start = seq(1, length(x), block), stringsAsFactors=FALSE)
@@ -85,21 +87,22 @@ biomRequest <- function (x, request=c("function", "organism", "feature"), ...,
 		}
 	}
 
+
 biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 # data retrieval: function to fulfill requests
 #
 # "..." in prototype is just good practice for generics
 # !quiet=TRUE is used to report on the download in complete detail
-#---------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 	assign("quiet", quiet, x)
 	assign("wait", wait, x)
 	with (x, {
 		repeat {
 			zz <- call.MGRAST("status", "instance", id=ledger[n, "ticket"], verify=FALSE)
-			if("data" %in% names(zz)) {										#  otherwise, data not ready
+			if("data" %in% names(zz)) {								# request may have arrived
 				yy <- try (biom(zz$data))
-				if (inherits (yy, "try-error")) {							#  got something other than biom
+				if (inherits (yy, "try-error")) {					# some other message from API
 					print (zz$data)
 					stop ("can\'t interpret server response as BIOM data")
 					}
@@ -132,7 +135,7 @@ biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 				function (ff) { 
 					load(ff); unlink(ff); yy
 					})
-		yy <- suppressWarnings (Reduce (merge.biom, ll))			#   we intend to suppress the warning about dup rows; not ideal
+		yy <- suppressWarnings (Reduce (merge.biom, ll))			# suppress dup row warning (not ideal)
 		if (!quiet && nrow (ledger) > 1) message("done")
 
 #		if(!is.null("add.metadata")) columns(yy) <- add.metadata
@@ -140,6 +143,7 @@ biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 		invisible(yy)
 		})
 	}
+
 
 metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file) {
 #-----------------------------------------------------------------------------------------
@@ -164,7 +168,7 @@ metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file) {
 		f <- function (x) simplify2array (suppressWarnings (call.MGRAST (					# keep IDs, drop URLs
 			"project", "instance", id=x, verbosity='full', quiet=quiet)) $ metagenomes,
 			higher=FALSE) [1,]
-		sapply (x, f, simplify=FALSE)											# sapply gives names to the result
+		sapply (x, f, simplify=FALSE)									# sapply retains names
 
 	} else if (is.null(detail) && y=="metagenome") {
 		f <- function (x) suppressWarnings (call.MGRAST (
@@ -182,6 +186,7 @@ metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file) {
 		}
 	}
 
+
 dir.MGRAST <- function (from, to, length.out=0, ..., quiet=TRUE) {
 #-----------------------------------------------------------------------------------------
 #  here we translate just a bit:
@@ -198,11 +203,11 @@ dir.MGRAST <- function (from, to, length.out=0, ..., quiet=TRUE) {
 #
 #  --> allow "from" and "to" to contain names
 #-----------------------------------------------------------------------------------------
-	if (missing(from) && missing(to)) {					# length.out given or ==0
+	if (missing(from) && missing(to)) {								# length.out given or ==0
 		from <- 1
-	} else if (missing(from) && length.out) {			# to and length.out given
+	} else if (missing(from) && length.out) {						# to and length.out given
 		from <- to - length.out + 1
-	} else if (missing(from))	{						# to given, only
+	} else if (missing(from))	{									# to given, only
 		from <- 1
 		length.out <- to
 		}
@@ -217,17 +222,17 @@ dir.MGRAST <- function (from, to, length.out=0, ..., quiet=TRUE) {
 		offset = from - 1))
 	y <- list2df (do.call (call.MGRAST, args) $ data)
 
-#-----------------------------------------------------------------------------------------
-#  make a data.frame.
-#  content will vary according to "verbosity".
-#  remove certain junk fields, and turn "status" (public/private) into a factor.
-#  rownames of the data.frame will always be "mgpXX"
-#-----------------------------------------------------------------------------------------
+####  make a data.frame.
+####  content will vary according to "verbosity".
+####  remove certain junk fields, and turn "status" (public/private) into a factor.
+####  rownames of the data.frame will always be "mgpXX"
+
 	rownames(y) <- y$id
 	y$id <- y$created <- y$url <- y$version <- NULL
 	y$status <- as.factor (y$status)
 	y
 	}
+
 
 search.MGRAST <- function (public=NULL, detail=NULL, match.all=TRUE, ..., quiet=TRUE) {
 #-----------------------------------------------------------------------------------------

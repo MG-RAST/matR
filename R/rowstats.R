@@ -1,9 +1,10 @@
-#---------------------------------------------------------------------
-#  Significance testing of rows (annotations)
+
+#-----------------------------------------------------------------------------------------
+#  significance testing of rows (annotations).
 #
 #  "biom" method is deliberately prototyped with only the arguments
-#  that it actually touches
-#---------------------------------------------------------------------
+#  that it actually touches.
+#-----------------------------------------------------------------------------------------
 
 rowstats <- function (x, ...) UseMethod("rowstats")
 
@@ -53,7 +54,7 @@ rowstats.matrix <- function(
 		p.value = stat [2,],
 		mean = matrix2list (apply (x, 1, tapply, groups, mean)),
 		sd = matrix2list (apply (x, 1, tapply, groups, sd)))
-	names (y$mean) <- names (y$sd) <- levels (groups)								# right order guaranteed?  think so.
+	names (y$mean) <- names (y$sd) <- levels (groups)					# right order guaranteed?  think so.
 
 # 	if (test != "ANOVA-one-way" && qvalue) {
 # 		stat [c ("q.value", "significant")] <- qvalue::qvalue (stat$p.value, fdr.level = fdr.level) [c ("qvalues", "significant")]

@@ -22,7 +22,7 @@ for (xx in List) {
 	distx (xx, p=vv, bycol=FALSE)									# from each row
 	distx (xx, p=uu, groups=1:ncol(xx) %% 4)						# from each group to given vector
 	distx (xx, p=vv, groups=1:nrow(xx) %% 4, bycol=FALSE)			# row groups
-}
+	}
 
 for (xx in List) {
 #-----------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ for (xx in List) {
 		str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="t-test-p"))
 		str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="Wilc"))
 		}
-}
+	}
 
 for (xx in List) {
 #-----------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ for (xx in List) {
 	transform (xx, t_NA2Zero, t_Threshold = list(entry=5))
 	transform (xx, t_NA2Zero, t_Threshold = list(entry=5), t_Log)
 	transform (xx, t_NA2Zero, t_Threshold = list(entry=5), t_Log, t_ColCenter)
-}
+	}
 
 for (xx in List) {
 #-----------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ for (xx in List) {
 		x.cex.axis=1.5,
 		y.names="$$metagenome.id",
 		y.cex.axis=0.75)
-}
+	}
 xx <- xx1 ; xx.normed <- transform (xx, t_Log)
 boxplot(
 	xx,

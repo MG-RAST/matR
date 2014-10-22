@@ -1,10 +1,9 @@
-#---------------------------------------------------------------
-#  currently unused
-#  leftover from an idea for randomization tests
-#  may become relevant later on
-#---------------------------------------------------------------
 
 randomize.matrix <- function (x, ntimes=1, method=c("sample", "rowwise", "dataset", "complete"), seed=NULL, FUN=identity, ...) {
+#-----------------------------------------------------------------------------------------
+#  function leftover from an early idea for randomization tests,
+#  currently unused but may become useful.  not exported.
+#-----------------------------------------------------------------------------------------
 	if(!is.matrix(x)) stop("argument must be matrix")
 	f <- switch(
 		match.arg (method),

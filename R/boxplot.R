@@ -1,6 +1,7 @@
-#---------------------------------------------------------------------
-#  Boxplot(s)
-#---------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------
+#  boxplots of biom objects.
+#-----------------------------------------------------------------------------------------
 
 boxplot.biom <- function(
 	x, y=NULL, 
@@ -16,15 +17,13 @@ boxplot.biom <- function(
 		}
 	arg <- list(...)
 
-#---------------------------------------------------------------------
-#  for first plot (analogously for second):
-#    drop "y.*" args
-#    strip "x.*" from arg names
-#    apply metadata substitution to "names"
-#    drop "y.*" mappings
-#    strip "x.* from mapping names
-#    apply mapping
-#---------------------------------------------------------------------
+####  for first plot (analogously for second):
+####    drop "y.*" args
+####    strip "x.*" from arg names
+####    apply metadata substitution to "names"
+####    drop "y.*" mappings
+####    strip "x.* from mapping names
+####    apply mapping
 
 	x.arg <- arg [substr(names(arg),1,2) != "y."]
 	names(x.arg) <- ifelse(
@@ -60,14 +59,14 @@ boxplot.biom <- function(
 
 	par0 <- list(
 		x = as.matrix (x, TRUE),
-		main = NULL,				# no title
-		names = colnames(x),		# x-axis annotations
-#		notch = TRUE,				# box notch -- often looks bad & produces warnings
-		las	= 2, 			 		# label orientation (x: vertical; y: horizontal)
-		cex.axis = 0.5, 			# axis annotation size (smallish)
-		font.axis = 3,				# axis annotation font style (italic)
-		outpch = 19,				# outlier character (filled circle)
-		outcex = 0.5)				# outlier size (small)
+		main = NULL,						# no title
+		names = colnames(x),				# x-axis annotations
+#		notch = TRUE,						# box notch -- often looks bad & produces warnings
+		las	= 2, 			 				# label orientation (x: vertical; y: horizontal)
+		cex.axis = 0.5, 					# axis annotation size (smallish)
+		font.axis = 3,						# axis annotation font style (italic)
+		outpch = 19,						# outlier character (filled circle)
+		outcex = 0.5)						# outlier size (small)
 	par <- resolve (x.arg, par0)
 
 	zz <- list()
@@ -90,4 +89,3 @@ boxplot.biom <- function(
 	zz$call <- match.call()
 	return(invisible(zz))
 	}
-

@@ -4,13 +4,12 @@ library(matR)
 #  OK FOR CRAN
 #-----------------------------------------------------------------------------------------
 
-xx <- lapply (demoSets(), readSet)					#  readSet(), scrubSet(), scrapeSet(), expandSet()
+xx <- lapply (demoSets(), readSet)									# readSet(), scrubSet(), scrapeSet()
 lapply (xx, scrubSet)
 lapply (xx, scrapeSet)
-# lapply (xx, expandSet)							#   network call; not ok for CRAN
 
-lapply (list (
-	"mgm4440066.3",									#  scrubSet()
+lapply (list (														# scrubSet()
+	"mgm4440066.3",
 	"mgm4440066.3 mgm4440062.3",
 	"mgm4440066.3 mgm4440062.3 mgm4440055.3",
 	"mgm4440066.3",
@@ -50,7 +49,9 @@ lapply (list (
 #  NOT OK FOR CRAN
 #-----------------------------------------------------------------------------------------
 
-# expandSet('mgp9')									#  expandSet()
+# lapply (xx, expandSet)												# expandSet()
+#
+# expandSet('mgp9')
 # expandSet('mgp24')
 # expandSet('mgp24 mgp9')
 # expandSet('mgp24 mgp9 mgm4440463.3')

@@ -1,8 +1,10 @@
-#---------------------------------------------------------------------
-#  Data transformations:
-#    matrix transformations:  set of primitives
-#    biom transformations:  function transform() as common interface
-#---------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------
+#  data transformations of biom objects.
+#
+#  for matrix transformation, we have a set of "primitives".
+#  for biom transformation, we have a transform() method that applies them.
+#-----------------------------------------------------------------------------------------
 
 transform.biom <- function (`_data`, ...) {
 	x <- `_data`
@@ -21,11 +23,18 @@ transform.biom <- function (`_data`, ...) {
 		a.list [names (li) != ""] <- li [names (li) != ""]
 		}
 
-	ll <- append(										#	this is:  list(x, list(list of functions, list of argument lists))
+####  this is:  list(x, list(list of functions, list of argument lists))
+
+	ll <- append(
 			list (as.matrix (x, expand=TRUE)),
 			mapply (list, f.list, a.list, SIMPLIFY=FALSE))
 	pass.to <- function (x, funcWithArgs) {
-		do.call (funcWithArgs [[1]], append (list (x), funcWithArgs [[2]]))				# some issue; args being passed in a list capsule should not be
+
+####  there was an issue here:
+####  args being passed in a list capsule should not be.
+####  but it is resolved now?
+
+		do.call (funcWithArgs [[1]], append (list (x), funcWithArgs [[2]]))
 		}
 	data1 <- Reduce (pass.to, ll)
 
@@ -42,21 +51,26 @@ t_NA2Zero <- function (x, ...) {
 	x [is.na (x)] <- 0;
 	x
 	}
+
 t_Threshold <- function (x, entry.min=2, row.min=2, col.min=2) {
 	x [x < entry.min] <- 0
 	x <- x [rowSums (x) >= row.min, ]
 	x <- x [, colSums (x) >= col.min]
 	x
 	}
+
 t_Log <- function (x, ...) {
 	log2 (1 + x)
 	}
+
 t_ColCenter <- function (x, ...) {
 	x - colMeans(x) [col(x)]
 	}
+
 t_ColScale <- function (x, ...) {
 	sigma <- apply (x, 2, sd)
 	sigma [sigma == 0] <- 1
 	x / sigma [col(x)]
 	}
+
 t_DENorm <- function (x, DEparam, ...) { x }
