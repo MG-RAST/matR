@@ -1,19 +1,20 @@
 Package: matR
 Type: Package
-Title: metagenomics analysis tools for R
+Title: Metagenomics Analysis Tools for R
 Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), 
  email = "contact.dtb@gmail.com"), person ("Kevin", "Keegan", role = "aut", 
- email = "keegan@mcs.anl.gov"))
+ email = "keegan@mcs.anl.gov"), person (c ("University", "of"), "Chicago", 
+ role = "cph"))
 Version: 0.9
 Depends: R (>= 2.10), MGRASTer, BIOM.utils, graphics, stats, utils
 Imports: 
 Suggests: RJSONIO, qvalue, ecodist, gplots, scatterplot3d
 URL: https://github.com/MG-RAST/matR/
 Date: 2014-10-22
-Description: matR is an analysis platform for metagenomics combining 
- specialized analysis tools and workflows, easy handling of the BIOM 
+Description: An analysis platform for metagenomics combining 
+ specialized tools and workflows, easy handling of the BIOM 
  format, and transparent access to MG-RAST resources.  matR integrates 
- easily with other R packages.
+ easily with other R packages and non-R software.
 License: BSD_2_clause + file LICENSE
 Copyright: University of Chicago
 LazyData: yes
