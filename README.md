@@ -6,21 +6,24 @@ language and environment for statistical computing.  See http://metagenomics.anl
 and http://kbase.us.
 
 LOADING
+-------
 During an R session, load matR with:
-> library(matR)
+	> library(matR)
 
 INSTALLATION
-Make sure to have a current version of R (http://www.r-project.org).
+------------
+Make sure to have a current version of R, available from http://www.r-project.org.
 Then during an R session, install with:
-> install.packages('matR', dep=TRUE)
-> library(matR)
-> dependencies()
+	> install.packages('matR', dep=TRUE)
+	> library(matR)
+	> dependencies()
 
 OLDER VERSION
+-------------
 Users of the early release version may reinstall it with:
-> remove.packages('matR')        # if necessary
-> install.packages('devtools')
-> library(devtools)
-> install_github(repo='MG-RAST/matR', ref="early-release", dep=FALSE)
-> library(matR)
-> dependencies()
+	> remove.packages('matR')        # if necessary
+	> install.packages('devtools')
+	> library(devtools)
+	> install_github(repo='MG-RAST/matR', ref="early-release", dep=FALSE)
+	> library(matR)
+	> dependencies()
