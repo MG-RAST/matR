@@ -8,12 +8,14 @@ and http://kbase.us.
 LOADING
 -------
 During an R session, load matR with:
+
 	> library(matR)
 
 INSTALLATION
 ------------
 Make sure to have a current version of R, available from http://www.r-project.org.
 Then during an R session, install with:
+
 	> install.packages('matR', dep=TRUE)
 	> library(matR)
 	> dependencies()
@@ -21,6 +23,7 @@ Then during an R session, install with:
 OLDER VERSION
 -------------
 Users of the early release version may reinstall it with:
+
 	> remove.packages('matR')        # if necessary
 	> install.packages('devtools')
 	> library(devtools)
