@@ -24,6 +24,6 @@ Users of the early release version may reinstall it with:
 	> remove.packages('matR')        # if necessary
 	> install.packages('devtools')
 	> library(devtools)
-	> install_github(repo='MG-RAST/matR', ref="early-release", dep=FALSE)
+	> install_github(repo='MG-RAST/matR', ref="early-release")
 	> library(matR)
 	> dependencies()
