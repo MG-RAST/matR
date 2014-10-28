@@ -2,8 +2,8 @@ Package matR (Metagenomics Analysis Tools) is an analysis client for the
 MG-RAST metagenome annotation engine, part of the US Department of Energy (DOE)
 Systems Biology Knowledge Base (KBase).  Customized analysis and visualization
 tools securely access remote data and metadata within the popular open source R 
-language and environment for statistical computing.  See http://metagenomics.anl.gov
-and http://kbase.us.
+language and environment for statistical computing.  See: http://metagenomics.anl.gov
+and: http://kbase.us.
 
 LOADING
 -------
@@ -22,7 +22,7 @@ Then during an R session, install with:
 
 OLDER VERSION
 -------------
-Users of the early release version may reinstall it with:
+Users of the early release version can reinstall it with:
 
 	> remove.packages('matR')        # if necessary
 	> install.packages('devtools')

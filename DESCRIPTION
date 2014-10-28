@@ -1,10 +1,12 @@
 Package: matR
 Type: Package
 Title: Metagenomics Analysis Tools
-Authors@R: c (person ("Daniel", "Braithwaite", role = c ("aut", "cre"), 
- email = "contact.dtb@gmail.com"), person ("Kevin", "Keegan", role = "aut", 
- email = "keegan@mcs.anl.gov"), person (c ("University", "of"), "Chicago", 
- role = "cph"))
+Authors@R: c(
+ person (c("Daniel", "T."), "Braithwaite", 
+ role = c("aut", "cre"), email = "contact.dtb@gmail.com"),
+ person (c("Kevin", "P."), "Keegan", 
+ role = "aut", email = "keegan@mcs.anl.gov"), 
+ person (c("University", "of"), "Chicago", role = "cph"))
 Version: 0.9
 Depends: R (>= 2.10), MGRASTer, BIOM.utils, graphics, stats, utils
 Imports: 
