@@ -5,6 +5,11 @@ tools securely access remote data and metadata within the popular open source R
 language and environment for statistical computing.  See: http://metagenomics.anl.gov
 and: http://kbase.us.
 
+CRAN (Comprehensive R Archive Network) hosts 
+the [package](http://cran.r-project.org/web/packages/matR/index.html)
+including 
+its [manual](http://cran.r-project.org/web/packages/matR/matR.pdf).
+
 LOADING
 -------
 During an R session, load matR with:
@@ -20,7 +25,7 @@ Then during an R session, install with:
 	> library(matR)
 	> dependencies()
 
-OLDER VERSION
+OLD VERSION
 -------------
 Users of the early release version can reinstall it with:
 
