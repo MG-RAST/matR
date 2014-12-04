@@ -27,7 +27,9 @@ To install the last stable release of matR, you can use the following commands:
 
 \# uninstall current matR
 
-remove.packages("matR")
+matR_path <- gsub( "matR$", "", find.package("matR") )
+
+remove.packages("matR", lib=matR_path)
 
 \# install devtools, then use it to install matR from the July 10 2014 commit
 
