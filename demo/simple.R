@@ -27,7 +27,7 @@ princomp (zz0, map=c(col="host_common_name", pch="samp_store_temp"), labels="$$p
 
 distx (zz0, groups="$$host_common_name")
 
-####  annotations providing significant group differentitation can be identified.
+####  annotations providing significant group differentiation can be identified.
 
 pp <- (rowstats (zz0, groups="$$material") $ p.value < 0.05)
 pp[is.na(pp)] <- FALSE
