@@ -1,0 +1,9 @@
+.R*
+*.aux
+*.log
+.DS*
+*.aux
+*.log
+*.txt
+_*
+*~
