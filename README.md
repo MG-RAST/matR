@@ -33,8 +33,7 @@ remove.packages("matR")
 
    library(devtools)
    
-   
-   install_github(repo="MG-RAST/matR", dependencies=FALSE, ref="3d068d0c4c644083f588379ca111a575a409c797")
+   install_github(repo="MG-RAST/matR", dependencies=FALSE, ref="early-release")
    
    library(matR)
    
