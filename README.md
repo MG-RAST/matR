@@ -33,6 +33,8 @@ remove.packages("matR", lib=matR_path)
 
 \# install devtools, then use it to install matR from the July 10 2014 commit
 
+   install.packages("devtools")
+
    library(devtools)
    
    install_github(repo="MG-RAST/matR", dependencies=FALSE, ref="early-release")
