@@ -21,7 +21,9 @@ INSTALLATION (SEE INSTALLATION NOTE BELOW!)
 INSTALLTION NOTE (October 2014)
 We are in the process of updating matR code - during this time, it is possible that 
 some matR functionality may be temporarily unavaialable. Until the updates are complete.,
-we recommend installing the last stable version of matR as follows:
+we recommend installing the last stable version of matR as follows (NOTE: this installation
+procedure may take a few minutes to complete - if it does not complete, please contact us
+through the google group https://groups.google.com/forum/#!forum/matr-forum):
 
 To install the last stable release of matR, you can use the following commands:
 
