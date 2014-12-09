@@ -28,6 +28,7 @@ Send questions and comments to [mg-rast@mcs.anl.gov]().
 
 `Tutorials`
 ---------
++ [HTML](boxplot-examples.html) | [pdf](boxplot-examples.pdf) | [source](boxplot-examples.R) : boxplot-examples
 + [HTML]() | [pdf]() | [source]() : how-to-search
 + [HTML]() | [pdf]() | [source]() : using-metadata
 + [HTML]() | [pdf]() | [source]() : how-to-download-annotations
