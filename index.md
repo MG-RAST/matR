@@ -1,37 +1,67 @@
+`Metagenomics Analysis Tools: the "matR" package for R`
+=======================================================
+See **"Getting started"** at the bottom of this page for installation instructions.
+The [package](http://cran.r-project.org/web/packages/matR/index.html)
+and manual
+([HTML]();
+[pdf](http://cran.r-project.org/web/packages/matR/matR.pdf))
+are available on
+[CRAN](http://cran.r-project.org).
 
-Supplements to the `matR` package
-=================================
-Here are the [package]() and manual ([HTML](); [pdf]()) on [CRAN]().
+HTML and pdf versions of **"Tutorials"** are available just below.
+Or if you have matR installed, execute these in your R session,
+for example with:
 
-Demos and how-to's
-------------------
-Browse online, or execute these in a local R session with: `step.through(file="http://path-to-source...")`
+	> library(matR)
+	> step.through(file="http://mg-rast.github.io/matR/using-metadata.R")
 
-+ [source]() | [HTML]() | [pdf]() : how-to-search
-+ [source]() | [HTML]() | [pdf]() : how-to-use-metadata
-+ [source]() | [HTML]() | [pdf]() : how-to-download-annotations
-+ [source]() | [HTML]() | [pdf]() : short-workflow-example
-+ [source]() | [HTML]() | [pdf]() : integrating-vegan-package
+Execute the **"Other scripts"** locally in the same way.
+Current add-ons to the package's CRAN version
+are listed under **"Extensions"** and can be loaded with:
 
+	> library(matR)
+	> source("file="http://mg-rast.github.io/matR/local-workbench.R")
 
-Extensions
-----------
-Add this functionality to `matR` with: `source(file="http://path-to-source...")`
+Send questions and comments to [mg-rast@mcs.anl.gov]().
 
+***
+
+`Tutorials`
+---------
++ [HTML]() | [pdf]() | [source]() : how-to-search
++ [HTML]() | [pdf]() | [source]() : using-metadata
++ [HTML]() | [pdf]() | [source]() : how-to-download-annotations
++ [HTML]() | [pdf]() | [source]() : handling-biom
+
+`Extensions`
+------------
 + [source]() : local-workbench
-+ [source]() : new-analysis-capability
 + [source]() : improved-color-palettes
 
+`Other scripts`
+---------------
++ [HTML]() | [pdf]() | [source]() : soils-2014-tutorial-1
++ [HTML]() | [pdf]() | [source]() : soils-2014-tutorial-2
++ [HTML]() | [pdf]() | [source]() : soils-2014-tutorial-3
 
-Custom scripts
---------------
-Browse these, or execute (like the how-to's) using `step.through(file=...)`
+`Getting Started`
+-----------------
+Make sure to have a [current version of R](http://www.r-project.org).
+Then open an R session and install the package with:
 
-+ [source]() | [HTML]() | [pdf]() : soils-2014-tutorial-1
-+ [source]() | [HTML]() | [pdf]() : soils-2014-tutorial-2
-+ [source]() | [HTML]() | [pdf]() : soils-2014-tutorial-3
-+ [source]() | [HTML]() | [pdf]() : china-workshop-exercise-1
-+ [source]() | [HTML]() | [pdf]() : china-workshop-exercise-2
-+ [source]() | [HTML]() | [pdf]() : china-workshop-exercise-3
-+ [source]() | [HTML]() | [pdf]() : china-workshop-exercise-4
+	> install.packages('matR', dependencies=TRUE)
+	> library(matR)
+	> dependencies()
 
+It must be loaded during every R session with:  `library(matR)`
+
+`Old version`
+-------------
+Users of the early release version can reinstall it with:
+
+	> remove.packages('matR')        # if necessary
+	> install.packages('devtools')
+	> library(devtools)
+	> install_github(repo='MG-RAST/matR', ref="early-release")
+	> library(matR)
+	> dependencies()

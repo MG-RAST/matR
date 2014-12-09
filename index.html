@@ -1,38 +1,77 @@
-<h1>Supplements to the <code>matR</code> package</h1>
+<h1><code>Metagenomics Analysis Tools: the "matR" package for R</code></h1>
 
-<p>Here are the <a href="">package</a> and manual (<a href="">HTML</a>; <a href="">pdf</a>) on <a href="">CRAN</a>.</p>
+<p>See <strong>"Getting started"</strong> at the bottom of this page for installation instructions.
+The <a href="http://cran.r-project.org/web/packages/matR/index.html">package</a>
+and manual
+(<a href="">HTML</a>;
+<a href="http://cran.r-project.org/web/packages/matR/matR.pdf">pdf</a>)
+are available on
+<a href="http://cran.r-project.org">CRAN</a>.</p>
 
-<h2>Demos and how-to's</h2>
+<p>HTML and pdf versions of <strong>"Tutorials"</strong> are available just below.
+Or if you have matR installed, execute these in your R session,
+for example with:</p>
 
-<p>Browse these online, or execute in a local R session with: <code>step.through(file="http://path-to-source...")</code></p>
+<pre><code>&gt; library(matR)
+&gt; step.through(file="http://mg-rast.github.io/matR/using-metadata.R")
+</code></pre>
+
+<p>Execute the <strong>"Other scripts"</strong> locally in the same way.
+Current add-ons to the package's CRAN version
+are listed under <strong>"Extensions"</strong> and can be loaded with:</p>
+
+<pre><code>&gt; library(matR)
+&gt; source("file="http://mg-rast.github.io/matR/local-workbench.R")
+</code></pre>
+
+<p>Send questions and comments to <a href="">mg-rast@mcs.anl.gov</a>.</p>
+
+<hr />
+
+<h2><code>Tutorials</code></h2>
 
 <ul>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : how-to-search</li>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : how-to-use-metadata</li>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : how-to-download-annotations</li>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : short-workflow-example</li>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : integrating-vegan-package</li>
+<li><a href="">HTML</a> | <a href="">pdf</a> | <a href="">source</a> : how-to-search</li>
+<li><a href="">HTML</a> | <a href="">pdf</a> | <a href="">source</a> : using-metadata</li>
+<li><a href="">HTML</a> | <a href="">pdf</a> | <a href="">source</a> : how-to-download-annotations</li>
+<li><a href="">HTML</a> | <a href="">pdf</a> | <a href="">source</a> : handling-biom</li>
 </ul>
 
-<h2>Extensions</h2>
-
-<p>Add functionality to a local <code>matR</code> installation with: <code>source(file="http://path-to-source...")</code></p>
+<h2><code>Extensions</code></h2>
 
 <ul>
-<li><a href="">source</a> : new-analysis-capability</li>
+<li><a href="">source</a> : local-workbench</li>
 <li><a href="">source</a> : improved-color-palettes</li>
 </ul>
 
-<h2>Custom scripts</h2>
-
-<p>Browse these or execute locally as above.</p>
+<h2><code>Other scripts</code></h2>
 
 <ul>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : soils-2014-tutorial-1</li>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : soils-2014-tutorial-2</li>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : soils-2014-tutorial-3</li>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : china-workshop-exercise-1</li>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : china-workshop-exercise-2</li>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : china-workshop-exercise-3</li>
-<li><a href="">source</a> | <a href="">HTML</a> | <a href="">pdf</a> : china-workshop-exercise-4</li>
+<li><a href="">HTML</a> | <a href="">pdf</a> | <a href="">source</a> : soils-2014-tutorial-1</li>
+<li><a href="">HTML</a> | <a href="">pdf</a> | <a href="">source</a> : soils-2014-tutorial-2</li>
+<li><a href="">HTML</a> | <a href="">pdf</a> | <a href="">source</a> : soils-2014-tutorial-3</li>
 </ul>
+
+<h2><code>Getting Started</code></h2>
+
+<p>Make sure to have a <a href="http://www.r-project.org">current version of R</a>.
+Then open an R session and install the package with:</p>
+
+<pre><code>&gt; install.packages('matR', dependencies=TRUE)
+&gt; library(matR)
+&gt; dependencies()
+</code></pre>
+
+<p>It must be loaded during every R session with:  <code>library(matR)</code></p>
+
+<h2><code>Old version</code></h2>
+
+<p>Users of the early release version can reinstall it with:</p>
+
+<pre><code>&gt; remove.packages('matR')        # if necessary
+&gt; install.packages('devtools')
+&gt; library(devtools)
+&gt; install_github(repo='MG-RAST/matR', ref="early-release")
+&gt; library(matR)
+&gt; dependencies()
+</code></pre>

@@ -38,4 +38,4 @@ doc.MGRAST (3, head=c("matrix","organism","parameters","options"))
 doc.MGRAST (3, head=c("matrix","feature","parameters","options"))
 
 
-
+readSet(file)
