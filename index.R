@@ -33,8 +33,7 @@ source("file="http://mg-rast.github.io/matR/local-workbench.R")
 citation('matR')
 
 #' Check out our [Google group (matR-forum)](https://groups.google.com/forum/#!forum/matR-forum)
-#' for discussion and help, 
-#' and contact us at [mg-rast@mcs.anl.gov]().
+#' for discussion and help.
 
 #'
 #' Tutorials

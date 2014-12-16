@@ -72,4 +72,3 @@ install.packages("matR", dependencies=TRUE)
 #' -----------------
 #' Check out our [Google group (matR-forum)](https://groups.google.com/forum/#!forum/matR-forum)
 #' for discussion and help.
-#' Send questions and comments to [mg-rast@mcs.anl.gov]().
