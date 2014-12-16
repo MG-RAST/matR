@@ -31,7 +31,6 @@ zz0 <- transform (zz, t_Threshold, t_Log)
 #' Both columns (metagenomes) and rows (annotations) of `biom` objects have metadata.
 #' The entirety of metadata, or a selection of specific entries (as below), can be examined.
 
-opts_knit$set(width=120)
 columns (zz0, "host_common_name|samp_store_temp|ncbi_id")
 
 #' Plotting principal coordinates is a standard visualization, shown next.
