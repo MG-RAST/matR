@@ -60,9 +60,9 @@ install.packages("matR", dependencies=TRUE)
 #' About package dependencies
 #' --------------------------
 #' Difficulties may arise with packages that matR uses ("dependencies").
-#' Third-party open-source software offers a wealth of functionality that matR leverages to advantage,
-#' but this can incur costs in stability and portability.
-#' Such issues are beyond the scope of this tutorial, but
+#' Third-party open-source software offers a wealth of functionality that can be leveraged to advantage,
+#' but often incurring costs in stability and portability.
+#' Addressing such issues is beyond the scope of this tutorial, but
 #' the maintainer of a problematic package should be able to help.
 #' Note that a missing dependency affects only the particular functionality it supports.
 #' So matR can always be used without all its dependencies installed.

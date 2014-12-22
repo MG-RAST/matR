@@ -56,45 +56,23 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </div>
 
 
-<p>This tutorial discusses slightly technical programming issues, and will be most easily understood by experienced R users. Still, the gist is not too complicated. The topic here is how matR data objects relate to the built-in data types of R. Annotation information is retrieved by the <code>biomRequest()</code> function as a <code>biom</code> object, essentially a <code>matrix</code> with additional metadata annotations for the rows and columns. Such objects can also be created by importing from a file of data in <a href="http://biom-format.org">BIOM format</a> produced by other software. <code>xx1</code> to <code>xx4</code> are example <code>biom</code> objects included with the matR package. Here is an example showing part of the column metadata of <code>xx3</code>. The information is returned as a <code>data.frame</code>.</p>
-<pre class="r"><code>columns (xx3, &quot;latitude|longitude&quot;)</code></pre>
+<p>This tutorial discusses slightly technical programming issues, and will be most easily understood by experienced R users. Still, the gist is simple. The topic is how matR data objects relate to the built-in data types of R. Annotation information is retrieved by the <code>biomRequest()</code> function as a <code>biom</code> object, essentially a <code>matrix</code> with additional metadata annotations for the rows and columns. Such objects can also be created by importing from a file of data in <a href="http://biom-format.org">BIOM format</a> produced by other software.</p>
+<p><code>xx1</code> to <code>xx4</code> are example <code>biom</code> objects included with the matR package.</p>
+<pre class="r"><code>summary (xx1)</code></pre>
+<pre><code>## [id:] mgm4440463.3_mgm4440464.3_mgm4441679.3_mgm4441680.3_mgm4441682.3_mgm4441695.3_mgm4441696.3_function_level2_Subsystems_all_abundance_5_60_15_0
+## [generated_by:] MG-RAST revision 3.5 on [date:] 2014-09-05T20:17:55
+## [type:] sparse Function table (161x7 of which 938 nonzero)
+## [format:] Biological Observation Matrix 1.0</code></pre>
+<p>Here is an example showing part of the column metadata of <code>xx3</code>. The information is returned as a <code>data.frame</code>.</p>
+<pre class="r"><code>head (columns (xx3, &quot;latitude|longitude&quot;))</code></pre>
 <pre><code>##              sample.data.latitude sample.data.longitude
 ## mgm4477803.3              -77.725               162.311
 ## mgm4477804.3                 39.1                 -96.6
 ## mgm4477805.3                 34.9               -115.65
 ## mgm4477807.3              -12.633               -71.233
 ## mgm4477872.3               35.383              -105.933
-## mgm4477873.3               34.333              -106.733
-## mgm4477874.3               68.633              -149.583
-## mgm4477875.3              -26.733               -54.683
-## mgm4477876.3                 64.8               -148.25
-## mgm4477877.3               34.617               -81.667
-## mgm4477899.3               35.967               -79.083
-## mgm4477900.3               -78.03      163.873283333333
-## mgm4477901.3              -77.725               162.313
-## mgm4477902.3              -77.608               163.249
-## mgm4477903.3             -77.6375               162.887
-## mgm4477904.3              -77.527               161.702
-## mgm4575382.3              -26.733               -54.683
-## mgm4575383.3                 64.8               -148.25
-## mgm4575384.3               34.617               -81.667
-## mgm4575385.3               35.967               -79.083
-## mgm4575386.3               -78.03      163.873283333333
-## mgm4575387.3              -77.725               162.313
-## mgm4575388.3              -77.608               163.249
-## mgm4575389.3             -77.6375               162.887
-## mgm4575390.3              -77.527               161.702
-## mgm4575391.3              -77.725               162.311
-## mgm4575392.3                 39.1                 -96.6
-## mgm4575393.3                 34.9               -115.65
-## mgm4575394.3              -12.633               -71.233
-## mgm4575395.3               35.383              -105.933
-## mgm4575396.3               34.333              -106.733
-## mgm4575397.3               68.633              -149.583</code></pre>
-<p>Even in case of a single field, a <code>data.frame</code> is returned.</p>
-<pre class="r"><code>is.data.frame (columns (xx3, &quot;latitude&quot;))</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<p>Metadata is selected by a <em>regular expression</em> (see <code>?regex</code>). The regex below selects project IDs plus all metadata related to the environmental package.</p>
+## mgm4477873.3               34.333              -106.733</code></pre>
+<p>Metadata is selected by a <em>regular expression</em>. See <code>?regex</code> for details. The regex below selects project IDs plus all metadata related to the environmental package.</p>
 <pre class="r"><code>names (columns (xx2, &quot;project\\.id|^env_package&quot;))</code></pre>
 <pre><code>##  [1] &quot;env_package.data.alkalinity&quot;         
 ##  [2] &quot;env_package.data.ammonium&quot;           
@@ -121,25 +99,20 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <p>The regex can be omitted to show all metadata. Metadata for rows typically consists of annotation hierarchy levels only.</p>
 <pre class="r"><code>names (rows (xx1))</code></pre>
 <pre><code>## [1] &quot;ontology1&quot; &quot;ontology2&quot;</code></pre>
-<p>Note that in this example, the <code>rownames()</code> and the single variable of the <code>data.frame</code> coincide.</p>
-<pre class="r"><code>head (rows (xx1, &quot;ontology2&quot;), 9)</code></pre>
-<pre><code>##                                                                               ontology2
-## ABC transporters                                                       ABC transporters
-## ATP synthases                                                             ATP synthases
-## Acid stress                                                                 Acid stress
-## Adhesion                                                                       Adhesion
-## Alanine, serine, and glycine                               Alanine, serine, and glycine
-## Aminosugars                                                                 Aminosugars
-## Anaerobic degradation of aromatic compounds Anaerobic degradation of aromatic compounds
-## Arginine; urea cycle, polyamines                       Arginine; urea cycle, polyamines
-## Aromatic amino acids and derivatives               Aromatic amino acids and derivatives</code></pre>
-<p>Metadata is almost always coded as a <code>factor</code>.</p>
-<pre class="r"><code>is.factor (columns (xx1, &quot;sample.data.biome&quot;) [[1]])</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<p>The <code>biom</code> and <code>matrix</code> classes are similar aside from metadata. Replacement functions, <code>dim()</code>, <code>rownames()</code>, <code>colnames()</code>, and <code>dimnames()</code> can all be applied to <code>biom</code> objects. This example renames columns with information taken from metadata.</p>
+<p>A <code>data.frame</code> is returned even in case of a single metadata field, so note that in this example, the <code>rownames()</code> and the single variable of the <code>data.frame</code> coincide.</p>
+<pre class="r"><code>head (rows (xx1, &quot;ontology2&quot;))</code></pre>
+<pre><code>##                                                 ontology2
+## ABC transporters                         ABC transporters
+## ATP synthases                               ATP synthases
+## Acid stress                                   Acid stress
+## Adhesion                                         Adhesion
+## Alanine, serine, and glycine Alanine, serine, and glycine
+## Aminosugars                                   Aminosugars</code></pre>
+<p>Metadata fields are almost always coded as <code>factor</code>s.</p>
+<p>The <code>biom</code> and <code>matrix</code> classes are very similar, aside from metadata. Replacement functions, <code>dim()</code>, <code>rownames()</code>, <code>colnames()</code>, and <code>dimnames()</code> can all be applied to <code>biom</code> objects. This example renames columns with information taken from metadata.</p>
 <pre class="r"><code>yy &lt;- xx4
-colnames (yy) &lt;- columns (yy, &quot;sample.data.sample_name&quot;)</code></pre>
-<p>Subsetting also works in a familiar way.</p>
+colnames (yy) &lt;- columns (yy, &quot;sample.data.sample_name&quot;) [[1]]</code></pre>
+<p>Subsetting also works in familiar ways.</p>
 <pre class="r"><code>xx3 [1:10,1:2]</code></pre>
 <pre><code>##                                                  mgm4477803.3 mgm4477804.3
 ## Amino Acids and Derivatives                            209800       178730
@@ -154,205 +127,78 @@ colnames (yy) &lt;- columns (yy, &quot;sample.data.sample_name&quot;)</code></pr
 ## Iron acquisition and metabolism                         16409         9896
 ## 
 ## [id:] derived with `[.biom`(x = xx3, i = 1:10, j = 1:2)
-## [generated_by:] matR: metagenomics analysis tools for R (0.9) on [date:] 2014-12-16 09:00:05
+## [generated_by:] matR: metagenomics analysis tools for R (0.9) on [date:] 2014-12-20 14:56:58
 ## [type:] sparse Function table (10x2 of which 20 nonzero)
 ## [format:] Biological Observation Matrix 1.0</code></pre>
+<p>Subsetting by row and column names:</p>
 <pre class="r"><code>xx4 [c(&quot;Bacteria&quot;, &quot;Eukaryota&quot;), c(&quot;mgm4575333.3&quot;, &quot;mgm4575334.3&quot;, &quot;mgm4575335.3&quot;)]</code></pre>
 <pre><code>##           mgm4575333.3 mgm4575334.3 mgm4575335.3
 ## Bacteria        168162       164695       179684
 ## Eukaryota           59           83           23
 ## 
 ## [id:] derived with `[.biom`(x = xx4, i = c(&quot;Bacteria&quot;, &quot;Eukaryota&quot;), j = c(&quot;mgm4575333.3&quot;, &quot;mgm4575334.3&quot;, &quot;mgm4575335.3&quot;))
-## [generated_by:] matR: metagenomics analysis tools for R (0.9) on [date:] 2014-12-16 09:00:05
+## [generated_by:] matR: metagenomics analysis tools for R (0.9) on [date:] 2014-12-20 14:56:58
 ## [type:] sparse Taxon table (2x3 of which 6 nonzero)
 ## [format:] Biological Observation Matrix 1.0</code></pre>
-<p>This command keeps metagenomes from only one biome.</p>
+<p>Subsetting to keep metagenomes from only one biome:</p>
 <pre class="r"><code>summary (xx3 [ ,columns(xx3,&quot;biome&quot;) == &quot;Tundra biome&quot;])</code></pre>
 <pre><code>## [id:] derived with `[.biom`(x = xx3, j = columns(xx3, &quot;biome&quot;) == &quot;Tundra biome&quot;)
-## [generated_by:] matR: metagenomics analysis tools for R (0.9) on [date:] 2014-12-16 09:00:05
+## [generated_by:] matR: metagenomics analysis tools for R (0.9) on [date:] 2014-12-20 14:56:58
 ## [type:] sparse Function table (28x2 of which 56 nonzero)
 ## [format:] Biological Observation Matrix 1.0</code></pre>
-<p>The command keeps only rows matching a search term.</p>
+<p>Subsetting to keep only rows matching a search term.</p>
 <pre class="r"><code>summary (xx1 [grepl(&quot;Protein secretion system&quot;, rownames(xx1)), ])</code></pre>
 <pre><code>## [id:] derived with `[.biom`(x = xx1, i = grepl(&quot;Protein secretion system&quot;, rownames(xx1)))
-## [generated_by:] matR: metagenomics analysis tools for R (0.9) on [date:] 2014-12-16 09:00:05
+## [generated_by:] matR: metagenomics analysis tools for R (0.9) on [date:] 2014-12-20 14:56:58
 ## [type:] sparse Function table (7x7 of which 28 nonzero)
 ## [format:] Biological Observation Matrix 1.0</code></pre>
-<p>It can be useful to merge two <code>biom</code> objects, but be careful. Since the operation requires only that all <code>colnames()</code> of the two objects be distinct, it’s possible to perform nonsense, as in this example where the merged objects are annotated at different hierarchy levels. (Look at the very end of the output!)</p>
-<pre class="r"><code>rownames (merge (xx1, xx4))</code></pre>
+<p>It can be useful to merge two <code>biom</code> objects, but be careful. Since the operation requires only that all <code>colnames()</code> of the two objects be distinct, it’s possible to perform nonsense, as in this example where the annotations of the merged objects are entirely unrelated. (One is taxonomic and the other is functional).</p>
+<pre class="r"><code>tail (rownames (merge (xx1, xx4)))</code></pre>
 <pre><code>## Warning: matR: merging different 'type's forces common 'type'</code></pre>
-<pre><code>##   [1] &quot;ABC transporters&quot;                                                                         
-##   [2] &quot;ATP synthases&quot;                                                                            
-##   [3] &quot;Acid stress&quot;                                                                              
-##   [4] &quot;Adhesion&quot;                                                                                 
-##   [5] &quot;Alanine, serine, and glycine&quot;                                                             
-##   [6] &quot;Aminosugars&quot;                                                                              
-##   [7] &quot;Anaerobic degradation of aromatic compounds&quot;                                              
-##   [8] &quot;Arginine; urea cycle, polyamines&quot;                                                         
-##   [9] &quot;Aromatic amino acids and derivatives&quot;                                                     
-##  [10] &quot;Bacterial cytostatics, differentiation factors and antibiotics&quot;                           
-##  [11] &quot;Bacteriocins, ribosomally synthesized antibacterial peptides&quot;                             
-##  [12] &quot;Biologically active compounds in metazoan cell defence and differentiation&quot;               
-##  [13] &quot;Biosynthesis of galactoglycans and related lipopolysacharides&quot;                            
-##  [14] &quot;Biosynthesis of phenylpropanoids&quot;                                                         
-##  [15] &quot;Biotin&quot;                                                                                   
-##  [16] &quot;Branched-chain amino acids&quot;                                                               
-##  [17] &quot;CO2 fixation&quot;                                                                             
-##  [18] &quot;CRISPRs and associated hypotheticals&quot;                                                     
-##  [19] &quot;CRISPs&quot;                                                                                   
-##  [20] &quot;Capsular and extracellular polysacchrides&quot;                                                
-##  [21] &quot;Carbohydrates&quot;                                                                            
-##  [22] &quot;Carotenoid biosynthesis&quot;                                                                  
-##  [23] &quot;Cell Division&quot;                                                                            
-##  [24] &quot;Cell wall of Mycobacteria&quot;                                                                
-##  [25] &quot;Central carbohydrate metabolism&quot;                                                          
-##  [26] &quot;Chemotaxis, response regulators&quot;                                                          
-##  [27] &quot;Choline bitartrate degradation, putative&quot;                                                 
-##  [28] &quot;Chromosome Replication&quot;                                                                   
-##  [29] &quot;Clustering-based subsystems&quot;                                                              
-##  [30] &quot;Coenzyme A&quot;                                                                               
-##  [31] &quot;Coenzyme B&quot;                                                                               
-##  [32] &quot;Coenzyme F420&quot;                                                                            
-##  [33] &quot;Coenzyme M&quot;                                                                               
-##  [34] &quot;Cold shock&quot;                                                                               
-##  [35] &quot;Cytochrome biogenesis&quot;                                                                    
-##  [36] &quot;D-tyrosyl-tRNA(Tyr) deacylase (EC 3.1.-.-) cluster&quot;                                       
-##  [37] &quot;DNA metabolism&quot;                                                                           
-##  [38] &quot;DNA polymerase III epsilon cluster&quot;                                                       
-##  [39] &quot;DNA recombination&quot;                                                                        
-##  [40] &quot;DNA repair&quot;                                                                               
-##  [41] &quot;DNA replication&quot;                                                                          
-##  [42] &quot;DNA uptake, competence&quot;                                                                   
-##  [43] &quot;Detection&quot;                                                                                
-##  [44] &quot;Detoxification&quot;                                                                           
-##  [45] &quot;Di- and oligosaccharides&quot;                                                                 
-##  [46] &quot;Electron accepting reactions&quot;                                                             
-##  [47] &quot;Electron donating reactions&quot;                                                              
-##  [48] &quot;Electron transport and photophosphorylation&quot;                                              
-##  [49] &quot;Fatty acid metabolic cluster&quot;                                                             
-##  [50] &quot;Fatty acids&quot;                                                                              
-##  [51] &quot;Fermentation&quot;                                                                             
-##  [52] &quot;Flagella protein?&quot;                                                                        
-##  [53] &quot;Flagellar motility in Prokaryota&quot;                                                         
-##  [54] &quot;Folate and pterines&quot;                                                                      
-##  [55] &quot;Gene Transfer Agent (GTA)&quot;                                                                
-##  [56] &quot;Glutamine, glutamate, aspartate, asparagine; ammonia assimilation&quot;                        
-##  [57] &quot;Glycoside hydrolases&quot;                                                                     
-##  [58] &quot;Gram-Negative cell wall components&quot;                                                       
-##  [59] &quot;Gram-Positive cell wall components&quot;                                                       
-##  [60] &quot;Heat shock&quot;                                                                               
-##  [61] &quot;Histidine Metabolism&quot;                                                                     
-##  [62] &quot;Hypothetical Related to Dihydroorate Dehydrogenase&quot;                                       
-##  [63] &quot;Hypothetical associated with RecF&quot;                                                        
-##  [64] &quot;Hypothetical in Lysine biosynthetic cluster&quot;                                              
-##  [65] &quot;Hypothetical lipase related to Phosphatidate metabolism&quot;                                  
-##  [66] &quot;Hypothetical protein possible functionally linked with Alanyl-tRNA synthetase&quot;            
-##  [67] &quot;Inorganic sulfur assimilation&quot;                                                            
-##  [68] &quot;Invasion and intracellular resistance&quot;                                                    
-##  [69] &quot;Isoprenoid/cell wall biosynthesis: PREDICTED UNDECAPRENYL DIPHOSPHATE PHOSPHATASE&quot;        
-##  [70] &quot;Isoprenoids&quot;                                                                              
-##  [71] &quot;Lipid-derived mediators&quot;                                                                  
-##  [72] &quot;Lipoic acid&quot;                                                                              
-##  [73] &quot;Lysine Biosynthesis&quot;                                                                      
-##  [74] &quot;Lysine, threonine, methionine, and cysteine&quot;                                              
-##  [75] &quot;Metabolism of central aromatic intermediates&quot;                                             
-##  [76] &quot;Methylamine utilization&quot;                                                                  
-##  [77] &quot;Molybdopterin oxidoreductase&quot;                                                             
-##  [78] &quot;Monosaccharides&quot;                                                                          
-##  [79] &quot;NAD and NADP&quot;                                                                             
-##  [80] &quot;Nucleotidyl-phosphate metabolic cluster&quot;                                                  
-##  [81] &quot;One-carbon Metabolism&quot;                                                                    
-##  [82] &quot;Organic acids&quot;                                                                            
-##  [83] &quot;Organic sulfur assimilation&quot;                                                              
-##  [84] &quot;Osmotic stress&quot;                                                                           
-##  [85] &quot;Oxidative stress&quot;                                                                         
-##  [86] &quot;Pathogenicity islands&quot;                                                                    
-##  [87] &quot;Peripheral pathways for catabolism of aromatic compounds&quot;                                 
-##  [88] &quot;Periplasmic Stress&quot;                                                                       
-##  [89] &quot;Phages, Prophages&quot;                                                                        
-##  [90] &quot;Phosphate metabolism&quot;                                                                     
-##  [91] &quot;Phospholipids&quot;                                                                            
-##  [92] &quot;Plant Alkaloids&quot;                                                                          
-##  [93] &quot;Plant Hormones&quot;                                                                           
-##  [94] &quot;Plant-Prokaryote DOE project&quot;                                                             
-##  [95] &quot;Plasmid related functions&quot;                                                                
-##  [96] &quot;Polysaccharides&quot;                                                                          
-##  [97] &quot;Probably GTP or GMP signaling related&quot;                                                    
-##  [98] &quot;Probably Pyrimidine biosynthesis-related&quot;                                                 
-##  [99] &quot;Probably Ybbk-related hypothetical membrane proteins&quot;                                     
-## [100] &quot;Probably organic hydroperoxide resistance related hypothetical protein&quot;                   
-## [101] &quot;Programmed Cell Death and Toxin-antitoxin Systems&quot;                                        
-## [102] &quot;Proline and 4-hydroxyproline&quot;                                                             
-## [103] &quot;Proteasome related clusters&quot;                                                              
-## [104] &quot;Protein and nucleoprotein secretion system, Type IV&quot;                                      
-## [105] &quot;Protein biosynthesis&quot;                                                                     
-## [106] &quot;Protein degradation&quot;                                                                      
-## [107] &quot;Protein export?&quot;                                                                          
-## [108] &quot;Protein folding&quot;                                                                          
-## [109] &quot;Protein processing and modification&quot;                                                      
-## [110] &quot;Protein secretion system, Type I&quot;                                                         
-## [111] &quot;Protein secretion system, Type II&quot;                                                        
-## [112] &quot;Protein secretion system, Type III&quot;                                                       
-## [113] &quot;Protein secretion system, Type V&quot;                                                         
-## [114] &quot;Protein secretion system, Type VI&quot;                                                        
-## [115] &quot;Protein secretion system, Type VII (Chaperone/Usher pathway, CU)&quot;                         
-## [116] &quot;Protein secretion system, Type VIII (Extracellular nucleation/precipitation pathway, ENP)&quot;
-## [117] &quot;Protein translocation across cytoplasmic membrane&quot;                                        
-## [118] &quot;Proteolytic pathway&quot;                                                                      
-## [119] &quot;Purines&quot;                                                                                  
-## [120] &quot;Putative GGDEF domain protein related to agglutinin secretion&quot;                            
-## [121] &quot;Putative Isoquinoline 1-oxidoreductase subunit&quot;                                           
-## [122] &quot;Putative asociate of RNA polymerase sigma-54 factor rpoN&quot;                                 
-## [123] &quot;Putrescine/GABA utilization cluster-temporal,to add to SSs&quot;                               
-## [124] &quot;Pyridoxine&quot;                                                                               
-## [125] &quot;Pyrimidines&quot;                                                                              
-## [126] &quot;Pyruvate kinase associated cluster&quot;                                                       
-## [127] &quot;Quinone cofactors&quot;                                                                        
-## [128] &quot;Quorum sensing and biofilm formation&quot;                                                     
-## [129] &quot;RNA processing and modification&quot;                                                          
-## [130] &quot;Recombination related cluster&quot;                                                            
-## [131] &quot;Regulation of virulence&quot;                                                                  
-## [132] &quot;Related to Menaquinone-cytochrome C reductase &quot;                                           
-## [133] &quot;Resistance to antibiotics and toxic compounds&quot;                                            
-## [134] &quot;Reverse electron transport&quot;                                                               
-## [135] &quot;Riboflavin, FMN, FAD&quot;                                                                     
-## [136] &quot;Ribosomal Protein L28P relates to a set of uncharacterized proteins&quot;                      
-## [137] &quot;Ribosome-related cluster&quot;                                                                 
-## [138] &quot;Sarcosine oxidase&quot;                                                                        
-## [139] &quot;Selenoproteins&quot;                                                                           
-## [140] &quot;Shiga toxin cluster&quot;                                                                      
-## [141] &quot;Siderophores&quot;                                                                             
-## [142] &quot;Sodium Ion-Coupled Energetics&quot;                                                            
-## [143] &quot;Spore DNA protection&quot;                                                                     
-## [144] &quot;Sugar Phosphotransferase Systems, PTS&quot;                                                    
-## [145] &quot;Sugar alcohols&quot;                                                                           
-## [146] &quot;Sulfatases and sulfatase modifying factor 1 (and a hypothetical)&quot;                         
-## [147] &quot;Tetrapyrroles&quot;                                                                            
-## [148] &quot;Three hypotheticals linked to lipoprotein biosynthesis&quot;                                   
-## [149] &quot;TldD cluster&quot;                                                                             
-## [150] &quot;Toxins and superantigens&quot;                                                                 
-## [151] &quot;Transcription&quot;                                                                            
-## [152] &quot;Translation&quot;                                                                              
-## [153] &quot;Transposable elements&quot;                                                                    
-## [154] &quot;Triacylglycerols&quot;                                                                         
-## [155] &quot;Tricarboxylate transporter&quot;                                                               
-## [156] &quot;Two related proteases&quot;                                                                    
-## [157] &quot;Uni- Sym- and Antiporters&quot;                                                                
-## [158] &quot;alpha-proteobacterial cluster of hypotheticals&quot;                                           
-## [159] &quot;proteosome related&quot;                                                                       
-## [160] &quot;recX and regulatory cluster&quot;                                                              
-## [161] &quot;tRNA sulfuration&quot;                                                                         
-## [162] &quot;Archaea&quot;                                                                                  
-## [163] &quot;Bacteria&quot;                                                                                 
-## [164] &quot;Eukaryota&quot;</code></pre>
-<p>In this more likely example, a merge facilitates differently normalizing metagenomes of a single original <code>biom</code> object.</p>
+<pre><code>## [1] &quot;proteosome related&quot;          &quot;recX and regulatory cluster&quot;
+## [3] &quot;tRNA sulfuration&quot;            &quot;Archaea&quot;                    
+## [5] &quot;Bacteria&quot;                    &quot;Eukaryota&quot;</code></pre>
+<p>In this more likely example, merging facilitates differently normalizing metagenomes of a single original <code>biom</code> object.</p>
 <pre class="r"><code>aa &lt;- transform (xx4 [,1:8], t_Threshold, t_Log)
 bb &lt;- transform (xx4 [,9:16], t_Threshold=list(entry.min=5), t_Log)
 xx4_norm &lt;- merge (aa, bb)</code></pre>
-<p>Finally, it is always possible to convert back and forth between <code>biom</code> class and the built-in data types of R. Note an important difference between the following two commands.</p>
-<pre class="r"><code>as.matrix (xx1)
-as.matrix (xx1, TRUE)</code></pre>
-<p>The second form is usually what is wanted. <code>as.biom.list</code>, etc.</p>
+<p>It is easy to convert between <code>biom</code> class and the built-in types of R, but note that BIOM data is often stored in a sparse format. Consequently, this variation of the <code>as.matrix()</code> command is usually best:</p>
+<pre class="r"><code>head (as.matrix (xx1, expand=TRUE))</code></pre>
+<pre><code>##                              mgm4440463.3 mgm4440464.3 mgm4441679.3
+## ABC transporters                       10           15          196
+## ATP synthases                          19           13          194
+## Acid stress                             8            1           20
+## Adhesion                                7            5           22
+## Alanine, serine, and glycine           42           43          452
+## Aminosugars                            24           18           84
+##                              mgm4441680.3 mgm4441682.3 mgm4441695.3
+## ABC transporters                      175          222          208
+## ATP synthases                         145          210           22
+## Acid stress                            21            9            9
+## Adhesion                                8           19           17
+## Alanine, serine, and glycine          241          346          119
+## Aminosugars                           116          122            9
+##                              mgm4441696.3
+## ABC transporters                      285
+## ATP synthases                          15
+## Acid stress                             8
+## Adhesion                                7
+## Alanine, serine, and glycine          136
+## Aminosugars                            31</code></pre>
+<p>For comparison, here is the result of omitting the <code>expand=</code> option.</p>
+<pre class="r"><code>head (as.matrix (xx1))</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    0    6  285
+## [2,]    0    0   10
+## [3,]    0    4  222
+## [4,]    0    3  175
+## [5,]    0    2  196
+## [6,]    0    5  208</code></pre>
+<p>JSON text is the native format of BIOM data and can be obtained with either of the following commands. The latter outputs to a file which could be used by other software.</p>
+<pre class="r"><code>as.character (xx1)
+as.character (xx1, file=&quot;xx1.biom&quot;)</code></pre>
+<p>Similarly, the next command creates a <code>biom</code> object from BIOM data in a file (created by matR or other software).</p>
+<pre class="r"><code>biom (file=&quot;xx1.biom&quot;)</code></pre>
 
 
 </div>

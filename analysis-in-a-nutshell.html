@@ -63,9 +63,9 @@ writeLines (colnames (xx1), &quot;my_ids.txt&quot;)</code></pre>
 <p>The next command requests a matrix of abundance counts of function annotations at Subsystems level 2 for the specified metagenomes. Many variations of this command are available. Note that the request may take several minutes to complete.</p>
 <pre class="r"><code>zz &lt;- biomRequest(file=&quot;my_ids.txt&quot;, request=&quot;function&quot;, group_level=&quot;level2&quot;, evalue=1)</code></pre>
 <pre><code>##   start stop requested ticket
-## 1     1    7      TRUE  19608
+## 1     1    7      TRUE  29682
 ##                                                                            file
-## 1 /var/folders/07/pm0p1bcn5f3b66dy_x51yv340000gp/T//RtmpjmzUA4/file50a54020d094</code></pre>
+## 1 /var/folders/07/pm0p1bcn5f3b66dy_x51yv340000gp/T//Rtmp9P4DCt/file5dd33f10227b</code></pre>
 <p>Technically, the returned object <code>zz</code> is not a <code>matrix</code> but a classed <code>biom</code> object. Such objects carry metadata that can enrich analyses. As a first step, it is usually effective to transform the raw abundance counts, as follows.</p>
 <pre class="r"><code>zz0 &lt;- transform (zz, t_Threshold, t_Log)</code></pre>
 <p>Both columns (metagenomes) and rows (annotations) of <code>biom</code> objects have metadata. The entirety of metadata, or a selection of specific entries (as below), can be examined.</p>
