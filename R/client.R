@@ -165,9 +165,9 @@ metadata.character <- function (x, detail=NULL, ..., quiet=TRUE, file) {
 	y <- scrapeSet(x) [1]
 
 	if (is.null(detail) && y=="project") {
-		f <- function (x) simplify2array (suppressWarnings (call.MGRAST (					# keep IDs, drop URLs
-			"project", "instance", id=x, verbosity='full', quiet=quiet)) $ metagenomes,
-			higher=FALSE) [1,]
+		f <- function (x) {    #  get metagenome_ids out of project return
+                        mgs<-suppressWarnings (call.MGRAST ("project", "instance", id=x, verbosity='full', quiet=quiet)) $ metagenomes
+                        ids<-sapply(mgs, function(x) x$metagenome_id)  } 
 		sapply (x, f, simplify=FALSE)									# sapply retains names
 
 	} else if (is.null(detail) && y=="metagenome") {
