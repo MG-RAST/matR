@@ -1,87 +1,70 @@
 library(matR)
+N <- 1:4
+List <- mget (paste0 ("xx", N), inherits=TRUE)
 
-dim(xx1)
-dim(xx2)
-dim(xx3)
-dim(xx4)
+#-----------------------------------------------------------------------------------------
+#  OK FOR CRAN
+#-----------------------------------------------------------------------------------------
 
-length (intersect (colnames(xx1), colnames(xx2)))
-length (setdiff (colnames(xx1), colnames(xx2)))
-length (setdiff (colnames(xx2), colnames(xx1)))
-length (intersect (rownames(xx1), rownames(xx2)))
-length (setdiff (rownames(xx1), rownames(xx2)))
-length (setdiff (rownames(xx2), rownames(xx1)))
+f <- function (x, y) {										# merge and check integrity
+	z <- merge (x,y)
+#	applyBiomMethods (z)									# truncated for CRAN
+#	message ("rows:\t", nrow(x), "(x)\t", nrow(y), "(y)\t", nrow(z), "(merge)\t", 
+#		length (intersect (rownames(x), rownames(y))), "(in common)\n")
+#	message ("cols:\t", ncol(x), "(x)\t", ncol(y), "(y)\t", ncol(z), "(merge)\t", 
+#		length (intersect (colnames(x), colnames(y))), "(in common)\n")
+	}
 
-length (intersect (colnames(xx1), colnames(xx3)))
-length (setdiff (colnames(xx1), colnames(xx3)))
-length (setdiff (colnames(xx3), colnames(xx1)))
-length (intersect (rownames(xx1), rownames(xx3)))
-length (setdiff (rownames(xx1), rownames(xx3)))
-length (setdiff (rownames(xx3), rownames(xx1)))
-
-length (intersect (colnames(xx2), colnames(xx4)))
-length (setdiff (colnames(xx2), colnames(xx4)))
-length (setdiff (colnames(xx4), colnames(xx2)))
-length (intersect (rownames(xx2), rownames(xx4)))
-length (setdiff (rownames(xx2), rownames(xx4)))
-length (setdiff (rownames(xx4), rownames(xx2)))
-
+for (j in matrix2list (t (combn (N, 2)))) {
 #-----------------------------------------------------------------------------------------
 #  merge()
 #-----------------------------------------------------------------------------------------
-applyBiomMethods (merge (xx1,xx2))
-applyBiomMethods (merge (xx2,xx1))
-applyBiomMethods (merge (xx1,xx3))
-applyBiomMethods (merge (xx3,xx1))
-applyBiomMethods (merge (xx1,xx4))
-applyBiomMethods (merge (xx4,xx1))
-applyBiomMethods (merge (xx2,xx3))
-applyBiomMethods (merge (xx3,xx2))
-applyBiomMethods (merge (xx2,xx4))
-applyBiomMethods (merge (xx4,xx2))
-applyBiomMethods (merge (xx3,xx4))
-applyBiomMethods (merge (xx4,xx3))
+	x <- List [[j [1]]]
+	y <- List [[j [2]]]
+	f(x,y) ; f(y,x)											# merge each pair
+	}
 
+for (x in List) {
 #-----------------------------------------------------------------------------------------
 #  rows() and columns()
 #-----------------------------------------------------------------------------------------
-rows (xx2)
-dim (rows (xx2))
-dimnames (rows (xx2))
-class (rows (xx2))
-rows (xx2,"1")
-rows (xx2,"2")
-levels (rows (xx2,"1") [[1]])
-dim (rows (xx2,"1"))
-dimnames (rows (xx2,"1"))
-class (rows (xx2,"1"))
+	str (rows (x))											# all row/column annotations
+	str (columns (x))
+	str (rows (x, "a"))										# many matches
+	str (columns (x, "a"))
+	str (rows (x, "syzygy"))								# no match --- not sure this result is correct
+	str (columns (x, "syzygy"))
+	}	
 
-columns (xx1)
-dim (columns (xx1))
-dimnames (columns (xx1))
-class (columns (xx1))
-columns (xx1,"host_common_name")
-dim (columns (xx1,"host_common_name"))
-dimnames (columns (xx1,"host_common_name"))
-class (columns (xx1,"host_common_name"))
-columns (xx1,"samp_store_temp")
-columns (xx1,"collection_time")
-columns (xx1,"altitude")
-
-#-----------------------------------------------------------------------------------------
-#  subselection
-#-----------------------------------------------------------------------------------------
-xx1 [1:20, ]
-xx1 [, c(1,2,4)]
-xx1 [1:20, c(1,2,4)]
-
+for (x in List) {
 #-----------------------------------------------------------------------------------------
 #  rows<-() and columns<-()
 #-----------------------------------------------------------------------------------------
-rows (xx1, "junk") <- 1:nrow(xx1)
-columns (xx1, "junk") <- 1:ncol(xx1)
+	rows (x, "junk") <- 1:nrow(x)							# assign data of adequate length
+	columns (x, "junk") <- 1:ncol(x)
+	rows (x, "junk") <- 1:2									# assign too-short data
+	columns (x, "junk") <- 1:2
+	}
 
+for (x in List) {
 #-----------------------------------------------------------------------------------------
-#  rownames<-() and colnames<-()
+#  subselection
 #-----------------------------------------------------------------------------------------
+	i <- rep (c(TRUE,FALSE), len=nrow(x))
+	j <- rep (c(TRUE,FALSE), len=ncol(x))
+	x [i, ]													# just test a few random things
+	x [,j]
+	x [i,j]	
+	x [1,]													# but the special case of one index, in particular
+	x [,1]
+	}
 
+for (x in List) {
+#-----------------------------------------------------------------------------------------
+#  dimnames<-()
+#-----------------------------------------------------------------------------------------
+	rownames(x) <- 1:nrow(x)								# assign data of adequate length
+	colnames(x) <- 1:ncol(x)
+	rownames(x) <- 1										# assign too-short data
+	colnames(x) <- 1
+	}

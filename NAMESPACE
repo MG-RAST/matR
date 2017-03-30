@@ -19,7 +19,6 @@ export(
 	t_Log,
 	t_ColCenter,
 	t_ColScale,
-	t_DENorm,
 	transform.biom,
 
 	boxplot.biom,
@@ -36,9 +35,9 @@ export(
 
 	getMetRows,
 	getMetColumns,
-	subMetRows,
-	subMetColumns,
-	parMapper,
+	subRow,
+	subColumn,
+	parMap,
 	parAuto,
 
 	readSet,
@@ -76,27 +75,28 @@ S3method (rowstats, biom)
 S3method (distx, matrix)
 S3method (distx, biom)
 
-
+#-----------------------------------------------------------------------------------------
 #  package BIOM.utils is a strict dependency, declared in "Depends:"
 #  also (this is a separate point) methods for class "biom" are used throughout,
 #  so it makes sense to import the entire package namespace.
-
+#-----------------------------------------------------------------------------------------
 import (BIOM.utils)
 
+#-----------------------------------------------------------------------------------------
 #  package MGRASTer ought not to be considered a dependency, perhaps, yet is declared in "Depends:"
-#  because its environment seems to fail if not loaded this way.  (nonetheless, the
-#  following namespace import might reasonably be removed, in favor of explicit references.)
-
+#  because its environment seems to fail if not loaded this way.  nonetheless, the
+#  following namespace import might reasonably be removed, in favor of explicit references.
+#-----------------------------------------------------------------------------------------
 import (MGRASTer)
 
-#  all other packages are optional, each provided specific and limited analysis functionality.
+#-----------------------------------------------------------------------------------------
+#  all other packages are optional, each providing specific and limited analysis functionality.
 #  we adopt the approach described in this remark from the (forthcoming) R-ext manual:
 #    "If the intention is to give an error 
 #    if the suggested package is not available, 
 #    simply use e.g. rgl::plot3d."
-
-#  except that these are necessary because the package namespace depends on them:
-
+#  the following are exceptions, because the matR package namespace depends on them:
+#-----------------------------------------------------------------------------------------
 importFrom (graphics, boxplot)
 importFrom (graphics, image)
 importFrom (stats, princomp)

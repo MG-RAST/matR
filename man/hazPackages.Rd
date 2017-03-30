@@ -1,9 +1,9 @@
 \name{hazPackages}
 \alias{hazPackages}
 
-\title{Check for presence of recommnded packages}
+\title{Check for presence of recommended packages}
 
-\description{Check for presence of recommnded packages.}
+\description{Check for presence of recommended packages.}
 
 \usage{
 hazPackages()

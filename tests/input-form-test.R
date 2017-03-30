@@ -1,63 +1,35 @@
 library(matR)
 
 #-----------------------------------------------------------------------------------------
-#  readSet(), scrubSet(), scrapeSet(), expandSet()
+#  OK FOR CRAN
 #-----------------------------------------------------------------------------------------
-xx <- demoSets()
-yy <- lapply (xx, readSet)
-lapply (yy, scrubSet)
-lapply (yy, scrapeSet)
-lapply (yy, expandSet)
 
-#-----------------------------------------------------------------------------------------
-#  expandSet()
-#-----------------------------------------------------------------------------------------
-expandSet('mgp9')
-expandSet('mgp24')
-expandSet('mgp24 mgp9')
-expandSet('mgp24 mgp9 mgm4440463.3')
-expandSet('mgp24 mgm4440463.3 mgp9')
-expandSet('mgm4440463.3 mgp24 mgp9')
-expandSet('mgm4440463.3')
-df <- readSet(demoSets()[6]) ; df
-expandSet (df)
-df ['mgm4440463.3',] <- 'foo' ; df
-expandSet (df)
-zz <- readSet(demoSets()[7]) ; zz
-expandSet (xx)
+xx <- lapply (demoSets(), readSet)									# readSet(), scrubSet(), scrapeSet()
+lapply (xx, scrubSet)
+lapply (xx, scrapeSet)
 
-#-----------------------------------------------------------------------------------------
-#  scrubSet()
-#-----------------------------------------------------------------------------------------
-li <- list (
+lapply (list (														# scrubSet()
 	"mgm4440066.3",
 	"mgm4440066.3 mgm4440062.3",
 	"mgm4440066.3 mgm4440062.3 mgm4440055.3",
-
 	"mgm4440066.3",
 	"mgm4440066.3\tmgm4440062.3",
 	"mgm4440066.3\tmgm4440062.3 mgm4440055.3",
-
 	"mgm4440066.3",
 	"mgm4440066.3\t mgm4440062.3",
 	"mgm4440066.3\t mgm4440062.3\t mgm4440055.3",
-
 	"mgm4440066.3",
 	"mgm4440066.3\nmgm4440062.3",
 	"mgm4440066.3\nmgm4440062.3\nmgm4440055.3",
-
 	"4440066.3",
 	"4440066.3 4440062.3",
 	"4440066.3 4440062.3 4440055.3",
-
 	c("mgm4440066.3"),
 	c("mgm4440066.3", "mgm4440062.3"),
 	c("mgm4440066.3", "mgm4440062.3", "mgm4440055.3"),
-
 	c(4440066.3),
 	c(4440066.3, 4440062.3),
 	c(4440066.3, 4440062.3, 4440055.3),
-
 	c("mgm4440066.3 mgm4440062.3", "mgm4440055.3"),
 	c("4440066.3 mgm4440062.3", "mgm4440055.3"),
 	c("mgm4440066.3 4440062.3", "mgm4440055.3"),
@@ -65,12 +37,30 @@ li <- list (
 	c("mgm4440066.3 4440062.3", "4440055.3"),
 	c("4440066.3 mgm4440062.3", "4440055.3"),
 	c("4440066.3 4440062.3", "mgm4440055.3"),
-
 	"mgp21",
 	"mgp21 mgp24",
 	"mgp21 mgp24 mgp30",
-
 	c("mgp21"),
 	c("mgp21", "mgp24"),
-	c("mgp21", "mgp24", "mgp30"))
-lapply (li, scrubSet)
+	c("mgp21", "mgp24", "mgp30")), 
+	scrubSet)
+
+#-----------------------------------------------------------------------------------------
+#  NOT OK FOR CRAN
+#-----------------------------------------------------------------------------------------
+
+# lapply (xx, expandSet)												# expandSet()
+#
+# expandSet('mgp9')
+# expandSet('mgp24')
+# expandSet('mgp24 mgp9')
+# expandSet('mgp24 mgp9 mgm4440463.3')
+# expandSet('mgp24 mgm4440463.3 mgp9')
+# expandSet('mgm4440463.3 mgp24 mgp9')
+# expandSet('mgm4440463.3')
+# df <- readSet(demoSets()[6]) ; df
+# expandSet (df)
+# df ['mgm4440463.3',] <- 'foo' ; df
+# expandSet (df)
+# zz <- readSet(demoSets()[7]) ; zz
+# expandSet (xx)

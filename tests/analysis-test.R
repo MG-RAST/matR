@@ -1,106 +1,108 @@
 library(matR)
+N <- 1:4
+List <- mget (paste0 ("xx", N), inherits=TRUE)
 
 #-----------------------------------------------------------------------------------------
-#  distx()		...matrix method
+#  OK FOR CRAN
 #-----------------------------------------------------------------------------------------
-xx <- as.matrix (xx1, TRUE)
-yy <- as.matrix (xx2, TRUE)
-distx (xx)												# distance between columns
-distx (xx, bycol=FALSE)									# distance between rows
-distx (xx, method="bray-curtis")						# alt measure
-distx (xx, method="bray-curtis", bycol=FALSE)
-distx (xx, groups = columns(xx1, "host_common_name")[[1]])		# mean pairwise distance between groups
-distx (yy, groups = rows(xx2, "taxonomy1")[[1]], bycol=FALSE)	# row groups
-distx (xx, xx[,1])												# from each col to a given vector
-distx (xx, xx[1,], bycol=FALSE)										# from each row
-distx (xx, xx[,1], groups=columns(xx1, "host_common_name")[[1]])		# from each group to given vector
-distx (yy, yy[1,], groups=rows(xx2, "taxonomy1")[[1]], bycol=FALSE)	# row groups
 
+for (xx in List) {
 #-----------------------------------------------------------------------------------------
-#  distx()		...biom method (almost same)
+#  distx()		...biom method
 #-----------------------------------------------------------------------------------------
-uu <- as.matrix (xx1, TRUE) [,1]
-vv <- as.matrix (xx1, TRUE) [1,]
-ww <- as.matrix (yy1, TRUE) [1,]
-distx (xx1)											# distance between columns
-distx (xx1, bycol=FALSE)							# distance between rows
-distx (xx1, method="bray-curtis")					# alt measure
-distx (xx1, method="bray-curtis", bycol=FALSE)
-distx (xx1, groups="$$host_common_name")			# mean pairwise distance between groups
-distx (xx2, groups="$$taxonomy1", bycol=FALSE)		# row groups
-distx (xx1, uu)										# from each col to a given vector
-distx (xx1, vv, bycol=FALSE)							# from each row
-distx (xx1, uu, groups="$$host_common_name")			# from each group to given vector
-distx (xx2, ww, groups="$$taxonomy1", bycol=FALSE)	# row groups
+	uu <- as.matrix (xx, TRUE) [,1]
+	vv <- as.matrix (xx, TRUE) [1,]
+	distx (xx)														# distance between columns
+	distx (xx, bycol=FALSE)											# distance between rows
+	distx (xx, method="bray-curtis")								# alt measure
+	distx (xx, method="bray-curtis", bycol=FALSE)
+	distx (xx, groups=1:ncol(xx) %% 4)								# mean pairwise distance between groups
+	distx (xx, groups=1:nrow(xx) %% 4, bycol=FALSE)					# row groups
+	distx (xx, p=uu)												# from each col to a given vector
+	distx (xx, p=vv, bycol=FALSE)									# from each row
+	distx (xx, p=uu, groups=1:ncol(xx) %% 4)						# from each group to given vector
+	distx (xx, p=vv, groups=1:nrow(xx) %% 4, bycol=FALSE)			# row groups
+	}
 
+for (xx in List) {
 #-----------------------------------------------------------------------------------------
-#  rowstats()		...matrix method
+#  rowstats()	...biom method
 #-----------------------------------------------------------------------------------------
-#.............
-#.............
-#.............
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="Kr"))
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 3, test="Kr"))
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="t-test-un"))
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="Mann"))		# gives warning re. ties
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="AN"))
+	str (rowstats (xx, groups=seq(along=colnames(xx)) %% 3, test="AN"))
+	if (ncol(xx) %% 2 != 1) {
+		str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="t-test-p"))
+		str (rowstats (xx, groups=seq(along=colnames(xx)) %% 2, test="Wilc"))
+		}
+	}
 
+for (xx in List) {
 #-----------------------------------------------------------------------------------------
-#  rowstats()		...biom method (almost same)
+#  transform()				
 #-----------------------------------------------------------------------------------------
-stats(xx2a, groups="$source", test="Kruskal-Wallis", qvalue=TRUE)
-stats(xx2a, groups="$source", test="t-test-paired", qvalue=TRUE)
-stats(xx2a, groups="$source", test="Wilcoxon-paired", qvalue=TRUE)
-stats(xx2a, groups="$source", test="t-test-unpaired", qvalue=TRUE)
-stats(xx2a, groups="$source", test="Mann-Whitney-unpaired-Wilcoxon", qvalue=TRUE)
-stats(xx2a, groups="$source", test="ANOVA-one-way", qvalue=TRUE)
+	transform (xx, t_NA2Zero)
+	transform (xx, t_NA2Zero, t_Threshold)
+	transform (xx, t_NA2Zero, t_Threshold = list(entry=3))
+	transform (xx, t_NA2Zero, t_Threshold = list(row=6))
+	transform (xx, t_NA2Zero, t_Threshold = list(row=6,col=9))
+	transform (xx, t_NA2Zero, t_Threshold = list(entry=5))
+	transform (xx, t_NA2Zero, t_Threshold = list(entry=5), t_Log)
+	transform (xx, t_NA2Zero, t_Threshold = list(entry=5), t_Log, t_ColCenter)
+	}
 
-stats(xx2a, groups=1:ncol(xx2a) %% 2, test="Kruskal-Wallis", qvalue=TRUE)
-stats(xx2a, groups=1:ncol(xx2a) %% 2, test="t-test-paired", qvalue=TRUE)
-stats(xx2a, groups=1:ncol(xx2a) %% 2, test="Wilcoxon-paired", qvalue=TRUE)
-stats(xx2a, groups=1:ncol(xx2a) %% 2, test="t-test-unpaired", qvalue=TRUE)
-stats(xx2a, groups=1:ncol(xx2a) %% 2, test="Mann-Whitney-unpaired-Wilcoxon", qvalue=TRUE)
-stats(xx2a, groups=1:ncol(xx2a) %% 2, test="ANOVA-one-way", qvalue=TRUE)
-
-#-----------------------------------------------------------------------------------------
-#  transform()
-#-----------------------------------------------------------------------------------------
-#.............
-#.............
-#.............
-
-
+for (xx in List) {
 #-----------------------------------------------------------------------------------------
 #  boxplot()
 #-----------------------------------------------------------------------------------------
-xx1.normed <- transform (xx1, t.Log)
-graphics.off() ; boxplot(xx1)
-graphics.off() ; boxplot(
-	xx1, 
-	xx1,
-	main="so good they named it twice")
-graphics.off() ; boxplot(
-	xx1, 
-	xx1.normed)
-graphics.off() ; boxplot( 
-	xx1, 
-	xx1.normed,
-	columns=2:4)
-graphics.off() ; boxplot(
-	xx1, 
-	xx1.normed,
-	x.main="raw",
-	y.main="log")
-graphics.off() ; boxplot(
-	xx1,
-	xx1.normed,
+	xx.normed <- transform (xx, t_Log)
+	boxplot(xx)
+	boxplot(
+		xx, 
+		xx,
+		main="so good they named it twice")
+	boxplot(
+		xx, 
+		xx.normed)
+	boxplot( 
+		xx, 
+		xx.normed,
+		columns=2:4)
+	boxplot(
+		xx, 
+		xx.normed,
+		x.main="raw",
+		y.main="log")
+	boxplot(
+		xx,
+		xx.normed,
+		x.main="raw",
+		y.main="log",
+		cex.main=2,
+		x.names="$$project.id",
+		x.cex.axis=1.5,
+		y.names="$$metagenome.id",
+		y.cex.axis=0.75)
+	}
+xx <- xx1 ; xx.normed <- transform (xx, t_Log)
+boxplot(
+	xx,
+	xx.normed,
 	map=c(
 		col="host_common_name"))
-graphics.off() ; boxplot(
-	xx1, 
-	xx1.normed,
+boxplot(
+	xx, 
+	xx.normed,
 	x.main="raw",
 	y.main="log",
 	map=c(
 		col="host_common_name"))
-graphics.off() ; boxplot(
-	xx1.normed,
-	xx1.normed,
+boxplot(
+	xx.normed,
+	xx.normed,
 	x.main="log",
 	y.main="log",
 	map=c(
@@ -109,33 +111,23 @@ graphics.off() ; boxplot(
 	y.col=c(
 		"-80"="salmon",
 		"NA"="orange"))
-graphics.off() ; boxplot(
-	xx1,
-	xx1.normed,
-	x.main="raw",
-	y.main="log",
-	cex.main=2,
-	x.names="$$project.id",
-	x.cex.axis=1.5,
-	y.names="$$metagenome.id",
-	y.cex.axis=0.75)
 
 #-----------------------------------------------------------------------------------------
-#  princomp()
+#  princomp()				
 #-----------------------------------------------------------------------------------------
 princomp (xx1, method="euclidean")
 princomp (xx1, method="bray-curtis")
 
-princomp (xx1, dim=1)										# single PC
+princomp (xx1, dim=1)											# single PC
 princomp (xx1, dim=2)
-princomp (xx1, dim=c(1,2))									# two PCs
+princomp (xx1, dim=c(1,2))										# two PCs
 princomp (xx1, dim=c(2,3))
-princomp (xx1, dim=c(1,2,3))								# same three PCs
-princomp (xx1, dim=c(1,3,2))								# from different perspectives
+princomp (xx1, dim=c(1,2,3))									# same three PCs
+princomp (xx1, dim=c(1,3,2))									# from different perspectives
 princomp (xx1, dim=c(2,1,3))
-princomp (xx1, dim=c(2,3,4))								# different three PCs
+princomp (xx1, dim=c(2,3,4))									# different three PCs
 
-princomp (xx1, labels = "")									# labeling variations (color, size, metadata)
+princomp (xx1, labels = "")										# labeling variations (color, size, metadata)
 princomp (xx1, labels = LETTERS [1:7])
 princomp (xx1, labels = LETTERS [1:7], label.col = "blue")
 princomp (xx1, labels = "$$host_common_name")
@@ -158,9 +150,9 @@ princomp(
 # 		"cow"="blue",
 # 		"striped bass"="brown",
 # 		"Mouse"="brown"))
-princomp (xx3, dim=3, labels="", col="biom")
+princomp (xx3, dim=3, labels="", map=c(col="biome"))
 
-princomp(												# plotting character variations
+princomp(														# plotting character variations
 	xx1,
 	col="blue")
 princomp(
@@ -277,60 +269,60 @@ princomp(
 	mar=c(1,1,0,0))
 
 #-----------------------------------------------------------------------------------------
-#  image()
+#  image() --- omitted for CRAN
 #-----------------------------------------------------------------------------------------
-xx1.log <- transform (xx1, t.Log)
-xx2.log <- transform (xx2, t.Log)
-image(
-	xx1.log,
-	margins=c(6,13),
-	lwid=c(1,1.75), lhei=c(1,10),
-	cexRow=0.3, cexCol=0.8)
-image(
-	xx2.log,
-	margins=c(6,6),
-	lwid=c(1,2.5), lhei=c(1,10),
-	cexRow=0.5, cexCol=0.8)
-image(
-	xx2.log,
-	margins=c(9,6),
-	lwid=c(1,2.5), lhei=c(1,10),
-	cexRow=0.5, cexCol=0.8,
-	labCol="$$material")
-image(
-	xx2.log,
-	margins=c(4,6),
-	lwid=c(1,2.5), lhei=c(1,10),
-	cexRow=0.5, cexCol=0.8,
-	labCol="$$project.id")
- 
-zz <- image (xx1.log)
-image (xx1.log, 											# is this working?
-	main = "title added without recompute",
-	margins=c(5,5),
-	lhei=c(1,3), lwid=c(1,3),
-	labRow=NA,
-	rerender=zz)
-
-image (xx1.log, 											# row subselection
-	rows = (rows(xx1,"ontology1")[[1]] == "Clustering-based subsystems"),
-	labRow="$$ontology2",
-	lwid=c(1,3),
-	cexRow=0.5,
-	margins=c(5,10))
-
-image (xx1.log, columns = c(1,2,4))							# column subselection
-
-image (xx1.log, labCol=letters[1:7])
-image (xx1.log, labCol = "$$data.age")
-image (xx1.log, labCol=columns(xx1, "data.age") [[1]])		# same as previous
-
-image (xx1.log, rows=1:20, labRow=1:20)
-image (xx1.log, labRow="$$ontology1")
-image (xx1.log, labRow=rows(xx1, "ontology1")[[1]])			# same as previous
-
-image(														# no dendrograms
-	xx2.log,
-	dendrogram='none',
-	lwid=c(1,5), lhei=c(1,10),
-	margins=c(5,7))
+# xx1.log <- transform (xx1, t_Log)
+# xx2.log <- transform (xx2, t_Log)
+# image(
+# 	xx1.log,
+# 	margins=c(6,13),
+# 	lwid=c(1,1.75), lhei=c(1,10),
+# 	cexRow=0.3, cexCol=0.8)
+# image(
+# 	xx2.log,
+# 	margins=c(6,6),
+# 	lwid=c(1,2.5), lhei=c(1,10),
+# 	cexRow=0.5, cexCol=0.8)
+# image(
+# 	xx2.log,
+# 	margins=c(9,6),
+# 	lwid=c(1,2.5), lhei=c(1,10),
+# 	cexRow=0.5, cexCol=0.8,
+# 	labCol="$$material")
+# image(
+# 	xx2.log,
+# 	margins=c(4,6),
+# 	lwid=c(1,2.5), lhei=c(1,10),
+# 	cexRow=0.5, cexCol=0.8,
+# 	labCol="$$project.id")
+#  
+# zz <- image (xx1.log)
+# image (xx1.log, 											# is this working?
+# 	main = "title added without recompute",
+# 	margins=c(5,5),
+# 	lhei=c(1,3), lwid=c(1,3),
+# 	labRow=NA,
+# 	rerender=zz)
+# 
+# image (xx1.log, 											# row subselection
+# 	rows = (rows(xx1,"ontology1")[[1]] == "Clustering-based subsystems"),
+# 	labRow="$$ontology2",
+# 	lwid=c(1,3),
+# 	cexRow=0.5,
+# 	margins=c(5,10))
+# 
+# image (xx1.log, columns = c(1,2,4))							# column subselection
+# 
+# image (xx1.log, labCol=letters[1:7])
+# image (xx1.log, labCol = "$$data.age")
+# image (xx1.log, labCol=columns(xx1, "data.age") [[1]])		# same as previous
+# 
+# image (xx1.log, rows=1:20, labRow=1:20)
+# image (xx1.log, labRow="$$ontology1")
+# image (xx1.log, labRow=rows(xx1, "ontology1")[[1]])			# same as previous
+# 
+# image(														# no dendrograms
+# 	xx2.log,
+# 	dendrogram='none',
+# 	lwid=c(1,5), lhei=c(1,10),
+# 	margins=c(5,7))

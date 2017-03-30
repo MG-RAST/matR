@@ -10,8 +10,8 @@ parAuto(par.name, n)
 }
 
 \arguments{
-  \item{par.name}{name of graphical parameter ("character")}
-  \item{n}{how many values are needed ("integer")}
+  \item{par.name}{name of graphical parameter (\code{character})}
+  \item{n}{how many values are needed (\code{integer})}
 }
 
 \details{Internal and undocumented at present.}

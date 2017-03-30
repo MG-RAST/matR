@@ -1,6 +1,8 @@
+
 #-----------------------------------------------------------------------------------------
-#  Methods extending "biom" class (of package BIOM.utils)
+#  methods extending "biom" class from package BIOM.utils.
 #-----------------------------------------------------------------------------------------
+
 
 "dimnames<-.biom" <- function (x, value) {
 #-----------------------------------------------------------------------------------------
@@ -21,7 +23,7 @@
 	x
 	}
 
-rows <- function (x, pattern="*") {
+
 #-----------------------------------------------------------------------------------------
 #  rows,columns --- based on "metadata" fields
 #
@@ -29,19 +31,22 @@ rows <- function (x, pattern="*") {
 #     IDs in rownames
 #     metadata in colnames
 #
-#   -->should return vector rather than data.frame of one column??
-#	-->these will need to change slightly when biom is reimplemented
+#  -->should return vector rather than data.frame of one column??			prob not.
+#  -->these will need to change slightly when biom is reimplemented
+#  -->could rewrite with list2df()
 #
 #  produce a list of character vectors
 #  produce a corresponding list of logical index vectors
 #  select the matching elements; this is essentially the desired data, but its shape may be ragged...
-#  ...because we must allow that every row is structured differently!
+#  ...because every row may be structured differently
 #  so gather all names of matching fields
 #  and make the data rectangular, using indexing to add NA's where needed.
 #  sapply() returned matrix, or vector in case of a single metadata field
 #  in latter case, must recover its (lost) name,
 #  before constructing the data.frame
 #-----------------------------------------------------------------------------------------
+
+rows <- function (x, pattern="*") {
 	ll <- lapply (x$rows, unlist)
 	ii <- lapply (ll, function (vv, p) grepl (p, names(vv)), pattern)
 	yy <- mapply (`[`, ll, ii, SIMPLIFY=FALSE)
@@ -52,10 +57,8 @@ rows <- function (x, pattern="*") {
 	as.data.frame (t(ss), row.names = rownames (x))
 	}
 
+
 columns <- function (x, pattern="*") {
-#-----------------------------------------------------------------------------------------
-#  the same logic as above is followed here
-#-----------------------------------------------------------------------------------------
 	ll <- lapply (x$columns, unlist)
 	ii <- lapply (ll, function (vv, p) grepl (p, names(vv)), pattern)
 	yy <- mapply (`[`, ll, ii, SIMPLIFY=FALSE)
@@ -67,6 +70,7 @@ columns <- function (x, pattern="*") {
 
 	as.data.frame (t(ss), row.names = dimnames (x) [[2]])
 	}
+
 
 #-----------------------------------------------------------------------------------------
 #  metadata is "append-only" so the replacement functions are not typical:
@@ -89,21 +93,17 @@ insertHelper <- function (xx, yy, name) {
 	x
 	}
 
+
 `[.biom` <- function (x, i, j, ...) {
 #-----------------------------------------------------------------------------------------
-#  subsetting
-#
-#  allows indexing by:
-#  	 logical
-# 	 character (dimnames)
-# 	 numeric
-#  and note indexing can be used to reorder (needs testing)
+#  subsetting allows indexing by logical, character (i.e., dimnames), numeric.
+#  note that indexing can be used to reorder as usual (needs testing).
 #-----------------------------------------------------------------------------------------
 	m <- as.matrix (x, expand=TRUE) [i, j, drop=FALSE]
 	x$rows <- x$rows [match (rownames(m), rownames(x))]
 	x$columns <- x$columns [match (colnames(m), colnames(x))]
 	x$date <- strftime (Sys.time())
-	x$id <- paste0 ("derived with ", deparse (match.call()))
+	x$id <- paste0 ("derived with ", deparse (match.call(), width.cutoff=500))
 	x$generated_by <- tagline()
 
 	if (is.null (x$sparse)) {
@@ -120,10 +120,10 @@ insertHelper <- function (xx, yy, name) {
 	x
 	}
 
+
 merge.biom <- function (x, y, ...) {
 #-----------------------------------------------------------------------------------------
-#  merging
-#  assumption here is: columns are distinct, rows may not be
+#  requires here that columns are distinct; rows may not be
 #
 #  we require unique column names (biom ids)
 #  we identify rows with matching names (biom ids)
@@ -144,9 +144,9 @@ merge.biom <- function (x, y, ...) {
 	if (anyDuplicated (new.column.names))
 		stop("merge prevented by duplicated columns")
 	if (anyDuplicated (c(rownames(x), rownames(y))))
-		warning ("merging with rows in common takes metadata from \"x\"")
+		warning ("merging with rows in common takes row metadata from \'x\'")
 	if (x$type != y$type)
-		warning ("merging different \"type\"s forces common \"type\"")
+		warning ("merging different \'type\'s forces common \'type\'")
 
 	nc <- length (new.column.names)
 	new.columns <- append (x$columns, y$columns)
@@ -154,17 +154,17 @@ merge.biom <- function (x, y, ...) {
 	new.row.names <- union (rownames (x), rownames (y))
 	nr <- length (new.row.names)
 	new.rows <- vector ("list", nr)
-	names (new.rows) <- new.row.names		# names convenient for assignment; not required for biom
-	new.rows [rownames (y)] <- y$rows
+	names (new.rows) <- new.row.names					# names are convenient here,
+	new.rows [rownames (y)] <- y$rows					# not required by biom format
 	new.rows [rownames (x)] <- x$rows
 
-#  unsparse merge
-#    create a new matrix of the right size
-#    and fill in data from x and y, both expanded
+####  unsparse merge
+####    create a new matrix of the right size
+####    and fill in data from x and y, both expanded
 
 	if (is.null (x$sparse) || is.null (y$sparse)) {
 		if (!is.null (x$sparse) || !is.null (y$sparse))
-			warning ("\"sparse\" expanded to merge with \"dense\"")
+			warning ("\'sparse\' expanded to merge with \'dense\'")
 		sparse <- NULL
 		mm <- matrix(
 			0, nrow=nr, ncol=nc,
@@ -174,9 +174,9 @@ merge.biom <- function (x, y, ...) {
 		mm [rownames(x), colnames(x)] <- as.matrix (x$data, TRUE)
 		mm [rownames(y), colnames(y)] <- as.matrix (y$data, TRUE)
 				
-#  sparse merge:
-#    update row indices (nonzero entries from both x and y)
-#    update col indices (nonzero entries from y only)
+####  sparse merge:
+####    update row indices (nonzero entries from both x and y)
+####    update col indices (nonzero entries from y only)
 
 		} else {
 			sparse <- list (new.row.names, new.column.names)
@@ -188,7 +188,7 @@ merge.biom <- function (x, y, ...) {
 	zz <- biom (mm, x$type, sparse)
 	zz$rows <- new.rows
 	zz$columns <- new.columns
-	zz$id <- paste0 ("derived with ", deparse (match.call()))
+	zz$id <- paste0 ("derived with ", deparse (match.call(), width.cutoff=500))
 	zz$generated_by <- tagline()
 	zz
 	}

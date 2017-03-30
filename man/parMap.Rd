@@ -1,18 +1,18 @@
-\name{parMapper}
-\alias{parMapper}
+\name{parMap}
+\alias{parMap}
 
 \title{Determine par values according to a provided metadata mapping}
 
 \description{Determine par values according to a provided metadata mapping.}
 
 \usage{
-parMapper(object, name.map, value.map)
+parMap(object, name.map, value.map)
 }
 
 \arguments{
-  \item{object}{object with metadata ("biom")}
-  \item{name.map}{mapping of par names to metadata names ("character")}
-  \item{value.map}{list possibly including mappings of metadata values to par values ("list")}
+  \item{object}{object with metadata (\code{biom})}
+  \item{name.map}{mapping of par names to metadata names (\code{character})}
+  \item{value.map}{list possibly including mappings of metadata values to par values (\code{list})}
 }
 
 \details{Internal and undocumented at present.}

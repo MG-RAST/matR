@@ -1,11 +1,13 @@
-#---------------------------------------------------------------------
-#  Data transformations:
-#    matrix transformations:  set of primitives
-#    biom transformations:  function transform() as common interface
-#---------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------
+#  data transformations of biom objects.
+#
+#  for matrix transformation, we have a set of "primitives".
+#  for biom transformation, we have a transform() method that applies them.
+#-----------------------------------------------------------------------------------------
 
 transform.biom <- function (`_data`, ...) {
-	xx <- `_data`
+	x <- `_data`
 	li <- list (...)
 	if (is.null (names (li))) {
 		f.list <- li
@@ -21,30 +23,54 @@ transform.biom <- function (`_data`, ...) {
 		a.list [names (li) != ""] <- li [names (li) != ""]
 		}
 
+####  this is:  list(x, list(list of functions, list of argument lists))
+
 	ll <- append(
-			list (as.matrix (xx, expand=TRUE)),
+			list (as.matrix (x, expand=TRUE)),
 			mapply (list, f.list, a.list, SIMPLIFY=FALSE))
 	pass.to <- function (x, funcWithArgs) {
-		do.call (funcWithArgs [[1]], append (list (x), funcWithArgs [-1]))
+
+####  there was an issue here:
+####  args being passed in a list capsule should not be.
+####  but it is resolved now?
+
+		do.call (funcWithArgs [[1]], append (list (x), funcWithArgs [[2]]))
 		}
 	data1 <- Reduce (pass.to, ll)
 
-	y <- xx [rownames(xx) %in% rownames (data1), colnames (xx) %in% colnames (data1)]
+	y <- x [rownames(x) %in% rownames (data1), colnames (x) %in% colnames (data1)]
 	y$data <- data1
 	y$sparse <- NULL
 	y$generated_by <- tagline()
 	y$date <- strftime(Sys.time())
-	y$id <- paste0 ("derived with ", deparse (match.call()))
+	y$id <- paste0 ("derived with ", deparse (match.call(), width.cutoff=500))
 	y
 	}
 
-t_NA2Zero <- function (x, ...) { x [is.na (x)] <- 0; x }
-t_Threshold <- function (x, entry.lim=1, row.lim=1, col.lim=1) {
-	x [x <= entry.lim] <- 0 ; x <- x [rowSums (x) >= row.lim, ] ; x <- x [, colSums (x) >= col.lim] ; x
+t_NA2Zero <- function (x, ...) {
+	x [is.na (x)] <- 0;
+	x
 	}
-t_Log <- function (x, ...) { log2 (1 + x) }
-t_ColCenter <- function (x, ...) { x - colMeans(x) [col(x)] }
+
+t_Threshold <- function (x, entry.min=2, row.min=2, col.min=2) {
+	x [x < entry.min] <- 0
+	x <- x [rowSums (x) >= row.min, ]
+	x <- x [, colSums (x) >= col.min]
+	x
+	}
+
+t_Log <- function (x, ...) {
+	log2 (1 + x)
+	}
+
+t_ColCenter <- function (x, ...) {
+	x - colMeans(x) [col(x)]
+	}
+
 t_ColScale <- function (x, ...) {
-	sigma <- apply (x, 2, sd) ; sigma <- ifelse (sigma == 0, 1, sigma) ; x / sigma [col(x)]
+	sigma <- apply (x, 2, sd)
+	sigma [sigma == 0] <- 1
+	x / sigma [col(x)]
 	}
+
 t_DENorm <- function (x, DEparam, ...) { x }

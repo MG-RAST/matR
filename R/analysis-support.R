@@ -1,24 +1,31 @@
+
+#-----------------------------------------------------------------------------------------
+#  functions in support of analysis methods.
+#-----------------------------------------------------------------------------------------
+
+
 resolve <- function (first, second) {
-#---------------------------------------------------------------
+#-----------------------------------------------------------------------------------------
 #  merge two named lists, eliminating duplicates and giving priority to the first
-#---------------------------------------------------------------
-	append (first, second) [ !duplicated (c (names (first), names(second))) ]
+#-----------------------------------------------------------------------------------------
+	append (first, second) [ !duplicated (c (names(first), names(second))) ]
 	}
 
 
-parMapper <- function (object, name.map, value.map) {
-#---------------------------------------------------------------------
-#	produce par values given mappings.  input is:
-#		xx			biom object (with metadata)
-#		map			mapping of names of par to names of metadata
-#		values		list _possibly_ including a specific mapping for each mapped par
-#---------------------------------------------------------------------
+parMap <- function (object, name.map, value.map) {
+#-----------------------------------------------------------------------------------------
+#  workhorse function enabling metadata mapping in graphics.  input is:
+#    object			biom
+#    map			mapping of par variable names to metadata field names (character)
+#    values			optional specific value mappings for par variable (list)
+#  return value is specific values for all mapped par variables.
+#-----------------------------------------------------------------------------------------
 	if (is.null (name.map)) return (list())
 
 	pars <- names (name.map)
 	metadata.values <- lapply (name.map, getMetColumns, object)
 
-#  make NA any metadata that is "NA".
+####  make NA any metadata that is "NA".
 
 	metadata.values <- lapply (metadata.values,
 		function (xx) {
@@ -26,9 +33,9 @@ parMapper <- function (object, name.map, value.map) {
 			xx
 			})
 
-#  create mappings where they are not specified at all.
-#  in the mapping, the missing level must be identified by name "NA",
-#  not by a missing name.
+####  create mappings where they are not specified at all.
+####  in the mapping, the missing level must be identified by name "NA",
+####  not by a missing name.
 
 	automatic <- setdiff (pars, names (value.map))
 	value.map [automatic] <- mapply(
@@ -45,7 +52,7 @@ parMapper <- function (object, name.map, value.map) {
 
 	value.map <- value.map [pars]
 
-#  make NA any unspecified levels of partially-specified metadata
+####  make NA any unspecified levels of partially-specified metadata
 
 	metadata.values <- mapply(
 		function (xx, map) {
@@ -56,7 +63,7 @@ parMapper <- function (object, name.map, value.map) {
 		value.map,
 		SIMPLIFY=FALSE)
 
-#  complete partial mappings by adding a value for NA, if necessary
+####  complete partial mappings by adding a value for NA, if necessary
 
 	value.map <- mapply(
 		function (map, par) {
@@ -67,9 +74,9 @@ parMapper <- function (object, name.map, value.map) {
 		names (value.map),
 		SIMPLIFY=FALSE)
 
-#  apply all mappings to create par specifications.
-#  the missing level must be renamed to "NA",
-#  in order to get the value intended for it.
+####  apply all mappings to create par specifications.
+####  the missing level must be renamed to "NA",
+####  in order to get the value intended for it.
 
 	yy <- mapply(
 		function (values, map) {
@@ -77,7 +84,7 @@ parMapper <- function (object, name.map, value.map) {
 			yy <- levels (values)
 			yy [is.na (yy)] <- "NA"
 			levels (values) <- map [yy]
-			if (is.numeric (map)) {						# ensure resulting par has the right class
+			if (is.numeric (map)) {								# ensure correct class
 				as.numeric (as.character (values))
 			} else as.character (values)
 			},
@@ -86,42 +93,46 @@ parMapper <- function (object, name.map, value.map) {
 		SIMPLIFY=FALSE)
 	}
 
-#---------------------------------------------------------------------
-#  facilitate:
-#    (1) metadata mapping
-#    (2) literal metadata substitutions
-#---------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------
+#  utilities to facilitate metadata mapping
+#-----------------------------------------------------------------------------------------
 
 getMetColumns <- function (name, xx) {
 	yy <- columns (xx, name)
 	if (ncol (yy) != 1)
-		stop ("\"", name, "\" does not identify a unique column metadata field")
+		stop ("\'", name, "\' does not identify a unique column metadata field")
 	yy [[1]]
 	}
 
 getMetRows <- function (name, xx) {
 	yy <- rows (xx, name)
 	if (ncol (yy) != 1)
-		stop ("\"", name, "\" does not identify a unique row metadata field")
+		stop ("\'", name, "\' does not identify a unique row metadata field")
 	yy [[1]]
 	}
 
-subMetColumns <- function (name, xx) {
+
+#-----------------------------------------------------------------------------------------
+#  utilities to facilitate literal metadata substitutions
+#-----------------------------------------------------------------------------------------
+
+subColumn <- function (name, xx) {
 	if (length (name) != 1 ||
 		!is.character (name) ||
 		substr (name, 1, 2) != "$$") return (name)
 	yy <- columns (xx, substring (name, 3))
 	if (ncol (yy) != 1)
-		stop ("\"", name, "\" does not identify a unique column metadata field")
+		stop ("\'", name, "\' does not identify a unique column metadata field")
 	as.character (yy [[1]])
 	}
 
-subMetRows <- function (name, xx) {
+subRow <- function (name, xx) {
 	if (length (name) != 1 ||
 		!is.character (name) ||
 		substr (name, 1, 2) != "$$") return (name)
 	yy <- rows (xx, substring (name, 3))
 	if (ncol (yy) != 1)
-		stop ("\"", name, "\" does not identify a unique row metadata field")
+		stop ("\'", name, "\' does not identify a unique row metadata field")
 	as.character (yy [[1]])
 	}

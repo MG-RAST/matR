@@ -1,10 +1,15 @@
 library(matR)
+N <- 1:4
 
 #-----------------------------------------------------------------------------------------
-#  check package sample data and related functions
+#  OK FOR CRAN
 #-----------------------------------------------------------------------------------------
-ff <- demoSets()
-cat ("Sample files:", ff, sep="\n")
-li <- lapply (ff, readSet)
-gg <- buildDemoSets()
-unlink (gg)
+
+sapply (demoSets(), readSet, simplify=FALSE)					# check demo ID files are available
+names (.Last.value)
+
+#-----------------------------------------------------------------------------------------
+#  NOT OK FOR CRAN
+#-----------------------------------------------------------------------------------------
+
+ # unlink (buildDemoSets (N))									# build demo objects

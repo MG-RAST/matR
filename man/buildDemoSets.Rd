@@ -1,19 +1,28 @@
 \name{buildDemoSets}
 \alias{buildDemoSets}
 
-\title{Build example datasets}
+\title{
+Build objects containing metagenome annotations as BIOM data
+}
 
-\description{Build example datasets.}
+\description{
+Build (for packaging) or rebuild certain objects of class \code{biom} for demonstration purposes.
+}
 
 \usage{
-buildDemoSets(file = "sample-sets.rda")
+buildDemoSets(n=TRUE, file="demoObjects.rda")
 }
 
 \arguments{
-  \item{file}{filename for output ("character")}
+  \item{n}{which sets (\code{integer})}
+  \item{file}{filename for output (\code{character})}
 }
 
 \details{Internal and undocumented at present.}
 \value{Internal and undocumented at present. }
 \author{Daniel T. Braithwaite}
+\seealso{
+\code{\link{demoObjects}},
+\code{\link{demoSets}}
+}
 \keyword{internal}
