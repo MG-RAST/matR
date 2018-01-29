@@ -18,20 +18,20 @@ During an R session, load matR with:
 
 INSTALLATION
 ------------
-Make sure to have a current version of R, available from http://www.r-project.org.
-Then during an R session, install with:
-
-	> install.packages('matR', dep=TRUE)
-	> library(matR)
-	> dependencies()
-
-DEVELOPMENT VERSION
--------------
-Users of the early release version can reinstall it with:
-
 	> remove.packages('matR')        # if necessary
 	> install.packages('devtools')
 	> library(devtools)
-	> install_github(repo='MG-RAST/matR', ref="early-release")
+	> install_github(repo='MG-RAST/matR') 
 	> library(matR)
 	> dependencies()
+
+
+QUICK START
+-------------
+
+    > # auth.MGRAST('MgRastWebKeyGoesHereKEJ88')      # get this from the upload page if you need to access private data
+    > list_mgp80869 <- metadata("mgp80869")$mgp80869  #  Cross CZO soil depth profiles  project
+    > biom_phylym <- biomRequest(list_mgp80869, request="organism", hit_type="all", source="RDP", group_level="phylum", evalue=15,  wait=TRUE)
+    > phylum_matrix <- as.matrix(biom_phylum)
+    > dimnames(phylum_matrix)
+

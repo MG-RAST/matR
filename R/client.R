@@ -139,7 +139,7 @@ biom.environment <- function (x, wait=TRUE, ..., quiet=FALSE) {
 		if (!quiet && nrow (ledger) > 1) message("done")
 
 #		if(!is.null("add.metadata")) columns(yy) <- add.metadata
-		if(!is.null(outfile)) writeLines(as.character(yy), file=outfile)
+		if(!is.null(outfile)) writeLines(as.character(yy), outfile)
 		invisible(yy)
 		})
 	}
