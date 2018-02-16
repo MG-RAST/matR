@@ -31,7 +31,7 @@ QUICK START
 
     > # auth.MGRAST('MgRastWebKeyGoesHereKEJ88')      # get this from the upload page if you need to access private data
     > list_mgp80869 <- metadata("mgp80869")$mgp80869  #  Cross CZO soil depth profiles  project
-    > biom_phylym <- biomRequest(list_mgp80869, request="organism", hit_type="all", source="RDP", group_level="phylum", evalue=15,  wait=TRUE)
+    > biom_phylum <- biomRequest(list_mgp80869, request="organism", hit_type="all", source="RDP", group_level="phylum", evalue=15,  wait=TRUE)
     > phylum_matrix <- as.matrix(biom_phylum)
     > dimnames(phylum_matrix)
 
