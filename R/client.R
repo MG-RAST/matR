@@ -27,7 +27,6 @@ biomRequest <- function (x, request=c("function", "organism", "feature"), ...,
 #  for "..." arguments see:
 #    doc.MGRAST(2, head=c('matrix','organism','parameters','options'))
 #    doc.MGRAST(2, head=c('matrix','function','parameters','options'))
-#    doc.MGRAST(2, head=c('matrix','feature','parameters','options'))
 #
 #    asynchronous 	source 		result_type 	filter 			group_level 	grep 	length 
 #    evalue 		identity	 filter_source 	hide_metadata 	id 				filter_level

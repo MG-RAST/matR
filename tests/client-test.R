@@ -315,7 +315,6 @@ library(matR)
 # 
 # names(.MGRAST$API [[c('matrix','organism','parameters','options')]])
 # names(.MGRAST$API [[c('matrix','function','parameters','options')]])
-# names(.MGRAST$API [[c('matrix','feature','parameters','options')]])
 # # 
 # #  $ organism.parameters.options:List of 15
 # #   ..$ asynchronous : chr [1:2] "boolean" "if true return process id to query status resource for results, default is false"
@@ -371,21 +370,3 @@ library(matR)
 # #   .. ..$ : chr "cv"
 # #   .. ..$ :List of 8
 # # 
-# #  $ feature.parameters.options :List of 11
-# #   ..$ asynchronous   : chr [1:2] "boolean" "if true return process id to query status resource for results, default is false"
-# #   ..$ source         :List of 2
-# #   .. ..$ : chr "cv"
-# #   .. ..$ :List of 12
-# #   ..$ result_type    :List of 2
-# #   .. ..$ : chr "cv"
-# #   .. ..$ :List of 4
-# #   ..$ filter         : chr [1:2] "string" "filter the return results to only include abundances based on genes with this organism"
-# #   ..$ length         : chr [1:2] "int" "value for minimum alignment length cutoff: default is 15"
-# #   ..$ evalue         : chr [1:2] "int" "negative exponent value for maximum e-value cutoff: default is 5"
-# #   ..$ identity       : chr [1:2] "int" "percent value for minimum % identity cutoff: default is 60"
-# #   ..$ hide_annotation: chr [1:2] "boolean" "if true do not return feature metadata in 'rows' object, default is false"
-# #   ..$ id             : chr [1:2] "string" "one or more metagenome or project unique identifier"
-# #   ..$ hide_metadata  : chr [1:2] "boolean" "if true do not return metagenome metadata in 'columns' object, default is false"
-# #   ..$ filter_level   :List of 2
-# #   .. ..$ : chr "cv"
-# #   .. ..$ :List of 8
