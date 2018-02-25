@@ -12,7 +12,7 @@ for specified metagenomes and projects into an object of class \code{biom}.
 }
 
 \usage{
-biomRequest(x, request=c("function", "organism", "feature"), ..., 
+biomRequest(x, request=c("function", "organism"), ...,
   block, wait=TRUE, quiet=FALSE, file, outfile)
 
 \method{biom}{environment}(x, wait=TRUE, ..., quiet=FALSE)
@@ -79,5 +79,4 @@ yy <- biom (yy)
 ####  full detail for available options
 doc.MGRAST (3, head=c("matrix","function","parameters","options"))
 doc.MGRAST (3, head=c("matrix","organism","parameters","options"))
-doc.MGRAST (3, head=c("matrix","feature","parameters","options"))
 }

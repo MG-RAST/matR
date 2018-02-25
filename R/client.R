@@ -13,7 +13,7 @@
 #-----------------------------------------------------------------------------------------
 
 
-biomRequest <- function (x, request=c("function", "organism", "feature"), ..., 
+biomRequest <- function (x, request=c("function", "organism"), ...,
 	block, wait=TRUE, quiet=FALSE, file, outfile) {
 #-----------------------------------------------------------------------------------------
 #  Post and fulfill data requests.  Important capabilities:
