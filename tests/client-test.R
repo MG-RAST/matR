@@ -9,7 +9,7 @@ library(matR)
 ##
 ## Set this variable manually if you want to run the tests
 ##
-if (Sys.getenv("RunFOAASTests=yes") != "yes") 
+if (Sys.getenv("RunFOAASTests=yes") != "yes")
 {
 
 # #-----------------------------------------------------------------------------------------
@@ -19,71 +19,71 @@ tt <- tempfile()
 ff <- demoSets() [1]
 gg <- demoSets () [4]
 
-xx <- readSet (ff)  							#  7 metagenomes; IDs only --- vector
-yy <- readSet (gg)							#  32 metagenomes; data.frame with names, type
+xx <- readSet (ff) #  7 metagenomes; IDs only --- vector
+yy <- readSet (gg) #  32 metagenomes; with metadata --- data.frame
 
-biomRequest (file=ff)  # This is OK
-biomRequest (file=gg)  # FAIL wrong type
+k01 <- biomRequest (file=ff)  # This is OK
+k02 <- biomRequest (file=gg)  # FAIL wrong type
 
-biomRequest(xx)
-biomRequest(xx, request="organism")
-biomRequest(xx, block=3)
-biomRequest(xx, block=3, request="organism")
+k03 <- biomRequest(xx)
+k04 <- biomRequest(xx, request="organism")
+k05 <- biomRequest(xx, block=3)
+k06 <- biomRequest(xx, block=3, request="organism")
 
-biomRequest(xx, quiet=TRUE)
-biomRequest(xx, quiet=TRUE, request="organism")
-biomRequest(xx, quiet=TRUE, block=3)
-biomRequest(xx, quiet=TRUE, block=3, request="organism")
+k07 <- biomRequest(xx, quiet=TRUE)
+k08 <- biomRequest(xx, quiet=TRUE, request="organism")
+k09 <- biomRequest(xx, quiet=TRUE, block=3)
+k10 <- biomRequest(xx, quiet=TRUE, block=3, request="organism")
 
-biomRequest(xx, wait=FALSE) -> zz ; biom(zz, wait=TRUE)
-biomRequest(xx, wait=FALSE, request="organism") -> zz ; biom(zz, wait=TRUE)
-biomRequest(xx, wait=FALSE, block=3) -> zz ; biom(zz, wait=TRUE)
-biomRequest(xx, wait=FALSE, block=3, request="organism") -> zz ; biom(zz, wait=TRUE)
+k11 <- biomRequest(xx, wait=FALSE) -> zz ; biom(zz, wait=TRUE)
+k12 <- biomRequest(xx, wait=FALSE, request="organism") -> zz ; biom(zz, wait=TRUE)
+k13 <- biomRequest(xx, wait=FALSE, block=3) -> zz ; biom(zz, wait=TRUE)
+k14 <- biomRequest(xx, wait=FALSE, block=3, request="organism") -> zz ; biom(zz, wait=TRUE)
 
-biomRequest(xx, wait=FALSE, quiet=TRUE) -> zz ; biom(zz, wait=TRUE)
-biomRequest(xx, wait=FALSE, quiet=TRUE, request="organism") -> zz ; biom(zz, wait=TRUE)
-biomRequest(xx, wait=FALSE, quiet=TRUE, block=3) -> zz ; biom(zz, wait=TRUE)
-biomRequest(xx, wait=FALSE, quiet=TRUE, block=3, request="organism") -> zz ; biom(zz, wait=TRUE)
+k15 <- biomRequest(xx, wait=FALSE, quiet=TRUE) -> zz ; biom(zz, wait=TRUE)
+k16 <- biomRequest(xx, wait=FALSE, quiet=TRUE, request="organism") -> zz ; biom(zz, wait=TRUE)
+k17 <- biomRequest(xx, wait=FALSE, quiet=TRUE, block=3) -> zz ; biom(zz, wait=TRUE)
+k18 <- biomRequest(xx, wait=FALSE, quiet=TRUE, block=3, request="organism") -> zz ; biom(zz, wait=TRUE)
 
-biomRequest(xx, wait=FALSE) -> zz ; biom(zz, wait=FALSE)
-biomRequest(xx, wait=FALSE, request="organism") -> zz ; biom(zz, wait=FALSE)
-biomRequest(xx, wait=FALSE, block=3) -> zz ; biom(zz, wait=FALSE)
-biomRequest(xx, wait=FALSE, block=3, request="organism") -> zz ; biom(zz, wait=FALSE)
+k19 <- biomRequest(xx, wait=FALSE) -> zz ; biom(zz, wait=FALSE)
+k20 <- biomRequest(xx, wait=FALSE, request="organism") -> zz ; biom(zz, wait=FALSE)
+k21 <- biomRequest(xx, wait=FALSE, block=3) -> zz ; biom(zz, wait=FALSE)
+k22 <- biomRequest(xx, wait=FALSE, block=3, request="organism") -> zz ; biom(zz, wait=FALSE)
 
-biomRequest(xx, wait=FALSE, quiet=TRUE) -> zz ; biom(zz, wait=FALSE)
-biomRequest(xx, wait=FALSE, quiet=TRUE, request="organism") -> zz ; biom(zz, wait=FALSE)
-biomRequest(xx, wait=FALSE, quiet=TRUE, block=3) -> zz ; biom(zz, wait=FALSE)
-biomRequest(xx, wait=FALSE, quiet=TRUE, block=3, request="organism") -> zz ; biom(zz, wait=FALSE)
+k23 <- biomRequest(xx, wait=FALSE, quiet=TRUE) -> zz ; biom(zz, wait=FALSE)
+k24 <- biomRequest(xx, wait=FALSE, quiet=TRUE, request="organism") -> zz ; biom(zz, wait=FALSE)
+k25 <- biomRequest(xx, wait=FALSE, quiet=TRUE, block=3) -> zz ; biom(zz, wait=FALSE)
+k26 <- biomRequest(xx, wait=FALSE, quiet=TRUE, block=3, request="organism") -> zz ; biom(zz, wait=FALSE)
 
-# biomRequest(yy)   # FAIL wrong data type requested 
-biomRequest(yy, request="organism", source="Greengenes")
-# biomRequest(yy, block=10)
-biomRequest(yy, block=10, request="organism", source="Greengenes")
+#k27 <- biomRequest(yy) # FAIL wrong data type requested
+k28 <- biomRequest(yy, request="organism", source="Greengenes")
+#k29 <- biomRequest(yy, block=10)
+k30 <- biomRequest(yy, block=10, request="organism", source="Greengenes")
 
-# biomRequest(yy, quiet=TRUE)
-biomRequest(yy, quiet=TRUE, request="organism", source="Greengenes")
-# biomRequest(yy, quiet=TRUE, block=10)
-biomRequest(yy, quiet=TRUE, block=10, request="organism", source="Greengenes")
+#k31 <- biomRequest(yy, quiet=TRUE)
+k32 <- biomRequest(yy, quiet=TRUE, request="organism", source="Greengenes")
+#k33 <- biomRequest(yy, quiet=TRUE, block=10)
+k34 <- biomRequest(yy, quiet=TRUE, block=10, request="organism", source="Greengenes")
 
-# biomRequest(yy, wait=FALSE) -> zz ; biom(zz, wait=TRUE)
-biomRequest(yy, wait=FALSE, request="organism", source="Greengenes") -> zz ; biom(zz, wait=TRUE)
-#biomRequest(yy, wait=FALSE, block=10) -> zz ; biom(zz, wait=TRUE)
-biomRequest(yy, wait=FALSE, block=10, request="organism", source="Greengenes") -> zz ; biom(zz, wait=TRUE)
+#k35 <- biomRequest(yy, wait=FALSE) -> zz ; biom(zz, wait=TRUE)
+k36 <- biomRequest(yy, wait=FALSE, request="organism", source="Greengenes") -> zz ; biom(zz, wait=TRUE)
+#k37 <- biomRequest(yy, wait=FALSE, block=10) -> zz ; biom(zz, wait=TRUE)
+k38 <- biomRequest(yy, wait=FALSE, block=10, request="organism", source="Greengenes") -> zz ; biom(zz, wait=TRUE)
 
-#biomRequest(yy, wait=FALSE, quiet=TRUE) -> zz ; biom(zz, wait=TRUE)
-biomRequest(yy, wait=FALSE, quiet=TRUE, request="organism", source="Greengenes") -> zz ; biom(zz, wait=TRUE)
-#biomRequest(yy, wait=FALSE, quiet=TRUE, block=10) -> zz ; biom(zz, wait=TRUE)
-biomRequest(yy, wait=FALSE, quiet=TRUE, block=10, request="organism", source="Greengenes") -> zz ; biom(zz, wait=TRUE)
+#k39 <- biomRequest(yy, wait=FALSE, quiet=TRUE) -> zz ; biom(zz, wait=TRUE)
+k40 <- biomRequest(yy, wait=FALSE, quiet=TRUE, request="organism", source="Greengenes") -> zz ; biom(zz, wait=TRUE)
+#k41 <- biomRequest(yy, wait=FALSE, quiet=TRUE, block=10) -> zz ; biom(zz, wait=TRUE)
+k42 <- biomRequest(yy, wait=FALSE, quiet=TRUE, block=10, request="organism", source="Greengenes") -> zz ; biom(zz, wait=TRUE)
 
-#biomRequest(yy, wait=FALSE) -> zz ; biom(zz, wait=FALSE)
-biomRequest(yy, wait=FALSE, request="organism", source="Greengenes") -> zz ; biom(zz, wait=FALSE)
-#biomRequest(yy, wait=FALSE, block=10) -> zz ; biom(zz, wait=FALSE)
-biomRequest(yy, wait=FALSE, block=10, request="organism", source="Greengenes") -> zz ; biom(zz, wait=FALSE)
+#k43 <- biomRequest(yy, wait=FALSE) -> zz ; biom(zz, wait=FALSE)
+k44 <- biomRequest(yy, wait=FALSE, request="organism", source="Greengenes") -> zz ; biom(zz, wait=FALSE)
+#k45 <- biomRequest(yy, wait=FALSE, block=10) -> zz ; biom(zz, wait=FALSE)
+k46 <- biomRequest(yy, wait=FALSE, block=10, request="organism", source="Greengenes") -> zz ; biom(zz, wait=FALSE)
 
-#biomRequest(yy, wait=FALSE, quiet=TRUE) -> zz ; biom(zz, wait=FALSE)
-biomRequest(yy, wait=FALSE, quiet=TRUE, request="organism", source="Greengenes") -> zz ; biom(zz, wait=FALSE)
-#biomRequest(yy, wait=FALSE, quiet=TRUE, block=10) -> zz ; biom(zz, wait=FALSE)
-biomRequest(yy, wait=FALSE, quiet=TRUE, block=10, request="organism", source="Greengenes") -> zz ; biom(zz, wait=FALSE)
+#k47 <- biomRequest(yy, wait=FALSE, quiet=TRUE) -> zz ; biom(zz, wait=FALSE)
+k48 <- biomRequest(yy, wait=FALSE, quiet=TRUE, request="organism", source="Greengenes") -> zz ; biom(zz, wait=FALSE)
+#k49 <- biomRequest(yy, wait=FALSE, quiet=TRUE, block=10) -> zz ; biom(zz, wait=FALSE)
+k50 <- biomRequest(yy, wait=FALSE, quiet=TRUE, block=10, request="organism", source="Greengenes") -> zz ; biom(zz, wait=FALSE)
 
 
 
