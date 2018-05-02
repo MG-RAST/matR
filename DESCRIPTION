@@ -9,7 +9,7 @@ Authors@R: c(
  person (c("William", "L."), "Trimble", 
  role = c("cre", "ctb"), email = "trimble@anl.gov"), 
  person (c("University", "of"), "Chicago", role = "cph"))
-Version: 0.9
+Version: 0.9.1
 Depends: R (>= 2.10), MGRASTer, BIOM.utils, graphics, stats, utils
 Imports: 
 Suggests: RJSONIO, qvalue, ecodist, gplots, scatterplot3d
