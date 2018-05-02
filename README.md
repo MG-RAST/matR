@@ -6,7 +6,7 @@ language and environment for statistical computing.
 See: http://mg-rast.org
 
 CRAN (Comprehensive R Archive Network) hosts 
-the [package](http://cran.r-project.org/web/packages/matR/index.html)
+the [package](https://CRAN.R-project.org/package=matR)
 including 
 its [manual](http://cran.r-project.org/web/packages/matR/matR.pdf).
 
