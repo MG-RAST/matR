@@ -9,7 +9,7 @@ library(matR)
 ##
 ## Set this variable manually if you want to run the tests
 ##
-if (Sys.getenv("RunFOAASTests=yes") != "yes")
+if (Sys.getenv("RunFOAASTests=yes") == "yes")
 {
 
 # #-----------------------------------------------------------------------------------------
@@ -22,10 +22,10 @@ gg <- demoSets () [4]
 xx <- readSet (ff) #  7 metagenomes; IDs only --- vector
 yy <- readSet (gg) #  32 metagenomes; with metadata --- data.frame
 
-k01 <- biomRequest (file=ff)  # This is OK
-k02 <- biomRequest (file=gg)  # FAIL wrong type
+k01 <- biomRequest (file=ff)  # This is OK  but warning: matR: 'request' is defaulting to 'function'  
+k02 <- biomRequest (file=gg, request="organism")  # FAIL wrong type
 
-k03 <- biomRequest(xx)
+k03 <- biomRequest(xx)   # warning: request is defaulting to function
 k04 <- biomRequest(xx, request="organism")
 k05 <- biomRequest(xx, block=3)
 k06 <- biomRequest(xx, block=3, request="organism")
