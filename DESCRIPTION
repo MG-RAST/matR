@@ -3,16 +3,18 @@ Type: Package
 Title: Metagenomics Analysis Tools
 Authors@R: c(
  person (c("Daniel", "T."), "Braithwaite", 
- role = c("aut", "cre"), email = "contact.dtb@gmail.com"),
+ role = c("aut"), email = "contact.dtb@gmail.com"),
  person (c("Kevin", "P."), "Keegan", 
  role = "aut", email = "keegan@mcs.anl.gov"), 
+ person (c("William", "L."), "Trimble", 
+ role = c("cre", "ctb"), email = "trimble@anl.gov"), 
  person (c("University", "of"), "Chicago", role = "cph"))
 Version: 0.9
 Depends: R (>= 2.10), MGRASTer, BIOM.utils, graphics, stats, utils
 Imports: 
 Suggests: RJSONIO, qvalue, ecodist, gplots, scatterplot3d
 URL: https://github.com/MG-RAST/matR/
-Date: 2014-10-22
+Date: 2018-05-04
 Description: An analysis platform for metagenomics combining 
  specialized tools and workflows, easy handling of the BIOM 
  format, and transparent access to MG-RAST resources.  Integrates 
