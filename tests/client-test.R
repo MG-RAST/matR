@@ -22,8 +22,8 @@ gg <- demoSets () [4]
 xx <- readSet (ff) #  7 metagenomes; IDs only --- vector
 yy <- readSet (gg) #  32 metagenomes; with metadata --- data.frame
 
-k01 <- biomRequest (file=ff)  # This is OK  but warning: matR: 'request' is defaulting to 'function'  
-k02 <- biomRequest (file=gg, request="organism")  # FAIL wrong type
+k01 <- biomRequest (file=ff)  # warning: request is defaulting to function
+k02 <- biomRequest (file=gg, request="organism", source="RDP") 
 
 k03 <- biomRequest(xx)   # warning: request is defaulting to function
 k04 <- biomRequest(xx, request="organism")
@@ -91,9 +91,9 @@ k50 <- biomRequest(yy, wait=FALSE, quiet=TRUE, block=10, request="organism", sou
 
 
 biomRequest (xx, quiet=TRUE)
-biomRequest (xx, blocking=3)
+biomRequest (xx, block=3)
 biomRequest (xx, outfile=tt)
-biomRequest (xx, blocking=3, outfile=tt)
+biomRequest (xx, block=3, outfile=tt)
 unlink(tt)
 
 biomRequest (xx, request="function")
@@ -104,7 +104,7 @@ biomRequest (xx, request="function", group_level="function")
 biomRequest (xx, request="function", group_level="level1", evalue=1)
 biomRequest (xx, request="function", group_level="level1", evalue=1, length=20)
 biomRequest (xx, request="function", group_level="level1", evalue=1, length=20, identity=85)
-biomRequest (xx, request="function", group_level="level1", evalue=1, length=20, identity=85, filter_source="NOG")
+biomRequest (xx, request="function", group_level="level1", evalue=1, length=20, identity=85, filter_source="KEGG")
 
 biomRequest (xx, request="organism")
 biomRequest (xx, request="organism", group_level="domain")
