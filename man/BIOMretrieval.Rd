@@ -66,9 +66,9 @@ rownames (yy)
 yy <- biomRequest (file=ff[4], request="organism", group_level="phylum", source="Greengenes")
 
 ####  IDs can be given directly, while output can be to a file
-biomRequest ("mgp9", request="function", outfile="mgp9.biom")
+biomRequest ("mgp9", request="function", outfile=file.path(tempdir("mgp9.biom")))
 biomRequest ("mgm4441619.3 mgm4441620.3 mgm4441656.4", 
-  request="function", outfile="mgp9.biom")
+  request="function", outfile=file.path(tempdir("mgp9.biom")))
 
 ####  place an asynchronous request...
 yy <- biomRequest ("mgp9", wait=FALSE)
