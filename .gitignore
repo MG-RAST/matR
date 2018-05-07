@@ -7,4 +7,6 @@
 *.txt
 _*
 *~
-
+.DS_Store
+.Rhistory
+.RData

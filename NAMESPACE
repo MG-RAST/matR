@@ -100,3 +100,13 @@ import (MGRASTer)
 importFrom (graphics, boxplot)
 importFrom (graphics, image)
 importFrom (stats, princomp)
+
+  importFrom("grDevices", "colorRamp", "colors", "rgb")
+  importFrom("graphics", "abline", "close.screen", "grid", "plot",
+             "points", "screen", "split.screen", "text")
+  importFrom("stats", "anova", "aov", "kruskal.test", "sd", "t.test",
+             "wilcox.test")
+  importFrom("utils", "browseURL", "chooseBioCmirror",
+             "chooseCRANmirror", "install.packages",
+             "packageDescription", "packageVersion", "read.table",
+             "setRepositories")

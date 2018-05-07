@@ -12,7 +12,7 @@ for specified metagenomes and projects into an object of class \code{biom}.
 }
 
 \usage{
-biomRequest(x, request=c("function", "organism", "feature"), ..., 
+biomRequest(x, request=c("function", "organism"), ...,
   block, wait=TRUE, quiet=FALSE, file, outfile)
 
 \method{biom}{environment}(x, wait=TRUE, ..., quiet=FALSE)
@@ -66,9 +66,9 @@ rownames (yy)
 yy <- biomRequest (file=ff[4], request="organism", group_level="phylum", source="Greengenes")
 
 ####  IDs can be given directly, while output can be to a file
-biomRequest ("mgp9", request="function", outfile="mgp9.biom")
+biomRequest ("mgp9", request="function", outfile=file.path(tempdir("mgp9.biom")))
 biomRequest ("mgm4441619.3 mgm4441620.3 mgm4441656.4", 
-  request="function", outfile="mgp9.biom")
+  request="function", outfile=file.path(tempdir("mgp9.biom")))
 
 ####  place an asynchronous request...
 yy <- biomRequest ("mgp9", wait=FALSE)
@@ -79,5 +79,4 @@ yy <- biom (yy)
 ####  full detail for available options
 doc.MGRAST (3, head=c("matrix","function","parameters","options"))
 doc.MGRAST (3, head=c("matrix","organism","parameters","options"))
-doc.MGRAST (3, head=c("matrix","feature","parameters","options"))
 }
